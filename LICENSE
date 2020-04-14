@@ -44,3 +44,4 @@ Backbase mobile-setup depends on the following third-party products (and version
 
 * SwiftCLI (6.0.0)
 * PathKit (1.0.0)
+* Yams (2.0.0)

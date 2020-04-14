@@ -15,13 +15,20 @@ let package = Package(
         .package(
             url: "https://github.com/kylef/PathKit",
             from: "1.0.0"
+        ),
+        .package(
+            url: "https://github.com/jpsim/Yams.git",
+            from: "2.0.0"
         )
     ],
     targets: [
         .target(
             name: "MobileSetup",
-            dependencies: ["SwiftCLI",
-                           "PathKit"]
+            dependencies: [
+                "SwiftCLI",
+                "PathKit",
+                "Yams"
+            ]
         ),
         .testTarget(
             name: "MobileSetupTests",
