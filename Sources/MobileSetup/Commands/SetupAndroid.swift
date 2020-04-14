@@ -9,32 +9,25 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-final class SetupAndroid: Command, VerboseLogger {
-    let name = "android"
-    let shortDescription = "Setup multiple build flavours for Android project, alongside fastlane"
+final class SetupAndroid: SetupDefault {
     
-    @Param var configuration: String
+    // --------------
+    // MARK: Command information
     
-    @Flag("-c", "--config", description: "Use a yaml configuration file")
-    var isValidConfigurationFile: Bool
+    override var name: String {
+        get { "android" }
+        set { }
+    }
     
-    @Flag("-f", "--include-fastlane", description: "Should setup fastlane")
-    var includeFastlane: Bool
+    override var shortDescription: String {
+        get { "Setup multiple build flavours for Android project, alongside fastlane" }
+        set { }
+    }
     
-    func execute() throws {
-        guard isValidConfigurationFile else {
-            throw CLI.Error(message: "Error: Use '-c' to specify the configuration file")
+    override func createVariants(for environments: [Environment]) {
+        log("Creating build flavour for environments:")
+        environments.forEach {
+            log("→ \($0.env)\n", indentationLevel: 1, color: .android)
         }
-        
-        let configurationPath = Path(configuration)
-        guard !configurationPath.isDirectory else {
-            throw CLI.Error(message: "Error: \(configurationPath) is a directory path")
-        }
-        
-        if includeFastlane {
-            log("Including Fastlane", indentationLevel: 2)
-        }
-        
-        log("Done project setup!", indentationLevel: 2)
     }
 }

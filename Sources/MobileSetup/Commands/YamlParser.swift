@@ -9,23 +9,26 @@ import Foundation
 import SwiftCLI
 import Yams
 
-protocol YamlParser: VerboseLogger {
+public protocol YamlParser: VerboseLogger {
     var verbose: Bool { get }
     func extractConfiguration(from configurationPath: String) throws -> Configuration
 }
 
 extension YamlParser {
-    var verbose: Bool { VerboseFlag.value }
+    public var verbose: Bool { VerboseFlag.value }
     
-    func extractConfiguration(from configurationPath: String) throws -> Configuration {
+    public func extractConfiguration(from configurationPath: String) throws -> Configuration {
         let decoder = YAMLDecoder()
+        let encoder = YAMLEncoder()
         
         do {
             let encodedYAML = try String(contentsOfFile: configurationPath, encoding: .utf8)
-            log("\nLoaded configuration:")
-            log("\n\(encodedYAML)\n", color: .purple)
-            
+            log("Encoded string: \(encodedYAML)")
             let decoded: Configuration = try decoder.decode(Configuration.self, from: encodedYAML)
+            
+            log("\nLoaded configuration:")
+            try log("\n\(encoder.encode(decoded))\n", color: .purple)
+            
             return decoded
             
         } catch {

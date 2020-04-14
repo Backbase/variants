@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Environment: Codable, Classable {
+public struct Environment: Codable, Classable {
     static let _class = "environment"
     
     let env: String

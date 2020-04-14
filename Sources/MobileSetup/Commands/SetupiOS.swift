@@ -9,52 +9,25 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-final class SetupiOS: Command, VerboseLogger, Setup {
+final class SetupiOS: SetupDefault {
     
     // --------------
     // MARK: Command information
     
-    let name = "ios"
-    let shortDescription = "Setup multiple xcconfigs for iOS project, alongside fastlane"
-    
-    // --------------
-    // MARK: Configuration Properties
-    
-    @Param var configuration: String
-    
-    @Flag("-c", "--config", description: "Use a yaml configuration file")
-    var isValidConfigurationFile: Bool
-    
-    @Flag("-f", "--include-fastlane", description: "Should setup fastlane")
-    var includeFastlane: Bool
-    
-    // --------------
-    // MARK: Configuration Data
-    
-    internal var configurationData: Configuration?
-    
-    func execute() throws {
-        try loadConfiguration(configuration)
-        
-        if includeFastlane {
-            log("Including Fastlane", indentationLevel: 1)
-        }
-        
-        log("Done project setup!")
+    override var name: String {
+        get { "ios" }
+        set(newValue) { }
     }
-}
-
-extension SetupiOS {
-    private func loadConfiguration(_ path: String) throws {
-        guard isValidConfigurationFile else {
-            throw CLI.Error(message: "Error: Use '-c' to specify the configuration file")
+    
+    override var shortDescription: String {
+        get { "Setup multiple xcconfigs for iOS project, alongside fastlane" }
+        set(newValue) { }
+    }
+    
+    override func createVariants(for environments: [Environment]) {
+        log("Creating xcconfig for environments:")
+        environments.forEach {
+            log("→ \($0.env)\n", indentationLevel: 1, color: .ios)
         }
-        
-        let configurationPath = Path(path)
-        guard !configurationPath.isDirectory else {
-            throw CLI.Error(message: "Error: \(configurationPath) is a directory path")
-        }
-        
-        configurationData = decode(configuration: path)
     }
 }
