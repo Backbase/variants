@@ -20,12 +20,15 @@ final class GenerateConfig: Command, VerboseLogger {
         log("--------------------------------------------", indentationLevel: 1, force: true)
         log("Running: mobile-setup init", indentationLevel: 1, force: true)
         log("--------------------------------------------", indentationLevel: 1, force: true)
-        generateConfig(path: "./")
+        try? generateConfig(path: Path("/usr/local/lib/mobile-setup/templates"))
         log("Generated mobile-setup.yml\n", indentationLevel: 2, force: true)
         log("Edit the file above before continuing\n\n", indentationLevel: 1, color: .purple, force: true)
     }
     
-    private func generateConfig(path: String) {
-        try? Task.run(bash: "cp ./Templates/mobile-setup-template.yml \(path)", directory: nil)
+    private func generateConfig(path: Path) throws {
+        guard path.absolute().exists else {
+            throw CLI.Error(message: "Couldn't find template path")
+        }
+        try? Task.run(bash: "echo \(path.absolute())/mobile-setup-template.yml", directory: nil)
     }
 }
