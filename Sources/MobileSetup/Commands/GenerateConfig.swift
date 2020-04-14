@@ -24,7 +24,7 @@ final class GenerateConfig: Command, VerboseLogger {
     // --------------
     // MARK: Configuration Properties
     
-    @Key("-p", "--platform", description: "Initialize config for platform: ios | android")
+    @Param(validation: Validation.allowing(Platform.ios.rawValue, Platform.android.rawValue))
     var platform: String
     
     public func execute() throws {
@@ -32,15 +32,14 @@ final class GenerateConfig: Command, VerboseLogger {
         log("Running: mobile-setup init", force: true)
         
         guard
-            let platformString = platform,
-            let platformEnum = Platform(rawValue: platformString)
+            let platformEnum = Platform(rawValue: platform)
         else {
             log("--------------------------------------------", force: true)
             log("Error: Parameter not specified: -p | --platform = ios | android\n", color: .red)
             throw CLI.Error(message: "Missing parameter")
         }
     
-        log("Platform: \(platformString)")
+        log("Platform: \(platform)")
         log("--------------------------------------------", force: true)
         
         do {
