@@ -23,11 +23,10 @@ extension YamlParser {
         
         do {
             let encodedYAML = try String(contentsOfFile: configurationPath, encoding: .utf8)
-            log("Encoded string: \(encodedYAML)")
             let decoded: Configuration = try decoder.decode(Configuration.self, from: encodedYAML)
             
-            log("\nLoaded configuration:")
-            try log("\n\(encoder.encode(decoded))\n", color: .purple)
+            log("Loaded configuration:", force: true)
+            try log("\n\(encoder.encode(decoded))\n", color: .purple, force: true)
             
             return decoded
             

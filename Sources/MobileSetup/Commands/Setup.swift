@@ -39,10 +39,8 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     // --------------
     // MARK: Configuration Properties
     
-    @Param var configuration: String
-    
-    @Flag("-c", "--config", description: "Use a yaml configuration file")
-    var isValidConfigurationFile: Bool
+    @Key("-c", "--config", description: "Use a yaml configuration file")
+    var configuration: String
     
     @Flag("-f", "--include-fastlane", description: "Should setup fastlane")
     var includeFastlane: Bool
@@ -74,8 +72,8 @@ public class SetupDefault: Command, VerboseLogger, Setup {
 }
 
 extension SetupDefault {
-    private func loadConfiguration(_ path: String) throws {
-        guard isValidConfigurationFile else {
+    private func loadConfiguration(_ path: String?) throws {
+        guard let path = path else {
             throw CLI.Error(message: "Error: Use '-c' to specify the configuration file")
         }
         

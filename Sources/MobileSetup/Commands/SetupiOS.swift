@@ -24,6 +24,14 @@ final class SetupiOS: SetupDefault {
         set(newValue) { }
     }
     
+    override func execute() throws {
+        log("--------------------------------------------", force: true)
+        log("Running: mobile-setup ios", force: true)
+        log("--------------------------------------------\n", force: true)
+        
+        try super.execute()
+    }
+    
     override func createVariants(for environments: [Environment]) {
         log("Creating xcconfig for environments:")
         environments.forEach {

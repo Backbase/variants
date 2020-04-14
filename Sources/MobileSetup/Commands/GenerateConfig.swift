@@ -28,30 +28,35 @@ final class GenerateConfig: Command, VerboseLogger {
     var platform: String
     
     public func execute() throws {
-        log("--------------------------------------------", indentationLevel: 1, force: true)
-        log("Running: mobile-setup init", indentationLevel: 1, force: true)
+        log("--------------------------------------------", force: true)
+        log("Running: mobile-setup init", force: true)
         
         guard
             let platformString = platform,
             let platformEnum = Platform(rawValue: platformString)
         else {
-            log("--------------------------------------------", indentationLevel: 1, force: true)
-            throw CLI.Error(message: "Parameter not specified: -p | --platform = ios | android")
+            log("--------------------------------------------", force: true)
+            log("Error: Parameter not specified: -p | --platform = ios | android\n", color: .red)
+            throw CLI.Error(message: "Missing parameter")
         }
     
-        log("Platform: \(runningPlatform)", indentationLevel: 1)
-        log("--------------------------------------------", indentationLevel: 1, force: true)
-
-        try? generateConfig(path: Path("/usr/local/lib/mobile-setup/templates"), platform: platformEnum)
+        log("Platform: \(platformString)")
+        log("--------------------------------------------", force: true)
         
-        log("Generated mobile-setup.yml\n", indentationLevel: 2, force: true)
-        log("Edit the file above before continuing\n\n", indentationLevel: 1, color: .purple, force: true)
+        do {
+            try generateConfig(path: Path("/usr/local/lib/mobile-setup/templates"), platform: platformEnum)
+        } catch {
+            log("Error: ", color: .red, force: true)
+            throw CLI.Error(message: "Couldn't generate YAML config")
+        }
+        log("Generated mobile-setup.yml\n", indentationLevel: 1, force: true)
+        log("Edit the file above before continuing\n\n", color: .purple, force: true)
     }
     
     private func generateConfig(path: Path, platform: Platform) throws {
         guard path.absolute().exists else {
             throw CLI.Error(message: "Couldn't find template path")
         }
-        try? Task.run(bash: "cp \(path.absolute())/mobile-setup-\(platform.rawValue)-template.yml ./mobile-setup.yml", directory: nil)
+        try Task.run(bash: "cp \(path.absolute())/mobile-setup-\(platform.rawValue)-template.yml ./mobile-setup.yml", directory: nil)
     }
 }
