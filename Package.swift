@@ -9,10 +9,6 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/apple/swift-argument-parser",
-            from: "0.0.1"
-        ),
-        .package(
             url: "https://github.com/jakeheis/SwiftCLI",
             from: "6.0.0"
         ),
@@ -24,8 +20,7 @@ let package = Package(
     targets: [
         .target(
             name: "MobileSetup",
-            dependencies: ["ArgumentParser",
-                           "SwiftCLI",
+            dependencies: ["SwiftCLI",
                            "PathKit"]
         ),
         .testTarget(
