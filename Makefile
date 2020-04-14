@@ -4,10 +4,12 @@ prefix ?= /usr/local
 bindir ?= $(prefix)/bin
 libdir ?= $(prefix)/lib
 srcdir = Sources
+templatesdir = Templates
 
 REPODIR = $(shell pwd)
 BUILDDIR = $(REPODIR)/.build
 SOURCES = $(wildcard $(srcdir)/**/*.swift)
+TEMPLATES = $(wildcard $(templatesdir)/*)
 
 .DEFAULT_GOAL = all
 
@@ -24,6 +26,8 @@ mobile-setup: $(SOURCES)
 install: mobile-setup
 	@install -d "$(bindir)" "$(libdir)"
 	@install "$(BUILDDIR)/release/mobile-setup" "$(bindir)"
+	@mkdir -p "$(libdir)/mobile-setup/templates"
+	@cp "$(TEMPLATES)" "$(libdir)/mobile-setup/templates/"
 
 .PHONY: uninstall
 uninstall:
