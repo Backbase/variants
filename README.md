@@ -6,7 +6,31 @@
 
 ## Features
 
-TODO: List features
+- ✅ Setup your mobile project to have multiple variants of the same application.
+  - ➡️ Each variant having it's own:
+	  - Name
+	  - Bundle Identifier
+	  - Icon
+	  - Connecting to specific backend environment
+- ✅ Setup CI/CD using fastlane.
+  - ➡️ Lanes for specific tasks:
+  	- Setup CI
+	- Create Keychain
+	- Perform Unit and UI tests
+	- Lint and format
+	- Complexity analisys
+	- Sonar report
+	- Build and sign application
+	- Deploy to AppCenter
+  - ➡️ Lanes for specific branches (to be triggered by CI - Jenkins, Github Actions, Azure DevOps, etc)
+	- master
+		- Deploys production application
+	- develop
+		- Deploys test application
+	- release
+		- Deploys beta application
+	- branch
+		- Performs specific tasks and flags build as successful or failure.
 
 ## Installation
 
