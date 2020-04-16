@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  MobileSetup
 //
-//  Created by Arthur Alves on 14/04/2020.
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Arthur Alves
 //
 
 import Foundation
