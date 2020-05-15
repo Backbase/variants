@@ -6,7 +6,7 @@ ios:
       source:
         path: Sources
         info: Sources/Info.plist
-        config: Sources/Resources/assets/backbase/conf
+        config: Sources/Resources/Configs/
   environments: 
     - env: "dev"
       cxp: 

@@ -72,7 +72,13 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         default:
             break
         }
-        createVariants(for: environments)
+//        createVariants(for: environments)
+        
+        do {
+            try configuration.ios?.targets.forEach { (_, target) in
+                touchConfig(with: target)
+            }
+        } catch {}
     }
     
     private func setupFastlane(_ include: Bool) {
@@ -81,6 +87,35 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         } else {
             log("Skipping Fastlane setup", indentationLevel: 1)
         }
+    }
+    
+    // MARK: - Revamp
+    private func touchConfig(with target: Target) {
+        do {
+            log("Check if mobile-variants.xcconfig exist")
+            
+            guard let parentString = configuration else  { return }
+            let configPath = Path(parentString).absolute().parent()
+            
+            let configString = target.source.config
+            
+            let xcodeConfigFolder = Path("\(configPath)/\(configString)")
+            guard xcodeConfigFolder.isDirectory else {
+                log("Source isn't a folder or doesn't exist", indentationLevel: 1)
+                log("\(xcodeConfigFolder.absolute().description)")
+                return
+            }
+
+            let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/mobile-variants.xcconfig")
+            guard !xcodeConfigPath.isFile else {
+                log("mobile-variants.xcconfig already exist", indentationLevel: 1)
+                return
+            }
+            
+            try Task.run(bash: "touch \(xcodeConfigPath)")
+            log("Created file: 'mobile-variants.xcconfig' at \(xcodeConfigFolder.absolute().description)",
+                indentationLevel: 1)
+        } catch {}
     }
     
 }
