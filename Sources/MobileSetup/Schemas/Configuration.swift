@@ -13,24 +13,22 @@ public struct Configuration: Codable {
 }
 
 public protocol BaseConfiguration {
-    var name: String { get }
     var targets: [String: Target] { get }
     var variants: [Variant] { get }
 }
 
 public struct iOSConfiguration: Codable, BaseConfiguration {
-    public var name: String
     public var targets: [String : Target]
     public var variants: [Variant]
 }
 
 public struct AndroidConfiguration: Codable, BaseConfiguration {
-    public var name: String
     public var targets: [String : Target]
     public var variants: [Variant]
 }
 
 public struct Target: Codable {
+    let name: String
     let bundleId: String
     let source: Source
 }

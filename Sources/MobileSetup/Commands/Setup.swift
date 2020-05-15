@@ -76,7 +76,7 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         
         do {
             try configuration.ios?.targets.forEach { (_, target) in
-                touchConfig(with: target)
+                touchConfig(with: target, variants: variants)
             }
         } catch {}
     }
@@ -90,7 +90,7 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     }
     
     // MARK: - Revamp
-    private func touchConfig(with target: Target) {
+    private func touchConfig(with target: Target, variants: [Variant]?) {
         do {
             log("Check if mobile-variants.xcconfig exist")
             
@@ -107,17 +107,53 @@ public class SetupDefault: Command, VerboseLogger, Setup {
             }
 
             let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/mobile-variants.xcconfig")
-            guard !xcodeConfigPath.isFile else {
-                log("mobile-variants.xcconfig already exist", indentationLevel: 1)
-                return
+            if !xcodeConfigPath.isFile {
+                log("mobile-variants.xcconfig already exist, cleaning up", indentationLevel: 1)
+                write("", toFile: xcodeConfigPath, force: true)
             }
             
             try Task.run(bash: "touch \(xcodeConfigPath)")
             log("Created file: 'mobile-variants.xcconfig' at \(xcodeConfigFolder.absolute().description)",
                 indentationLevel: 1)
+            populateConfig(with: target, configFile: xcodeConfigPath, variants: variants)
+
         } catch {}
     }
     
+    private func populateConfig(with target: Target, configFile: Path, variants: [Variant]?) {
+        guard let variant = variants?.first else {
+            log("Variants not specified", color: .red)
+            return
+        }
+        
+        log("Populating xcconfig")
+        
+        variant.getDefaultValues(for: target).forEach { (key, value) in
+            let stringContent = "\(key) = \(value)"
+            log("\(stringContent) \n", indentationLevel: 2, color: .ios)
+            
+            let (success, file) = write(stringContent, toFile: configFile, force: false)
+        }
+    }
+    
+    private func updateInfoPlist(with target: Target, configFile: Path, variants: [Variant]?) {
+        
+    }
+    
+    private func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
+        do {
+            if force {
+                try stringContent.write(toFile: file.absolute().description,
+                                        atomically: false,
+                                        encoding: .utf8)
+            } else {
+                try stringContent.appendLine(to: file)
+            }
+            return (true, file)
+        } catch {
+            return (false, nil)
+        }
+    }
 }
 
 extension SetupDefault {
@@ -133,5 +169,36 @@ extension SetupDefault {
         
         let configuration = decode(configuration: path)
         return configuration
+    }
+}
+
+
+extension String {
+    func appendLine(to file: Path) throws {
+        try (self + "\n").appendToURL(fileURL: file.url)
+    }
+    
+    func appendLineToURL(fileURL: URL) throws {
+        try (self + "\n").appendToURL(fileURL: fileURL)
+    }
+
+    func appendToURL(fileURL: URL) throws {
+        let data = self.data(using: String.Encoding.utf8)!
+        try data.append(fileURL: fileURL)
+    }
+}
+
+extension Data {
+    func append(fileURL: URL) throws {
+        if let fileHandle = FileHandle(forWritingAtPath: fileURL.path) {
+            defer {
+                fileHandle.closeFile()
+            }
+            fileHandle.seekToEndOfFile()
+            fileHandle.write(self)
+        }
+        else {
+            try write(to: fileURL, options: .atomic)
+        }
     }
 }

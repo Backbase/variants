@@ -12,7 +12,22 @@ public struct Variant: Codable {
     let id_suffix: String
     let version_name: String
     let version_number: Int
-    let custom: [String]?
+    let custom: [String: String]?
+    
+    func getDefaultValues(for target: Target) -> [String: String] {
+        var customDictionary: [String: String] = [
+            "MV_APP_NAME": target.name+" "+name,
+            "MV_BUNDLE_ID": target.bundleId+"."+id_suffix,
+            "MV_VERSION_NAME": version_name,
+            "MV_VERSION_NUMBER": String(version_number)
+        ]
+       
+        custom?.forEach({ (key, value) in
+            customDictionary["MV_\(key.uppercased())"] = value
+        })
+        
+        return customDictionary
+    }
 }
 
 public struct Environment: Codable {

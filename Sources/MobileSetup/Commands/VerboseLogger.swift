@@ -14,8 +14,8 @@ public enum ShellColor: String {
     case red = "\\033[1;31m"
     case green = "\\033[0;32m"
     case cyan = "\\033[0;36m"
-    case purple = "\\033[0;35m"
-    case ios = "\\033[2;49;36m"
+    case purple = "\\033[1;35m"
+    case ios = "\\033[1;49;36m"
     case android = "\\033[1;49;33m"
     case neutral = "\\033[0m"
 }
