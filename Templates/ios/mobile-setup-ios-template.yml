@@ -1,0 +1,21 @@
+ios:
+  name: PeachTree
+  targets:
+    PeachTree:
+      bundleId: com.peachtree.app
+      source:
+        path: Sources
+        info: Sources/Info.plist
+        config: Sources/Resources/assets/backbase/conf
+  environments: 
+    - env: "dev"
+      cxp: 
+        serverURL: "https://dev.env"
+      identity:
+        baseURL: "https://identity.dev"
+    - env: "qa"
+      cxp: 
+        serverURL: "https://qa.env"
+      identity:
+        baseURL: "https://identity.qa"
+

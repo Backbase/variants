@@ -9,6 +9,19 @@ import Foundation
 
 public struct Environment: Codable {
     let env: String
-    let cxp: String
-    let identity: String
+    let cxp: CXP
+    let identity: Identity
+}
+
+public struct CXP: Codable {
+    let serverURL: String
+    let experience: String?
+    let version: String?
+    let navigationType: String?
+}
+
+public struct Identity: Codable {
+    let baseURL: String
+    let realm: String?
+    let clientId: String?
 }

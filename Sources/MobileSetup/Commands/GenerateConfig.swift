@@ -9,9 +9,10 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-enum Platform: String {
+public enum Platform: String {
     case ios
     case android
+    case unknown
 }
 
 final class GenerateConfig: Command, VerboseLogger {

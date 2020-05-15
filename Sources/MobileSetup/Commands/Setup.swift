@@ -13,14 +13,15 @@ import Yams
 public protocol Setup: YamlParser {
     var name: String { get }
     var shortDescription: String { get }
-    var configurationData: Configuration? { get set }
+    var platform: Platform { get set }
+    
     func decode(configuration: String) -> Configuration?
 }
 
 extension Setup {
     public func decode(configuration: String) -> Configuration? {
         do {
-            return try extractConfiguration(from: configuration)
+            return try extractConfiguration(from: configuration, platform: platform)
         } catch {
             log(error.localizedDescription)
         }
@@ -45,34 +46,47 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     @Flag("-f", "--include-fastlane", description: "Should setup fastlane")
     var includeFastlane: Bool
     
-    // --------------
-    // MARK: Configuration Data
-    
-    public var configurationData: Configuration?
+    public var platform: Platform = .unknown
     
     public func execute() throws {
-        try loadConfiguration(configuration)
-        
-        guard let configData = configurationData else {
+        guard let configurationData = try loadConfiguration(configuration) else {
             throw CLI.Error(message: "Unable to proceed creating build variants")
         }
-        createVariants(for: configData.setupConfiguration.environments)
         
-        if includeFastlane {
-            log("Including Fastlane", indentationLevel: 1)
+        scanVariants(with: configurationData)
+        setupFastlane(includeFastlane)
+    }
+    
+    public func createVariants(for environments: [Environment]?) {}
+    
+    // --------------
+    // MARK: Private methods
+    
+    private func scanVariants(with configuration: Configuration) {
+        var environments: [Environment]?
+        switch platform {
+        case .ios:
+            environments = configuration.ios?.environments
+        case .android:
+            environments = configuration.android?.environments
+        default:
+            break
+        }
+        createVariants(for: environments)
+    }
+    
+    private func setupFastlane(_ include: Bool) {
+        if include {
+            log("Setting up Fastlane", indentationLevel: 1)
+        } else {
+            log("Skipping Fastlane setup", indentationLevel: 1)
         }
     }
     
-    // --------------
-    // MARK: Public methods
-    
-    public func createVariants(for environments: [Environment]) {
-        
-    }
 }
 
 extension SetupDefault {
-    private func loadConfiguration(_ path: String?) throws {
+    private func loadConfiguration(_ path: String?) throws -> Configuration? {
         guard let path = path else {
             throw CLI.Error(message: "Error: Use '-c' to specify the configuration file")
         }
@@ -82,6 +96,7 @@ extension SetupDefault {
             throw CLI.Error(message: "Error: \(configurationPath) is a directory path")
         }
         
-        configurationData = decode(configuration: path)
+        let configuration = decode(configuration: path)
+        return configuration
     }
 }

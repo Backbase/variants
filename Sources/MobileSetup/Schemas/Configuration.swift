@@ -8,22 +8,36 @@
 import Foundation
 
 public struct Configuration: Codable {
-    let name: String
-    let targets: [String: Target]
-    let setupConfiguration: SetupConfiguration
+    let ios: iOSConfiguration?
+    let android: AndroidConfiguration?
 }
 
-public struct SetupConfiguration: Codable {
-    let configPath: String
-    let baseBundleId: String
-    let environments: [Environment]
+public protocol BaseConfiguration {
+    var name: String { get }
+    var targets: [String: Target] { get }
+    var environments: [Environment] { get }
+}
+
+public struct iOSConfiguration: Codable, BaseConfiguration {
+    public var name: String
+    public var targets: [String : Target]
+    public var environments: [Environment]
+}
+
+public struct AndroidConfiguration: Codable, BaseConfiguration {
+    public var name: String
+    public var targets: [String : Target]
+    public var environments: [Environment]
 }
 
 public struct Target: Codable {
-    let sources: [Source]
+    let bundleId: String
+    let source: Source
 }
 
 public struct Source: Codable {
     let path: String
+    let info: String
+    let config: String
 }
 

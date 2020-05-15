@@ -25,6 +25,8 @@ final class SetupiOS: SetupDefault {
     }
     
     override func execute() throws {
+        platform = .ios
+        
         log("--------------------------------------------", force: true)
         log("Running: mobile-setup ios", force: true)
         log("--------------------------------------------\n", force: true)
@@ -32,9 +34,9 @@ final class SetupiOS: SetupDefault {
         try super.execute()
     }
     
-    override func createVariants(for environments: [Environment]) {
+    override func createVariants(for environments: [Environment]?) {
         log("Creating xcconfig for environments:")
-        environments.forEach {
+        environments?.compactMap { $0 }.forEach {
             log("→ \($0.env)\n", indentationLevel: 1, color: .ios)
         }
     }

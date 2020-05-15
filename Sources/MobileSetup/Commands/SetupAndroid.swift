@@ -25,6 +25,8 @@ final class SetupAndroid: SetupDefault {
     }
     
     override func execute() throws {
+        platform = .android
+        
         log("--------------------------------------------", force: true)
         log("Running: mobile-setup android", force: true)
         log("--------------------------------------------\n", force: true)
@@ -32,9 +34,9 @@ final class SetupAndroid: SetupDefault {
         try super.execute()
     }
     
-    override func createVariants(for environments: [Environment]) {
+    override func createVariants(for environments: [Environment]?) {
         log("Creating build flavour for environments:")
-        environments.forEach {
+        environments?.compactMap { $0 }.forEach {
             log("→ \($0.env)\n", indentationLevel: 1, color: .android)
         }
     }
