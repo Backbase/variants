@@ -109,14 +109,21 @@ public class SetupDefault: Command, VerboseLogger, Setup {
             let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/mobile-variants.xcconfig")
             if !xcodeConfigPath.isFile {
                 log("mobile-variants.xcconfig already exist, cleaning up", indentationLevel: 1)
-                write("", toFile: xcodeConfigPath, force: true)
             }
             
-            try Task.run(bash: "touch \(xcodeConfigPath)")
+            write("", toFile: xcodeConfigPath, force: true)
             log("Created file: 'mobile-variants.xcconfig' at \(xcodeConfigFolder.absolute().description)",
                 indentationLevel: 1)
+            
             populateConfig(with: target, configFile: xcodeConfigPath, variants: variants)
-
+            
+            /*
+             * INFO.plist
+             */
+            let infoPath = target.source.info
+            let infoPlistPath = Path("\(configPath)/\(infoPath)")
+            
+            updateInfoPlist(with: target, configFile: infoPlistPath, variants: variants)
         } catch {}
     }
     
@@ -138,6 +145,20 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     
     private func updateInfoPlist(with target: Target, configFile: Path, variants: [Variant]?) {
         
+        do {
+            try Task.run(bash: "plutil -replace CFBundleVersion -string '$(MV_VERSION_NUMBER)' \(configFile.absolute().description)")
+            
+            try Task.run(bash: "plutil -replace CFBundleShortVersionString -string '$(MV_VERSION_NAME)' \(configFile.absolute().description)")
+            
+            try Task.run(bash: "plutil -replace CFBundleName -string '$(MV_APP_NAME)' \(configFile.absolute().description)")
+            
+            try Task.run(bash: "plutil -replace CFBundleExecutable -string '$(MV_APP_NAME)' \(configFile.absolute().description)")
+            
+            try Task.run(bash: "plutil -replace CFBundleIdentifier -string '$(MV_BUNDLE_ID)' \(configFile.absolute().description)")
+            
+        } catch {
+            print("Error \(error.localizedDescription)")
+        }
     }
     
     private func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
