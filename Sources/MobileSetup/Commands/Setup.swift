@@ -57,22 +57,22 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         setupFastlane(includeFastlane)
     }
     
-    public func createVariants(for environments: [Environment]?) {}
+    public func createVariants(for variants: [Variant]?) {}
     
     // --------------
     // MARK: Private methods
     
     private func scanVariants(with configuration: Configuration) {
-        var environments: [Environment]?
+        var variants: [Variant]?
         switch platform {
         case .ios:
-            environments = configuration.ios?.environments
+            variants = configuration.ios?.variants
         case .android:
-            environments = configuration.android?.environments
+            variants = configuration.android?.variants
         default:
             break
         }
-//        createVariants(for: environments)
+//        createVariants(for: variants)
         
         do {
             try configuration.ios?.targets.forEach { (_, target) in

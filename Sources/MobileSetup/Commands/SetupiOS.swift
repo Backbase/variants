@@ -34,10 +34,10 @@ final class SetupiOS: SetupDefault {
         try super.execute()
     }
     
-    override func createVariants(for environments: [Environment]?) {
-        log("Creating xcconfig for environments:")
-        environments?.compactMap { $0 }.forEach {
-            log("→ \($0.env)\n", indentationLevel: 1, color: .ios)
+    override func createVariants(for variants: [Variant]?) {
+        log("Creating xcconfig for variants:")
+        variants?.compactMap { $0 }.forEach {
+            log("→ \($0.name)\n", indentationLevel: 1, color: .ios)
         }
     }
 }

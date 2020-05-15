@@ -7,6 +7,14 @@
 
 import Foundation
 
+public struct Variant: Codable {
+    let name: String
+    let id_suffix: String
+    let version_name: String
+    let version_number: Int
+    let custom: [String]?
+}
+
 public struct Environment: Codable {
     let env: String
     let cxp: CXP

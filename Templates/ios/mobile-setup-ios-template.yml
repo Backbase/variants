@@ -7,15 +7,13 @@ ios:
         path: Sources
         info: Sources/Info.plist
         config: Sources/Resources/Configs/
-  environments: 
-    - env: "dev"
-      cxp: 
-        serverURL: "https://dev.env"
-      identity:
-        baseURL: "https://identity.dev"
-    - env: "qa"
-      cxp: 
-        serverURL: "https://qa.env"
-      identity:
-        baseURL: "https://identity.qa"
+  variants: 
+    - name: dev
+      id_suffix: dev
+      version_name: 1.0.0
+      version_number: 1
+    - name: qa
+      id_suffix: qa
+      version_name: 1.0.0
+      version_number: 1
 

@@ -34,10 +34,10 @@ final class SetupAndroid: SetupDefault {
         try super.execute()
     }
     
-    override func createVariants(for environments: [Environment]?) {
-        log("Creating build flavour for environments:")
-        environments?.compactMap { $0 }.forEach {
-            log("→ \($0.env)\n", indentationLevel: 1, color: .android)
+    override func createVariants(for variants: [Variant]?) {
+        log("Creating build flavour for variants:")
+        variants?.compactMap { $0 }.forEach {
+            log("→ \($0.name)\n", indentationLevel: 1, color: .android)
         }
     }
 }

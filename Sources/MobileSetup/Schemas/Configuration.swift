@@ -15,19 +15,19 @@ public struct Configuration: Codable {
 public protocol BaseConfiguration {
     var name: String { get }
     var targets: [String: Target] { get }
-    var environments: [Environment] { get }
+    var variants: [Variant] { get }
 }
 
 public struct iOSConfiguration: Codable, BaseConfiguration {
     public var name: String
     public var targets: [String : Target]
-    public var environments: [Environment]
+    public var variants: [Variant]
 }
 
 public struct AndroidConfiguration: Codable, BaseConfiguration {
     public var name: String
     public var targets: [String : Target]
-    public var environments: [Environment]
+    public var variants: [Variant]
 }
 
 public struct Target: Codable {
