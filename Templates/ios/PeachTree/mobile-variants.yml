@@ -1,12 +1,12 @@
 ios:
-  name: PeachTree
   targets:
     PeachTree:
-      bundleId: com.peachtree.app
+      name: Peachy
+      bundleId: com.peachtree.peachy
       source:
         path: Sources
         info: Sources/Info.plist
-        config: Sources/Resources/Configs/
+        config: Sources/
   variants: 
     - name: dev
       id_suffix: dev
