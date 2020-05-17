@@ -1,8 +1,10 @@
-<p align="center">
-<img src="Assets/Examples/variants_logo.svg" title="variants">
+<p align="left">
+<img src="Assets/Examples/variants_logo_small.png" title="variants">
 </p>
 
-<p align="center">Variants is a command line tool written in Swift that setup deployment variants and full CI/CD pipelines for mobile projects.</p>
+# Variants
+
+<p align="left">Variants is a command line tool written in Swift that setup deployment variants and full CI/CD pipelines for mobile projects.</p>
 
 ## Features
 
