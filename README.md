@@ -1,8 +1,8 @@
 <p align="center">
-<img src="Assets/logo.svg" title="MobileSetup">
+<img src="Assets/Examples/variants_logo.svg" title="variants">
 </p>
 
-<p align="center">MobileSetup is a command line tool written in Swift that setup deployment variants and full CI/CD pipelines for mobile projects.</p>
+<p align="center">Variants is a command line tool written in Swift that setup deployment variants and full CI/CD pipelines for mobile projects.</p>
 
 ## Features
 
@@ -32,108 +32,137 @@
 	- branch
 		- Performs specific tasks and flags build as successful or failure.
 
-## Installation
-
-### Homebrew (recommended)
-
-```sh
-brew tap arthurpalves/formulae
-brew install mobile-setup
-```
-
-### [Mint](https://github.com/yonaskolb/Mint)
-
-```sh
-mint install arthurpalves/mobile-setup
-```
-
-### Make
-
-```sh
-git clone https://github.com/arthurpalves/mobile-setup.git
-cd mobile-setup
-make install
-```
-
-### Swift Package Manager
-
-#### Use as CLI
-
-```sh
-git clone https://github.com/arthurpalves/mobile-setup.git
-cd mobile-setup
-swift run mobile-setup
-```
-
-#### Use as dependency
-
-Add the following to your Package.swift file's dependencies:
-
-```swift
-.package(url: "https://github.com/arthurpalves/mobile-setup.git", from: "0.0.1"),
-```
-
-And then import wherever needed: import MobileSetup
-
 ## Usage
 
 ### Initialize
 
 Before running setup to create your deployment variants and pipelines you need a YAML configuration file.
-Run `mobile-setup init` in the base folder of your project.
+Run `variants init` in the base folder of your project.
 
 ```sh
-mobile-setup init <platform>
+variants init <platform>
 
 # Example:
 ## Initialize with a configuration file specific for an iOS project
-mobile-setup init ios
+
+variants init ios
+```
+It will generate a variants.yml file in the base folder of your project
+
+<p align="center">
+<img src="Assets/Examples/Project_Example_Step_2.png" title="variants.yml">
+</p>
+
+> NOTE: Edit the file variants.yml accordingly.
+
+#### Config settings
+Your `variants.yml` will contain all the necessary fields. It comes with one variant named `default`, which will be used whenever a variant isn't specified. You can then include custom variants, for which the following settings are required:
+* `bundle_id_suffix`
+
+```yaml
+ios:
+  xcodeproj: PeachTree.xcodeproj
+  targets:
+    PeachTree:
+      name: PeachyApp
+      bundle_id: com.peachtree.peachy
+      icon: AppIcon
+      source:
+        path: Sources
+        info: Sources/Info.plist
+  variants:
+    - name: default
+      version_name: 1.0.0
+      version_number: 1
+    - name: dev
+      bundle_id_suffix: dev
+      icon: DevelopmentIcon
+      version_name: 0.0.1
+      version_number: 1
+    - name: test
+      bundle_id_suffix: test
+      icon: TestIcon
+      version_name: 0.1.0
+      version_number: 1
 ```
 
-> NOTE: Edit the generated .yml file accordingly.
+### Setup multiple build variants with full fastlane integration.
 
-### Generate multiple build variants per environment.
-
-#### Using default configuration file (mobile-setup.yml)
+#### Using default configuration file (variants.yml)
 
 ```sh
-mobile-setup <platform>
+variants setup <platform>
 
 # Example:
-## Create multiple variants for your iOS app, each using its own config.json,
+## Create multiple variants for your iOS app, each using its own
 ## name, bundle-id, version, assets, backend environment, etc.
-mobile-setup ios
+
+variants setup ios
 ```
+
+It will generate a fully working fastlane setup for your platform (ios or android), edit your project in order to read default configs from variants (such as `app_name`, `bundle_id`, `icon`, `version_name` and `version_number`) and add code extensions so you can easily access your custom settings in code (i.e.: `server_base_url`, `a_service_api_key` etc )
+
+<p align="center">
+<img src="Assets/Examples/Project_Example_Step_3.png" title="Setup completed">
+</p>
 
 #### Using a configuration file other than the default one
 
 ```sh
-mobile-setup <platform> [-c,--config] <yml config path>
+variants setup <platform> [-s,--spec] <yml config path>
 
 # Example:
-## Create multiple variants for your iOS app, each using its own config.json,
+## Create multiple variants for your iOS app, each using its own
 ## name, bundle-id, version, assets, backend environment, etc.
-mobile-setup ios -c ./MyProjectConfig.yml
+
+variants setup ios -s ./custom/path/variants.yml
 ```
 
-### Generate fastlane setup
+> NOTE: *variants setup* will automatically assign the first variant configuration to the project
+
+### Switch variants
 
 ```sh
-mobile-setup <platform> --include-fastlane
+variants switch <platform> <variant>
 
 # Example:
-## Besides creating multiple variants, include a fully working
-## fastlane setup, with lanes specific for: `master`, `develop`,
-## `release` and `branch`.
-mobile-setup ios --include-fastlane
+## Switches configuration to one of the available variants in your `variants.yml`.
+
+variants switch ios dev
 ```
 
+### As part of fastlane deployment
 
-### Flags
+```sh
 
-|          |                             |                            |
-|:---------|:----------------------------|:---------------------------|
-| **`-v`** | **`--verbose`**             | Log tech details for nerds |
-| **`-h`** | **`--help`**                | Show help information      |
-|          | **`--include-fastlane`**    | Include fastlane setup     |
+# Example:
+# You can switch variants before deploying your application.
+#
+# fastlane deploy variant:'test'
+# fastlane deploy variant:'dev'
+# fastlane deploy variant:'uat'
+# fastlane deploy variant:'region_abc'
+# fastlane deploy
+
+lane :deploy do |options|
+    switch_variant(options)
+
+    run_tests
+    run_linter
+    run_cohesion
+    run_lizard
+    run_archive
+    run_deploy
+end
+
+private_lane :switch_variant do |options|
+    variant = options[:variant] || 'default'
+    begin
+        sh 'variants switch ios #{variant}'
+    rescue
+        UI.user_error!("variant #{variant} not found in your configuration")
+    end
+end
+
+```
 
