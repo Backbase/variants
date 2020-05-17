@@ -18,6 +18,7 @@ public protocol BaseConfiguration {
 }
 
 public struct iOSConfiguration: Codable, BaseConfiguration {
+    public var pbxproj: String
     public var targets: [String : Target]
     public var variants: [Variant]
 }

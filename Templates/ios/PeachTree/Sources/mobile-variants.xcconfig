@@ -1,4 +1,4 @@
-MV_VERSION_NAME = 1.0.0
-MV_APP_NAME = Peachy dev
 MV_BUNDLE_ID = com.peachtree.peachy.dev
+MV_APP_NAME = Peachy dev
 MV_VERSION_NUMBER = 1
+MV_VERSION_NAME = 1.0.0

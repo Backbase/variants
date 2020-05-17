@@ -72,12 +72,12 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         default:
             break
         }
-//        createVariants(for: variants)
         
         do {
-            try configuration.ios?.targets.forEach { (_, target) in
-                touchConfig(with: target, variants: variants)
-            }
+            try configuration.ios?.targets.map { (target: $0, pbx: configuration.ios?.pbxproj) }.forEach({ (result) in
+                touchConfig(with: result.target.value, variants: variants, pbxproj: result.pbx)
+//                touchConfig(with: target, variants: variants, pbxproj: pbxproj)
+            })
         } catch {}
     }
     
@@ -90,7 +90,7 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     }
     
     // MARK: - Revamp
-    private func touchConfig(with target: Target, variants: [Variant]?) {
+    private func touchConfig(with target: Target, variants: [Variant]?, pbxproj: String?) {
         do {
             log("Check if mobile-variants.xcconfig exist")
             
@@ -124,6 +124,12 @@ public class SetupDefault: Command, VerboseLogger, Setup {
             let infoPlistPath = Path("\(configPath)/\(infoPath)")
             
             updateInfoPlist(with: target, configFile: infoPlistPath, variants: variants)
+            
+            /*
+             * PBXPROJ
+             */
+            guard let pbxString = pbxproj else { return }
+            convertPBXToJSON("\(configPath)/\(pbxString)")
         } catch {}
     }
     
@@ -159,6 +165,13 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         } catch {
             print("Error \(error.localizedDescription)")
         }
+    }
+    
+    private func convertPBXToJSON(_ config: String) {
+        do {
+            print("Convert project.pbxproj to JSON")
+            try Task.run(bash: "plutil -convert json \(config)")
+        } catch {}
     }
     
     private func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
