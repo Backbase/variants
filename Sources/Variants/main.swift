@@ -8,15 +8,15 @@
 import SwiftCLI
 
 let cli = CLI(
-    name: "mobile-setup",
+    name: "variants",
     version: "0.1.0",
     description: "A command-line tool to setup deployment variants and full CI/CD pipelines"
 )
 
 cli.commands = [
+    Initializer(),
     SetupiOS(),
-    SetupAndroid(),
-    GenerateConfig()
+    SetupAndroid()
 ]
 
 cli.globalOptions.append(VerboseFlag)
