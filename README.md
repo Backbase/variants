@@ -93,13 +93,13 @@ ios:
 #### Using default configuration file (variants.yml)
 
 ```sh
-variants setup <platform>
+variants <platform>
 
 # Example:
 ## Create multiple variants for your iOS app, each using its own
 ## name, bundle-id, version, assets, backend environment, etc.
 
-variants setup ios
+variants ios
 ```
 
 It will generate a fully working fastlane setup for your platform (ios or android), edit your project in order to read default configs from variants (such as `app_name`, `bundle_id`, `icon`, `version_name` and `version_number`) and add code extensions so you can easily access your custom settings in code (i.e.: `server_base_url`, `a_service_api_key` etc )
@@ -111,13 +111,13 @@ It will generate a fully working fastlane setup for your platform (ios or androi
 #### Using a configuration file other than the default one
 
 ```sh
-variants setup <platform> [-s,--spec] <yml config path>
+variants <platform> [-s,--spec] <yml config path>
 
 # Example:
 ## Create multiple variants for your iOS app, each using its own
 ## name, bundle-id, version, assets, backend environment, etc.
 
-variants setup ios -s ./custom/path/variants.yml
+variants ios -s ./custom/path/variants.yml
 ```
 
 > NOTE: *variants setup* will automatically assign the first variant configuration to the project

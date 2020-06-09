@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PathKit
 
 extension String {
     func appendLine(to file: Path) throws {
