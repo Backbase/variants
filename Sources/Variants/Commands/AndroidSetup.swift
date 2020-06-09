@@ -9,7 +9,7 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-final class SetupAndroid: SetupDefault {
+final class AndroidSetup: SetupDefault {
     
     // --------------
     // MARK: Command information
@@ -26,18 +26,6 @@ final class SetupAndroid: SetupDefault {
     
     override func execute() throws {
         platform = .android
-        
-        log("--------------------------------------------", force: true)
-        log("Running: variants android", force: true)
-        log("--------------------------------------------\n", force: true)
-        
         try super.execute()
-    }
-    
-    override func createVariants(for variants: [Variant]?) {
-        log("Creating build flavour for variants:")
-        variants?.compactMap { $0 }.forEach {
-            log("→ \($0.name)\n", indentationLevel: 1, color: .android)
-        }
     }
 }

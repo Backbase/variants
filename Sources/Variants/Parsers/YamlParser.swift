@@ -25,23 +25,26 @@ extension YamlParser {
             let encodedYAML = try String(contentsOfFile: configurationPath, encoding: .utf8)
             let decoded: Configuration = try decoder.decode(Configuration.self, from: encodedYAML)
             
-            log("Loaded configuration:", force: true)
+            Logger.shared.logDebug("Loaded configuration", item: "")
+            var encoded = try encoder.encode(decoded)
             
             switch platform {
             case .ios:
-                try log("\n\(encoder.encode(decoded.ios))\n", color: .purple, force: true)
-                
+                encoded = try encoder.encode(decoded.ios)
             case .android:
-                try log("\n\(encoder.encode(decoded.android))\n", color: .purple, force: true)
-                
-            default:
-                try log("\n\(encoder.encode(decoded))\n", color: .purple, force: true)
+                encoded = try encoder.encode(decoded.android)
+            default: break
+            }
+            
+            let nsString = encoded as NSString
+            nsString.enumerateLines { (stringLine, _) in
+                Logger.shared.log(item: stringLine, indentationLevel: 1, color: .purple, logLevel: .verbose)
             }
             
             return decoded
             
         } catch {
-            log("Error reading configuration file \(configurationPath)")
+            Logger.shared.logError("❌: ", item: error.localizedDescription)
             throw CLI.Error(message: error.localizedDescription)
         }
     }
