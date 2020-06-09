@@ -1,11 +1,11 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 
 import PackageDescription
 
 let package = Package(
-    name: "MobileSetup",
+    name: "Variants",
     products: [
-        .executable(name: "mobile-setup", targets: ["MobileSetup"])
+        .executable(name: "variants", targets: ["Variants"])
     ],
     dependencies: [
         .package(
@@ -23,7 +23,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "MobileSetup",
+            name: "Variants",
             dependencies: [
                 "SwiftCLI",
                 "PathKit",
@@ -31,8 +31,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "MobileSetupTests",
-            dependencies: ["MobileSetup"]
+            name: "VariantsTests",
+            dependencies: ["Variants"]
         ),
     ]
 )
