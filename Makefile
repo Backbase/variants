@@ -14,24 +14,24 @@ TEMPLATES = $(wildcard $(templatesdir)/*)
 .DEFAULT_GOAL = all
 
 .PHONY: all
-all: mobile-setup
+all: variants
 
-mobile-setup: $(SOURCES)
+variants: $(SOURCES)
 	@swift build \
 		-c release \
 		--disable-sandbox \
 		--build-path "$(BUILDDIR)"
 
 .PHONY: install
-install: mobile-setup
+install: variants
 	@install -d "$(bindir)" "$(libdir)"
-	@install "$(BUILDDIR)/release/mobile-setup" "$(bindir)"
-	@mkdir -p "$(libdir)/mobile-setup/templates"
-	@cp "$(TEMPLATES)" "$(libdir)/mobile-setup/templates/"
+	@install "$(BUILDDIR)/release/variants" "$(bindir)"
+	@mkdir -p "$(libdir)/variants/templates"
+	@cp "$(TEMPLATES)" "$(libdir)/variants/templates/"
 
 .PHONY: uninstall
 uninstall:
-	@rm -rf "$(bindir)/mobile-setup"
+	@rm -rf "$(bindir)/variants"
 
 .PHONY: clean
 distclean:

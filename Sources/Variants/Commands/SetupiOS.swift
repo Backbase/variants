@@ -28,7 +28,7 @@ final class SetupiOS: SetupDefault {
         platform = .ios
         
         log("--------------------------------------------", force: true)
-        log("Running: mobile-setup ios", force: true)
+        log("Running: variants ios", force: true)
         log("--------------------------------------------\n", force: true)
         
         try super.execute()

@@ -28,7 +28,7 @@ final class SetupAndroid: SetupDefault {
         platform = .android
         
         log("--------------------------------------------", force: true)
-        log("Running: mobile-setup android", force: true)
+        log("Running: variants android", force: true)
         log("--------------------------------------------\n", force: true)
         
         try super.execute()
