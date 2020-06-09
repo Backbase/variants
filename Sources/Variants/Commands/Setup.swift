@@ -1,5 +1,5 @@
 //
-//  MobileSetup
+//  Variants
 //
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Arthur Alves
@@ -41,7 +41,7 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     // MARK: Configuration Properties
     
     @Key("-c", "--config", description: "Use a yaml configuration file")
-    var configuration: String
+    var configuration: String?
     
     @Flag("-f", "--include-fastlane", description: "Should setup fastlane")
     var includeFastlane: Bool
@@ -73,12 +73,9 @@ public class SetupDefault: Command, VerboseLogger, Setup {
             break
         }
         
-        do {
-            try configuration.ios?.targets.map { (target: $0, pbx: configuration.ios?.pbxproj) }.forEach({ (result) in
-                touchConfig(with: result.target.value, variants: variants, pbxproj: result.pbx)
-//                touchConfig(with: target, variants: variants, pbxproj: pbxproj)
-            })
-        } catch {}
+        configuration.ios?.targets.map { (target: $0, pbx: configuration.ios?.pbxproj) }.forEach({ (result) in
+            touchConfig(with: result.target.value, variants: variants, pbxproj: result.pbx)
+        })
     }
     
     private func setupFastlane(_ include: Bool) {
@@ -91,46 +88,44 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     
     // MARK: - Revamp
     private func touchConfig(with target: Target, variants: [Variant]?, pbxproj: String?) {
-        do {
-            log("Check if mobile-variants.xcconfig exist")
-            
-            guard let parentString = configuration else  { return }
-            let configPath = Path(parentString).absolute().parent()
-            
-            let configString = target.source.config
-            
-            let xcodeConfigFolder = Path("\(configPath)/\(configString)")
-            guard xcodeConfigFolder.isDirectory else {
-                log("Source isn't a folder or doesn't exist", indentationLevel: 1)
-                log("\(xcodeConfigFolder.absolute().description)")
-                return
-            }
+        log("Check if mobile-variants.xcconfig exist")
+        
+        guard let parentString = configuration else  { return }
+        let configPath = Path(parentString).absolute().parent()
+        
+        let configString = target.source.config
+        
+        let xcodeConfigFolder = Path("\(configPath)/\(configString)")
+        guard xcodeConfigFolder.isDirectory else {
+            log("Source isn't a folder or doesn't exist", indentationLevel: 1)
+            log("\(xcodeConfigFolder.absolute().description)")
+            return
+        }
 
-            let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/mobile-variants.xcconfig")
-            if !xcodeConfigPath.isFile {
-                log("mobile-variants.xcconfig already exist, cleaning up", indentationLevel: 1)
-            }
-            
-            write("", toFile: xcodeConfigPath, force: true)
-            log("Created file: 'mobile-variants.xcconfig' at \(xcodeConfigFolder.absolute().description)",
-                indentationLevel: 1)
-            
-            populateConfig(with: target, configFile: xcodeConfigPath, variants: variants)
-            
-            /*
-             * INFO.plist
-             */
-            let infoPath = target.source.info
-            let infoPlistPath = Path("\(configPath)/\(infoPath)")
-            
-            updateInfoPlist(with: target, configFile: infoPlistPath, variants: variants)
-            
-            /*
-             * PBXPROJ
-             */
-            guard let pbxString = pbxproj else { return }
-            convertPBXToJSON("\(configPath)/\(pbxString)")
-        } catch {}
+        let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/mobile-variants.xcconfig")
+        if !xcodeConfigPath.isFile {
+            log("mobile-variants.xcconfig already exist, cleaning up", indentationLevel: 1)
+        }
+        
+        write("", toFile: xcodeConfigPath, force: true)
+        log("Created file: 'mobile-variants.xcconfig' at \(xcodeConfigFolder.absolute().description)",
+            indentationLevel: 1)
+        
+        populateConfig(with: target, configFile: xcodeConfigPath, variants: variants)
+        
+        /*
+         * INFO.plist
+         */
+        let infoPath = target.source.info
+        let infoPlistPath = Path("\(configPath)/\(infoPath)")
+        
+        updateInfoPlist(with: target, configFile: infoPlistPath, variants: variants)
+        
+        /*
+         * PBXPROJ
+         */
+        guard let pbxString = pbxproj else { return }
+        convertPBXToJSON("\(configPath)/\(pbxString)")
     }
     
     private func populateConfig(with target: Target, configFile: Path, variants: [Variant]?) {

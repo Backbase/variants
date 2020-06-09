@@ -1,5 +1,5 @@
 //
-//  MobileSetup
+//  Variants
 //
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Arthur Alves
@@ -20,7 +20,7 @@ final class GenerateConfig: Command, VerboseLogger {
     // MARK: Command information
     
     let name: String = "init"
-    let shortDescription: String = "Generate project yml file that is used by MobileSetup and XcodeGen"
+    let shortDescription: String = "Generate specs file - variants.yml"
     
     // --------------
     // MARK: Configuration Properties
