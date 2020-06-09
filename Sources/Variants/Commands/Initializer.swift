@@ -9,13 +9,15 @@ import Foundation
 import PathKit
 import SwiftCLI
 
+typealias DoesFileExist = (exists: Bool, path: Path?)
+
 public enum Platform: String {
     case ios
     case android
     case unknown
 }
 
-final class GenerateConfig: Command, VerboseLogger {
+final class Initializer: Command, VerboseLogger {
     // --------------
     // MARK: Command information
     
@@ -30,7 +32,7 @@ final class GenerateConfig: Command, VerboseLogger {
     
     public func execute() throws {
         log("--------------------------------------------", force: true)
-        log("Running: mobile-setup init", force: true)
+        log("Running: variants init", force: true)
         
         guard
             let platformEnum = Platform(rawValue: platform)
@@ -39,17 +41,24 @@ final class GenerateConfig: Command, VerboseLogger {
             log("Error: Parameter not specified: -p | --platform = ios | android\n", color: .red)
             throw CLI.Error(message: "Missing parameter")
         }
+        
+        let result = doesTemplateExist()
+        guard result.exists, let path = result.path
+        else {
+            log("Error: Templates folder not found on '/usr/local/lib/coherent-swift/templates' or './Templates'", color: .red)
+            exit(1)
+        }
     
         log("Platform: \(platform)")
         log("--------------------------------------------", force: true)
         
         do {
-            try generateConfig(path: Path("/usr/local/lib/mobile-setup/templates"), platform: platformEnum)
+            try generateConfig(path: path, platform: platformEnum)
         } catch {
             log("Error: ", color: .red, force: true)
             throw CLI.Error(message: "Couldn't generate YAML config")
         }
-        log("Generated mobile-setup.yml\n", indentationLevel: 1, force: true)
+        log("Generated variants.yml\n", indentationLevel: 1, force: true)
         log("Edit the file above before continuing\n\n", color: .purple, force: true)
     }
     
@@ -57,6 +66,24 @@ final class GenerateConfig: Command, VerboseLogger {
         guard path.absolute().exists else {
             throw CLI.Error(message: "Couldn't find template path")
         }
-        try Task.run(bash: "cp \(path.absolute())/mobile-setup-\(platform.rawValue)-template.yml ./mobile-setup.yml", directory: nil)
+        try Task.run(bash: "cp \(path.absolute())/ios/variants-template.yml ./variants.yml", directory: nil)
+    }
+    
+    private func doesTemplateExist() -> DoesFileExist {
+        var path: Path?
+        var exists = true
+        
+        let libTemplates = Path("/usr/local/lib/variants/templates")
+        let localTemplates = Path("./Templates")
+        
+        if libTemplates.exists {
+            path = libTemplates
+        } else if localTemplates.exists {
+            path = localTemplates
+        } else {
+            exists = false
+        }
+        
+        return (exists: exists, path: path)
     }
 }
