@@ -16,6 +16,8 @@ public protocol Setup: YamlParser {
     var platform: Platform { get set }
     
     func decode(configuration: String) -> Configuration?
+    
+    var logger: Logger { get }
 }
 
 extension Setup {
@@ -35,18 +37,20 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     // MARK: Command information
     
     public var name: String = "setup"
-    public var shortDescription: String = "Default description"
+    public var shortDescription: String = "Setup variants with fastlane included"
     
     // --------------
     // MARK: Configuration Properties
     
-    @Key("-c", "--config", description: "Use a yaml configuration file")
+    @Key("-s", "--spec", description: "Use a different yaml configuration spec")
     var configuration: String?
     
-    @Flag("-f", "--include-fastlane", description: "Should setup fastlane")
-    var includeFastlane: Bool
+    @Flag("--skip-fastlane", description: "Skip fastlane setup")
+    var skipFastlane: Bool
     
     public var platform: Platform = .unknown
+    
+    var logger: Logger { Logger.shared }
     
     public func execute() throws {
         guard let configurationData = try loadConfiguration(configuration) else {
@@ -54,7 +58,7 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         }
         
         scanVariants(with: configurationData)
-        setupFastlane(includeFastlane)
+        setupFastlane(skipFastlane)
     }
     
     public func createVariants(for variants: [Variant]?) {}
@@ -78,11 +82,11 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         })
     }
     
-    private func setupFastlane(_ include: Bool) {
-        if include {
-            log("Setting up Fastlane", indentationLevel: 1)
-        } else {
+    private func setupFastlane(_ skip: Bool) {
+        if skip {
             log("Skipping Fastlane setup", indentationLevel: 1)
+        } else {
+            log("Setting up Fastlane", indentationLevel: 1)
         }
     }
     
@@ -188,7 +192,7 @@ public class SetupDefault: Command, VerboseLogger, Setup {
 extension SetupDefault {
     private func loadConfiguration(_ path: String?) throws -> Configuration? {
         guard let path = path else {
-            throw CLI.Error(message: "Error: Use '-c' to specify the configuration file")
+            throw CLI.Error(message: "Error: Use '-s' to specify the configuration file")
         }
         
         let configurationPath = Path(path)
@@ -198,36 +202,5 @@ extension SetupDefault {
         
         let configuration = decode(configuration: path)
         return configuration
-    }
-}
-
-
-extension String {
-    func appendLine(to file: Path) throws {
-        try (self + "\n").appendToURL(fileURL: file.url)
-    }
-    
-    func appendLineToURL(fileURL: URL) throws {
-        try (self + "\n").appendToURL(fileURL: fileURL)
-    }
-
-    func appendToURL(fileURL: URL) throws {
-        let data = self.data(using: String.Encoding.utf8)!
-        try data.append(fileURL: fileURL)
-    }
-}
-
-extension Data {
-    func append(fileURL: URL) throws {
-        if let fileHandle = FileHandle(forWritingAtPath: fileURL.path) {
-            defer {
-                fileHandle.closeFile()
-            }
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(self)
-        }
-        else {
-            try write(to: fileURL, options: .atomic)
-        }
     }
 }
