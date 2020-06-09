@@ -30,43 +30,32 @@ final class Initializer: Command, VerboseLogger {
     @Param(validation: Validation.allowing(Platform.ios.rawValue, Platform.android.rawValue))
     var platform: String
     
+    let logger = Logger.shared
+    
     public func execute() throws {
-        log("--------------------------------------------", force: true)
-        log("Running: variants init", force: true)
-        
-        guard
-            let platformEnum = Platform(rawValue: platform)
-        else {
-            log("--------------------------------------------", force: true)
-            log("Error: Parameter not specified: -p | --platform = ios | android\n", color: .red)
-            throw CLI.Error(message: "Missing parameter")
-        }
         
         let result = doesTemplateExist()
         guard result.exists, let path = result.path
         else {
-            log("Error: Templates folder not found on '/usr/local/lib/coherent-swift/templates' or './Templates'", color: .red)
+            logger.logError("❌: ",
+                            item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
             exit(1)
         }
     
-        log("Platform: \(platform)")
-        log("--------------------------------------------", force: true)
+        logger.logSection("$ ", item: "variants init \(platform)", color: .ios)
         
         do {
-            try generateConfig(path: path, platform: platformEnum)
+            try generateConfig(path: path, platform: Platform(rawValue: platform) ?? .unknown)
         } catch {
-            log("Error: ", color: .red, force: true)
-            throw CLI.Error(message: "Couldn't generate YAML config")
+            logger.logError("❌: ", item: error.localizedDescription)
         }
-        log("Generated variants.yml\n", indentationLevel: 1, force: true)
-        log("Edit the file above before continuing\n\n", color: .purple, force: true)
     }
     
     private func generateConfig(path: Path, platform: Platform) throws {
         guard path.absolute().exists else {
             throw CLI.Error(message: "Couldn't find template path")
         }
-        try Task.run(bash: "cp \(path.absolute())/ios/variants-template.yml ./variants.yml", directory: nil)
+        try Task.run(bash: "cp \(path.absolute())/\(platform.rawValue)/variants-template.yml ./variants.yml", directory: nil)
     }
     
     private func doesTemplateExist() -> DoesFileExist {
