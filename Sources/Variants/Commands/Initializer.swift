@@ -37,7 +37,7 @@ final class Initializer: Command, VerboseLogger {
         let result = doesTemplateExist()
         guard result.exists, let path = result.path
         else {
-            logger.logError("❌: ",
+            logger.logError("❌ ",
                             item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
             exit(1)
         }
@@ -47,7 +47,7 @@ final class Initializer: Command, VerboseLogger {
         do {
             try generateConfig(path: path, platform: Platform(rawValue: platform) ?? .unknown)
         } catch {
-            logger.logError("❌: ", item: error.localizedDescription)
+            logger.logError("❌ ", item: error.localizedDescription)
         }
     }
     

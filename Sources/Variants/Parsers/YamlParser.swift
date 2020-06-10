@@ -44,7 +44,7 @@ extension YamlParser {
             return decoded
             
         } catch {
-            Logger.shared.logError("❌: ", item: error.localizedDescription)
+            Logger.shared.logError("❌ ", item: error.localizedDescription)
             throw CLI.Error(message: error.localizedDescription)
         }
     }

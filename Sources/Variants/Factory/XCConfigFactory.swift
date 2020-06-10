@@ -47,18 +47,16 @@ struct XCConfigFactory {
         }
     }
     
-    func populateConfig(with target: Target, configFile: Path, variants: [Variant]?) {
-        guard let variant = variants?.first else {
-            Logger.shared.logError("❌: ", item: "Variants not specified", color: .red)
-            return
-        }
-        
+    func populateConfig(with target: Target, configFile: Path, variant: Variant) {
         Logger.shared.logDebug(item: "Populating .xcconfig")
         variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
-            Logger.shared.logDebug("Item: ", item: stringContent)
+            Logger.shared.logDebug("Item: ", item: stringContent, indentationLevel: 1, color: .purple)
             
-            let (success, file) = write(stringContent, toFile: configFile, force: false)
+            let (success, _) = write(stringContent, toFile: configFile, force: false)
+            if !success {
+                Logger.shared.logDebug("⚠️ ", item: "Failed to add item to .xcconfig", indentationLevel: 2)
+            }
         }
     }
     
@@ -69,7 +67,7 @@ struct XCConfigFactory {
             Logger.shared.logDebug(item: "Converting project.pbxproj to JSON")
             try Task.run(bash: "plutil -convert json \(config.absolute().description)")
         } catch {
-            Logger.shared.logError("❌: ", item: error.localizedDescription)
+            Logger.shared.logError("❌ ", item: error.localizedDescription)
         }
     }
 }
