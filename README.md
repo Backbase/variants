@@ -72,18 +72,17 @@ ios:
       source:
         path: Sources
         info: Sources/Info.plist
+        config: Sources
   variants:
     - name: default
       version_name: 1.0.0
       version_number: 1
     - name: dev
       bundle_id_suffix: dev
-      icon: DevelopmentIcon
       version_name: 0.0.1
       version_number: 1
     - name: test
       bundle_id_suffix: test
-      icon: TestIcon
       version_name: 0.1.0
       version_number: 1
 ```
