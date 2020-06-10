@@ -43,8 +43,7 @@ final class iOSSetup: SetupDefault {
         
         logger.logDebug(item: "Checking if mobile-variants.xcconfig exists")
         
-        guard let parentString = configuration else  { return }
-        let configPath = Path(parentString).absolute().parent()
+        let configPath = Path(defaultSpecs).absolute().parent()
         let configString = target.source.config
         
         let xcodeConfigFolder = Path("\(configPath)/\(configString)")
@@ -109,12 +108,12 @@ final class iOSSetup: SetupDefault {
              */
             try variant.getDefaultValues(for: target).filter { !$0.key.starts(with: "V_") }
                 .forEach { (key, _) in
-                    try? Task.run(bash: "plutil -remove \(key) \(configFile.absolute().description)")
+                    try? Task.run(bash: "plutil -remove '$(\(key))' \(configFile.absolute().description)")
                     try Task.run(bash: "plutil -insert '$(\(key))' -string '$(\(key))' \(configFile.absolute().description)")
             }
             
         } catch {
-            logger.logError("❌ ", item: error.localizedDescription)
+            logger.logError("❌ ", item: "Something went wrong while updating the Info.plist")
             exit(1)
         }
     }
