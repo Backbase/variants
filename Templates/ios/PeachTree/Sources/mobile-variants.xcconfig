@@ -1,4 +1,6 @@
-MV_VERSION_NUMBER = 1
-MV_APP_NAME = Peachy dev
-MV_BUNDLE_ID = com.peachtree.peachy.dev
-MV_VERSION_NAME = 1.0.0
+CONFIG_PATH = Assets/backbase/resources/config.json
+V_VERSION_NUMBER = 1
+OTHER_SWIFT_FLAGS = $(inherited)
+V_BUNDLE_ID = com.peachtree.peachy
+V_APP_NAME = Peachy
+V_VERSION_NAME = 0.0.1
