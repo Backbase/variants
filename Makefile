@@ -27,7 +27,7 @@ install: variants
 	@install -d "$(bindir)" "$(libdir)"
 	@install "$(BUILDDIR)/release/variants" "$(bindir)"
 	@mkdir -p "$(libdir)/variants/templates"
-	@cp "$(TEMPLATES)" "$(libdir)/variants/templates/"
+	@cp -R "$(TEMPLATES)" "$(libdir)/variants/templates/"
 
 .PHONY: uninstall
 uninstall:
