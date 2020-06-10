@@ -1,6 +1,5 @@
+V_APP_NAME = Peachy dev
 V_VERSION_NUMBER = 1
-CONFIG_PATH = Assets/backbase/resources/config.json
-OTHER_SWIFT_FLAGS = $(inherited)
-V_VERSION_NAME = 0.0.1
-V_BUNDLE_ID = com.peachtree.peachy
-V_APP_NAME = Peachy
+V_VERSION_NAME = 1.0.0
+V_BUNDLE_ID = com.peachtree.peachy.dev
+OTHER_SWIFT_FLAGS = $(inherited) -DDEBUG
