@@ -25,11 +25,6 @@ struct ConfigurationHelper: YamlParser {
     }
     
     func decode(configuration: String, platform: Platform) -> Configuration? {
-        do {
-            return try extractConfiguration(from: configuration, platform: platform)
-        } catch {
-            Logger.shared.logError("❌ ", item: error.localizedDescription)
-        }
-        return nil
+        return extractConfiguration(from: configuration, platform: platform)
     }
 }
