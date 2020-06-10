@@ -32,6 +32,7 @@ install: variants
 .PHONY: uninstall
 uninstall:
 	@rm -rf "$(bindir)/variants"
+	@rm -rf "$(libdir)/variants"
 
 .PHONY: clean
 distclean:
