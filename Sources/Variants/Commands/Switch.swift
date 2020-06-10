@@ -77,12 +77,12 @@ final class Switch: Command, VerboseLogger {
             let configPath = Path(defaultSpecs).absolute().parent()
             
             configuration.ios?
-                .targets.map { (target: $0, pbx: configuration.ios?.pbxproj) }
+                .targets.map { (target: $0, xcodeproj: configuration.ios?.xcodeproj) }
                 .forEach { result in
                     
                     factory.createConfig(with: result.target.value,
                                          variant: desiredVariant,
-                                         pbxproj: result.pbx,
+                                         xcodeProj: result.xcodeproj,
                                          configPath: configPath)
             }
 

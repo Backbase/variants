@@ -19,6 +19,11 @@ let package = Package(
         .package(
             url: "https://github.com/jpsim/Yams.git",
             from: "2.0.0"
+        ),
+        .package(
+            name: "XcodeProj",
+            url: "https://github.com/tuist/xcodeproj.git",
+            from: "7.11.1"
         )
     ],
     targets: [
@@ -27,7 +32,8 @@ let package = Package(
             dependencies: [
                 "SwiftCLI",
                 "PathKit",
-                "Yams"
+                "Yams",
+                "XcodeProj"
             ]
         ),
         .testTarget(
