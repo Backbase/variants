@@ -47,7 +47,7 @@ struct XCConfigFactory {
         }
     }
     
-    func createConfig(with target: Target, variant: Variant, pbxproj: String?, configPath: Path) {
+    func createConfig(with target: Target, variant: Variant, xcodeProj: String?, configPath: Path) {
         let logger = Logger.shared
         logger.logDebug(item: "Checking if mobile-variants.xcconfig exists")
         
@@ -76,6 +76,15 @@ struct XCConfigFactory {
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
         
         updateInfoPlist(with: target, configFile: infoPlistPath, variant: variant)
+        
+        let xcodeFactory = XcodeProjFactory()
+        xcodeFactory.modify(
+            [
+                "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
+                "PRODUCT_NAME": "$(V_APP_NAME)",
+            ],
+            in: Path(xcodeProj!),
+            target: target)
     }
     
     // MARK: - Convert method

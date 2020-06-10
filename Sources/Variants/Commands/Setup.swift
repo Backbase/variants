@@ -60,7 +60,7 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     }
     
     public func createVariants(for variants: [Variant]?) {}
-    public func createConfig(with target: Target, variants: [Variant]?, pbxproj: String?) {}
+    public func createConfig(with target: Target, variants: [Variant]?, xcodeProj: String?) {}
     
     // --------------
     // MARK: Private methods
@@ -69,10 +69,10 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         switch platform {
         case .ios:
             configuration.ios?.targets.map { (target: $0,
-                                              pbx: configuration.ios?.pbxproj) }.forEach { result in
+                                              xcodeproj: configuration.ios?.xcodeproj) }.forEach { result in
                 createConfig(with: result.target.value,
                              variants: configuration.ios?.variants,
-                             pbxproj: result.pbx)
+                             xcodeProj: result.xcodeproj)
             }
         case .android:
             break
