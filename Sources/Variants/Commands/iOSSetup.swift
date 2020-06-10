@@ -31,7 +31,7 @@ final class iOSSetup: SetupDefault {
         try super.execute()
     }
     
-    override func createConfig(with target: Target, variants: [Variant]?, pbxproj: String?) {
+    override func createConfig(with target: Target, variants: [Variant]?, xcodeProj: String?) {
         guard
             let variants = variants,
             !variants.isEmpty,
@@ -42,7 +42,7 @@ final class iOSSetup: SetupDefault {
         }
         
         let configPath = Path(defaultSpecs).absolute().parent()
-        factory.createConfig(with: target, variant: defaultVariant, pbxproj: pbxproj, configPath: configPath)
+        factory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
         
         /*
          * PBXPROJ
