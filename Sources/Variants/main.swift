@@ -16,7 +16,8 @@ let cli = CLI(
 cli.commands = [
     Initializer(),
     iOSSetup(),
-    AndroidSetup()
+    AndroidSetup(),
+    Switch()
 ]
 
 cli.globalOptions.append(VerboseFlag)

@@ -43,7 +43,8 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     // MARK: Configuration Properties
     
     @Key("-s", "--spec", description: "Use a different yaml configuration spec")
-    var configuration: String?
+    var specs: String?
+    var defaultSpecs: String = "variants.yml"
     
     @Flag("--skip-fastlane", description: "Skip fastlane setup")
     var skipFastlane: Bool
@@ -54,11 +55,12 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     public func execute() throws {
         logger.logSection("$ ", item: "variants \(platform)", color: .ios)
         
-        guard let configurationData = try loadConfiguration(configuration) else {
+        defaultSpecs = specs ?? defaultSpecs
+        guard let configuration = try loadConfiguration(defaultSpecs) else {
             throw CLI.Error(message: "Unable to proceed creating build variants")
         }
         
-        scanVariants(with: configurationData)
+        scanVariants(with: configuration)
         setupFastlane(skipFastlane)
     }
     
