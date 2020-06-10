@@ -25,7 +25,7 @@ extension Setup {
         do {
             return try extractConfiguration(from: configuration, platform: platform)
         } catch {
-            logger.logError("❌: ", item: error.localizedDescription)
+            logger.logError("❌ ", item: error.localizedDescription)
         }
         return nil
     }
