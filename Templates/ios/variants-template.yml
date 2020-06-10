@@ -22,14 +22,16 @@ ios:
       - name: default
         version_name: 0.0.1
         version_number: 1
-        # Sample variant, "beta".
-        # Only name and bundle_id_suffix are mandatory fields
-      - name: beta
-        bundle_id_suffix: beta
         # custom:
         # You can have as many custom fields as possible.
         # Only strings allowed
         # These will be available to you via `Variants.customConfig` dictionary
         # i.e.: `Variants.customConfig["sample_property"]`
         custom:
-            sample_property: hello there
+            OTHER_SWIFT_FLAGS: $(inherited)
+        # Sample variant, "beta".
+        # Only name and bundle_id_suffix are mandatory fields
+      - name: beta
+        bundle_id_suffix: beta
+        version_name: 0.0.1
+        version_number: 1

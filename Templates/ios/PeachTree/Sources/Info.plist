@@ -2,22 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>$(CONFIG_PATH)</key>
+	<string>$(CONFIG_PATH)</string>
+	<key>$(OTHER_SWIFT_FLAGS)</key>
+	<string>$(OTHER_SWIFT_FLAGS)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
-	<string>$(MV_APP_NAME)</string>
+	<string>$(V_APP_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(MV_BUNDLE_ID)</string>
+	<string>$(V_BUNDLE_ID)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(MV_APP_NAME)</string>
+	<string>$(V_APP_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MV_VERSION_NAME)</string>
+	<string>$(V_VERSION_NAME)</string>
 	<key>CFBundleVersion</key>
-	<string>$(MV_VERSION_NUMBER)</string>
+	<string>$(V_VERSION_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
