@@ -11,7 +11,7 @@ import SwiftCLI
 
 typealias DoesFileExist = (exists: Bool, path: Path?)
 
-public enum Platform: String {
+public enum Platform: String, ConvertibleFromString {
     case ios
     case android
     case unknown
