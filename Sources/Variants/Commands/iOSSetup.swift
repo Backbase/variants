@@ -32,6 +32,15 @@ final class iOSSetup: SetupDefault {
     }
     
     override func createConfig(with target: Target, variants: [Variant]?, pbxproj: String?) {
+        guard
+            let variants = variants,
+            !variants.isEmpty,
+            variants.first(where: { $0.name == "default" }) != nil
+        else {
+            logger.logError("❌ ", item: "Missing mandatory variant 'default'")
+            exit(1)
+        }
+        
         logger.logDebug(item: "Checking if mobile-variants.xcconfig exists")
         
         guard let parentString = configuration else  { return }
@@ -40,7 +49,7 @@ final class iOSSetup: SetupDefault {
         
         let xcodeConfigFolder = Path("\(configPath)/\(configString)")
         guard xcodeConfigFolder.isDirectory else {
-            logger.logError("❌: ", item: "'\(xcodeConfigFolder.absolute().description)' doesn't exist or isn't a folder")
+            logger.logError("❌ ", item: "'\(xcodeConfigFolder.absolute().description)' doesn't exist or isn't a folder")
             return
         }
 
@@ -49,10 +58,14 @@ final class iOSSetup: SetupDefault {
             logger.logDebug(item: "mobile-variants.xcconfig already exist. Cleaning up")
         }
         
-        factory.write("", toFile: xcodeConfigPath, force: true)
+        let _ = factory.write("", toFile: xcodeConfigPath, force: true)
         logger.logDebug(item: "Created file: 'mobile-variants.xcconfig' at \(xcodeConfigFolder.absolute().description)")
         
-        factory.populateConfig(with: target, configFile: xcodeConfigPath, variants: variants)
+        guard let variant = variants.first else {
+            Logger.shared.logError("❌ ", item: "Variants not specified")
+            return
+        }
+        factory.populateConfig(with: target, configFile: xcodeConfigPath, variant: variant)
         
         /*
          * INFO.plist
@@ -60,36 +73,48 @@ final class iOSSetup: SetupDefault {
         let infoPath = target.source.info
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
         
-        updateInfoPlist(with: target, configFile: infoPlistPath, variants: variants)
+        updateInfoPlist(with: target, configFile: infoPlistPath, variant: variant)
         
         /*
          * PBXPROJ
+         * TODO: Edit pbxproj to modify, if needed:
+         *      - ASSETCATALOG_COMPILER_APPICON_NAME
+         *      - PRODUCT_BUNDLE_IDENTIFIER
+         *      - PROVISIONING_PROFILE_SPECIFIER
          */
-        guard
-            let pbxString = pbxproj,
-            let pbxPath: Path = Path("\(configPath)/\(pbxString)"),
-            pbxPath.exists
-        else { return }
+        /*
+        guard let pbxString = pbxproj else { return }
+        let pbxPath = Path("\(configPath)/\(pbxString)")
         factory.convertPBXToJSON(pbxPath)
+        */
     }
     
     // MARK: - Private
     
-    private func updateInfoPlist(with target: Target, configFile: Path, variants: [Variant]?) {
+    private func updateInfoPlist(with target: Target, configFile: Path, variant: Variant) {
         
         do {
-            try Task.run(bash: "plutil -replace CFBundleVersion -string '$(MV_VERSION_NUMBER)' \(configFile.absolute().description)")
+            try Task.run(bash: "plutil -replace CFBundleVersion -string '$(V_VERSION_NUMBER)' \(configFile.absolute().description)")
             
-            try Task.run(bash: "plutil -replace CFBundleShortVersionString -string '$(MV_VERSION_NAME)' \(configFile.absolute().description)")
+            try Task.run(bash: "plutil -replace CFBundleShortVersionString -string '$(V_VERSION_NAME)' \(configFile.absolute().description)")
             
-            try Task.run(bash: "plutil -replace CFBundleName -string '$(MV_APP_NAME)' \(configFile.absolute().description)")
+            try Task.run(bash: "plutil -replace CFBundleName -string '$(V_APP_NAME)' \(configFile.absolute().description)")
             
-            try Task.run(bash: "plutil -replace CFBundleExecutable -string '$(MV_APP_NAME)' \(configFile.absolute().description)")
+            try Task.run(bash: "plutil -replace CFBundleExecutable -string '$(V_APP_NAME)' \(configFile.absolute().description)")
             
-            try Task.run(bash: "plutil -replace CFBundleIdentifier -string '$(MV_BUNDLE_ID)' \(configFile.absolute().description)")
+            try Task.run(bash: "plutil -replace CFBundleIdentifier -string '$(V_BUNDLE_ID)' \(configFile.absolute().description)")
+            
+            /*
+             * Add custom configs to Info.plist so that it is accessible through Variants.swift
+             */
+            try variant.getDefaultValues(for: target).filter { !$0.key.starts(with: "V_") }
+                .forEach { (key, _) in
+                    try? Task.run(bash: "plutil -remove \(key) \(configFile.absolute().description)")
+                    try Task.run(bash: "plutil -insert '$(\(key))' -string '$(\(key))' \(configFile.absolute().description)")
+            }
             
         } catch {
-            logger.logError("❌: ", item: error.localizedDescription)
+            logger.logError("❌ ", item: error.localizedDescription)
             exit(1)
         }
     }
