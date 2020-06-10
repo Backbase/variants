@@ -18,9 +18,13 @@ public protocol BaseConfiguration {
 }
 
 public struct iOSConfiguration: Codable, BaseConfiguration {
-    public var pbxproj: String
-    public var targets: [String : Target]
+    public var xcodeproj: String
+    public var targets: [String: Target]
     public var variants: [Variant]
+    
+    var pbxproj: String {
+        return xcodeproj+"/project.pbxproj"
+    }
 }
 
 public struct AndroidConfiguration: Codable, BaseConfiguration {
@@ -32,6 +36,12 @@ public struct Target: Codable {
     let name: String
     let bundleId: String
     let source: Source
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case bundleId = "bundle_id"
+        case source
+    }
 }
 
 public struct Source: Codable {
