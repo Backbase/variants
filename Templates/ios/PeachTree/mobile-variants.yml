@@ -1,5 +1,5 @@
 ios:
-  pbxproj: PeachTree.xcodeproj/project.pbxproj
+  xcodeproj: PeachTree.xcodeproj
   targets:
     PeachTree:
       name: Peachy

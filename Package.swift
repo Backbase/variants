@@ -21,8 +21,9 @@ let package = Package(
             from: "2.0.0"
         ),
         .package(
+            name: "XcodeProj",
             url: "https://github.com/tuist/xcodeproj.git",
-            .upToNextMajor(from: "7.11.1")
+            from: "7.11.1"
         )
     ],
     targets: [
@@ -31,7 +32,8 @@ let package = Package(
             dependencies: [
                 "SwiftCLI",
                 "PathKit",
-                "Yams"
+                "Yams",
+                "XcodeProj"
             ]
         ),
         .testTarget(
