@@ -22,12 +22,7 @@ public protocol Setup: YamlParser {
 
 extension Setup {
     public func decode(configuration: String) -> Configuration? {
-        do {
-            return try extractConfiguration(from: configuration, platform: platform)
-        } catch {
-            logger.logError("❌ ", item: error.localizedDescription)
-        }
-        return nil
+        return extractConfiguration(from: configuration, platform: platform)
     }
 }
 

@@ -11,13 +11,13 @@ import Yams
 
 public protocol YamlParser: VerboseLogger {
     var verbose: Bool { get }
-    func extractConfiguration(from configurationPath: String, platform: Platform?) throws -> Configuration
+    func extractConfiguration(from configurationPath: String, platform: Platform?) -> Configuration
 }
 
 extension YamlParser {
     public var verbose: Bool { VerboseFlag.value }
     
-    public func extractConfiguration(from configurationPath: String, platform: Platform? = .unknown) throws -> Configuration {
+    public func extractConfiguration(from configurationPath: String, platform: Platform? = .unknown) -> Configuration {
         let decoder = YAMLDecoder()
         let encoder = YAMLEncoder()
         
@@ -45,7 +45,7 @@ extension YamlParser {
             
         } catch {
             Logger.shared.logError("❌ ", item: error.localizedDescription)
-            throw CLI.Error(message: error.localizedDescription)
+            exit(1)
         }
     }
 }
