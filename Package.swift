@@ -19,6 +19,10 @@ let package = Package(
         .package(
             url: "https://github.com/jpsim/Yams.git",
             from: "2.0.0"
+        ),
+        .package(
+            url: "https://github.com/tuist/xcodeproj.git",
+            .upToNextMajor(from: "7.11.1")
         )
     ],
     targets: [
