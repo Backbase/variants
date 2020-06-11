@@ -9,8 +9,6 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-typealias DoesFileExist = (exists: Bool, path: Path?)
-
 public enum Platform: String, ConvertibleFromString {
     case ios
     case android
@@ -34,7 +32,7 @@ final class Initializer: Command, VerboseLogger {
     
     public func execute() throws {
         
-        let result = doesTemplateExist()
+        let result = XCConfigFactory().doesTemplateExist()
         guard result.exists, let path = result.path
         else {
             logger.logError("❌ ",
