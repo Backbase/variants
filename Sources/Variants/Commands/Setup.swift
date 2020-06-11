@@ -83,9 +83,9 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     
     private func setupFastlane(_ skip: Bool) {
         if skip {
-            logger.logDebug(item: "Skipping Fastlane setup")
+            logger.logInfo("Skiped Fastlane setup", item: "")
         } else {
-            logger.logDebug(item: "Setting up Fastlane")
+            logger.logInfo("Setting up Fastlane", item: "")
         }
     }
     
