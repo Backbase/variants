@@ -142,6 +142,7 @@ struct XCConfigFactory {
                 [
                     "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
                     "PRODUCT_NAME": "$(V_APP_NAME)",
+                    "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)",
                 ],
                 in: projectPath,
                 target: target.value)
