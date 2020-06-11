@@ -97,15 +97,6 @@ struct XCConfigFactory {
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
         
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
-        
-        let xcodeFactory = XcodeProjFactory()
-        xcodeFactory.modify(
-            [
-                "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
-                "PRODUCT_NAME": "$(V_APP_NAME)",
-            ],
-            in: xcodeProjPath,
-            target: target.value)
     }
     
     func doesTemplateExist() -> DoesFileExist {
@@ -146,6 +137,14 @@ struct XCConfigFactory {
             
             let xcodeFactory = XcodeProjFactory()
             xcodeFactory.add([xcConfigFile, variantsFile], toProject: projectPath, sourceRoot: sourceRoot, target: target)
+            
+            xcodeFactory.modify(
+                [
+                    "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
+                    "PRODUCT_NAME": "$(V_APP_NAME)",
+                ],
+                in: projectPath,
+                target: target.value)
             
         } catch {
             Logger.shared.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
