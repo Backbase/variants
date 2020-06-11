@@ -31,14 +31,14 @@ final class iOSSetup: SetupDefault {
         try super.execute()
     }
     
-    override func createConfig(with target: Target, variants: [Variant]?, xcodeProj: String?) {
+    override func createConfig(with target: NamedTarget, variants: [Variant]?, xcodeProj: String?) {
         guard
             let variants = variants,
             !variants.isEmpty,
             let defaultVariant = variants.first(where: { $0.name == "default" })
         else {
-            logger.logError("❌ ", item: "Missing mandatory variant 'default'")
-            exit(1)
+            logger.logFatal("❌ ", item: "Missing mandatory variant 'default'")
+            return
         }
         
         let configPath = Path(defaultSpecs).absolute().parent()
