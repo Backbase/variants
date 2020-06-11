@@ -2,9 +2,7 @@
 <img src="Assets/Examples/variants_logo.png" title="variants">
 </p>
 
-# Variants
-
-<p align="center">Variants is a command line tool to setup deployment variants and full CI/CD pipelines for mobile projects.</p>
+<p align="center">A command line tool to setup deployment variants and full CI/CD pipelines for mobile projects.</p>
 
 ## Features
 
