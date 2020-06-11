@@ -1,0 +1,16 @@
+
+coherentConfig = PROJECT_PARAMS[:coherent_config]
+
+desc 'Measure and report cohesion'
+lane :cohesion do
+  begin
+    executable = sh "which coherent-swift"
+    puts "Found 'coherent-swift' at: "+executable
+
+    sh "coherent-swift report -s #{coherentConfig}"
+  rescue
+    puts "Couldn't find 'coherent-swift', installing it."
+    sh "brew install arthurpalves/formulae/coherent-swift"
+    cohesion
+  end
+end
