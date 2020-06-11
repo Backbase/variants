@@ -93,15 +93,18 @@ ios:
         version_name: 0.0.1
         version_number: 1
         custom:
-            apiBaseUrl: https://sample.com/
+            - key: apiBaseUrl
+              value: https://sample.com/
       - name: BETA
         id_suffix: beta
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 13
         custom:
-            apiBaseUrl: https://sample-beta.com/
-            OTHER_SWIFT_FLAGS: $(inherited) -DBETA
+            - key: apiBaseUrl
+              value: https://sample-beta.com/
+            - key:  OTHER_SWIFT_FLAGS
+              value: $(inherited) -DBETA
             
 ```
 
