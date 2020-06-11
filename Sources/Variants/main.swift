@@ -9,7 +9,7 @@ import SwiftCLI
 
 let cli = CLI(
     name: "variants",
-    version: "0.1.0",
+    version: "0.0.1",
     description: "A command-line tool to setup deployment variants and full CI/CD pipelines"
 )
 
