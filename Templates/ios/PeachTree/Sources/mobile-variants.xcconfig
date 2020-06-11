@@ -1,5 +1,0 @@
-V_APP_NAME = Peachy dev
-V_VERSION_NUMBER = 1
-V_VERSION_NAME = 1.0.0
-V_BUNDLE_ID = com.peachtree.peachy.dev
-OTHER_SWIFT_FLAGS = $(inherited) -DDEBUG
