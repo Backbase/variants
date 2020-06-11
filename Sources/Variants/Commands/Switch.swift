@@ -30,38 +30,40 @@ final class Switch: Command, VerboseLogger {
     var defaultSpecs: String = "variants.yml"
     
     let logger = Logger.shared
-    let configurationHelper = ConfigurationHelper()
     
     public func execute() throws {
         logger.logSection("$ ", item: "variants switch \(platform) \(variant)", color: .ios)
-    
         defaultSpecs = specs ?? defaultSpecs
+    
         do {
+            let configurationHelper = ConfigurationHelper()
             guard let configuration = try configurationHelper
                 .loadConfiguration(defaultSpecs, platform: platform)
             else {
                 fail(with: "Unable to load specs '\(defaultSpecs)'")
                 return
             }
-            
-            var variantObj: Variant?
-            switch platform {
-            case .ios:
-                variantObj = configuration.ios?.variants.first(where: { $0.name == variant })
-            case .android:
-                variantObj = configuration.android?.variants.first(where: { $0.name == variant })
-            default:
-                break
-            }
-            
-            switchTo(variantObj, with: configuration)
-            
+            process(configuration)
+
         } catch {
-            fail(with: error.localizedDescription)
+            fail(with: "Unable to switch variants - Check your YAML spec")
         }
     }
     
     // MARK: - Private
+    
+    private func process(_ configuration: Configuration) {
+        var variantObj: Variant?
+        switch platform {
+        case .ios:
+            variantObj = configuration.ios?.variants.first(where: { $0.name == variant })
+        case .android:
+            variantObj = configuration.android?.variants.first(where: { $0.name == variant })
+        default:
+            break
+        }
+        switchTo(variantObj, with: configuration)
+    }
     
     private func switchTo(_ variant: Variant?, with configuration: Configuration) {
         guard let desiredVariant = variant

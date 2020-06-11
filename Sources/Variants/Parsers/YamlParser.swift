@@ -25,7 +25,7 @@ extension YamlParser {
             let encodedYAML = try String(contentsOfFile: configurationPath, encoding: .utf8)
             let decoded: Configuration = try decoder.decode(Configuration.self, from: encodedYAML)
             
-            Logger.shared.logInfo("Loaded configuration", item: "")
+            Logger.shared.logInfo("Loading configuration", item: "")
             var encoded = try encoder.encode(decoded)
             
             switch platform {

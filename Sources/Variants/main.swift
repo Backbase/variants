@@ -15,8 +15,7 @@ let cli = CLI(
 
 cli.commands = [
     Initializer(),
-    iOSSetup(),
-    AndroidSetup(),
+    Setup(),
     Switch()
 ]
 
