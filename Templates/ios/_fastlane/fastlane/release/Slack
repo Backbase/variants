@@ -1,0 +1,41 @@
+  
+
+  lane :slackit do |options|
+    if options[:env] &&
+      options[:build_number]
+
+      build_number = options[:build_number]
+      environment = "#{options[:env]}".upcase
+
+      success = true
+      if options[:failure]
+        success = false
+      end
+
+      url = "https://install.appcenter.ms/orgs/alm-advanzia/apps/Advanzia-iOS-#{environment}"
+      message = "Advanzia #{environment} Successfully Deployed - Run ID: #{build_number}"
+      if success == false
+          message = "Advanzia #{environment} Failed - Run ID: #{build_number}"
+          url = "https://github.com/backbase-alm-advanzia/advanzia-mobile-ios/actions/runs/#{build_number}"
+      end
+
+      slack(
+        slack_url: "https://hooks.slack.com/services/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",
+        message: message,
+        channel: "#ios-deployment",
+        success: success,
+        payload: {
+          "Build Date" => Time.new.to_s,
+        },
+        default_payloads: [:git_branch, :lane, :test_result, :last_git_commit],
+        attachment_properties: {
+          fields: [{
+            title: "Link",
+            value: url,
+            short: false
+          }]
+        }
+      )
+    end
+  end
+

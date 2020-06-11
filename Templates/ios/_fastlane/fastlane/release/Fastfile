@@ -1,0 +1,147 @@
+require File.expand_path('../project_params.rb', __dir__)
+require File.expand_path('../match_params.rb', __dir__)
+
+workspace = PROJECT_PARAMS[:workspace]
+app_scheme = PROJECT_PARAMS[:app_scheme]
+uitest_scheme = PROJECT_PARAMS[:uitest_scheme]
+test_devices = PROJECT_PARAMS[:test_devices]
+
+derived_data_path = PROJECT_PARAMS[:derived_data_path]
+reports_folder = PROJECT_PARAMS[:reports_folder]
+swiftlint_path = PROJECT_PARAMS[:swiftlint_path]
+
+xcconfig_folder = "./ragnarok-us-app/AppConfiguration/Variants/"
+
+MATCH_KEYCHAIN_NAME = MATCH_PARAMS[:MATCH_KEYCHAIN_NAME]
+MATCH_KEYCHAIN_PASSWORD = MATCH_PARAMS[:MATCH_KEYCHAIN_PASSWORD]
+
+github_run_id = ENV["GITHUB_RUN_ID"]
+
+import("release/Slack")
+
+# --- Deploy
+
+desc 'Run deploy'
+lane :deploy do |options|
+  if options[:env]
+    env = options[:env]
+    configuration = "Release"
+    xcconfig = xcconfig_folder+env+".xcconfig"
+
+    match_signing_config
+    build(xcconfig: xcconfig, configuration: configuration)
+    appcenter(xcconfig: xcconfig)
+    slackit(env: env, build_number: github_run_id)
+  else
+    puts "missing parameters, valid parameters `env` = 'dev' | 'prod' | 'qa'"
+  end
+end
+
+# --- BaaS Build
+
+desc "Build the project without packaging"
+private_lane :build do |options|
+
+  if options[:xcconfig] && options[:configuration]
+    xcconfig_path = options[:xcconfig]
+    configuration = options[:configuration]
+
+    build_ios_app(
+      workspace: workspace,
+      configuration: configuration,
+      xcconfig: xcconfig_path,
+      scheme: app_scheme,
+      silent: false,
+      clean: true,
+      codesigning_identity: 'iPhone Distribution: BACKBASE EUROPE B.V.',
+      export_options: {
+        method: "enterprise"
+      },
+      xcargs: '-allowProvisioningUpdates',
+      skip_profile_detection: true
+    )
+  else
+    puts "missing parameters, valid parameters `xcconfig` =  '/path/to/dev.xcconfig', `configuration` = Debug | Release"
+  end
+end
+
+# --- Match
+
+desc 'Match signing confifguration'
+lane :match_signing_config do
+  create_temporary_keychain
+  match(
+      keychain_name: MATCH_KEYCHAIN_NAME,
+      keychain_password: MATCH_KEYCHAIN_PASSWORD,
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
+      readonly: true,
+      verbose: true,
+      skip_docs: true
+  )
+end
+
+private_lane :appcenter do |options|
+  if options[:xcconfig]
+    xcconfig_path = options[:xcconfig]
+    destinations = "Public"
+    notify = true
+
+    # Retrieve app name, as found in AppCenter, from config
+    appcenter_app_name = get_xcconfig_value(
+      path: xcconfig_path,
+      name: 'BB_APPCENTER_APP_NAME'
+    )
+
+    # Make sure the app name has hyphens instead of whitespaces
+    appcenter_app_name = appcenter_app_name.gsub(" ", "-")
+
+    appcenter_upload(
+      owner_name: "alm-advanzia",
+      app_name: appcenter_app_name,
+      notify_testers: notify,
+      destinations: destinations
+    )
+  else
+    puts "missing parameters, valid parameters `xcconfig` =  '/path/to/dev.xcconfig'"
+  end
+end
+
+# --- KEYCHAIN
+
+desc "Create temporary keychain"
+private_lane :create_temporary_keychain do
+  create_keychain(
+    name: MATCH_KEYCHAIN_NAME,
+    password: MATCH_KEYCHAIN_PASSWORD,
+    default_keychain: true,
+    unlock: true,
+    timeout: 3600,
+    lock_when_sleeps: false
+  )
+end
+
+desc "Delete temporary keychain"
+private_lane :clean_keychain do
+  delete_keychain(
+    name: MATCH_KEYCHAIN_NAME
+  )
+end
+
+# --- Branches
+
+lane :master do
+  deploy(env: "prod")
+  clean_keychain
+end
+
+lane :develop do
+  # Temporarily deploy UAT instead of QA
+  deploy(env: "uat")
+  clean_keychain
+end
+
+lane :release do
+  deploy(env: "uat")
+  clean_keychain
+end
+

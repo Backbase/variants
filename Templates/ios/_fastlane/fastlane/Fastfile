@@ -1,0 +1,170 @@
+# frozen_string_literal: true
+
+require File.expand_path('project_params.rb', __dir__)
+require File.expand_path('versions.rb', __dir__)
+require File.expand_path('match_params.rb', __dir__)
+
+import('release/Fastfile')
+import('Cohesion')
+
+workspace = PROJECT_PARAMS[:workspace]
+app_scheme = PROJECT_PARAMS[:app_scheme]
+derived_data_path = PROJECT_PARAMS[:derived_data_path]
+reports_folder = PROJECT_PARAMS[:reports_folder]
+swiftlint_path = PROJECT_PARAMS[:swiftlint_path]
+test_devices = PROJECT_PARAMS[:test_devices]
+build_number = ENV["JENKINS_BUILD_NUMBER"]
+jenkins_job = ENV["JENKINS_JOB_URL"]
+uitest_scheme = PROJECT_PARAMS[:uitest_scheme]
+ui_test_destination = PROJECT_PARAMS[:ui_test_destination] 
+ui_test_reports_folder = PROJECT_PARAMS[:ui_test_reports_folder]
+ui_test_plan = PROJECT_PARAMS[:ui_test_plan]
+
+# --- Debug local run
+
+desc 'Run all fastlane commands that can run outside of a jenkins environment'
+lane :local_run do
+  prepare
+  tests
+  lint
+end
+
+# --- Preparation phase
+
+desc 'Prepares the environment for build / test'
+lane :prepare do |options|
+  defaults = {
+    derived_data_path: derived_data_path
+  }.freeze
+
+  options = defaults.merge(options)
+
+  # Temporarily disable update_fastlane due to
+  # https://github.com/fastlane/fastlane/issues/16127
+  # update_fastlane
+  setup_jenkins(options)
+  pods_update
+end
+
+# --- Cocoapod dependencies
+
+desc 'Update cocoapods and repo-art automatically if pod install fails'
+lane :pods_update do
+  cocoapods(use_bundle_exec: true, error_callback: lambda { |_result|
+    pod_repo_art_update
+    cocoapods(use_bundle_exec: true, repo_update: true)
+  })
+end
+
+desc 'Update all repo-art repositories'
+lane :pod_repo_art_update do
+  repos = sh 'pod repo-art | egrep \'^[a-zA-Z]\''
+  repos.split("\n").each { |repo| sh "pod repo-art update #{repo}" }
+end
+
+# --- Sonar checks
+
+desc 'Run a sonar scan using the configuration in sonar-project.properties'
+lane :sonar_report do |options|
+  branch_name = options[:branch_name] || ''
+  options.delete :branch
+
+  defaults = {
+    project_name: "ragnarok-ios #{branch_name}".strip,
+    project_key: "ragnarok-ios:#{branch_name}".strip,
+    project_version: get_version_number(target: app_scheme)
+  }.freeze
+
+  sonar(defaults.merge(options))
+end
+
+desc 'Run swiftlint on the entire codebase'
+lane :lint do |options|
+  defaults = {
+    config_file: swiftlint_path,
+    executable: './Pods/SwiftLint/swiftlint',
+    output_file: "#{reports_folder}/swiftlint.result.txt"
+  }.freeze
+
+  swiftlint(defaults.merge(options))
+end
+
+lane :coverage do |options|
+  defaults = {
+    scheme: app_scheme,
+    cobertura_xml: true,
+    input_format: "profdata",
+    build_directory: derived_data_path,
+  }.freeze
+
+  slather(defaults.merge(options))
+end
+
+desc 'Run a lizard scan on the project'
+lane :lizard_report do |options|
+  defaults = {
+    source_folder: 'Source',
+    language: 'swift',
+    export_type: 'xml',
+    report_file: "#{reports_folder}/lizard-report.xml",
+    executable: '/Users/jenkins/Library/Python/2.7/bin/lizard'
+  }.freeze
+
+  lizard(defaults.merge(options))
+end
+
+# --- Tests
+
+desc 'Run all tests'
+lane :tests do |options|
+  defaults = {
+    workspace: workspace,
+    scheme: app_scheme,
+    code_coverage: true,
+    devices: test_devices,
+    derived_data_path: derived_data_path,
+    output_directory: reports_folder
+  }.freeze
+
+  scan(defaults.merge(options))
+end
+
+# --- Tagging
+
+lane :update_tag do
+  add_git_tag(
+    tag: "build-#{get_build_number}"
+  )
+end
+
+lane :commit_build_and_tag do
+  git_commit(
+    path: '.',
+    message: "Bump build number to #{get_build_number}"
+  )
+  push_git_tags
+end
+
+# --- UI-Tests
+
+  desc 'Run UI Tests'
+  lane :ui_test do |options|
+  defaults = {
+    workspace: workspace,
+    scheme: uitest_scheme,
+    output_directory: ui_test_reports_folder,
+    destination: ui_test_destination,
+    testplan: ui_test_plan,
+    clean: true,
+    max_concurrent_simulators: 1,
+    disable_concurrent_testing: true,
+    result_bundle: true,
+    fail_build: false,
+    slack_url: "https://hooks.slack.com/services/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",
+    slack_channel: "#ui-tests",
+    slack_message: "Advanzia iOS UI tests complete.\nDevice: #{ENV["DEVICE"]}, iOS #{ENV["OS"]}.\nLink: https://github.com/backbase-alm-advanzia/advanzia-mobile-ios/actions/runs/#{ENV["GITHUB_RUN_ID"]}"
+  }.freeze
+
+  scan(defaults.merge(options))
+  xchtmlreport(result_bundle_path: "#{ui_test_reports_folder}/#{uitest_scheme}.xcresult")
+  end
