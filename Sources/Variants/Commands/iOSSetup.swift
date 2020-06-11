@@ -43,18 +43,5 @@ final class iOSSetup: SetupDefault {
         
         let configPath = Path(defaultSpecs).absolute().parent()
         factory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
-        
-        /*
-         * PBXPROJ
-         * TODO: Edit pbxproj to modify, if needed:
-         *      - ASSETCATALOG_COMPILER_APPICON_NAME
-         *      - PRODUCT_BUNDLE_IDENTIFIER
-         *      - PROVISIONING_PROFILE_SPECIFIER
-         */
-        /*
-        guard let pbxString = pbxproj else { return }
-        let pbxPath = Path("\(configPath)/\(pbxString)")
-        factory.convertPBXToJSON(pbxPath)
-        */
     }
 }
