@@ -10,32 +10,19 @@ import SwiftCLI
 import PathKit
 import Yams
 
-public protocol Setup: YamlParser {
-    var name: String { get }
-    var shortDescription: String { get }
-    var platform: Platform { get set }
-    
-    func decode(configuration: String) -> Configuration?
-    
-    var logger: Logger { get }
-}
-
-extension Setup {
-    public func decode(configuration: String) -> Configuration? {
-        return extractConfiguration(from: configuration, platform: platform)
-    }
-}
-
-public class SetupDefault: Command, VerboseLogger, Setup {
+public class Setup: Command, VerboseLogger {
     
     // --------------
     // MARK: Command information
     
     public var name: String = "setup"
-    public var shortDescription: String = "Setup variants with fastlane included"
+    public var shortDescription: String = "Setup deployment variants"
     
     // --------------
     // MARK: Configuration Properties
+    
+    @Param(validation: Validation.allowing(Platform.ios, Platform.android))
+    var platform: Platform
     
     @Key("-s", "--spec", description: "Use a different yaml configuration spec")
     var specs: String?
@@ -44,28 +31,32 @@ public class SetupDefault: Command, VerboseLogger, Setup {
     @Flag("--skip-fastlane", description: "Skip fastlane setup")
     var skipFastlane: Bool
     
-    public var platform: Platform = .unknown
-    public var logger: Logger { Logger.shared }
+    let logger = Logger.shared
     
     public func execute() throws {
         logger.logSection("$ ", item: "variants \(platform)", color: .ios)
         
         defaultSpecs = specs ?? defaultSpecs
-        guard let configuration = try loadConfiguration(defaultSpecs) else {
-            throw CLI.Error(message: "Unable to proceed creating build variants")
-        }
         
-        scanVariants(with: configuration)
-        setupFastlane(skipFastlane)
+        do {
+            let configurationHelper = ConfigurationHelper()
+            guard let configuration = try configurationHelper
+                .loadConfiguration(defaultSpecs, platform: platform)
+            else {
+                fail(with: "Unable to load specs '\(defaultSpecs)'")
+                return
+            }
+            
+            createVariants(with: configuration)
+            setupFastlane(skipFastlane)
+        } catch {
+            fail(with: "Sorry! Something is wrong with your YAML specs")
+        }
     }
     
-    public func createVariants(for variants: [Variant]?) {}
-    public func createConfig(with target: NamedTarget, variants: [Variant]?, xcodeProj: String?) {}
-    
-    // --------------
     // MARK: Private methods
     
-    private func scanVariants(with configuration: Configuration) {
+    private func createVariants(with configuration: Configuration) {
         switch platform {
         case .ios:
             configuration.ios?.targets.map { (key: $0.key,
@@ -81,6 +72,25 @@ public class SetupDefault: Command, VerboseLogger, Setup {
         }
     }
     
+    // MARK: - iOS
+    
+    private func createConfig(with target: NamedTarget, variants: [Variant]?, xcodeProj: String?) {
+        guard
+            let variants = variants,
+            !variants.isEmpty,
+            let defaultVariant = variants.first(where: { $0.name == "default" })
+        else {
+            fail(with: "Missing mandatory variant: 'default'")
+            return
+        }
+        
+        let configPath = Path(defaultSpecs).absolute().parent()
+        let factory = XCConfigFactory()
+        factory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
+    }
+    
+    // MARK: - Setup Fastlane
+    
     private func setupFastlane(_ skip: Bool) {
         if skip {
             logger.logInfo("Skiped Fastlane setup", item: "")
@@ -88,11 +98,9 @@ public class SetupDefault: Command, VerboseLogger, Setup {
             logger.logInfo("Setting up Fastlane", item: "")
         }
     }
-    
-    // MARK: - Revamp
 }
 
-extension SetupDefault {
+extension Setup {
     private func loadConfiguration(_ path: String?) throws -> Configuration? {
         guard let path = path else {
             throw CLI.Error(message: "Error: Use '-s' to specify the configuration file")
@@ -105,5 +113,11 @@ extension SetupDefault {
         
         let configuration = decode(configuration: path)
         return configuration
+    }
+}
+
+extension Setup: YamlParser {
+    private func decode(configuration: String) -> Configuration? {
+        return extractConfiguration(from: configuration, platform: platform)
     }
 }
