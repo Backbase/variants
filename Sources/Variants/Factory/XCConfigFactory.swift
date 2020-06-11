@@ -9,6 +9,8 @@ import Foundation
 import PathKit
 import SwiftCLI
 
+public typealias DoesFileExist = (exists: Bool, path: Path?)
+
 struct XCConfigFactory {
     func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
         do {
@@ -47,35 +49,54 @@ struct XCConfigFactory {
         }
     }
     
-    func createConfig(with target: Target, variant: Variant, xcodeProj: String?, configPath: Path) {
+    func createConfig(with target: NamedTarget,
+                      variant: Variant,
+                      xcodeProj: String?,
+                      configPath: Path,
+                      addToXcodeProj: Bool? = true) {
+        
         let logger = Logger.shared
-        logger.logDebug(item: "Checking if mobile-variants.xcconfig exists")
+        guard let xcodeProj = xcodeProj
+        else {
+            logger.logFatal("❌ ", item: "Attempting to create variants.xcconfig - Path to Xcode Project not found")
+            return
+        }
+        let xcodeProjPath = Path(xcodeProj)
         
-        let configString = target.source.config
+        let configString = target.value.source.config
         
+        logger.logInfo(item: "Checking if variants.xcconfig exists")
         let xcodeConfigFolder = Path("\(configPath)/\(configString)")
         guard xcodeConfigFolder.isDirectory else {
-            logger.logError("❌ ", item: "'\(xcodeConfigFolder.absolute().description)' doesn't exist or isn't a folder")
+            logger.logFatal("❌ ", item: "'\(xcodeConfigFolder.absolute().description)' doesn't exist or isn't a folder")
             return
         }
 
-        let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/mobile-variants.xcconfig")
-        if !xcodeConfigPath.isFile {
-            logger.logDebug(item: "mobile-variants.xcconfig already exist. Cleaning up")
+        let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/Variants/variants.xcconfig")
+        if !xcodeConfigPath.parent().isDirectory {
+            logger.logDebug(item: "Creating folder '\(xcodeConfigPath.parent().description)'")
+            try? Task.run("mkdir", xcodeConfigPath.parent().absolute().description)
         }
         
         let _ = write("", toFile: xcodeConfigPath, force: true)
-        logger.logDebug(item: "Created file: 'mobile-variants.xcconfig' at \(xcodeConfigFolder.absolute().description)")
+        logger.logDebug(item: "Created file: 'variants.xcconfig' at \(xcodeConfigPath.parent().absolute().description)")
         
-        populateConfig(with: target, configFile: xcodeConfigPath, variant: variant)
+        populateConfig(with: target.value, configFile: xcodeConfigPath, variant: variant)
+        
+        /*
+         * If template files should be added to Xcode Project
+         */
+        if addToXcodeProj ?? false {
+            addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target)
+        }
         
         /*
          * INFO.plist
          */
-        let infoPath = target.source.info
+        let infoPath = target.value.source.info
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
         
-        updateInfoPlist(with: target, configFile: infoPlistPath, variant: variant)
+        updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
         
         let xcodeFactory = XcodeProjFactory()
         xcodeFactory.modify(
@@ -83,11 +104,53 @@ struct XCConfigFactory {
                 "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
                 "PRODUCT_NAME": "$(V_APP_NAME)",
             ],
-            in: Path(xcodeProj!),
-            target: target)
+            in: xcodeProjPath,
+            target: target.value)
+    }
+    
+    func doesTemplateExist() -> DoesFileExist {
+        var path: Path?
+        var exists = true
+        
+        let libTemplates = Path("/usr/local/lib/variants/templates")
+        let localTemplates = Path("./Templates")
+        
+        if libTemplates.exists {
+            path = libTemplates
+        } else if localTemplates.exists {
+            path = localTemplates
+        } else {
+            exists = false
+        }
+        
+        return (exists: exists, path: path)
     }
     
     // MARK: - Convert method
+    
+    private func addToXcode(_ xcConfigFile: Path,
+                            toProject projectPath: Path,
+                            sourceRoot: Path,
+                            target: NamedTarget) {
+        let result = XCConfigFactory().doesTemplateExist()
+        let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
+        
+        guard result.exists, let path = result.path, path.exists
+        else {
+            Logger.shared.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
+            return
+        }
+        
+        do {
+            try Task.run(bash: "cp \(path.absolute())/ios/Variants.swift \(variantsFile.absolute().description)", directory: nil)
+            
+            let xcodeFactory = XcodeProjFactory()
+            xcodeFactory.add([xcConfigFile, variantsFile], toProject: projectPath, sourceRoot: sourceRoot, target: target)
+            
+        } catch {
+            Logger.shared.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
+        }
+    }
     
     private func populateConfig(with target: Target, configFile: Path, variant: Variant) {
         Logger.shared.logDebug(item: "Populating .xcconfig")
@@ -97,7 +160,7 @@ struct XCConfigFactory {
             
             let (success, _) = write(stringContent, toFile: configFile, force: false)
             if !success {
-                Logger.shared.logDebug("⚠️ ", item: "Failed to add item to .xcconfig", indentationLevel: 2)
+                Logger.shared.logDebug("⚠️  ", item: "Failed to add item to .xcconfig", indentationLevel: 2)
             }
         }
     }
@@ -106,13 +169,9 @@ struct XCConfigFactory {
         
         do {
             try Task.run(bash: "plutil -replace CFBundleVersion -string '$(V_VERSION_NUMBER)' \(configFile.absolute().description)")
-            
             try Task.run(bash: "plutil -replace CFBundleShortVersionString -string '$(V_VERSION_NAME)' \(configFile.absolute().description)")
-            
             try Task.run(bash: "plutil -replace CFBundleName -string '$(V_APP_NAME)' \(configFile.absolute().description)")
-            
             try Task.run(bash: "plutil -replace CFBundleExecutable -string '$(V_APP_NAME)' \(configFile.absolute().description)")
-            
             try Task.run(bash: "plutil -replace CFBundleIdentifier -string '$(V_BUNDLE_ID)' \(configFile.absolute().description)")
             
             /*
@@ -125,8 +184,7 @@ struct XCConfigFactory {
             }
             
         } catch {
-            Logger.shared.logError("❌ ", item: "Something went wrong while updating the Info.plist")
-            exit(1)
+            Logger.shared.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
         }
     }
 }
