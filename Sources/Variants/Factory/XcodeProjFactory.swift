@@ -10,9 +10,65 @@ import XcodeProj
 import PathKit
 
 struct XcodeProjFactory {
-    func modify(_ keyValue: [String: String], in projectPath: Path, target: Target) {
+    func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: NamedTarget) {
+        let variantsGroupPath = Path("\(projectPath)/Variants")
+        
         do {
+            let project = try XcodeProj(path: projectPath)
+            guard let pbxTarget = project.pbxproj.targets(named: target.key).first
+            else {
+                Logger.shared.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
+                return
+            }
+        
+            let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
+            try rootGroup?.addGroup(named: variantsGroupPath.lastComponent)
+            let variantsGroup = rootGroup?.group(named: variantsGroupPath.lastComponent)
             
+            try files.forEach { file in
+                let fileRef = try variantsGroup?.addFile(at: file,
+                                                         sourceTree: .group,
+                                                         sourceRoot: sourceRoot,
+                                                         validatePresence: true)
+                
+                let fileElement = PBXFileElement(sourceTree: .group, path: file.description, name: file.lastComponent)
+                let buildFile = PBXBuildFile(file: fileElement)
+                let sourceBuildPhase = try pbxTarget.sourcesBuildPhase()
+                sourceBuildPhase?.files?.append(buildFile)
+                
+                /*
+                 * If .xcconfig, set baseConfigurationReference to it
+                 */
+                if file.lastComponent.contains(".xcconfig"), let fileReference = fileRef {
+                    changeBaseConfig(fileReference, in: project, target: target)
+                }
+            }
+            try project.write(path: projectPath)
+        } catch {
+            dump(error)
+            Logger.shared.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)'")
+        }
+    }
+    
+    func changeBaseConfig(_ fileReference: PBXFileReference, in xcodeProject: XcodeProj, target: NamedTarget, autoSave: Bool = false) {
+        do {
+            for conf in xcodeProject.pbxproj.buildConfigurations {
+                if
+                    let infoList = conf.buildSettings["INFOPLIST_FILE"] as? String,
+                    infoList == target.value.source.info {
+                    print("Changing: \(conf.baseConfiguration) = \(fileReference)")
+                    conf.baseConfiguration = fileReference
+                }
+            }
+            if autoSave { try project.write(path: projectPath) }
+            Logger.shared.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.key)'", color: .green)
+        } catch {
+            Logger.shared.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.key)'")
+        }
+    }
+    
+    func modify(_ keyValue: [String: String], in projectPath: Path, target: Target, silent: Bool = false) {
+        do {
             let project = try XcodeProj(path: projectPath)
             Logger.shared.logInfo("Updating: ", item: projectPath)
             for conf in project.pbxproj.buildConfigurations {
@@ -27,11 +83,12 @@ struct XcodeProjFactory {
                 }
             }
             try project.write(path: projectPath)
-            Logger.shared.logInfo("🚀 ", item: "Xcode Project modified with success", color: .green)
+            if !silent {
+                Logger.shared.logInfo("🚀 ", item: "Xcode Project modified with success", color: .green)
+            }
             
         } catch {
-            Logger.shared.logError("❌ ", item: "Unable to edit project '\(projectPath)'")
-            exit(1)
+            Logger.shared.logFatal("❌ ", item: "Unable to edit Xcode project '\(projectPath)'")
         }
     }
 }
