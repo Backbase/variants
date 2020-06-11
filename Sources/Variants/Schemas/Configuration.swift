@@ -32,6 +32,7 @@ public struct AndroidConfiguration: Codable, BaseConfiguration {
     public var variants: [Variant]
 }
 
+public typealias NamedTarget = (key: String, value: Target)
 public struct Target: Codable {
     let name: String
     let bundleId: String

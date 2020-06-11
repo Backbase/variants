@@ -31,30 +31,17 @@ final class iOSSetup: SetupDefault {
         try super.execute()
     }
     
-    override func createConfig(with target: Target, variants: [Variant]?, xcodeProj: String?) {
+    override func createConfig(with target: NamedTarget, variants: [Variant]?, xcodeProj: String?) {
         guard
             let variants = variants,
             !variants.isEmpty,
             let defaultVariant = variants.first(where: { $0.name == "default" })
         else {
-            logger.logError("❌ ", item: "Missing mandatory variant 'default'")
-            exit(1)
+            logger.logFatal("❌ ", item: "Missing mandatory variant 'default'")
+            return
         }
         
         let configPath = Path(defaultSpecs).absolute().parent()
         factory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
-        
-        /*
-         * PBXPROJ
-         * TODO: Edit pbxproj to modify, if needed:
-         *      - ASSETCATALOG_COMPILER_APPICON_NAME
-         *      - PRODUCT_BUNDLE_IDENTIFIER
-         *      - PROVISIONING_PROFILE_SPECIFIER
-         */
-        /*
-        guard let pbxString = pbxproj else { return }
-        let pbxPath = Path("\(configPath)/\(pbxString)")
-        factory.convertPBXToJSON(pbxPath)
-        */
     }
 }
