@@ -129,13 +129,4 @@ struct XCConfigFactory {
             exit(1)
         }
     }
-    
-    private func convertPBXToJSON(_ config: Path) {
-        do {
-            Logger.shared.logDebug(item: "Converting project.pbxproj to JSON")
-            try Task.run(bash: "plutil -convert json \(config.absolute().description)")
-        } catch {
-            Logger.shared.logError("❌ ", item: error.localizedDescription)
-        }
-    }
 }
