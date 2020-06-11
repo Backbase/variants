@@ -25,8 +25,8 @@ final class Initializer: Command, VerboseLogger {
     // --------------
     // MARK: Configuration Properties
     
-    @Param(validation: Validation.allowing(Platform.ios.rawValue, Platform.android.rawValue))
-    var platform: String
+    @Param(validation: Validation.allowing(Platform.ios, Platform.android))
+    var platform: Platform
     
     let logger = Logger.shared
     
@@ -42,7 +42,8 @@ final class Initializer: Command, VerboseLogger {
         logger.logSection("$ ", item: "variants init \(platform)", color: .ios)
         
         do {
-            try generateConfig(path: path, platform: Platform(rawValue: platform) ?? .unknown)
+            try generateConfig(path: path, platform: platform)
+            Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
         } catch {
             logger.logError("❌ ", item: error.localizedDescription)
         }
