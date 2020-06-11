@@ -10,7 +10,6 @@ import SwiftCLI
 
 extension Command {
     func fail(with message: String) {
-        Logger.shared.logError("❌ ", item: message)
-        exit(1)
+        Logger.shared.logFatal("❌ ", item: message)
     }
 }
