@@ -26,6 +26,32 @@
         - Deploy to AppCenter / PlayStore / AppStore
         - Many more!
 
+## Installation
+
+### Homebrew (recommended)
+
+```sh
+brew install backbase/m/variants
+```
+
+### Make
+
+```sh
+git clone https://github.com/backbase/variants.git
+cd variants
+make install
+```
+
+### Swift Package Manager
+
+#### Use as CLI
+
+```sh
+git clone https://github.com/backbase/variants.git
+cd variants
+swift run coherent-swift
+```
+
 ## Usage
 
 ```sh
