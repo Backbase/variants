@@ -40,7 +40,7 @@ struct XcodeProjFactory {
                  * If .xcconfig, set baseConfigurationReference to it
                  */
                 if file.lastComponent.contains(".xcconfig"), let fileReference = fileRef {
-                    changeBaseConfig(fileReference, in: project, target: target)
+                    changeBaseConfig(fileReference, in: project, path: projectPath, target: target)
                 }
             }
             try project.write(path: projectPath)
@@ -50,17 +50,16 @@ struct XcodeProjFactory {
         }
     }
     
-    func changeBaseConfig(_ fileReference: PBXFileReference, in xcodeProject: XcodeProj, target: NamedTarget, autoSave: Bool = false) {
+    func changeBaseConfig(_ fileReference: PBXFileReference, in xcodeProject: XcodeProj, path: Path, target: NamedTarget, autoSave: Bool = false) {
         do {
             for conf in xcodeProject.pbxproj.buildConfigurations {
                 if
                     let infoList = conf.buildSettings["INFOPLIST_FILE"] as? String,
                     infoList == target.value.source.info {
-                    print("Changing: \(conf.baseConfiguration) = \(fileReference)")
                     conf.baseConfiguration = fileReference
                 }
             }
-            if autoSave { try project.write(path: projectPath) }
+            if autoSave { try xcodeProject.write(path: path) }
             Logger.shared.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.key)'", color: .green)
         } catch {
             Logger.shared.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.key)'")

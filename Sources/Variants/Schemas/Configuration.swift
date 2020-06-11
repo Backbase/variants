@@ -36,10 +36,12 @@ public typealias NamedTarget = (key: String, value: Target)
 public struct Target: Codable {
     let name: String
     let bundleId: String
+    let app_icon: String
     let source: Source
     
     enum CodingKeys: String, CodingKey {
         case name
+        case app_icon
         case bundleId = "bundle_id"
         case source
     }

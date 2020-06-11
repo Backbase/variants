@@ -13,7 +13,7 @@ ios:
       {{ PROJECT }}:
         name: {{ PROJECT }}
         bundle_id: {{ BUNDLE_ID }}
-        icon: AppIcon
+        app_icon: AppIcon
         source:
           path: {{ SOURCE }}
           info: {{ SOURCE }}/Info.plist
@@ -27,12 +27,14 @@ ios:
         # You can have as many custom fields as possible.
         # Only strings allowed
         # These will be available to you via `Variants.customConfig` dictionary
-        # i.e.: `Variants.customConfig["sample_property"]`
+        # i.e.: `Variants.configuration["sample_property"]`
         custom:
             OTHER_SWIFT_FLAGS: $(inherited)
         # Sample variant, "beta".
         # Only name and bundle_id_suffix are mandatory fields
       - name: BETA
         id_suffix: beta
+        # If app_icon isn't specified, the value fallbacks to target.app_icon
+        app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 1

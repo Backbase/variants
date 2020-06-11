@@ -9,6 +9,7 @@ import Foundation
 
 public struct Variant: Codable {
     let name: String
+    let app_icon: String?
     let id_suffix: String?
     let version_name: String
     let version_number: Int
@@ -19,7 +20,8 @@ public struct Variant: Codable {
             "V_APP_NAME": target.name+configName,
             "V_BUNDLE_ID": target.bundleId+configIdSuffix,
             "V_VERSION_NAME": version_name,
-            "V_VERSION_NUMBER": String(version_number)
+            "V_VERSION_NUMBER": String(version_number),
+            "V_APP_ICON": app_icon ?? target.app_icon
         ]
        
         custom?.forEach({ (key, value) in
