@@ -11,7 +11,7 @@ import SwiftCLI
 public class Logger: VerboseLogger {
     static let shared = Logger()
     
-    func logFatal(_ prefix: Any = "", item: Any, color: ShellColor = .red) {
+    func logFatal(_ prefix: Any = "❌ ", item: Any, color: ShellColor = .red) {
         logError(prefix, item: item, color: color)
         exit(1)
     }
