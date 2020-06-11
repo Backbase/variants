@@ -35,9 +35,8 @@ final class Initializer: Command, VerboseLogger {
         let result = XCConfigFactory().doesTemplateExist()
         guard result.exists, let path = result.path
         else {
-            logger.logError("❌ ",
-                            item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
-            exit(1)
+            logger.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
+            return
         }
     
         logger.logSection("$ ", item: "variants init \(platform)", color: .ios)

@@ -16,7 +16,7 @@ public class Setup: Command, VerboseLogger {
     // MARK: Command information
     
     public var name: String = "setup"
-    public var shortDescription: String = "Setup deployment variants"
+    public var shortDescription: String = "Setup deployment variants (alongside Fastlane)"
     
     // --------------
     // MARK: Configuration Properties
@@ -34,7 +34,7 @@ public class Setup: Command, VerboseLogger {
     let logger = Logger.shared
     
     public func execute() throws {
-        logger.logSection("$ ", item: "variants \(platform)", color: .ios)
+        logger.logSection("$ ", item: "variants setup \(platform)", color: .ios)
         
         defaultSpecs = specs ?? defaultSpecs
         

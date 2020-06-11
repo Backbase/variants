@@ -13,7 +13,7 @@ public struct Variant: Codable {
     let id_suffix: String?
     let version_name: String
     let version_number: Int
-    let custom: [String: String]?
+    let custom: [CustomConfig]?
     
     func getDefaultValues(for target: Target) -> [String: String] {
         var customDictionary: [String: String] = [
@@ -24,8 +24,8 @@ public struct Variant: Codable {
             "V_APP_ICON": app_icon ?? target.app_icon
         ]
        
-        custom?.forEach({ (key, value) in
-            customDictionary["\(key.uppercased())"] = value
+        custom?.forEach({ config in
+            customDictionary[config.key] = config.value
         })
         
         return customDictionary
@@ -50,21 +50,7 @@ public struct Variant: Codable {
     }
 }
 
-public struct Environment: Codable {
-    let env: String
-    let cxp: CXP
-    let identity: Identity
-}
-
-public struct CXP: Codable {
-    let serverURL: String
-    let experience: String?
-    let version: String?
-    let navigationType: String?
-}
-
-public struct Identity: Codable {
-    let baseURL: String
-    let realm: String?
-    let clientId: String?
+public struct CustomConfig: Codable {
+    let key: String
+    let value: String
 }
