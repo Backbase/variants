@@ -12,6 +12,9 @@ import SwiftCLI
 public typealias DoesFileExist = (exists: Bool, path: Path?)
 
 struct XCConfigFactory {
+    
+    let xcconfigFileName: String = "variants.xcconfig"
+    
     func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
         do {
             if force {
@@ -58,28 +61,28 @@ struct XCConfigFactory {
         let logger = Logger.shared
         guard let xcodeProj = xcodeProj
         else {
-            logger.logFatal("❌ ", item: "Attempting to create variants.xcconfig - Path to Xcode Project not found")
+            logger.logFatal("❌ ", item: "Attempting to create \(xcconfigFileName) - Path to Xcode Project not found")
             return
         }
         let xcodeProjPath = Path(xcodeProj)
         
         let configString = target.value.source.config
         
-        logger.logInfo(item: "Checking if variants.xcconfig exists")
+        logger.logInfo("Checking if \(xcconfigFileName) exists", item: "")
         let xcodeConfigFolder = Path("\(configPath)/\(configString)")
         guard xcodeConfigFolder.isDirectory else {
             logger.logFatal("❌ ", item: "'\(xcodeConfigFolder.absolute().description)' doesn't exist or isn't a folder")
             return
         }
 
-        let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/Variants/variants.xcconfig")
+        let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/Variants/\(xcconfigFileName)")
         if !xcodeConfigPath.parent().isDirectory {
-            logger.logDebug(item: "Creating folder '\(xcodeConfigPath.parent().description)'")
+            logger.logInfo("Creating folder: ", item: "'\(xcodeConfigPath.parent().description)'")
             try? Task.run("mkdir", xcodeConfigPath.parent().absolute().description)
         }
         
         let _ = write("", toFile: xcodeConfigPath, force: true)
-        logger.logDebug(item: "Created file: 'variants.xcconfig' at \(xcodeConfigPath.parent().absolute().description)")
+        logger.logInfo("Created file: ", item: "'\(xcconfigFileName)' at \(xcodeConfigPath.parent().abbreviate().description)")
         
         populateConfig(with: target.value, configFile: xcodeConfigPath, variant: variant)
         
@@ -153,7 +156,7 @@ struct XCConfigFactory {
     }
     
     private func populateConfig(with target: Target, configFile: Path, variant: Variant) {
-        Logger.shared.logDebug(item: "Populating .xcconfig")
+        Logger.shared.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
         variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
             Logger.shared.logDebug("Item: ", item: stringContent, indentationLevel: 1, color: .purple)
@@ -179,7 +182,7 @@ struct XCConfigFactory {
              */
             try variant.getDefaultValues(for: target).filter { !$0.key.starts(with: "V_") }
                 .forEach { (key, _) in
-                    try? Task.run(bash: "plutil -remove '$(\(key))' \(configFile.absolute().description)")
+                    let _ = try? Task.capture("plutil", "-remove", "'$(\(key))'", configFile.absolute().description)
                     try Task.run(bash: "plutil -insert '$(\(key))' -string '$(\(key))' \(configFile.absolute().description)")
             }
             
