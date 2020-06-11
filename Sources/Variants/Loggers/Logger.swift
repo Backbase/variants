@@ -11,10 +11,15 @@ import SwiftCLI
 public class Logger: VerboseLogger {
     static let shared = Logger()
     
+    func logFatal(_ prefix: Any = "❌ ", item: Any, color: ShellColor = .red) {
+        logError(prefix, item: item, color: color)
+        exit(1)
+    }
+    
     func logError(_ prefix: Any = "", item: Any, color: ShellColor = .red) {
-        log(item: "--------------------------------------------------------------------------------------", logLevel: .error)
+        divider(logLevel: .error)
         log(prefix, item: item, color: color, logLevel: .error)
-        log(item: "--------------------------------------------------------------------------------------", logLevel: .error)
+        divider(logLevel: .error)
     }
     
     func logInfo(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral) {
@@ -26,8 +31,14 @@ public class Logger: VerboseLogger {
     }
     
     func logSection(_ prefix: Any = "", item: Any, color: ShellColor = .neutral) {
-        log(item: "--------------------------------------------------------------------------------------", logLevel: .info)
+        divider(logLevel: .info)
         log(prefix, item: item, color: color, logLevel: .info)
-        log(item: "--------------------------------------------------------------------------------------", logLevel: .info)
+        divider(logLevel: .info)
+    }
+    
+    // MARK: - Private
+    
+    private func divider(logLevel: LogLevel) {
+        log(item: "--------------------------------------------------------------------------------------", logLevel: logLevel)
     }
 }
