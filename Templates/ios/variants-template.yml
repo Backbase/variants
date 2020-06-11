@@ -25,7 +25,8 @@ ios:
         # These will be available to you via `Variants.customConfig` dictionary
         # i.e.: `Variants.configuration["sample_property"]`
         custom:
-            OTHER_SWIFT_FLAGS: $(inherited)
+            - key: OTHER_SWIFT_FLAGS
+              value: $(inherited)
         # Sample variant, "beta".
         # Only name and bundle_id_suffix are mandatory fields
       - name: BETA

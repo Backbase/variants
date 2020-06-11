@@ -170,23 +170,25 @@ struct XCConfigFactory {
     
     private func updateInfoPlist(with target: Target, configFile: Path, variant: Variant) {
         
+        let configFilePath = configFile.absolute().description
         do {
-            try Task.run(bash: "plutil -replace CFBundleVersion -string '$(V_VERSION_NUMBER)' \(configFile.absolute().description)")
-            try Task.run(bash: "plutil -replace CFBundleShortVersionString -string '$(V_VERSION_NAME)' \(configFile.absolute().description)")
-            try Task.run(bash: "plutil -replace CFBundleName -string '$(V_APP_NAME)' \(configFile.absolute().description)")
-            try Task.run(bash: "plutil -replace CFBundleExecutable -string '$(V_APP_NAME)' \(configFile.absolute().description)")
-            try Task.run(bash: "plutil -replace CFBundleIdentifier -string '$(V_BUNDLE_ID)' \(configFile.absolute().description)")
+            try Task.run(bash: "plutil -replace CFBundleVersion -string '$(V_VERSION_NUMBER)' \(configFilePath)")
+            try Task.run(bash: "plutil -replace CFBundleShortVersionString -string '$(V_VERSION_NAME)' \(configFilePath)")
+            try Task.run(bash: "plutil -replace CFBundleName -string '$(V_APP_NAME)' \(configFilePath)")
+            try Task.run(bash: "plutil -replace CFBundleExecutable -string '$(V_APP_NAME)' \(configFilePath)")
+            try Task.run(bash: "plutil -replace CFBundleIdentifier -string '$(V_BUNDLE_ID)' \(configFilePath)")
             
             /*
              * Add custom configs to Info.plist so that it is accessible through Variants.swift
              */
             try variant.getDefaultValues(for: target).filter { !$0.key.starts(with: "V_") }
                 .forEach { (key, _) in
-                    let _ = try? Task.capture("plutil", "-remove", "'$(\(key))'", configFile.absolute().description)
-                    try Task.run(bash: "plutil -insert '$(\(key))' -string '$(\(key))' \(configFile.absolute().description)")
+                    try? Task.run(bash: "plutil -remove '$(\(key))' \(configFilePath)")
+                    try Task.run(bash: "plutil -insert '$(\(key))' -string '$(\(key))' \(configFilePath)")
             }
             
         } catch {
+            Logger.shared.logDebug(item: (error as NSError).debugDescription)
             Logger.shared.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
         }
     }
