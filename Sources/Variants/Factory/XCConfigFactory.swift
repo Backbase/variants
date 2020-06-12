@@ -183,8 +183,8 @@ struct XCConfigFactory {
              */
             try variant.getDefaultValues(for: target).filter { !$0.key.starts(with: "V_") }
                 .forEach { (key, _) in
-                    try? Task.run(bash: "plutil -remove '$(\(key))' \(configFilePath)")
-                    try Task.run(bash: "plutil -insert '$(\(key))' -string '$(\(key))' \(configFilePath)")
+                    try? Task.run(bash: "plutil -remove '\(key)' \(configFilePath)")
+                    try Task.run(bash: "plutil -insert '\(key)' -string '$(\(key))' \(configFilePath)")
             }
             
         } catch {
