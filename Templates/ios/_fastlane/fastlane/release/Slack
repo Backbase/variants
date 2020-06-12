@@ -1,6 +1,6 @@
   
-
-  lane :slackit do |options|
+desc 'Send deployment message to a Slack channel'
+lane :slackit do |options|
     if options[:env] &&
       options[:build_number]
 
@@ -37,5 +37,5 @@
         }
       )
     end
-  end
+end
 

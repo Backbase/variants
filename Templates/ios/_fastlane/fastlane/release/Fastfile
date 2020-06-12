@@ -1,5 +1,6 @@
 require File.expand_path('../project_params.rb', __dir__)
 require File.expand_path('../match_params.rb', __dir__)
+require File.expand_path('../env_params.rb', __dir__)
 
 workspace = PROJECT_PARAMS[:workspace]
 app_scheme = PROJECT_PARAMS[:app_scheme]
@@ -14,6 +15,7 @@ xcconfig_folder = "./ragnarok-us-app/AppConfiguration/Variants/"
 
 MATCH_KEYCHAIN_NAME = MATCH_PARAMS[:MATCH_KEYCHAIN_NAME]
 MATCH_KEYCHAIN_PASSWORD = MATCH_PARAMS[:MATCH_KEYCHAIN_PASSWORD]
+MATCH_GIT_BASIC_AUTHORIZATION = MATCH_PARAMS[:MATCH_GIT_BASIC_AUTHORIZATION]
 
 github_run_id = ENV["GITHUB_RUN_ID"]
 
@@ -65,21 +67,6 @@ private_lane :build do |options|
   end
 end
 
-# --- Match
-
-desc 'Match signing confifguration'
-lane :match_signing_config do
-  create_temporary_keychain
-  match(
-      keychain_name: MATCH_KEYCHAIN_NAME,
-      keychain_password: MATCH_KEYCHAIN_PASSWORD,
-      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
-      readonly: true,
-      verbose: true,
-      skip_docs: true
-  )
-end
-
 private_lane :appcenter do |options|
   if options[:xcconfig]
     xcconfig_path = options[:xcconfig]
@@ -106,42 +93,17 @@ private_lane :appcenter do |options|
   end
 end
 
-# --- KEYCHAIN
-
-desc "Create temporary keychain"
-private_lane :create_temporary_keychain do
-  create_keychain(
-    name: MATCH_KEYCHAIN_NAME,
-    password: MATCH_KEYCHAIN_PASSWORD,
-    default_keychain: true,
-    unlock: true,
-    timeout: 3600,
-    lock_when_sleeps: false
-  )
-end
-
-desc "Delete temporary keychain"
-private_lane :clean_keychain do
-  delete_keychain(
-    name: MATCH_KEYCHAIN_NAME
-  )
-end
-
 # --- Branches
 
 lane :master do
   deploy(env: "prod")
-  clean_keychain
 end
 
 lane :develop do
   # Temporarily deploy UAT instead of QA
   deploy(env: "uat")
-  clean_keychain
 end
 
 lane :release do
   deploy(env: "uat")
-  clean_keychain
 end
-

@@ -1,0 +1,41 @@
+
+MATCH_KEYCHAIN_NAME = MATCH_PARAMS[:MATCH_KEYCHAIN_NAME]
+MATCH_KEYCHAIN_PASSWORD = MATCH_PARAMS[:MATCH_KEYCHAIN_PASSWORD]
+MATCH_GIT_BASIC_AUTHORIZATION = MATCH_PARAMS[:MATCH_GIT_BASIC_AUTHORIZATION]
+
+# --- MATCH
+
+desc 'Match signing confifguration'
+lane :match_signing_config do
+  match(
+      keychain_name: MATCH_KEYCHAIN_NAME,
+      keychain_password: MATCH_KEYCHAIN_PASSWORD,
+      git_basic_authorization: MATCH_GIT_BASIC_AUTHORIZATION,
+      readonly: true,
+      verbose: true,
+      skip_docs: true
+  )
+end
+
+# --- KEYCHAIN
+
+desc "Create temporary keychain"
+private_lane :create_temporary_keychain do
+  create_keychain(
+    name: MATCH_KEYCHAIN_NAME,
+    password: MATCH_KEYCHAIN_PASSWORD,
+    default_keychain: true,
+    unlock: true,
+    timeout: 3600,
+    lock_when_sleeps: false
+  )
+end
+
+desc "Delete temporary keychain"
+private_lane :remove_keychain do
+  delete_keychain(
+    name: MATCH_KEYCHAIN_NAME
+  )
+end
+
+
