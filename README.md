@@ -51,7 +51,7 @@ make install
 ```sh
 git clone https://github.com/backbase/variants.git
 cd variants
-swift run coherent-swift
+swift run variants
 ```
 
 ## Usage
