@@ -1,8 +1,10 @@
 <p align="center">
-<img src="Assets/Examples/variants_logo.png" title="variants">
+<img src="Assets/Examples/variants_logo_small.png" title="variants">
 </p>
 
-<p align="center">A command line tool to setup deployment variants and full CI/CD pipelines for mobile projects.</p>
+## Variants
+
+A command line tool to setup deployment variants and full CI/CD pipelines for mobile projects.
 
 ## Features
 
