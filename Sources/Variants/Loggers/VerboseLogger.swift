@@ -5,10 +5,9 @@
 //  Created by Arthur Alves
 //
 
-import SwiftCLI
 import Foundation
 
-let VerboseFlag = Flag("-v", "--verbose", description: "Log tech details for nerds")
+//let VerboseFlag = Flag("-v", "--verbose", description: "Log tech details for nerds")
 
 public enum ShellColor: String {
     case blue = "\\033[0;34m"
@@ -47,7 +46,8 @@ extension Date {
 }
 
 extension VerboseLogger {
-    public var verbose: Bool { VerboseFlag.value }
+    #warning("Temporary, remove")
+    public var verbose: Bool { return true }
     
     public func log(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none) {
         if logLevel == .verbose {
@@ -63,7 +63,7 @@ extension VerboseLogger {
             "\(color.rawValue)\(item)\(ShellColor.neutral.rawValue)"
         ]
         arguments.forEach { command.append($0) }
-        try? Task.run("printf", command+"\n")
+        try? Bash("printf", arguments: command+"\n").run()
     }
     
     public func logBack(_ prefix: Any = "", item: Any, indentationLevel: Int = 0) -> String {

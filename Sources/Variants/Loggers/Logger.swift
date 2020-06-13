@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftCLI
 
 public class Logger: VerboseLogger {
     static let shared = Logger()

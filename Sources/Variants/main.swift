@@ -5,20 +5,19 @@
 //  Created by Arthur Alves
 //
 
-import SwiftCLI
+import ArgumentParser
 
-let cli = CLI(
-    name: "variants",
-    version: "0.0.1",
-    description: "A command-line tool to setup deployment variants and full CI/CD pipelines"
-)
+struct Variants: ParsableCommand {
+    static var configuration = CommandConfiguration(
+        commandName: "variants",
+        abstract: "A command-line tool to setup deployment variants and full CI/CD pipelines",
+        version: "0.1.0",
+        subcommands: [
+            Initializer.self,
+            Setup.self,
+            Switch.self
+        ]
+    )
+}
 
-cli.commands = [
-    Initializer(),
-    Setup(),
-    Switch()
-]
-
-cli.globalOptions.append(VerboseFlag)
-
-_ = cli.go()
+Variants.main(["init", "--platform", "ios"])

@@ -6,47 +6,41 @@
 //
 
 import Foundation
-import SwiftCLI
+import ArgumentParser
 import PathKit
 
-final class Switch: Command, VerboseLogger {
-    // --------------
-    // MARK: Command information
-    
-    let name: String = "switch"
-    let shortDescription: String = "Switch variants"
+struct Switch: ParsableCommand, VerboseLogger {
+    static var configuration = CommandConfiguration(
+        commandName: "switch",
+        abstract: "Switch variants"
+    )
     
     // --------------
     // MARK: Configuration Properties
     
-    @Param(validation: Validation.allowing(Platform.ios, Platform.android))
+    @Option()
     var platform: Platform
     
-    @Param
+    @Argument()
     var variant: String
     
-    @Key("-s", "--spec", description: "Use a different yaml configuration spec")
-    var specs: String?
-    var defaultSpecs: String = "variants.yml"
+    @Option(name: .shortAndLong, default: "variants.yml", help: "Use a different yaml configuration spec")
+    var spec: String
     
-    let logger = Logger.shared
-    
-    public func execute() throws {
-        logger.logSection("$ ", item: "variants switch \(platform) \(variant)", color: .ios)
-        defaultSpecs = specs ?? defaultSpecs
+    mutating func run() throws {
+        Logger.shared.logSection("$ ", item: "variants switch \(platform) \(variant)", color: .ios)
     
         do {
             let configurationHelper = ConfigurationHelper()
             guard let configuration = try configurationHelper
-                .loadConfiguration(defaultSpecs, platform: platform)
+                .loadConfiguration(spec, platform: platform)
             else {
-                fail(with: "Unable to load specs '\(defaultSpecs)'")
-                return
+                throw RuntimeError("Unable to load specs '\(spec)'")
             }
             process(configuration)
 
         } catch {
-            fail(with: "Unable to switch variants - Check your YAML spec")
+            throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
     }
     
@@ -62,21 +56,20 @@ final class Switch: Command, VerboseLogger {
         default:
             break
         }
-        switchTo(variantObj, with: configuration)
+        
+        try? switchTo(variantObj, with: configuration)
     }
     
-    private func switchTo(_ variant: Variant?, with configuration: Configuration) {
-        guard let desiredVariant = variant
-        else {
-            fail(with: "Variant \(self.variant) not found.")
-            return
+    private func switchTo(_ variant: Variant?, with configuration: Configuration) throws {
+        guard let desiredVariant = variant else {
+            throw ValidationError("Variant \(self.variant) not found.")
         }
-        logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+        Logger.shared.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
         
         switch platform {
         case .ios:
             let factory = XCConfigFactory()
-            let configPath = Path(defaultSpecs).absolute().parent()
+            let configPath = Path(spec).absolute().parent()
             
             configuration.ios?
                 .targets.map { (key: $0.key, value: $0.value)}

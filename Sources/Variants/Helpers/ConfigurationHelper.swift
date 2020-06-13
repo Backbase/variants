@@ -6,18 +6,18 @@
 //
 
 import Foundation
-import SwiftCLI
+import ArgumentParser
 import PathKit
 
 struct ConfigurationHelper: YamlParser {
     func loadConfiguration(_ path: String?, platform: Platform) throws -> Configuration? {
         guard let path = path else {
-            throw CLI.Error(message: "Error: Use '-s' to specify the configuration file")
+            throw ValidationError("Error: Use '-s' to specify the configuration file")
         }
         
         let configurationPath = Path(path)
         guard !configurationPath.isDirectory else {
-            throw CLI.Error(message: "Error: \(configurationPath) is a directory path")
+            throw ValidationError("Error: \(configurationPath) is a directory path")
         }
         
         let configuration = decode(configuration: path, platform: platform)
