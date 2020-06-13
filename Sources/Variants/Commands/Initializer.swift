@@ -14,18 +14,12 @@ struct Initializer: ParsableCommand, VerboseLogger {
         commandName: "init",
         abstract: "Generate spec file - variants.yml"
     )
-
-    // --------------
-    // MARK: Configuration Properties
     
     @Option()
     var platform: Platform
     
     mutating func run() throws {
-        
-        let result = XCConfigFactory().doesTemplateExist()
-        guard result.exists, let path = result.path
-        else {
+        guard let path = firstTemplateDirectory() else {
             throw RuntimeError("❌ Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
         }
     
@@ -39,29 +33,21 @@ struct Initializer: ParsableCommand, VerboseLogger {
         }
     }
     
+    // MARK: - Private
+    
     private func generateConfig(path: Path, platform: Platform) throws {
-        guard path.absolute().exists else {
-            throw RuntimeError("Couldn't find template path")
-        }
-        
         try Bash("cp", arguments: "\(path.absolute())/\(platform.rawValue)/variants-template.yml", "./variants.yml").run()
     }
     
-    private func doesTemplateExist() -> DoesFileExist {
-        var path: Path?
-        var exists = true
-        
-        let libTemplates = Path("/usr/local/lib/variants/templates")
-        let localTemplates = Path("./Templates")
-        
-        if libTemplates.exists {
-            path = libTemplates
-        } else if localTemplates.exists {
-            path = localTemplates
-        } else {
-            exists = false
-        }
-        
-        return (exists: exists, path: path)
+    private func firstTemplateDirectory() -> Path? {
+        templateDirectories
+            .map(Path.init(stringLiteral:))
+            .first(where: \.exists)
     }
+    
+    // TODO: Maybe extract template directory logic?
+    private var templateDirectories: [String] = [
+        "/usr/local/lib/variants/templates",
+        "./Templates"
+    ]
 }
