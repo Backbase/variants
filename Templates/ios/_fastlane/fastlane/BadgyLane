@@ -1,0 +1,28 @@
+# --- Badgy
+#
+# Adds badge overlay to AppIcon, replacing the entire set
+#
+# Example:
+#   fastlane badgy name:'BETA' app_icon:'./Sources/Assets.xcassets/AppIcon.appiconasset' color:'#FFD700' tint-color:'#FFF'
+#
+
+desc 'switch variants'
+lane :badgy do |options|
+    color = options[:color] || '#FFD700'
+    tintColor = options[:tint_color] || '#8B7500'
+    appIcon = options[:app_icon] || PROJECT_PARAMS[:APP_ICON_ASSET_PATH]
+    angle = options[:angle] || '15'
+    position = options[:position] || 'bottom'
+    
+    if options[:name]
+        name = options[:name]
+        begin
+            sh "`which badgy` long #{name} #{appIcon} --position #{position} --angle #{angle} --color '#{color}' --tint-color '#{tintColor}' --replace"
+        rescue
+            UI.user_error!("'badgy' not installed or something went wrong")
+        end
+    else
+        puts "Accepted parameters - 'name', 'color', 'tint_color', 'app_icon', 'angle', 'position'"
+        UI.user_error!("Missing parameter `name` - Badge name as string")
+    end
+end

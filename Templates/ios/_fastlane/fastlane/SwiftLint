@@ -1,22 +1,21 @@
-REPORTS_FOLDER = PROJECT_PARAMS[:REPORTS_FOLDER]
+SWIFTLINT_PATH = PROJECT_PARAMS[:SWIFTLINT_PATH]
+
+# --- SwiftLint
 
 desc 'run swiftlint on the entire codebase'
 lane :run_swiftlint do |options|
-    if options[:config_path]
-        begin
-            executable = sh "which swiftlint"
-            puts "Found 'swiftlint' at: "+executable
-            defaults = {
-                config_file: swiftlint_path,
-                executable: executable,
-                output_file: "#{REPORTS_FOLDER}/swiftlint.result"
-            }.freeze
+    begin
+        executable = sh "which swiftlint|tr -d '\n'"
+        puts "Found 'swiftlint' at: "+executable
+        defaults = {
+            config_file: SWIFTLINT_PATH,
+            executable: executable,
+            path: "../#{APP_SCHEME}/**/*",
+            output_file: "#{REPORTS_FOLDER}/swiftlint.result"
+        }.freeze
 
-            swiftlint(defaults.merge(options))
-        rescue
-          puts "Skipping step - Couldn't find 'swiftlint'"
-        end
-    else
-        puts "'run_lint' - ':config_path' not specified"
+        swiftlint(defaults.merge(options))
+    rescue
+      puts "Skipping step - Couldn't find 'swiftlint'"
     end
 end
