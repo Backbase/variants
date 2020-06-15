@@ -83,7 +83,7 @@ struct XcodeProjFactory {
             }
             try project.write(path: projectPath)
             if !silent {
-                Logger.shared.logInfo("🚀 ", item: "Xcode Project modified with success", color: .green)
+                Logger.shared.logInfo("⚙️  ", item: "Xcode Project modified with success", color: .green)
             }
             
         } catch {
