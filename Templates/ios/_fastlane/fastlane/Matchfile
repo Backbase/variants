@@ -6,6 +6,6 @@ storage_mode("git")
 type("appstore")
 
 app_identifier([
-    "com.backbase.bundle_id",
-    "com.backbase.bundle_id.beta"
+    "com.backbase.sample.bundle_id",
+    "com.backbase.sample.bundle_id.beta"
 ])

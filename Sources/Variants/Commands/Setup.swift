@@ -93,9 +93,37 @@ public class Setup: Command, VerboseLogger {
     
     private func setupFastlane(_ skip: Bool) {
         if skip {
-            logger.logInfo("Skiped Fastlane setup", item: "")
+            logger.logInfo("Skipped Fastlane setup", item: "")
         } else {
             logger.logInfo("Setting up Fastlane", item: "")
+            
+            let result = XCConfigFactory().doesTemplateExist()
+            guard result.exists, let path = result.path else { return }
+            do {
+                try Task.run(bash: "cp -R \(path.absolute())/\(platform)/_fastlane/* .", directory: nil)
+                Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
+                
+                let setupCompleteMessage = """
+
+                                            Your setup is complete, congratulations! 🎉
+                                            
+                                            However, you still need to provide some parameters in order for fastlane to run correctly.
+                                            
+                                            ⚠️  Check the files in 'fastlane/parameters/', change the parameters accordingly, provide environment variables when applicable.
+                                            ⚠️  If you use Cocoapods-art, enable it in 'fastlane/Cocoapods'
+                                            ⚠️  Change your signing configuration in 'fastlane/Match' and potentially 'fastlane/Deploy'
+
+                                            That is all.
+                                            """
+                
+                Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
+                setupCompleteMessage.enumerateLines { (line, _) in
+                    Logger.shared.logInfo("", item: line, color: .yellow)
+                }
+                
+            } catch {
+                fail(with: "Could not setup Fastlane - Not found in '\(path.abbreviate())'")
+            }
         }
     }
 }

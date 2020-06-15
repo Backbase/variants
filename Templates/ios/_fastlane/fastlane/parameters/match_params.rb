@@ -10,5 +10,8 @@ MATCH_PARAMS = {
   MATCH_GIT_BASIC_AUTHORIZATION: ENV['MATCH_GIT_BASIC_AUTHORIZATION'],
   
   # Match repository password, used to decrypt files
-  MATCH_PASSWORD: ENV['MATCH_PASSWORD']
+  MATCH_PASSWORD: ENV['MATCH_PASSWORD'],
+  
+  CODE_SIGNING_IDENTITY: 'iPhone Distribution: BACKBASE EUROPE B.V.',
+  EXPORT_METHOD: 'enterprise'
 }.freeze

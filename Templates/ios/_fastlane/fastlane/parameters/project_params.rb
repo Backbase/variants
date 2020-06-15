@@ -1,17 +1,13 @@
 
-
 PROJECT_PARAMS = {
-  app_scheme: 'ragnarok-us-app',
-  test_scheme: 'ragnarok-us-app',
-  uitest_scheme: 'ragnarok-us-app-ui-tests',
-  derived_data_path: '.derivedData',
-  ui_test_reports_folder: './ui-test-results',
-  swiftlint_path: './.swiftlint.yml',
-  test_devices: ['iPhone 11'],
-  ui_test_destination: "platform=iOS Simulator,name=#{ENV["DEVICE"]},OS=#{ENV["OS"]}",
-  ui_test_plan: 'Regression',
-  workspace: 'ragnarok-app.xcworkspace',
-  
-  REPORTS_FOLDER: './reports',
-  COHERENT_SPEC: '../coherent-swift.yml'
+    # MUST CHANGE
+    APP_ICON_SET_PATH: "../SamplePath/Assets.xcassets/AppIcon.appiconset",
+    XCCONFIG_PATH: "../SamplePath/Variants/variants.xcconfig",
+    
+    COHERENT_SPEC: '../coherent-swift.yml',
+    VARIANTS_SPEC: '../variants.yml',
+    SWIFTLINT_PATH: 'swiftlint.yml',
+    DERIVED_DATA_PATH: '.derivedData',
+    REPORTS_FOLDER: './reports',
+    TEST_DEVICES: ['iPhone 11']
 }.freeze
