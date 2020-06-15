@@ -1,0 +1,41 @@
+require File.expand_path('parameters/uitest_params.rb', __dir__)
+
+TEST_DEVICES            = PROJECT_PARAMS[:TEST_DEVICES]
+
+UITEST_SCHEME           = UITEST_PARAMS[:UITEST_SCHEME]
+UITEST_REPORTS_FOLDER   = UITEST_PARAMS[:UITEST_REPORTS_FOLDER]
+UITEST_DESTINATION      = UITEST_PARAMS[:UITEST_DESTINATION]
+
+# --- Tests
+
+desc 'run all tests'
+lane :run_all_tests do |options|
+  defaults = {
+    workspace: WORKSPACE,
+    scheme: APP_SCHEME,
+    code_coverage: true,
+    devices: TEST_DEVICES,
+    derived_data_path: DERIVED_DATA_PATH,
+    output_directory: REPORTS_FOLDER
+  }.freeze
+
+  scan(defaults.merge(options))
+end
+
+desc 'run only UI tests'
+lane :run_ui_tests do |options|
+    defaults = {
+        workspace: WORKSPACE,
+        scheme: UITEST_SCHEME,
+        output_directory: UITEST_REPORTS_FOLDER,
+        destination: UITEST_DESTINATION,
+        clean: true,
+        max_concurrent_simulators: 1,
+        disable_concurrent_testing: true,
+        result_bundle: true,
+        fail_build: false,
+    }.freeze
+
+    scan(defaults.merge(options))
+    xchtmlreport(result_bundle_path: "#{UITEST_REPORTS_FOLDER}/#{UITEST_SCHEME}.xcresult")
+end

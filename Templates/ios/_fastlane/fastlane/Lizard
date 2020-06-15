@@ -1,0 +1,20 @@
+require File.expand_path('parameters/lizard_params.rb', __dir__)
+
+SOURCE = LIZARD_PARAMS[:SOURCE]
+EXPORT_TYPE = LIZARD_PARAMS[:EXPORT_TYPE]
+FALLBACK_EXECUTABLE = LIZARD_PARAMS[:FALLBACK_EXECUTABLE]
+
+desc 'run a lizard scan on the project'
+lane :run_lizard do |options|
+    executable = options[:executable] || FALLBACK_EXECUTABLE
+
+    defaults = {
+        source_folder: SOURCE,
+        language: 'swift',
+        export_type: EXPORT_TYPE,
+        report_file: "#{REPORTS_FOLDER}/lizard-report.xml",
+        executable: executable
+    }.freeze
+
+    lizard(defaults.merge(options))
+end
