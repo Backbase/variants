@@ -1,5 +1,5 @@
 <p align="center">
-<img src="Assets/Examples/variants_logo_small.png" title="variants">
+<img src="Assets/Examples/variants_logo.svg" title="variants">
 </p>
 
 ## Variants
