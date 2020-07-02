@@ -29,7 +29,9 @@ before_all do |lane, options|
     
     # - Creates temporary keychain used by :match_signing_config
     # see 'fastlane/Match' file
-    create_temporary_keychain
+    if is_ci?
+    	create_temporary_keychain
+    end
 end
 
 # --- After all, clean up
@@ -37,7 +39,9 @@ end
 after_all do |lane, options|
     # - Removes temporary keychain used by :match_signing_config
     # see 'fastlane/Match' file
-    remove_keychain
+    if is_ci?
+        remove_keychain
+    end
 end
 
 # --- Preparation phase
