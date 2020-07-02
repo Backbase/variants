@@ -12,7 +12,7 @@ EXPORT_METHOD           = MATCH_PARAMS[:EXPORT_METHOD]
 # Example:
 #   fastlane run_all_but_deploy
 
-lane :run_all_but_deploy do
+lane :all_but_deploy do
     run_all_tests
     run_coverage
     run_swiftlint

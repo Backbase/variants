@@ -91,3 +91,7 @@ end
 lane :release do
   deploy(variant: "BETA")
 end
+
+lane :run_all_but_deploy do
+    all_but_deploy
+end
