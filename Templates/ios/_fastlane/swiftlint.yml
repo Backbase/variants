@@ -4,11 +4,6 @@ disabled_rules:
   - todo
   - opening_brace
   - nesting
-included:
-  - Journey
-  - ragnarok-us-app
-  - RetailUSApp
-  - RetailDesign
 excluded:
   - Pods
   - .build
