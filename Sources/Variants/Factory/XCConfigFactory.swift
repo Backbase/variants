@@ -53,7 +53,7 @@ struct XCConfigFactory {
     }
     
     func createConfig(with target: NamedTarget,
-                      variant: Variant,
+                      variant: iOSVariant,
                       xcodeProj: String?,
                       configPath: Path,
                       addToXcodeProj: Bool? = true) {
@@ -155,7 +155,7 @@ struct XCConfigFactory {
         }
     }
     
-    private func populateConfig(with target: Target, configFile: Path, variant: Variant) {
+    private func populateConfig(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         Logger.shared.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
         variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
@@ -168,7 +168,7 @@ struct XCConfigFactory {
         }
     }
     
-    private func updateInfoPlist(with target: Target, configFile: Path, variant: Variant) {
+    private func updateInfoPlist(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         
         let configFilePath = configFile.absolute().description
         do {

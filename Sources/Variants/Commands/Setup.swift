@@ -74,7 +74,7 @@ public class Setup: Command, VerboseLogger {
     
     // MARK: - iOS
     
-    private func createConfig(with target: NamedTarget, variants: [Variant]?, xcodeProj: String?) {
+    private func createConfig(with target: NamedTarget, variants: [iOSVariant]?, xcodeProj: String?) {
         guard
             let variants = variants,
             !variants.isEmpty,

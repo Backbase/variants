@@ -53,19 +53,46 @@ final class Switch: Command, VerboseLogger {
     // MARK: - Private
     
     private func process(_ configuration: Configuration) {
-        var variantObj: Variant?
         switch platform {
         case .ios:
-            variantObj = configuration.ios?.variants.first(where: { $0.name == variant })
+            iOSSwitchTo(configuration.ios?.variants.first(where: { $0.name == variant }), with: configuration)
         case .android:
-            variantObj = configuration.android?.variants.first(where: { $0.name == variant })
+            androidSwitchTo(configuration.android?.variants.first(where: { $0.name == variant }), with: configuration)
         default:
             break
         }
-        switchTo(variantObj, with: configuration)
     }
+    private func androidSwitchTo(_ variant: AndroidVariant?, with configuration: Configuration) {
+        // guard let desiredVariant = variant
+        // else {
+        //     fail(with: "Variant \(self.variant) not found.")
+        //     return
+        // }
+        // logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+        
+        // switch platform {
+        // case .ios:
+        //     let factory = XCConfigFactory()
+        //     let configPath = Path(defaultSpecs).absolute().parent()
+            
+        //     configuration.ios?
+        //         .targets.map { (key: $0.key, value: $0.value)}
+        //         .forEach {
+                    
+        //         factory.createConfig(with: $0,
+        //                              variant: desiredVariant,
+        //                              xcodeProj: configuration.ios?.xcodeproj,
+        //                              configPath: configPath,
+        //                              addToXcodeProj: false)
+        //     }
+
+        // default:
+        //     break
+        // }
+    }
+
     
-    private func switchTo(_ variant: Variant?, with configuration: Configuration) {
+    private func iOSSwitchTo(_ variant: iOSVariant?, with configuration: Configuration) {
         guard let desiredVariant = variant
         else {
             fail(with: "Variant \(self.variant) not found.")

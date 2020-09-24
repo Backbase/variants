@@ -66,7 +66,7 @@ struct XcodeProjFactory {
         }
     }
     
-    func modify(_ keyValue: [String: String], in projectPath: Path, target: Target, silent: Bool = false) {
+    func modify(_ keyValue: [String: String], in projectPath: Path, target: iOSTarget, silent: Bool = false) {
         do {
             let project = try XcodeProj(path: projectPath)
             Logger.shared.logInfo("Updating: ", item: projectPath)

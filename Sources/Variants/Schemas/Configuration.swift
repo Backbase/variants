@@ -12,32 +12,24 @@ public struct Configuration: Codable {
     let android: AndroidConfiguration?
 }
 
-public protocol BaseConfiguration {
-    var targets: [String: Target] { get }
-    var variants: [Variant] { get }
-}
-
-public struct iOSConfiguration: Codable, BaseConfiguration {
+public struct iOSConfiguration: Codable {
     public var xcodeproj: String
-    public var targets: [String: Target]
-    public var variants: [Variant]
+    public var targets: [String: iOSTarget]
+    public var variants: [iOSVariant]
     
     var pbxproj: String {
         return xcodeproj+"/project.pbxproj"
-    }
+        }
 }
 
-public struct AndroidConfiguration: Codable, BaseConfiguration {
-    public var targets: [String : Target]
-    public var variants: [Variant]
-}
+// iOS
 
-public typealias NamedTarget = (key: String, value: Target)
-public struct Target: Codable {
+public typealias NamedTarget = (key: String, value: iOSTarget)
+public struct iOSTarget: Codable {
     let name: String
     let bundleId: String
     let app_icon: String
-    let source: Source
+    let source: iOSSource
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -47,9 +39,65 @@ public struct Target: Codable {
     }
 }
 
-public struct Source: Codable {
+public struct iOSSource: Codable {
     let path: String
     let info: String
     let config: String
 }
 
+// Android
+
+public struct AndroidConfiguration: Codable {
+    public var path: String
+    public var appProjectName: String
+    public var variants: [AndroidVariant]
+    public var signing: AndroidSigning
+    public var custom: [String:String]
+
+    enum CodingKeys: String, CodingKey {
+        case path = "path"
+        case appProjectName = "app_project_name"
+        case variants = "variants"
+        case signing = "signing"
+        case custom = "custom"
+    }
+}
+
+public struct AndroidVariant: Codable {
+      public var name: String 
+      public var versionName: String 
+      public var versionCode: String 
+      public var appIdentifier: String 
+      public var appName: String 
+      public var appcenterAppName: String 
+      public var taskBuild: String 
+      public var taskUnitTest: String 
+      public var taskUitest: String
+
+      enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case versionName = "version_name"
+        case versionCode = "version_code"
+        case appIdentifier = "app_identifier"
+        case appName = "app_name"
+        case appcenterAppName = "appcenter_app_name"
+        case taskBuild = "task_build"
+        case taskUnitTest = "task_unittest"
+        case taskUitest = "task_uitest"
+      }
+}
+
+public struct AndroidSigning: Codable {
+    public var keyAlias: String
+    public var keyPassword: String
+    public var storeFile: String
+    public var storePassword: String
+
+
+    enum CodingKeys: String, CodingKey {
+        case keyAlias = "key_alias"
+        case keyPassword = "key_password"
+        case storeFile = "store_file"
+        case storePassword = "store_password"
+    }
+}

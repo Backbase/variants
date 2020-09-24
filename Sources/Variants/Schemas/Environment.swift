@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Variant: Codable {
+public struct iOSVariant: Codable {
     let name: String
     let app_icon: String?
     let id_suffix: String?
@@ -15,7 +15,7 @@ public struct Variant: Codable {
     let version_number: Int
     let custom: [CustomConfig]?
     
-    func getDefaultValues(for target: Target) -> [String: String] {
+    func getDefaultValues(for target: iOSTarget) -> [String: String] {
         var customDictionary: [String: String] = [
             "V_APP_NAME": target.name+configName,
             "V_BUNDLE_ID": target.bundleId+configIdSuffix,
