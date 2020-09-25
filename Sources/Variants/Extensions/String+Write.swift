@@ -13,6 +13,10 @@ extension String {
         try (self + "\n").appendToURL(fileURL: file.url)
     }
     
+    mutating func appendLine(_ value: String) {
+        self = self + value + "\n"
+    }
+    
     func appendLineToURL(fileURL: URL) throws {
         try (self + "\n").appendToURL(fileURL: fileURL)
     }

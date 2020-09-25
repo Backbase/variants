@@ -32,19 +32,19 @@ final class Switch: Command, VerboseLogger {
     let logger = Logger.shared
     
     public func execute() throws {
-        logger.logSection("$ ", item: "variants switch \(platform) \(variant)", color: .ios)
-        defaultSpecs = specs ?? defaultSpecs
-    
+        logger.logSection("$ ", item: "variants switch \(self.platform) \(self.variant)", color: .ios)
+        self.defaultSpecs = self.specs ?? self.defaultSpecs
+        
         do {
             let configurationHelper = ConfigurationHelper()
             guard let configuration = try configurationHelper
-                .loadConfiguration(defaultSpecs, platform: platform)
-            else {
-                fail(with: "Unable to load specs '\(defaultSpecs)'")
-                return
+                .loadConfiguration(self.defaultSpecs, platform: self.platform)
+                else {
+                    fail(with: "Unable to load specs '\(self.defaultSpecs)'")
+                    return
             }
             process(configuration)
-
+            
         } catch {
             fail(with: "Unable to switch variants - Check your YAML spec")
         }
@@ -53,72 +53,47 @@ final class Switch: Command, VerboseLogger {
     // MARK: - Private
     
     private func process(_ configuration: Configuration) {
-        switch platform {
-        case .ios:
-            iOSSwitchTo(configuration.ios?.variants.first(where: { $0.name == variant }), with: configuration)
-        case .android:
-            androidSwitchTo(configuration.android?.variants.first(where: { $0.name == variant }), with: configuration)
-        default:
-            break
-        }
+        switchTo(configuration)
     }
-    private func androidSwitchTo(_ variant: AndroidVariant?, with configuration: Configuration) {
-        // guard let desiredVariant = variant
-        // else {
-        //     fail(with: "Variant \(self.variant) not found.")
-        //     return
-        // }
-        // logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
-        
-        // switch platform {
-        // case .ios:
-        //     let factory = XCConfigFactory()
-        //     let configPath = Path(defaultSpecs).absolute().parent()
-            
-        //     configuration.ios?
-        //         .targets.map { (key: $0.key, value: $0.value)}
-        //         .forEach {
-                    
-        //         factory.createConfig(with: $0,
-        //                              variant: desiredVariant,
-        //                              xcodeProj: configuration.ios?.xcodeproj,
-        //                              configPath: configPath,
-        //                              addToXcodeProj: false)
-        //     }
-
-        // default:
-        //     break
-        // }
-    }
-
     
-    private func iOSSwitchTo(_ variant: iOSVariant?, with configuration: Configuration) {
-        guard let desiredVariant = variant
-        else {
-            fail(with: "Variant \(self.variant) not found.")
-            return
-        }
-        logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+    private func switchTo(_ configuration: Configuration) {
         
-        switch platform {
+        switch self.platform {
         case .ios:
+            guard let desiredVariant = configuration.ios?.variants.first(where: { $0.name == self.variant })
+                else {
+                    fail(with: "Variant \(self.variant) not found.")
+                    return
+            }
+            logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+            
             let factory = XCConfigFactory()
-            let configPath = Path(defaultSpecs).absolute().parent()
+            let configPath = Path(self.defaultSpecs).absolute().parent()
             
             configuration.ios?
                 .targets.map { (key: $0.key, value: $0.value)}
                 .forEach {
-                    
-                factory.createConfig(with: $0,
-                                     variant: desiredVariant,
-                                     xcodeProj: configuration.ios?.xcodeproj,
-                                     configPath: configPath,
-                                     addToXcodeProj: false)
+                    factory.createConfig(with: $0,
+                                         variant: desiredVariant,
+                                         xcodeProj: configuration.ios?.xcodeproj,
+                                         configPath: configPath,
+                                         addToXcodeProj: false)
             }
-
-        default:
-            break
+        case .android:
+            guard let desiredVariant = configuration.android?.variants.first(where: { $0.name == self.variant })
+                else {
+                    fail(with: "Variant \(self.variant) not found.")
+                    return
+            }
+            logger.logInfo(item: "Found: \(desiredVariant.name)")
+            
+            let factory = GradleScriptFactory()
+            let configPath = Path(self.defaultSpecs).absolute().parent()
+            
+            factory.createScript(with: configuration.android!, //TODO: Improve
+                variant: desiredVariant)
+        case .unknown:
+            return
         }
     }
 }
-
