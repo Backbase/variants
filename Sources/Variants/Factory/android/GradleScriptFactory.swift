@@ -6,6 +6,12 @@
 import PathKit
 import Foundation
 
+struct WrapperGradleTask{
+    let name: String
+    let dependsOnTaskWithName: String
+    let description: String
+}
+
 struct GradleScriptFactory {
     
     fileprivate func writeFile(_ configuration: AndroidConfiguration, _ fileContent: String) {
@@ -15,7 +21,6 @@ struct GradleScriptFactory {
         let destionationFilePath = destinationFolderPath + "/variants.gradle"
         
         do {
-            
             try fm.createDirectory(atPath: destinationFolderPath, withIntermediateDirectories: true, attributes: nil)
             let fileCreated = fm.createFile(atPath: destionationFilePath, contents: fileContent.data(using: .utf8
             ), attributes: nil)
@@ -26,6 +31,8 @@ struct GradleScriptFactory {
             //TODO: Improve handle error
         }
     }
+    
+    
     
     func createScript(with configuration: AndroidConfiguration,
                       variant: AndroidVariant)
@@ -39,11 +46,67 @@ struct GradleScriptFactory {
         fileContent.addDefinition("appIdentifier", value: variant.appIdentifier)
         fileContent.addDefinition("appName", value: variant.appName)
         
+        //Write wrapper gradle tasks
+        fileContent.appendLine("// ==== Wrapper gradle tasks ==== ")
+        
+        let wrapperGradleTasks = [
+            WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild, description: "Wrapper Gradle task used for building the application"),
+            WrapperGradleTask(name: "vUnitTests", dependsOnTaskWithName: variant.taskUnitTest, description: "Wrapper Gradle task used for executing the Unit Tests"),
+            WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest, description: "Wrapper Gradle task used for executing the UI Tests"),
+        ]
+        fileContent.addWrapperGradleTasks(wrapperGradleTasks)
+        
         writeFile(configuration, fileContent)
     }
 }
 
 fileprivate extension String {
+    
+    mutating func addWrapperGradleTasks(_ tasks: [WrapperGradleTask]) {
+        
+        let dependsOnScript = #"""
+        %@if (task.name == "%@") {
+                %@.dependsOn(task)
+            }
+        """#
+        var dependsOnScriptList = ""
+        
+        for (index, element) in tasks.enumerated() {
+            self.appendLine(String(format: "def %@ = task %@", element.name,element.name))
+            let isFirst = index == 0
+            if(isFirst )
+            { dependsOnScriptList.append(String(format: dependsOnScript,
+                                                    "",
+                                                    element.dependsOnTaskWithName, element.name)) }
+            else {
+                dependsOnScriptList.append(String(format: dependsOnScript,
+                                                        " else ",
+                                                        element.dependsOnTaskWithName, element.name))
+            }
+        }
+        
+        
+        let whenTaskAddedScript = """
+        tasks.whenTaskAdded { task ->
+            %@
+        }
+        """
+        
+        self.appendLine(String(format: whenTaskAddedScript, dependsOnScriptList))
+        
+        
+        //        self.appendLine("//" + description)
+        //        self.appendLine(String(format: "def %@ = task %@", name,name))
+        //        let dependsOnScript = """
+        //        tasks.whenTaskAdded { task ->
+        //            if (task.name == %@) {
+        //               %@.dependsOn(task)
+        //            }
+        //        }
+        //        """
+        //        self.appendLine(String(format:dependsOnScript, value, name))
+    }
+    
     mutating func addDefinition(_ name: String, value: String) {
         
         var value = value
@@ -69,6 +132,6 @@ fileprivate extension String {
         
         self.appendLine(String(format: #"rootProject.ext.%@ = "%@""#, name, value))
     }
-
+    
     
 }
