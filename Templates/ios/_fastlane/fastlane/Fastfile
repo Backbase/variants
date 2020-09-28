@@ -72,26 +72,6 @@ end
 
 # --- Convenience lanes
 
-#
-# Convenience public lanes that specify which variant to deploy.
-# You can always bypass this and run 'deploy' directly:
-#   fastlane deploy variant:'TEST'
-#   fastlane deploy variant:'BETA'
-#   fastlane deploy
-#
-
-lane :main do
-  deploy
-end
-
-lane :develop do
-  deploy(variant: "TEST")
-end
-
-lane :release do
-  deploy(variant: "BETA")
-end
-
 lane :run_all_but_deploy do
     all_but_deploy
 end
