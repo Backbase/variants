@@ -200,39 +200,3 @@ Example
 ```sh
 $ variants switch ios BETA
 ```
-
-### As part of fastlane deployment
-
-```sh
-
-# Example:
-# You can switch variants before deploying your application.
-#
-# fastlane deploy variant:'test'
-# fastlane deploy variant:'dev'
-# fastlane deploy variant:'uat'
-# fastlane deploy variant:'region_abc'
-# fastlane deploy
-
-lane :deploy do |options|
-    switch_variant(options)
-
-    run_tests
-    run_linter
-    run_cohesion
-    run_lizard
-    run_archive
-    run_deploy
-end
-
-private_lane :switch_variant do |options|
-    variant = options[:variant] || 'default'
-    begin
-        sh 'variants switch ios #{variant}'
-    rescue
-        UI.user_error!("variant #{variant} not found in your configuration")
-    end
-end
-
-```
-
