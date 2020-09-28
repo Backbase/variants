@@ -1,7 +1,7 @@
 import XCTest
 
-import MobileSetupTests
+import VariantsTests
 
 var tests = [XCTestCaseEntry]()
-tests += MobileSetupTests.allTests()
+tests += VariantsTests.allTests()
 XCTMain(tests)

@@ -1,11 +1,11 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 
 import PackageDescription
 
 let package = Package(
-    name: "MobileSetup",
+    name: "Variants",
     products: [
-        .executable(name: "mobile-setup", targets: ["MobileSetup"])
+        .executable(name: "variants", targets: ["Variants"])
     ],
     dependencies: [
         .package(
@@ -19,20 +19,26 @@ let package = Package(
         .package(
             url: "https://github.com/jpsim/Yams.git",
             from: "2.0.0"
+        ),
+        .package(
+            name: "XcodeProj",
+            url: "https://github.com/tuist/xcodeproj.git",
+            from: "7.11.1"
         )
     ],
     targets: [
         .target(
-            name: "MobileSetup",
+            name: "Variants",
             dependencies: [
                 "SwiftCLI",
                 "PathKit",
-                "Yams"
+                "Yams",
+                "XcodeProj"
             ]
         ),
         .testTarget(
-            name: "MobileSetupTests",
-            dependencies: ["MobileSetup"]
+            name: "VariantsTests",
+            dependencies: ["Variants"]
         ),
     ]
 )
