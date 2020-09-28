@@ -32,6 +32,9 @@ final class Switch: Command, VerboseLogger {
     let logger = Logger.shared
     
     public func execute() throws {
+        
+        print(FileManager.default.currentDirectoryPath)
+        
         logger.logSection("$ ", item: "variants switch \(self.platform) \(self.variant)", color: .ios)
         self.defaultSpecs = self.specs ?? self.defaultSpecs
         

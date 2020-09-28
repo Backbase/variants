@@ -52,7 +52,7 @@ public struct AndroidConfiguration: Codable {
     public var appProjectName: String
     public var variants: [AndroidVariant]
     public var signing: AndroidSigning
-    public var custom: [String:String]
+    public var custom: [CustomProperty]?
 
     enum CodingKeys: String, CodingKey {
         case path = "path"
@@ -69,10 +69,10 @@ public struct AndroidVariant: Codable {
       public var versionCode: String 
       public var appIdentifier: String 
       public var appName: String 
-      public var appcenterAppName: String 
-      public var taskBuild: String 
+      public var taskBuild: String
       public var taskUnitTest: String 
       public var taskUitest: String
+      public var custom: [CustomProperty]?
 
       enum CodingKeys: String, CodingKey {
         case name = "name"
@@ -80,10 +80,10 @@ public struct AndroidVariant: Codable {
         case versionCode = "version_code"
         case appIdentifier = "app_identifier"
         case appName = "app_name"
-        case appcenterAppName = "appcenter_app_name"
         case taskBuild = "task_build"
         case taskUnitTest = "task_unittest"
         case taskUitest = "task_uitest"
+        case custom = "custom"
       }
 }
 
@@ -99,5 +99,22 @@ public struct AndroidSigning: Codable {
         case keyPassword = "key_password"
         case storeFile = "store_file"
         case storePassword = "store_password"
+    }
+}
+
+public struct CustomProperty: Codable {
+    public var name: String
+    public var value: String
+    public var destination: Destination
+    
+    public enum Destination: String, Codable {
+        case gradle = "gradle"
+        case envVar = "envVar"
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case value = "value"
+        case destination = "destination"
     }
 }

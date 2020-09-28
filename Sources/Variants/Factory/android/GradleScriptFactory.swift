@@ -3,8 +3,10 @@
 //
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
 //
-import PathKit
+
 import Foundation
+import PathKit
+import SwiftCLI
 
 struct WrapperGradleTask{
     let name: String
@@ -14,15 +16,82 @@ struct WrapperGradleTask{
 
 struct GradleScriptFactory {
     
-    fileprivate func writeFile(_ configuration: AndroidConfiguration, _ fileContent: String) {
+    func createScript(with configuration: AndroidConfiguration, variant: AndroidVariant) {
+        var gradleFileContent = ""
+        var exportVariablesFileContent = ""
         
+        //Write the variant data
+        gradleFileContent.appendLine("// ==== Variant values ==== ")
+        gradleFileContent.addGradleDefinition("versionName", value: variant.versionName)
+        gradleFileContent.addGradleDefinition("versionCode", value: variant.versionCode)
+        gradleFileContent.addGradleDefinition("appIdentifier", value: variant.appIdentifier)
+        gradleFileContent.addGradleDefinition("appName", value: variant.appName)
+        
+        var customVariablesHeaderAdded = false
+        variant.custom?.forEach { prop in
+            switch(prop.destination) {
+            case .gradle:
+                if(!customVariablesHeaderAdded) {
+                    gradleFileContent.appendLine("// ==== Variant custom values ==== ")
+                    customVariablesHeaderAdded = true
+                }
+                gradleFileContent.addGradleDefinition(prop.name, value: prop.value)
+            case .envVar:
+                exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
+            }
+        }
+        //TODO: improve this duplicate
+        customVariablesHeaderAdded = false
+        configuration.custom?.forEach { prop in
+            switch(prop.destination) {
+            case .gradle:
+                if(!customVariablesHeaderAdded) {
+                    gradleFileContent.appendLine("// ==== Custom values ==== ")
+                    customVariablesHeaderAdded = true
+                }
+                gradleFileContent.addGradleDefinition(prop.name, value: prop.value)
+            case .envVar:
+                exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
+            }
+        }
+        
+        //Write wrapper gradle tasks
+        gradleFileContent.appendLine("// ==== Wrapper gradle tasks ==== ")
+        
+        let wrapperGradleTasks = [
+            WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild, description: "Wrapper Gradle task used for building the application"),
+            WrapperGradleTask(name: "vUnitTests", dependsOnTaskWithName: variant.taskUnitTest, description: "Wrapper Gradle task used for executing the Unit Tests"),
+            WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest, description: "Wrapper Gradle task used for executing the UI Tests"),
+        ]
+        
+        gradleFileContent.addWrapperGradleTasks(wrapperGradleTasks)
+        gradleFileContent.writeGradleScript(with: configuration)
+        if let path = exportVariablesFileContent.writeTemporaryFile() {
+            //TODO: Return path to stdout
+            Logger.shared.logInfo(item: "Written variables at \(path)")
+        }
+    }
+}
+
+fileprivate extension String {
+    
+    func writeTemporaryFile() -> String? {
+        do {
+        return try FileManager.default.writeTemporaryFile(withContent: self)
+        }
+        catch {
+            return nil
+        }
+    }
+    
+    func writeGradleScript(with configuration:AndroidConfiguration) {
         let fm = FileManager.default
         let destinationFolderPath = configuration.path + "/gradleScripts"
         let destionationFilePath = destinationFolderPath + "/variants.gradle"
         
         do {
             try fm.createDirectory(atPath: destinationFolderPath, withIntermediateDirectories: true, attributes: nil)
-            let fileCreated = fm.createFile(atPath: destionationFilePath, contents: fileContent.data(using: .utf8
+            let fileCreated = fm.createFile(atPath: destionationFilePath, contents: self.data(using: .utf8
             ), attributes: nil)
             print(fileCreated) //TODO: Improve
         } catch
@@ -31,36 +100,6 @@ struct GradleScriptFactory {
             //TODO: Improve handle error
         }
     }
-    
-    
-    
-    func createScript(with configuration: AndroidConfiguration,
-                      variant: AndroidVariant)
-    {
-        var fileContent = ""
-        
-        //Write the variant data
-        fileContent.appendLine("// ==== Variant values ==== ")
-        fileContent.addDefinition("versionName", value: variant.versionName)
-        fileContent.addDefinition("versionCode", value: variant.versionCode)
-        fileContent.addDefinition("appIdentifier", value: variant.appIdentifier)
-        fileContent.addDefinition("appName", value: variant.appName)
-        
-        //Write wrapper gradle tasks
-        fileContent.appendLine("// ==== Wrapper gradle tasks ==== ")
-        
-        let wrapperGradleTasks = [
-            WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild, description: "Wrapper Gradle task used for building the application"),
-            WrapperGradleTask(name: "vUnitTests", dependsOnTaskWithName: variant.taskUnitTest, description: "Wrapper Gradle task used for executing the Unit Tests"),
-            WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest, description: "Wrapper Gradle task used for executing the UI Tests"),
-        ]
-        fileContent.addWrapperGradleTasks(wrapperGradleTasks)
-        
-        writeFile(configuration, fileContent)
-    }
-}
-
-fileprivate extension String {
     
     mutating func addWrapperGradleTasks(_ tasks: [WrapperGradleTask]) {
         
@@ -76,12 +115,12 @@ fileprivate extension String {
             let isFirst = index == 0
             if(isFirst )
             { dependsOnScriptList.append(String(format: dependsOnScript,
-                                                    "",
-                                                    element.dependsOnTaskWithName, element.name)) }
+                                                "",
+                                                element.dependsOnTaskWithName, element.name)) }
             else {
                 dependsOnScriptList.append(String(format: dependsOnScript,
-                                                        " else ",
-                                                        element.dependsOnTaskWithName, element.name))
+                                                  " else ",
+                                                  element.dependsOnTaskWithName, element.name))
             }
         }
         
@@ -93,45 +132,12 @@ fileprivate extension String {
         """
         
         self.appendLine(String(format: whenTaskAddedScript, dependsOnScriptList))
-        
-        
-        //        self.appendLine("//" + description)
-        //        self.appendLine(String(format: "def %@ = task %@", name,name))
-        //        let dependsOnScript = """
-        //        tasks.whenTaskAdded { task ->
-        //            if (task.name == %@) {
-        //               %@.dependsOn(task)
-        //            }
-        //        }
-        //        """
-        //        self.appendLine(String(format:dependsOnScript, value, name))
     }
     
-    mutating func addDefinition(_ name: String, value: String) {
-        
-        var value = value
-        
-        let regexPattern = #"^\{\{ envVars.(?<name>.*) \}\}"#
-        
-        let regex = try? NSRegularExpression(
-            pattern: regexPattern
-        )
-        
-        if let match = regex?.firstMatch(in: value, options: [], range: NSRange(location: 0, length: value.utf16.count)) {
-            if #available(OSX 10.13, *) {
-                if let envVarName = Range(match.range(withName: "name"), in: value) {
-                    guard let envVarValue = ProcessInfo.processInfo.environment[String(value[envVarName])] else {
-                        return
-                    }
-                    value = envVarValue
-                } else {
-                    //TODO: No idea what to do here
-                }
-            }
-        }
-        
-        self.appendLine(String(format: #"rootProject.ext.%@ = "%@""#, name, value))
+    mutating func addGradleDefinition(_ name: String, value: String) {
+        self.appendLine("rootProject.ext.\(name) = \"\(value.envVarValue() ?? value)\"")
     }
-    
-    
+    mutating func addExportVariable(_ name: String, value: String) {
+        self.appendLine("export \(name)=\(value.envVarValue() ?? value)")
+    }
 }
