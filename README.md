@@ -1,7 +1,3 @@
-# WIP
-
-> See branch **new-proposal**
-
 <p align="center">
 <img src="Assets/Examples/variants_logo.svg" title="variants">
 </p>
