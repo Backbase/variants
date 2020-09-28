@@ -7,6 +7,20 @@ XCCONFIG_PATH = PROJECT_PARAMS[:XCCONFIG_PATH]
 
 # --- TestFlight
 
+#
+# ATTENTION:
+# 
+# Deploying to TestFlight or directly to AppStore
+# using `pilot`, `deliver` or their aliases require
+# authentication to AppStoreConnect.
+#
+# In order to have this handled automatically in
+# your CI machine, you'll need an Application Specific Password
+# 
+# Find more about it and how to generate yours in:
+# https://docs.fastlane.tools/best-practices/continuous-integration/#application-specific-passwords
+#
+
 private_lane :deploy_testflight do |options|
   # Retrieve app identifier from config
   app_identifier = get_xcconfig_value(
