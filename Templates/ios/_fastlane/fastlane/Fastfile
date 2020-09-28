@@ -17,6 +17,7 @@ import('Match')
 import('Sonar')
 import('SwiftLint')
 import('Tests')
+import('TestFlight')
 import('Variants')
 
 # --- Before all, prepare
