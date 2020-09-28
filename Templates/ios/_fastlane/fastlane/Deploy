@@ -25,7 +25,6 @@ end
 
 desc 'run deploy'
 lane :deploy do |options|
-    switch_variant(options)
 
     run_all_but_deploy
     
