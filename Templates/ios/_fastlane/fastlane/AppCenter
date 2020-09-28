@@ -8,12 +8,13 @@ XCCONFIG_PATH = PROJECT_PARAMS[:XCCONFIG_PATH]
 
 APPCENTER_OWNER_NAME = APPCENTER_PARAMS[:APPCENTER_OWNER_NAME]
 APPCENTER_API_TOKEN = APPCENTER_PARAMS[:APPCENTER_API_TOKEN]
+APPCENTER_DESTINATION_GROUP = APPCENTER_PARAMS[:APPCENTER_DESTINATION_GROUP]
 
 # --- AppCenter
 
 desc 'deploy app to AppCenter'
 lane :run_appcenter_deploy do |options|
-    destinations = options[:destinations] || "Public"
+    destinations = options[:destinations] || APPCENTER_DESTINATION_GROUP || "Collaborators"
     notify = options[:notify] || true
 
     # Retrieve app name from config.
