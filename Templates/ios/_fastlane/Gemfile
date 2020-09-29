@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'cocoapods', '1.9.0'
+gem 'cocoapods-art'
 gem 'fastlane'
 gem 'slather'
 gem 'json', '2.3.0'
