@@ -27,6 +27,15 @@ struct GradleScriptFactory {
         gradleFileContent.addGradleDefinition("appIdentifier", value: variant.appIdentifier)
         gradleFileContent.addGradleDefinition("appName", value: variant.appName)
         
+        if let signing = configuration.signing {
+            //Write the signing data
+            gradleFileContent.appendLine("// ==== Signing values ==== ")
+            gradleFileContent.addGradleDefinition("signingKeyAlias", value: signing.keyAlias)
+            gradleFileContent.addGradleDefinition("signingKeyPassword", value: signing.keyPassword)
+            gradleFileContent.addGradleDefinition("signingStoreFile", value: signing.storeFile)
+            gradleFileContent.addGradleDefinition("signingStorePassword", value: signing.storePassword)
+        }
+        
         var customVariablesHeaderAdded = false
         variant.custom?.forEach { prop in
             switch(prop.destination) {

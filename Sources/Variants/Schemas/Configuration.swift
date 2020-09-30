@@ -51,7 +51,7 @@ public struct AndroidConfiguration: Codable {
     public var path: String
     public var appProjectName: String
     public var variants: [AndroidVariant]
-    public var signing: AndroidSigning
+    public var signing: AndroidSigning?
     public var custom: [CustomProperty]?
 
     enum CodingKeys: String, CodingKey {
