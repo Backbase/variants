@@ -91,9 +91,8 @@ final class Switch: Command, VerboseLogger {
             logger.logInfo(item: "Found: \(desiredVariant.name)")
             
             let factory = GradleScriptFactory()
-            let configPath = Path(self.defaultSpecs).absolute().parent()
             
-            factory.createScript(with: configuration.android!, //TODO: Improve
+            factory.createScript(with: configuration.android!,
                 variant: desiredVariant)
         case .unknown:
             return

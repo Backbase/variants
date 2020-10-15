@@ -19,6 +19,7 @@ struct GradleScriptFactory {
     func createScript(with configuration: AndroidConfiguration, variant: AndroidVariant) {
         var gradleFileContent = ""
         var exportVariablesFileContent = ""
+        var fastlaneVariablesFileContent = "{\n"
         
         //Write the variant data
         gradleFileContent.appendLine("// ==== Variant values ==== ")
@@ -36,48 +37,52 @@ struct GradleScriptFactory {
             gradleFileContent.addGradleDefinition("signingStorePassword", value: signing.storePassword)
         }
         
-        var customVariablesHeaderAdded = false
-        variant.custom?.forEach { prop in
-            switch(prop.destination) {
-            case .gradle:
-                if(!customVariablesHeaderAdded) {
-                    gradleFileContent.appendLine("// ==== Variant custom values ==== ")
-                    customVariablesHeaderAdded = true
-                }
-                gradleFileContent.addGradleDefinition(prop.name, value: prop.value)
-            case .envVar:
-                exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
-            }
-        }
-        //TODO: improve this duplicate
-        customVariablesHeaderAdded = false
-        configuration.custom?.forEach { prop in
-            switch(prop.destination) {
-            case .gradle:
-                if(!customVariablesHeaderAdded) {
-                    gradleFileContent.appendLine("// ==== Custom values ==== ")
-                    customVariablesHeaderAdded = true
-                }
-                gradleFileContent.addGradleDefinition(prop.name, value: prop.value)
-            case .envVar:
-                exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
-            }
-        }
+        //Write the custom properties
+        add(customProperties: variant.custom, header: "// ==== Variant custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneVariablesFileContent)
+        add(customProperties: configuration.custom, header: "// ==== Custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneVariablesFileContent)
         
         //Write wrapper gradle tasks
         gradleFileContent.appendLine("// ==== Wrapper gradle tasks ==== ")
         
-        let wrapperGradleTasks = [
+        gradleFileContent.addWrapperGradleTasks([
             WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild, description: "Wrapper Gradle task used for building the application"),
             WrapperGradleTask(name: "vUnitTests", dependsOnTaskWithName: variant.taskUnitTest, description: "Wrapper Gradle task used for executing the Unit Tests"),
             WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest, description: "Wrapper Gradle task used for executing the UI Tests"),
-        ]
+        ])
         
-        gradleFileContent.addWrapperGradleTasks(wrapperGradleTasks)
+        //Write the actual files
         gradleFileContent.writeGradleScript(with: configuration)
+        
         if let path = exportVariablesFileContent.writeTemporaryFile() {
-            //TODO: Return path to stdout
-            Logger.shared.logInfo(item: "Written variables at \(path)")
+            Logger.shared.logInfo(item: "EXPORT_ENVIRONMENTAL_VARIABLES_PATH=\(path)")
+        } else {
+            Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
+        }
+        fastlaneVariablesFileContent = String(fastlaneVariablesFileContent.dropLast(2))
+        fastlaneVariablesFileContent.appendLine("\n}")
+        if let path = fastlaneVariablesFileContent.writeTemporaryFile() {
+            Logger.shared.logInfo(item: "EXPORT_FASTLANE_PARAMETERS_PATH=\(path)")
+        } else {
+            Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
+        }
+    }
+    
+    func add(customProperties properties: [CustomProperty]?, header: String, _ gradleFileContent: inout String, _ exportVariablesFileContent: inout String, _ fastlaneVariablesFileContent: inout String) {
+        
+        var customVariablesHeaderAdded = false
+        properties?.forEach { prop in
+            switch(prop.destination) {
+            case .gradle:
+                if(!customVariablesHeaderAdded) {
+                    gradleFileContent.appendLine(header)
+                    customVariablesHeaderAdded = true
+                }
+                gradleFileContent.addGradleDefinition(prop.name, value: prop.value)
+            case .envVar:
+                exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
+            case .fastlane:
+                fastlaneVariablesFileContent.addFastlaneParameter(prop.name,value: prop.value)
+            }
         }
     }
 }
@@ -100,13 +105,11 @@ fileprivate extension String {
         
         do {
             try fm.createDirectory(atPath: destinationFolderPath, withIntermediateDirectories: true, attributes: nil)
-            let fileCreated = fm.createFile(atPath: destionationFilePath, contents: self.data(using: .utf8
+            fm.createFile(atPath: destionationFilePath, contents: self.data(using: .utf8
             ), attributes: nil)
-            print(fileCreated) //TODO: Improve
         } catch
         {
-            print(error)
-            //TODO: Improve handle error
+            Logger.shared.logError(item: "Could not generate gradle script:\n\(error.localizedDescription)")
         }
     }
     
@@ -148,5 +151,8 @@ fileprivate extension String {
     }
     mutating func addExportVariable(_ name: String, value: String) {
         self.appendLine("export \(name)=\(value.envVarValue() ?? value)")
+    }
+    mutating func addFastlaneParameter(_ name: String, value: String) {
+        self.appendLine("   :\(name) => \"\(value.envVarValue() ?? value)\",")
     }
 }

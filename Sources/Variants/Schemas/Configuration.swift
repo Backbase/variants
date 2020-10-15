@@ -49,14 +49,12 @@ public struct iOSSource: Codable {
 
 public struct AndroidConfiguration: Codable {
     public var path: String
-    public var appProjectName: String
     public var variants: [AndroidVariant]
     public var signing: AndroidSigning?
     public var custom: [CustomProperty]?
 
     enum CodingKeys: String, CodingKey {
         case path = "path"
-        case appProjectName = "app_project_name"
         case variants = "variants"
         case signing = "signing"
         case custom = "custom"
@@ -108,8 +106,9 @@ public struct CustomProperty: Codable {
     public var destination: Destination
     
     public enum Destination: String, Codable {
-        case gradle = "gradle"
-        case envVar = "envVar"
+        case gradle = "project"
+        case fastlane = "fastlane"
+        case envVar = "environment"
     }
     
     enum CodingKeys: String, CodingKey {
