@@ -11,15 +11,15 @@ import Foundation
 let VerboseFlag = Flag("-v", "--verbose", description: "Log tech details for nerds")
 
 public enum ShellColor: String {
-    case blue = "\\033[0;34m"
-    case red = "\\033[0;31m"
-    case green = "\\033[0;32m"
-    case cyan = "\\033[0;36m"
-    case purple = "\\033[0;35m"
-    case yellow = "\\033[0;33m"
-    case ios = "\\033[0;49;36m"
-    case android = "\\033[0;49;33m"
-    case neutral = "\\033[0m"
+    case blue = "\u{001B}[0;34m"
+    case red = "\u{001B}[0;31m"
+    case green = "\u{001B}[0;32m"
+    case cyan = "\u{001B}[0;36m"
+    case purple = "\u{001B}[0;35m"
+    case yellow = "\u{001B}[0;33m"
+    case ios = "\u{001B}[0;49;36m"
+    case android = "\u{001B}[0;49;33m"
+    case neutral = "\u{001B}[0;0m"
     
     func bold() -> String {
         return self.rawValue.replacingOccurrences(of: "[0", with: "[1")
@@ -64,7 +64,8 @@ extension VerboseLogger {
             "\(color.rawValue)\(item)\(ShellColor.neutral.rawValue)"
         ]
         arguments.forEach { command.append($0) }
-        try? Task.run("printf", command+"\n")
+        var outputStream = StandardErrorOutputStream()
+        Swift.print(command, to: &outputStream)
     }
     
     public func logBack(_ prefix: Any = "", item: Any, indentationLevel: Int = 0) -> String {
@@ -78,5 +79,16 @@ extension VerboseLogger {
         ]
         arguments.forEach { command.append($0) }
         return command
+    }
+}
+
+fileprivate struct StandardErrorOutputStream: TextOutputStream {
+    let stderr = FileHandle.standardError
+
+    func write(_ string: String) {
+        guard let data = string.data(using: .utf8) else {
+            return
+        }
+        stderr.write(data)
     }
 }
