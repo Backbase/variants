@@ -38,8 +38,7 @@ final class Initializer: Command, VerboseLogger {
             logger.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
             return
         }
-    
-        logger.logSection("$ ", item: "variants init \(platform)", color: .ios)
+        logger.logSection("$ ", item: "variants init \(platform)", color: platform.color)
         
         do {
             try generateConfig(path: path, platform: platform)
