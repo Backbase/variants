@@ -8,15 +8,10 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-struct WrapperGradleTask{
-    let name: String
-    let dependsOnTaskWithName: String
-    let description: String
-}
-
 struct GradleScriptFactory {
     
     func createScript(with configuration: AndroidConfiguration, variant: AndroidVariant) {
+        let fm = FileManager.default
         var gradleFileContent = ""
         var exportVariablesFileContent = ""
         var fastlaneVariablesFileContent = "{\n"
@@ -53,17 +48,33 @@ struct GradleScriptFactory {
         //Write the actual files
         gradleFileContent.writeGradleScript(with: configuration)
         
-        if let path = exportVariablesFileContent.writeTemporaryFile() {
+        if let path = exportVariablesFileContent.writeToTemporaryFile() {
             Logger.shared.logInfo(item: "EXPORT_ENVIRONMENTAL_VARIABLES_PATH=\(path)")
         } else {
             Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
         }
-        fastlaneVariablesFileContent = String(fastlaneVariablesFileContent.dropLast(2))
-        fastlaneVariablesFileContent.appendLine("\n}")
-        if let path = fastlaneVariablesFileContent.writeTemporaryFile() {
-            Logger.shared.logInfo(item: "EXPORT_FASTLANE_PARAMETERS_PATH=\(path)")
-        } else {
-            Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
+        
+        let fastlaneParamPath = configuration.path + Constants.Fastlane.parametersPath
+        
+        if(!fastlaneVariablesFileContent.isEmpty) {
+            if(fm.fileExists(atPath: fastlaneParamPath)) {
+                fastlaneVariablesFileContent = String(fastlaneVariablesFileContent.dropLast(2))
+                fastlaneVariablesFileContent.appendLine("\n}")
+                let fastlaneVariantVariabelsUrl = URL(fileURLWithPath: fastlaneParamPath)
+                    .appendingPathComponent(Constants.Fastlane.variantGeneratedParametersFileName)
+                do {
+                    if(fm.fileExists(atPath: fastlaneVariantVariabelsUrl.absoluteString))
+                    {
+                        try fm.removeItem(at: fastlaneVariantVariabelsUrl)
+                    }
+                    try fastlaneVariablesFileContent.write(to:fastlaneVariantVariabelsUrl,atomically: true, encoding: .utf8)
+                } catch {
+                    Logger.shared.logError("❌ ", item: "Could not generate the file for the fastlane variables")
+                }
+            }
+            else {
+                Logger.shared.logError("❌ ", item: "\(fastlaneParamPath) not found. Unable to store configuration value for key \(variant.name) using \"fastlane\" destination.")
+            }
         }
     }
     
@@ -87,11 +98,17 @@ struct GradleScriptFactory {
     }
 }
 
+private struct WrapperGradleTask{
+    let name: String
+    let dependsOnTaskWithName: String
+    let description: String
+}
+
 fileprivate extension String {
     
-    func writeTemporaryFile() -> String? {
+    func writeToTemporaryFile() -> String? {
         do {
-        return try FileManager.default.writeTemporaryFile(withContent: self)
+            return try FileManager.default.writeTemporaryFile(withContent: self)
         }
         catch {
             return nil
