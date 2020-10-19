@@ -1,0 +1,79 @@
+require File.expand_path('parameters/match_params.rb', __dir__)
+
+CODE_SIGNING_IDENTITY   = MATCH_PARAMS[:CODE_SIGNING_IDENTITY]
+EXPORT_METHOD           = MATCH_PARAMS[:EXPORT_METHOD]
+
+# --- Well, it doesn't deploy
+
+#
+# Runs everything but deploy.
+# Perfect for a PR branch.
+#
+# Example:
+#   fastlane run_all_but_deploy
+
+lane :all_but_deploy do
+    run_all_tests
+    run_coverage
+    run_swiftlint
+    run_cohesion
+    # run_lizard
+    # run_sonar
+end
+
+# --- Deploy
+
+desc 'run deploy'
+lane :deploy do |options|
+
+    run_all_but_deploy
+    
+    # If Match is enabled, uncomment line below
+    # run_match_signing
+
+    # Change icon on the fly by adding a badge overlay to it
+    # AppIcon is defined in 'parameters/project_params.rb'
+    # or specify icon path via parameter 'app_icon'
+    #
+    # if options[:variant]
+    #    badge_name = options[:variant]
+    #    badgy(name: badge_name)
+    # end
+    
+    run_archive
+    run_appcenter_deploy
+    
+    # Send a Slack message
+    #
+    # The following parameters are necessary:
+    # - 'channel' (string)
+    # - 'hook_url' (string)
+    # - 'interactive_url' (string) - URL you'll click to lead you to AppCenter or CI pipeline
+    # - 'message' (string) - What to inform?
+    # - 'success' (boolean) - OPTIONAL value, false by default.
+    #
+    # send_slack_message
+end
+
+# --- Build and archive
+
+desc "build and archive"
+private_lane :run_archive do |options|
+    configuration = options[:configuration] || "Release"
+
+    defaults = {
+        workspace: WORKSPACE,
+        configuration: configuration,
+        scheme: APP_SCHEME,
+        silent: false,
+        clean: true,
+        codesigning_identity: CODE_SIGNING_IDENTITY,
+        export_options: {
+          method: EXPORT_METHOD
+        },
+        xcargs: '-allowProvisioningUpdates',
+        skip_profile_detection: true
+    }.freeze
+    
+    build_ios_app(defaults.merge(options))
+end

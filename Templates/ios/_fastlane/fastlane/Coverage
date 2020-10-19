@@ -1,0 +1,15 @@
+# --- Coverage
+
+desc 'convert coverage .profdata to cobertura xml'
+lane :run_coverage do |options|
+  defaults = {
+  	proj: PROJECT,
+  	workspace: WORKSPACE,
+    scheme: APP_SCHEME,
+    cobertura_xml: true,
+    input_format: "profdata",
+    build_directory: DERIVED_DATA_PATH,
+  }.freeze
+
+  slather(defaults.merge(options))
+end

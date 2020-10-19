@@ -1,0 +1,77 @@
+require File.expand_path('parameters/project_params.rb', __dir__)
+
+DERIVED_DATA_PATH = PROJECT_PARAMS[:DERIVED_DATA_PATH]
+REPORTS_FOLDER = PROJECT_PARAMS[:REPORTS_FOLDER]
+PROJECT = sh 'ls ..|grep "xcodeproj"|sort -r|head -n 1|tr -d "\n"'
+WORKSPACE = sh 'ls ..|grep "xcworkspace"|sort -r|head -n 1|tr -d "\n"'
+APP_SCHEME = WORKSPACE.split('.')[0]
+
+import('AppCenter')
+import('BadgyLane')
+import('Cohesion')
+import('Cocoapods')
+import('Coverage')
+import('Dependencies')
+import('Deploy')
+import('Lizard')
+import('Match')
+import('Sonar')
+import('SwiftLint')
+import('Tests')
+
+# --- Before all, prepare
+
+before_all do |lane, options|
+    # - Install dependencies if needed
+    # - Setup CI machine
+    # - Install/update Cocoapods
+    prepare
+    
+    # - Creates temporary keychain used by :match_signing_config
+    # see 'fastlane/Match' file
+    if is_ci?
+    	create_temporary_keychain
+    end
+end
+
+# --- After all, clean up
+
+after_all do |lane, options|
+    # - Removes temporary keychain used by :match_signing_config
+    # see 'fastlane/Match' file
+    if is_ci?
+        remove_keychain
+    end
+end
+
+# --- Preparation phase
+
+desc 'prepares the environment'
+private_lane :prepare do |options|
+    defaults = {
+        derived_data_path: DERIVED_DATA_PATH
+    }.freeze
+    options = defaults.merge(options)
+
+    # Check if CLI dependencies are installed
+    # Otherwise, install them
+    if is_ci?
+      prepare_dependencies
+    end
+  
+    # Temporarily disable update_fastlane due to
+    # https://github.com/fastlane/fastlane/issues/16127
+    # update_fastlane
+
+    # Setup CI machine
+    setup_jenkins(options)
+
+    # Update/Install Pods
+    pods_update
+end
+
+# --- Convenience lanes
+
+lane :run_all_but_deploy do
+    all_but_deploy
+end
