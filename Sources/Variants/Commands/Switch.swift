@@ -28,17 +28,12 @@ struct Switch: ParsableCommand {
     var spec: String = "variants.yml"
     
     @Flag(name: .shortAndLong, help: "Is verbose")
-    var verbose = false {
-        didSet {
-            logger = Logger(verbose: verbose)
-        }
-    }
-    
-    private var logger: Logger = .shared
+    var verbose = false
     
     mutating func run() throws {
+        let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants switch \(platform) \(variant)", color: .ios)
-        throw RuntimeError("Unable to switch variants - Check your YAML spec")
+        
         do {
             let configurationHelper = ConfigurationHelper(verbose: verbose)
             guard let configuration = try configurationHelper
@@ -73,11 +68,11 @@ struct Switch: ParsableCommand {
         guard let desiredVariant = variant else {
             throw ValidationError("Variant \(self.variant) not found.")
         }
-        logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+        Logger.shared.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
         
         switch platform {
         case .ios:
-            let factory = XCConfigFactory()
+            let factory = XCConfigFactory(logLevel: verbose)
             let configPath = Path(spec).absolute().parent()
             
             configuration.ios?

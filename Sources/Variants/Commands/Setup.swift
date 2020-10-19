@@ -29,15 +29,11 @@ struct Setup: ParsableCommand {
     var skipFastlane: Bool = false
     
     @Flag(name: .shortAndLong, help: "Is verbose")
-    var verbose = false {
-        didSet {
-            logger = Logger(verbose: verbose)
-        }
-    }
-    
-    private var logger: Logger = .shared
+    var verbose = false
     
     mutating func run() throws {
+        let logger = Logger(verbose: verbose)
+        
         logger.logSection("$ ", item: "variants setup \(platform)", color: .ios)
         
         do {
@@ -84,7 +80,7 @@ struct Setup: ParsableCommand {
         }
         
         let configPath = Path(spec).absolute().parent()
-        let factory = XCConfigFactory()
+        let factory = XCConfigFactory(logLevel: verbose)
         factory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
     }
     
@@ -92,16 +88,15 @@ struct Setup: ParsableCommand {
     
     private func setupFastlane(_ skip: Bool) {
         if skip {
-            logger.logInfo("Skipped Fastlane setup", item: "")
+            Logger.shared.logInfo("Skipped Fastlane setup", item: "")
         } else {
-            logger.logInfo("Setting up Fastlane", item: "")
+            Logger.shared.logInfo("Setting up Fastlane", item: "")
             
-            guard let path = XCConfigFactory().firstTemplateDirectory() else { return }
+            guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else { return }
             do {
                 try Bash("cp", arguments: "-R", "\(path.absolute())/\(platform)/_fastlane/*", ".")
                     .run()
-//                try Task.run(bash: "cp -R \(path.absolute())/\(platform)/_fastlane/* .", directory: nil)
-                logger.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
+                Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
                 
                 let setupCompleteMessage = """
 
@@ -116,13 +111,13 @@ struct Setup: ParsableCommand {
                                             That is all.
                                             """
                 
-                logger.logInfo("👇  Next steps ", item: "", color: .yellow)
+                Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
                 setupCompleteMessage.enumerateLines { (line, _) in
-                    self.logger.logInfo("", item: line, color: .yellow)
+                    Logger.shared.logInfo("", item: line, color: .yellow)
                 }
                 
             } catch {
-                logger.logFatal(item: "Could not setup Fastlane - Not found in '\(path.abbreviate())'")
+                Logger.shared.logFatal(item: "Could not setup Fastlane - Not found in '\(path.abbreviate())'")
             }
         }
     }

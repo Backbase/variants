@@ -18,23 +18,19 @@ struct Initializer: ParsableCommand {
     // --------------
     // MARK: Configuration Properties
     
-    @Option(help: "'ios' or 'android'")
+    @Argument(help: "'ios' or 'android'")
     var platform: Platform
     
     @Flag(name: .shortAndLong, help: "Is verbose")
-    var verbose = false {
-        didSet {
-            logger = Logger(verbose: verbose)
-        }
-    }
-
-    private var logger: Logger = .shared
+    var verbose = false
     
     mutating func run() throws {
-        guard let path = XCConfigFactory().firstTemplateDirectory() else {
+        guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else {
             throw RuntimeError("❌ Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
         }
 
+        let logger = Logger(verbose: verbose)
+        
         logger.logSection("$ ", item: "variants init \(platform)", color: .ios)
 
         do {

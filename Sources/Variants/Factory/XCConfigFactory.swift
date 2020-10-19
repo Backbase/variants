@@ -12,8 +12,12 @@ import PathKit
 public typealias DoesFileExist = (exists: Bool, path: Path?)
 
 struct XCConfigFactory {
-    
     let xcconfigFileName: String = "variants.xcconfig"
+    let logger: Logger
+    
+    init(logLevel: Bool = false) {
+        logger = Logger(verbose: logLevel)
+    }
     
     func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
         do {
@@ -117,7 +121,7 @@ struct XCConfigFactory {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
         
         guard let path = firstTemplateDirectory() else {
-            Logger.shared.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
+            logger.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
             return
         }
         
@@ -140,19 +144,19 @@ struct XCConfigFactory {
                 target: target.value)
             
         } catch {
-            Logger.shared.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
+            logger.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
         }
     }
     
     private func populateConfig(with target: Target, configFile: Path, variant: Variant) {
-        Logger.shared.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
+        logger.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
         variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
-            Logger.shared.logDebug("Item: ", item: stringContent, indentationLevel: 1, color: .purple)
+            logger.logDebug("Item: ", item: stringContent, indentationLevel: 1, color: .purple)
             
             let (success, _) = write(stringContent, toFile: configFile, force: false)
             if !success {
-                Logger.shared.logDebug("⚠️  ", item: "Failed to add item to .xcconfig", indentationLevel: 2)
+                logger.logDebug("⚠️  ", item: "Failed to add item to .xcconfig", indentationLevel: 2)
             }
         }
     }
@@ -184,8 +188,8 @@ struct XCConfigFactory {
             }
             
         } catch {
-            Logger.shared.logDebug(item: (error as NSError).debugDescription)
-            Logger.shared.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
+            logger.logDebug(item: (error as NSError).debugDescription)
+            logger.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
         }
     }
     
