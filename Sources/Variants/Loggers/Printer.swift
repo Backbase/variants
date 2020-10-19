@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  Variants
 //
-//  Created by Giuseppe Deraco on 15/10/2020.
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Giuseppe Deraco
 //
 
 import Foundation
