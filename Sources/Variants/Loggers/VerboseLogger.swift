@@ -8,10 +8,6 @@
 import Foundation
 import ArgumentParser
 
-//let VerboseFlag = Flag("-v", "--verbose", description: "Log tech details for nerds")
-
-@Flag() var verbose = false
-
 public enum ShellColor: String {
     case blue = "\u{001B}[0;34m"
     case red = "\u{001B}[0;31m"
@@ -37,7 +33,7 @@ public enum LogLevel: String {
 }
 
 public protocol VerboseLogger {
-    var isVerbose: Bool { get }
+    var verbose: Bool { get }
     func log(_ prefix: Any, item: Any, indentationLevel: Int, color: ShellColor, logLevel: LogLevel)
 }
 
@@ -50,12 +46,9 @@ extension Date {
 }
 
 extension VerboseLogger {
-    #warning("Temporary, remove")
-    public var isVerbose: Bool { return verbose }
-    
     public func log(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none) {
         if logLevel == .verbose {
-            guard isVerbose else { return }
+            guard verbose else { return }
         }
         let indentation = String(repeating: "   ", count: indentationLevel)
         var command = ""

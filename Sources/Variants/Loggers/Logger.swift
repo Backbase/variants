@@ -7,8 +7,15 @@
 
 import Foundation
 
-public class Logger: VerboseLogger {
-    static let shared = Logger()
+public class Logger: VerboseLogger, Codable {
+    static let shared = Logger(verbose: false)
+    
+    init(verbose: Bool) {
+        self.isVerbose = verbose
+    }
+    
+    private let isVerbose: Bool
+    public var verbose: Bool { return isVerbose }
     
     func logFatal(_ prefix: Any = "❌ ", item: Any, color: ShellColor = .red) {
         logError(prefix, item: item, color: color)

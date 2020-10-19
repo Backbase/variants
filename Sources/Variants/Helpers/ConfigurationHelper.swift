@@ -10,6 +10,8 @@ import ArgumentParser
 import PathKit
 
 struct ConfigurationHelper: YamlParser {
+    let verbose: Bool
+    
     func loadConfiguration(_ path: String?, platform: Platform) throws -> Configuration? {
         guard let path = path else {
             throw ValidationError("Error: Use '-s' to specify the configuration file")

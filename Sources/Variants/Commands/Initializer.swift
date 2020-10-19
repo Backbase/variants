@@ -9,25 +9,37 @@ import Foundation
 import PathKit
 import ArgumentParser
 
-struct Initializer: ParsableCommand, VerboseLogger {
+struct Initializer: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "init",
         abstract: "Generate spec file - variants.yml"
     )
     
-    @Option()
+    // --------------
+    // MARK: Configuration Properties
+    
+    @Option(help: "'ios' or 'android'")
     var platform: Platform
     
+    @Flag(name: .shortAndLong, help: "Is verbose")
+    var verbose = false {
+        didSet {
+            logger = Logger(verbose: verbose)
+        }
+    }
+
+    private var logger: Logger = .shared
+    
     mutating func run() throws {
-        guard let path = firstTemplateDirectory() else {
+        guard let path = XCConfigFactory().firstTemplateDirectory() else {
             throw RuntimeError("❌ Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
         }
-    
-        Logger.shared.logSection("$ ", item: "variants init \(platform)", color: .ios)
-        
+
+        logger.logSection("$ ", item: "variants init \(platform)", color: .ios)
+
         do {
-            try generateConfig(path: path, platform: platform)
-            Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
+            try generateConfig(path: path, platform: .ios)
+            logger.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
         } catch {
             throw RuntimeError(error.localizedDescription)
         }
@@ -38,16 +50,4 @@ struct Initializer: ParsableCommand, VerboseLogger {
     private func generateConfig(path: Path, platform: Platform) throws {
         try Bash("cp", arguments: "\(path.absolute())/\(platform.rawValue)/variants-template.yml", "./variants.yml").run()
     }
-    
-    private func firstTemplateDirectory() -> Path? {
-        templateDirectories
-            .map(Path.init(stringLiteral:))
-            .first(where: \.exists)
-    }
-    
-    // TODO: Maybe extract template directory logic?
-    private var templateDirectories: [String] = [
-        "/usr/local/lib/variants/templates",
-        "./Templates"
-    ]
 }

@@ -102,7 +102,13 @@ struct XCConfigFactory {
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
     }
     
-    // MARK: - Convert method
+    func firstTemplateDirectory() -> Path? {
+        templateDirectories
+            .map(Path.init(stringLiteral:))
+            .first(where: \.exists)
+    }
+    
+    // MARK: - Private methods
     
     private func addToXcode(_ xcConfigFile: Path,
                             toProject projectPath: Path,
@@ -181,12 +187,6 @@ struct XCConfigFactory {
             Logger.shared.logDebug(item: (error as NSError).debugDescription)
             Logger.shared.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
         }
-    }
-    
-    private func firstTemplateDirectory() -> Path? {
-        templateDirectories
-            .map(Path.init(stringLiteral:))
-            .first(where: \.exists)
     }
     
     private var templateDirectories: [String] = [

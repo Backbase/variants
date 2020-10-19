@@ -5,7 +5,7 @@
 import Foundation
 import ArgumentParser
 
-enum Platform: String, ExpressibleByArgument {
+enum Platform: String, ExpressibleByArgument, Codable {
     case ios
     case android
     case unknown

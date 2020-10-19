@@ -10,7 +10,7 @@ import ArgumentParser
 import PathKit
 import Yams
 
-struct Setup: ParsableCommand, VerboseLogger {
+struct Setup: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "setup",
         abstract: "Setup deployment variants (alongside Fastlane)"
@@ -19,20 +19,29 @@ struct Setup: ParsableCommand, VerboseLogger {
     // --------------
     // MARK: Configuration Properties
     
-    @Option()
+    @Argument(help: "'ios' or 'android'")
     var platform: Platform
     
-    @Option(name: .shortAndLong, default: "variants.yml", help: "Use a different yaml configuration spec")
-    var spec: String
+    @Option(name: .shortAndLong, help: "Use a different yaml configuration spec")
+    var spec: String = "variants.yml"
     
-    @Flag(help: "Skip fastlane setup")
-    var skipFastlane: Bool
+    @Flag()
+    var skipFastlane: Bool = false
+    
+    @Flag(name: .shortAndLong, help: "Is verbose")
+    var verbose = false {
+        didSet {
+            logger = Logger(verbose: verbose)
+        }
+    }
+    
+    private var logger: Logger = .shared
     
     mutating func run() throws {
-        Logger.shared.logSection("$ ", item: "variants setup \(platform)", color: .ios)
+        logger.logSection("$ ", item: "variants setup \(platform)", color: .ios)
         
         do {
-            let configurationHelper = ConfigurationHelper()
+            let configurationHelper = ConfigurationHelper(verbose: verbose)
             guard let configuration = try configurationHelper.loadConfiguration(spec, platform: platform) else {
                 throw RuntimeError("Unable to load spec '\(spec)'")
             }
@@ -87,11 +96,12 @@ struct Setup: ParsableCommand, VerboseLogger {
         } else {
             logger.logInfo("Setting up Fastlane", item: "")
             
-            let result = XCConfigFactory().doesTemplateExist()
-            guard result.exists, let path = result.path else { return }
+            guard let path = XCConfigFactory().firstTemplateDirectory() else { return }
             do {
-                try Task.run(bash: "cp -R \(path.absolute())/\(platform)/_fastlane/* .", directory: nil)
-                Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
+                try Bash("cp", arguments: "-R", "\(path.absolute())/\(platform)/_fastlane/*", ".")
+                    .run()
+//                try Task.run(bash: "cp -R \(path.absolute())/\(platform)/_fastlane/* .", directory: nil)
+                logger.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
                 
                 let setupCompleteMessage = """
 
@@ -106,13 +116,13 @@ struct Setup: ParsableCommand, VerboseLogger {
                                             That is all.
                                             """
                 
-                Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
+                logger.logInfo("👇  Next steps ", item: "", color: .yellow)
                 setupCompleteMessage.enumerateLines { (line, _) in
-                    Logger.shared.logInfo("", item: line, color: .yellow)
+                    self.logger.logInfo("", item: line, color: .yellow)
                 }
                 
             } catch {
-                fail(with: "Could not setup Fastlane - Not found in '\(path.abbreviate())'")
+                logger.logFatal(item: "Could not setup Fastlane - Not found in '\(path.abbreviate())'")
             }
         }
     }

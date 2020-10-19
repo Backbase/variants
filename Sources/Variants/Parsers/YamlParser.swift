@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftCLI
 import Yams
 
 protocol YamlParser: VerboseLogger {
@@ -15,9 +14,6 @@ protocol YamlParser: VerboseLogger {
 }
 
 extension YamlParser {
-    #warning("Temporary, remove")
-    public var verbose: Bool { return true }
-    
     public func extractConfiguration(from configurationPath: String, platform: Platform? = .unknown) -> Configuration {
         let decoder = YAMLDecoder()
         let encoder = YAMLEncoder()

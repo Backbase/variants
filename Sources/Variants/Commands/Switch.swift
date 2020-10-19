@@ -9,7 +9,7 @@ import Foundation
 import ArgumentParser
 import PathKit
 
-struct Switch: ParsableCommand, VerboseLogger {
+struct Switch: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "switch",
         abstract: "Switch variants"
@@ -18,20 +18,29 @@ struct Switch: ParsableCommand, VerboseLogger {
     // --------------
     // MARK: Configuration Properties
     
-    @Option()
+    @Argument(help: "'ios' or 'android'")
     var platform: Platform
     
     @Argument()
     var variant: String
     
-    @Option(name: .shortAndLong, default: "variants.yml", help: "Use a different yaml configuration spec")
-    var spec: String
+    @Option(name: .shortAndLong, help: "Use a different yaml configuration spec")
+    var spec: String = "variants.yml"
+    
+    @Flag(name: .shortAndLong, help: "Is verbose")
+    var verbose = false {
+        didSet {
+            logger = Logger(verbose: verbose)
+        }
+    }
+    
+    private var logger: Logger = .shared
     
     mutating func run() throws {
-        Logger.shared.logSection("$ ", item: "variants switch \(platform) \(variant)", color: .ios)
-    
+        logger.logSection("$ ", item: "variants switch \(platform) \(variant)", color: .ios)
+        throw RuntimeError("Unable to switch variants - Check your YAML spec")
         do {
-            let configurationHelper = ConfigurationHelper()
+            let configurationHelper = ConfigurationHelper(verbose: verbose)
             guard let configuration = try configurationHelper
                 .loadConfiguration(spec, platform: platform)
             else {
@@ -64,7 +73,7 @@ struct Switch: ParsableCommand, VerboseLogger {
         guard let desiredVariant = variant else {
             throw ValidationError("Variant \(self.variant) not found.")
         }
-        Logger.shared.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+        logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
         
         switch platform {
         case .ios:
