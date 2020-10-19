@@ -22,17 +22,17 @@ XCCONFIG_PATH = PROJECT_PARAMS[:XCCONFIG_PATH]
 #
 
 private_lane :deploy_testflight do |options|
-  # Retrieve app identifier from config
-  app_identifier = get_xcconfig_value(
-    path: XCCONFIG_PATH,
-    name: 'V_BUNDLE_ID'
-  )
+    # Retrieve app identifier from config
+    app_identifier = get_xcconfig_value(
+      path: XCCONFIG_PATH,
+      name: 'V_BUNDLE_ID'
+    )
 
-	pilot(
-	  username: USERNAME,
-	  app_identifier: app_identifier,
-    apple_id: APPLE_ID,
-	  skip_submission: true,
-	  skip_waiting_for_build_processing: true
-	)
+    pilot(
+      username: USERNAME,
+      app_identifier: app_identifier,
+      apple_id: APPLE_ID,
+      skip_submission: true,
+      skip_waiting_for_build_processing: true
+    )
 end
