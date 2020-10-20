@@ -44,9 +44,11 @@ extension YamlParser {
             return decoded
             
         } catch {
-            Logger.shared.logDebug(item: (error as NSError).debugDescription)
+
+            print((error as NSError).userInfo)
             Logger.shared.logFatal("❌ ", item: "Unable to load your YAML spec - Something must be wrong with it, consider fixing")
             exit(1) // Reduntant exit, otherwise we must return something
+            
         }
     }
 }

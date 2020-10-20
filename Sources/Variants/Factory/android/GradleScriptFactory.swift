@@ -2,6 +2,7 @@
 //  Variants
 //
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Giuseppe Deraco
 //
 
 import Foundation
@@ -14,7 +15,8 @@ struct GradleScriptFactory {
         let fm = FileManager.default
         var gradleFileContent = ""
         var exportVariablesFileContent = ""
-        var fastlaneVariablesFileContent = "{\n"
+        
+        var fastlaneConfig = FastlaneConfig(parameters: [String: String]())
         
         //Write the variant data
         gradleFileContent.appendLine("// ==== Variant values ==== ")
@@ -33,8 +35,8 @@ struct GradleScriptFactory {
         }
         
         //Write the custom properties
-        add(customProperties: variant.custom, header: "// ==== Variant custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneVariablesFileContent)
-        add(customProperties: configuration.custom, header: "// ==== Custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneVariablesFileContent)
+        add(customProperties: variant.custom, header: "// ==== Variant custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
+        add(customProperties: configuration.custom, header: "// ==== Custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
         
         //Write wrapper gradle tasks
         gradleFileContent.appendLine("// ==== Wrapper gradle tasks ==== ")
@@ -54,12 +56,10 @@ struct GradleScriptFactory {
             Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
         }
         
-        let fastlaneParamPath = configuration.path + Constants.Fastlane.parametersPath
+        let fastlaneParamPath = configuration.path + "/" + Constants.Fastlane.parametersPath
         
-        if(!fastlaneVariablesFileContent.isEmpty) {
+        if(!fastlaneConfig.parameters.isEmpty) {
             if(fm.fileExists(atPath: fastlaneParamPath)) {
-                fastlaneVariablesFileContent = String(fastlaneVariablesFileContent.dropLast(2))
-                fastlaneVariablesFileContent.appendLine("\n}")
                 let fastlaneVariantVariabelsUrl = URL(fileURLWithPath: fastlaneParamPath)
                     .appendingPathComponent(Constants.Fastlane.variantGeneratedParametersFileName)
                 do {
@@ -67,7 +67,11 @@ struct GradleScriptFactory {
                     {
                         try fm.removeItem(at: fastlaneVariantVariabelsUrl)
                     }
-                    try fastlaneVariablesFileContent.write(to:fastlaneVariantVariabelsUrl,atomically: true, encoding: .utf8)
+                    let fastlanePropsStringData = try RubyPropertiesEncoder().encode(fastlaneConfig).data(using: .utf8)
+                    let fileCreated = fm.createFile(atPath: fastlaneVariantVariabelsUrl.path, contents: fastlanePropsStringData, attributes: nil)
+                    if(!fileCreated) {
+                        throw "Could not generate the file for the fastlane variables"
+                    }
                 } catch {
                     Logger.shared.logError("❌ ", item: "Could not generate the file for the fastlane variables")
                 }
@@ -78,7 +82,7 @@ struct GradleScriptFactory {
         }
     }
     
-    func add(customProperties properties: [CustomProperty]?, header: String, _ gradleFileContent: inout String, _ exportVariablesFileContent: inout String, _ fastlaneVariablesFileContent: inout String) {
+    func add(customProperties properties: [CustomProperty]?, header: String, _ gradleFileContent: inout String, _ exportVariablesFileContent: inout String, _ fastlaneParameters: inout FastlaneConfig) {
         
         var customVariablesHeaderAdded = false
         properties?.forEach { prop in
@@ -92,7 +96,7 @@ struct GradleScriptFactory {
             case .envVar:
                 exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
             case .fastlane:
-                fastlaneVariablesFileContent.addFastlaneParameter(prop.name,value: prop.value)
+                fastlaneParameters.parameters[prop.name] = prop.value
             }
         }
     }
@@ -103,6 +107,8 @@ private struct WrapperGradleTask{
     let dependsOnTaskWithName: String
     let description: String
 }
+
+
 
 fileprivate extension String {
     
@@ -168,8 +174,5 @@ fileprivate extension String {
     }
     mutating func addExportVariable(_ name: String, value: String) {
         self.appendLine("export \(name)=\(value.envVarValue() ?? value)")
-    }
-    mutating func addFastlaneParameter(_ name: String, value: String) {
-        self.appendLine("   :\(name) => \"\(value.envVarValue() ?? value)\",")
     }
 }

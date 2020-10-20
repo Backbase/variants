@@ -9,7 +9,7 @@ import Foundation
 
 struct Constants {
     struct Fastlane {
-        static let parametersPath = "./fastlane/parameters"
+        static let parametersPath = "fastlane/parameters"
         static let variantGeneratedParametersFileName = "variants_params.rb"
     }
 }
