@@ -7,43 +7,35 @@
 
 import Foundation
 import PathKit
-import SwiftCLI
+import ArgumentParser
 
-public enum Platform: String, ConvertibleFromString {
-    case ios
-    case android
-    case unknown
-}
-
-final class Initializer: Command, VerboseLogger {
-    // --------------
-    // MARK: Command information
-    
-    let name: String = "init"
-    let shortDescription: String = "Generate specs file - variants.yml"
+struct Initializer: ParsableCommand {
+    static var configuration = CommandConfiguration(
+        commandName: "init",
+        abstract: "Generate spec file - variants.yml"
+    )
     
     // --------------
     // MARK: Configuration Properties
     
-    @Param(validation: Validation.allowing(Platform.ios, Platform.android))
+    @Argument(help: "'ios' or 'android'")
     var platform: Platform
     
-    let logger = Logger.shared
+    @Flag(name: .shortAndLong, help: "Is verbose")
+    var verbose = false
     
-    public func execute() throws {
-        let result = XCConfigFactory().doesTemplateExist()
-        guard result.exists, let path = result.path
-        else {
-            logger.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
-            return
+    mutating func run() throws {
+        guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else {
+            throw RuntimeError("❌ Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
         }
 
+        let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants init \(platform)", color: .ios)
 
         do {
             try VariantSpecFactory().generateSpec(path: path, platform: platform)
         } catch {
-            logger.logError("❌ ", item: error.localizedDescription)
+            throw RuntimeError(error.localizedDescription)
         }
     }
 }

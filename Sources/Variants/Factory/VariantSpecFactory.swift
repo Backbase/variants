@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftCLI
 import PathKit
 
 enum iOSProjectKey: String, CaseIterable {
@@ -32,10 +31,11 @@ struct VariantSpecFactory {
     /// - Throws: Exception for any operation that goes wrong.
     func generateSpec(path: Path, platform: Platform) throws {
         guard path.absolute().exists else {
-            throw CLI.Error(message: "Couldn't find template path")
+            throw RuntimeError("Couldn't find template path")
         }
+        
         let variantsPath = Path("./variants.yml")
-        try Task.run(bash: "cp \(path.absolute())/\(platform.rawValue)/variants-template.yml \(variantsPath)", directory: nil)
+        try Bash("cp", arguments: "\(path.absolute())/\(platform.rawValue)/variants-template.yml", "\(variantsPath)").run()
         
         if platform == .ios {
             try populateiOSSpec(path: variantsPath)
@@ -53,7 +53,7 @@ struct VariantSpecFactory {
         try projectSpecificInformation.forEach { (key, value) in
             if !value.isEmpty {
                 let escapedValue = value.replacingOccurrences(of: "/", with: "\\/")
-                try Task.run(bash: "sed -i -e 's/\(key.placeholder)/\(escapedValue)/g' \(path)")
+                try Bash("sed", arguments: "-i", "-e", "s/\(key.placeholder)/\(escapedValue)/g", "\(path)").run()
             }
         }
 
@@ -63,6 +63,6 @@ struct VariantSpecFactory {
         }
         
         // Remove remaining '*-e' file after `sed` in-file replacemnt
-        try? Task.run(bash: "rm -rf \(path)-e")
+        try? Bash("rm", arguments: "-rf", "\(path)-e").run()
     }
 }

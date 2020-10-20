@@ -8,9 +8,13 @@
 import Foundation
 import XcodeProj
 import PathKit
-import SwiftCLI
 
 struct XcodeProjFactory {
+    let logger: Logger
+    
+    init(logLegel: Bool = false) {
+        logger = Logger(verbose: logLegel)
+    }
     
     /// Scan the working directory for a Xcode project
     /// - Returns: Optional Path of the `.xcodeproj` folder
@@ -51,10 +55,27 @@ struct XcodeProjFactory {
                     if let infoPlist = buildSettings["INFOPLIST_FILE"] as? String {
                         applicationData[iOSProjectKey.infoPlist] = infoPlist
                         
+                        // Due to the nature of our 'Bash' helper, we have to run one command at a time,
+                        // not allowing us to pipe commands as `plutil ... | sed ...`.
+                        // This requires us to write the output of `plutil` to a temporary file and
+                        // use the content of this file as input for `sed`.
                         if
-                            let appName = try? Task.capture(bash: "plutil -extract CFBundleDisplayName xml1 -o - \(infoPlist) | sed -n 's/.*<string>\\(.*\\)<\\/string>.*/\\1/p'").stdout,
-                            !appName.isEmpty {
-                            applicationData[iOSProjectKey.appName] = appName
+                            let appNameTag = try? Bash("plutil", arguments: "-extract", "CFBundleDisplayName", "xml1", "-o", "-", "\(infoPlist)").capture(),
+                            
+                            // Create temporary file
+                            let temporaryFile = try? Bash("mktemp").capture() {
+                            
+                            // Write the output of `plutil` to temporary file
+                            try appNameTag.write(to: URL(fileURLWithPath: temporaryFile), atomically: true, encoding: .utf8)
+                            
+                            if
+                                let appName = try? Bash("sed", arguments: "-n", "s/.*<string>\\(.*\\)<\\/string>.*/\\1/p", temporaryFile).capture(),
+                                !appName.isEmpty {
+                                
+                                // Assign appName to `applicationData` dictionary,
+                                // trimming whitespaces and new lines
+                                applicationData[iOSProjectKey.appName] = appName.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
+                            }
                         }
                         
                         let sourcePath = infoPlist.split(separator: "/").dropLast().joined(separator: "/")
@@ -94,7 +115,7 @@ struct XcodeProjFactory {
             let project = try XcodeProj(path: projectPath)
             guard let pbxTarget = project.pbxproj.targets(named: target.key).first
             else {
-                Logger.shared.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
+                logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
                 return
             }
         
@@ -123,7 +144,7 @@ struct XcodeProjFactory {
             try project.write(path: projectPath)
         } catch {
             dump(error)
-            Logger.shared.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)'")
+            logger.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)'")
         }
     }
     
@@ -144,9 +165,9 @@ struct XcodeProjFactory {
                 }
             }
             if autoSave { try xcodeProject.write(path: path) }
-            Logger.shared.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.key)'", color: .green)
+            logger.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.key)'", color: .green)
         } catch {
-            Logger.shared.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.key)'")
+            logger.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.key)'")
         }
     }
     
@@ -159,7 +180,7 @@ struct XcodeProjFactory {
     func modify(_ keyValue: [String: String], in projectPath: Path, target: Target, silent: Bool = false) {
         do {
             let project = try XcodeProj(path: projectPath)
-            Logger.shared.logInfo("Updating: ", item: projectPath)
+            logger.logInfo("Updating: ", item: projectPath)
             for conf in project.pbxproj.buildConfigurations {
                 if
                     let infoList = conf.buildSettings["INFOPLIST_FILE"] as? String,
@@ -173,11 +194,11 @@ struct XcodeProjFactory {
             }
             try project.write(path: projectPath)
             if !silent {
-                Logger.shared.logInfo("⚙️  ", item: "Xcode Project modified with success", color: .green)
+                logger.logInfo("⚙️  ", item: "Xcode Project modified with success", color: .green)
             }
             
         } catch {
-            Logger.shared.logFatal("❌ ", item: "Unable to edit Xcode project '\(projectPath)'")
+            logger.logFatal("❌ ", item: "Unable to edit Xcode project '\(projectPath)'")
         }
     }
 }
