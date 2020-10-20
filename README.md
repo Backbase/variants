@@ -97,7 +97,7 @@ It will generate a variants.yml file in the base folder of your project
 > NOTE: Edit the file variants.yml accordingly.
 
 #### Config settings
-Your `variants.yml` will contain all the necessary fields. It comes with one variant named `default`, which will be used whenever a variant isn't specified. You can then include custom variants, for which the following settings are required:
+Your `variants.yml` spec will contain all the necessary fields. The information within `xcodeproj` and `targets` sections are populated automatically if a `.xcodeproj` is found in your working directory - otherwise, you'll be asked to update the placeholders in this file. It comes with one variant named `default`, which will be used whenever a variant isn't specified. You can then include custom variants, for which the following settings are required:
 * `name`
 * `version_name`
 * `version_number`
