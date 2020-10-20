@@ -51,7 +51,9 @@ struct XcodeProjFactory {
                     if let infoPlist = buildSettings["INFOPLIST_FILE"] as? String {
                         applicationData[iOSProjectKey.infoPlist] = infoPlist
                         
-                        if let appName = try? Task.capture(bash: "plutil -extract CFBundleDisplayName xml1 -o - \(infoPlist) | sed -n 's/.*<string>\\(.*\\)<\\/string>.*/\\1/p'").stdout {
+                        if
+                            let appName = try? Task.capture(bash: "plutil -extract CFBundleDisplayName xml1 -o - \(infoPlist) | sed -n 's/.*<string>\\(.*\\)<\\/string>.*/\\1/p'").stdout,
+                            !appName.isEmpty {
                             applicationData[iOSProjectKey.appName] = appName
                         }
                         
@@ -59,11 +61,15 @@ struct XcodeProjFactory {
                         applicationData[iOSProjectKey.source] = sourcePath
                     }
                     
-                    if let bundleId = buildSettings["PRODUCT_BUNDLE_IDENTIFIER"] as? String {
+                    if
+                        let bundleId = buildSettings["PRODUCT_BUNDLE_IDENTIFIER"] as? String,
+                        !bundleId.isEmpty {
                         applicationData[iOSProjectKey.appBundleID] = bundleId
                     }
                     
-                    if let appIcon = buildSettings["ASSETCATALOG_COMPILER_APPICON_NAME"] as? String {
+                    if
+                        let appIcon = buildSettings["ASSETCATALOG_COMPILER_APPICON_NAME"] as? String,
+                        !appIcon.isEmpty {
                         applicationData[iOSProjectKey.appIcon] = appIcon
                     }
                 }
