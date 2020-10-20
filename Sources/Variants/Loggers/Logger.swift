@@ -16,6 +16,10 @@ public class Logger: VerboseLogger {
         exit(1)
     }
     
+    func logWarning(_ prefix: Any = "⚠️  ", item: Any, indentationLevel: Int = 0, color: ShellColor = .yellow) {
+        log(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel: .warning)
+    }
+    
     func logError(_ prefix: Any = "", item: Any, color: ShellColor = .red) {
         divider(logLevel: .error)
         log(prefix, item: item, color: color, logLevel: .error)

@@ -12,7 +12,6 @@ import SwiftCLI
 public typealias DoesFileExist = (exists: Bool, path: Path?)
 
 struct XCConfigFactory {
-    
     let xcconfigFileName: String = "variants.xcconfig"
     
     func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
@@ -163,7 +162,7 @@ struct XCConfigFactory {
             
             let (success, _) = write(stringContent, toFile: configFile, force: false)
             if !success {
-                Logger.shared.logDebug("⚠️  ", item: "Failed to add item to .xcconfig", indentationLevel: 2)
+                Logger.shared.logWarning(item: "Failed to add item to .xcconfig", indentationLevel: 2)
             }
         }
     }
