@@ -7,7 +7,6 @@
 
 import Foundation
 import PathKit
-import SwiftCLI
 
 struct GradleScriptFactory {
     
@@ -17,6 +16,7 @@ struct GradleScriptFactory {
         var exportVariablesFileContent = ""
         
         var fastlaneConfig = FastlaneConfig(parameters: [String: String]())
+        let consolePrinter = StdoutPrinter()
         
         //Write the variant data
         gradleFileContent.appendLine("// ==== Variant values ==== ")
@@ -51,7 +51,7 @@ struct GradleScriptFactory {
         gradleFileContent.writeGradleScript(with: configuration)
         
         if let path = exportVariablesFileContent.writeToTemporaryFile() {
-            Logger.shared.logInfo(item: "EXPORT_ENVIRONMENTAL_VARIABLES_PATH=\(path)")
+            consolePrinter.print(item: "EXPORT_ENVIRONMENTAL_VARIABLES_PATH=\(path)")
         } else {
             Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
         }
@@ -171,8 +171,5 @@ fileprivate extension String {
     
     mutating func addGradleDefinition(_ name: String, value: String) {
         self.appendLine("rootProject.ext.\(name) = \"\(value.envVarValue() ?? value)\"")
-    }
-    mutating func addExportVariable(_ name: String, value: String) {
-        self.appendLine("export \(name)=\(value.envVarValue() ?? value)")
     }
 }

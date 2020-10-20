@@ -6,72 +6,66 @@
 //
 
 import Foundation
-import SwiftCLI
+import ArgumentParser
 import PathKit
 
-final class Switch: Command, VerboseLogger {
-    // --------------
-    // MARK: Command information
-    
-    let name: String = "switch"
-    let shortDescription: String = "Switch variants"
+struct Switch: ParsableCommand {
+    static var configuration = CommandConfiguration(
+        commandName: "switch",
+        abstract: "Switch variants"
+    )
     
     // --------------
     // MARK: Configuration Properties
     
-    @Param(validation: Validation.allowing(Platform.ios, Platform.android))
+    @Argument(help: "'ios' or 'android'")
     var platform: Platform
     
-    @Param
+    @Argument()
     var variant: String
     
-    @Key("-s", "--spec", description: "Use a different yaml configuration spec")
-    var specs: String?
-    var defaultSpecs: String = "variants.yml"
+    @Option(name: .shortAndLong, help: "Use a different yaml configuration spec")
+    var spec: String = "variants.yml"
     
-    let logger = Logger.shared
+    @Flag(name: .shortAndLong, help: "Is verbose")
+    var verbose = false
     
-    public func execute() throws {
-        
-        print(FileManager.default.currentDirectoryPath)
-        
-        logger.logSection("$ ", item: "variants switch \(self.platform) \(self.variant)", color: .ios)
-        self.defaultSpecs = self.specs ?? self.defaultSpecs
+    mutating func run() throws {
+        let logger = Logger(verbose: verbose)
+        logger.logSection("$ ", item: "variants switch \(platform) \(variant)", color: platform.color)
         
         do {
-            let configurationHelper = ConfigurationHelper()
+            let configurationHelper = ConfigurationHelper(verbose: verbose)
             guard let configuration = try configurationHelper
-                .loadConfiguration(self.defaultSpecs, platform: self.platform)
-                else {
-                    fail(with: "Unable to load specs '\(self.defaultSpecs)'")
-                    return
+                    .loadConfiguration(spec, platform: platform)
+            else {
+                throw RuntimeError("Unable to load specs '\(spec)'")
             }
             process(configuration)
             
         } catch {
-            fail(with: "Unable to switch variants - Check your YAML spec")
+            throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
     }
     
     // MARK: - Private
     
     private func process(_ configuration: Configuration) {
-        switchTo(configuration)
+        try? switchTo(configuration)
     }
     
-    private func switchTo(_ configuration: Configuration) {
+    private func switchTo(_ configuration: Configuration) throws {
         
         switch self.platform {
         case .ios:
             guard let desiredVariant = configuration.ios?.variants.first(where: { $0.name == self.variant })
-                else {
-                    fail(with: "Variant \(self.variant) not found.")
-                    return
+            else {
+                throw ValidationError("Variant \(self.variant) not found.")
             }
-            logger.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+            Logger.shared.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
             
             let factory = XCConfigFactory()
-            let configPath = Path(self.defaultSpecs).absolute().parent()
+            let configPath = Path(spec).absolute().parent()
             
             configuration.ios?
                 .targets.map { (key: $0.key, value: $0.value)}
@@ -81,19 +75,18 @@ final class Switch: Command, VerboseLogger {
                                          xcodeProj: configuration.ios?.xcodeproj,
                                          configPath: configPath,
                                          addToXcodeProj: false)
-            }
+                }
         case .android:
             guard let desiredVariant = configuration.android?.variants.first(where: { $0.name == self.variant })
-                else {
-                    fail(with: "Variant \(self.variant) not found.")
-                    return
+            else {
+                throw ValidationError("Variant \(self.variant) not found.")
             }
-            logger.logInfo(item: "Found: \(desiredVariant.name)")
-            
+            Logger.shared.logInfo(item: "Found: \(desiredVariant.name)")
+
             let factory = GradleScriptFactory()
             
             factory.createScript(with: configuration.android!,
-                variant: desiredVariant)
+                                 variant: desiredVariant)
         case .unknown:
             return
         }

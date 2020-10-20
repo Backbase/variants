@@ -8,6 +8,9 @@
 import Foundation
 
 extension String {
+    mutating func addExportVariable(_ name: String, value: String) {
+        self.appendLine("export \(name)=\(value.envVarValue() ?? value)")
+    }
     func envVarValue() -> String?
     {
         let regexPattern = #"^\{\{ envVars.(?<name>.*) \}\}"#

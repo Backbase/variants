@@ -6,17 +6,14 @@
 //
 
 import Foundation
-import SwiftCLI
 import Yams
 
-public protocol YamlParser: VerboseLogger {
+protocol YamlParser: VerboseLogger {
     var verbose: Bool { get }
     func extractConfiguration(from configurationPath: String, platform: Platform?) -> Configuration
 }
 
 extension YamlParser {
-    public var verbose: Bool { VerboseFlag.value }
-    
     public func extractConfiguration(from configurationPath: String, platform: Platform? = .unknown) -> Configuration {
         let decoder = YAMLDecoder()
         let encoder = YAMLEncoder()
@@ -44,11 +41,9 @@ extension YamlParser {
             return decoded
             
         } catch {
-
-            print((error as NSError).userInfo)
+            Logger.shared.logDebug(item: (error as NSError).debugDescription)
             Logger.shared.logFatal("❌ ", item: "Unable to load your YAML spec - Something must be wrong with it, consider fixing")
             exit(1) // Reduntant exit, otherwise we must return something
-            
         }
     }
 }
