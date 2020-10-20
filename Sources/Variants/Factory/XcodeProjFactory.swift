@@ -10,6 +10,12 @@ import XcodeProj
 import PathKit
 
 struct XcodeProjFactory {
+    let logger: Logger
+    
+    init(logLegel: Bool = false) {
+        logger = Logger(verbose: logLegel)
+    }
+    
     func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: NamedTarget) {
         let variantsGroupPath = Path("\(projectPath)/Variants")
         
@@ -17,7 +23,7 @@ struct XcodeProjFactory {
             let project = try XcodeProj(path: projectPath)
             guard let pbxTarget = project.pbxproj.targets(named: target.key).first
             else {
-                Logger.shared.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
+                logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
                 return
             }
         
@@ -46,7 +52,7 @@ struct XcodeProjFactory {
             try project.write(path: projectPath)
         } catch {
             dump(error)
-            Logger.shared.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)'")
+            logger.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)'")
         }
     }
     
@@ -60,16 +66,16 @@ struct XcodeProjFactory {
                 }
             }
             if autoSave { try xcodeProject.write(path: path) }
-            Logger.shared.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.key)'", color: .green)
+            logger.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.key)'", color: .green)
         } catch {
-            Logger.shared.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.key)'")
+            logger.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.key)'")
         }
     }
     
     func modify(_ keyValue: [String: String], in projectPath: Path, target: Target, silent: Bool = false) {
         do {
             let project = try XcodeProj(path: projectPath)
-            Logger.shared.logInfo("Updating: ", item: projectPath)
+            logger.logInfo("Updating: ", item: projectPath)
             for conf in project.pbxproj.buildConfigurations {
                 if
                     let infoList = conf.buildSettings["INFOPLIST_FILE"] as? String,
@@ -83,11 +89,11 @@ struct XcodeProjFactory {
             }
             try project.write(path: projectPath)
             if !silent {
-                Logger.shared.logInfo("⚙️  ", item: "Xcode Project modified with success", color: .green)
+                logger.logInfo("⚙️  ", item: "Xcode Project modified with success", color: .green)
             }
             
         } catch {
-            Logger.shared.logFatal("❌ ", item: "Unable to edit Xcode project '\(projectPath)'")
+            logger.logFatal("❌ ", item: "Unable to edit Xcode project '\(projectPath)'")
         }
     }
 }

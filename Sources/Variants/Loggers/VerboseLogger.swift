@@ -5,10 +5,8 @@
 //  Created by Arthur Alves
 //
 
-import SwiftCLI
 import Foundation
-
-let VerboseFlag = Flag("-v", "--verbose", description: "Log tech details for nerds")
+import ArgumentParser
 
 public enum ShellColor: String {
     case blue = "\u{001B}[0;34m"
@@ -48,8 +46,6 @@ extension Date {
 }
 
 extension VerboseLogger {
-    public var verbose: Bool { VerboseFlag.value }
-    
     public func log(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none) {
         if logLevel == .verbose {
             guard verbose else { return }
