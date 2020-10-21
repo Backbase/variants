@@ -43,7 +43,7 @@ struct XCConfigFactory {
         }
         
         do {
-            try _ = Bash("touch", arguments: file.absolute().description).run()
+            try Bash("touch", arguments: file.absolute().description).run()
             
             let encoded = try encoder.encode(encodableObject)
             guard let encodedJSONString = String(data: encoded, encoding: .utf8) else { return (false, nil) }
@@ -126,7 +126,7 @@ struct XCConfigFactory {
         }
         
         do {
-            try _ = Bash("cp", arguments:
+            try Bash("cp", arguments:
                 "\(path.absolute())/ios/Variants.swift",
                 variantsFile.absolute().description
             ).run()
@@ -183,8 +183,8 @@ struct XCConfigFactory {
                 .getDefaultValues(for: target)
                 .filter { !$0.key.starts(with: "V_") }
                 .forEach { (key, _) in
-                    try _ = Bash("plutil", arguments: "-remove '\(key)'", configFilePath).run()
-                    try _ = Bash("plutil", arguments: "-insert '\(key)'", "-string '$(\(key))'", configFilePath).run()
+                    try Bash("plutil", arguments: "-remove '\(key)'", configFilePath).run()
+                    try Bash("plutil", arguments: "-insert '\(key)'", "-string '$(\(key))'", configFilePath).run()
             }
             
         } catch {
