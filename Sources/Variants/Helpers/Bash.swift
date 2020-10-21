@@ -13,6 +13,7 @@ struct Bash {
         self.arguments = arguments
     }
     
+    @discardableResult
     func run() throws -> String? {
         guard var bashCommand = try execute(command: "/bin/bash" , arguments: ["-l", "-c", "which \(command)"]) else {
             throw RuntimeError("\(command) not found")
