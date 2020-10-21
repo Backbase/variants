@@ -23,6 +23,7 @@ struct Bash {
         }
         bashCommand = bashCommand.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
         if let output = try execute(command: bashCommand, arguments: arguments) {
+            // `dropLast()` is required as the output always contains a new line (`\n`) at the end.
             return String(output.dropLast())
         }
         return nil
