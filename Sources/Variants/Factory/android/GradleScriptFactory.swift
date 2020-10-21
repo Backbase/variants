@@ -10,6 +10,10 @@ import PathKit
 
 struct GradleScriptFactory {
     
+    /// Create `gradleScripts/variants.gradle` file inside project's path
+    /// - Parameters:
+    ///   - configuration: Android configuration from `variants.yml`
+    ///   - variant: Desired project variant.
     func createScript(with configuration: AndroidConfiguration, variant: AndroidVariant) {
         let fm = FileManager.default
         var gradleFileContent = ""
@@ -22,12 +26,12 @@ struct GradleScriptFactory {
         gradleFileContent.appendLine("// ==== Variant values ==== ")
         gradleFileContent.addGradleDefinition("versionName", value: variant.versionName)
         gradleFileContent.addGradleDefinition("versionCode", value: variant.versionCode)
-        gradleFileContent.addGradleDefinition("appIdentifier", value: variant.appIdentifier)
-        gradleFileContent.addGradleDefinition("appName", value: variant.appName)
+        gradleFileContent.addGradleDefinition("appIdentifier", value: configuration.appIdentifier+variant.configIdSuffix)
+        gradleFileContent.addGradleDefinition("appName", value: configuration.appName+variant.configName)
         
         if let signing = configuration.signing {
             //Write the signing data
-            gradleFileContent.appendLine("// ==== Signing values ==== ")
+            gradleFileContent.appendLine("\n// ==== Signing values ==== ")
             gradleFileContent.addGradleDefinition("signingKeyAlias", value: signing.keyAlias)
             gradleFileContent.addGradleDefinition("signingKeyPassword", value: signing.keyPassword)
             gradleFileContent.addGradleDefinition("signingStoreFile", value: signing.storeFile)
@@ -35,11 +39,11 @@ struct GradleScriptFactory {
         }
         
         //Write the custom properties
-        add(customProperties: variant.custom, header: "// ==== Variant custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
-        add(customProperties: configuration.custom, header: "// ==== Custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
+        add(customProperties: variant.custom, header: "\n// ==== Variant custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
+        add(customProperties: configuration.custom, header: "\n// ==== Custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
         
         //Write wrapper gradle tasks
-        gradleFileContent.appendLine("// ==== Wrapper gradle tasks ==== ")
+        gradleFileContent.appendLine("\n// ==== Wrapper gradle tasks ==== ")
         
         gradleFileContent.addWrapperGradleTasks([
             WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild, description: "Wrapper Gradle task used for building the application"),
@@ -50,10 +54,12 @@ struct GradleScriptFactory {
         //Write the actual files
         gradleFileContent.writeGradleScript(with: configuration)
         
-        if let path = exportVariablesFileContent.writeToTemporaryFile() {
-            consolePrinter.print(item: "EXPORT_ENVIRONMENTAL_VARIABLES_PATH=\(path)")
-        } else {
-            Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
+        if !exportVariablesFileContent.isEmpty {
+            if let path = exportVariablesFileContent.writeToTemporaryFile() {
+                consolePrinter.print(item: "EXPORT_ENVIRONMENTAL_VARIABLES_PATH=\(path)")
+            } else {
+                Logger.shared.logError(item: "Could not generate the file for the enviromental variables")
+            }
         }
         
         let fastlaneParamPath = configuration.path + "/" + Constants.Fastlane.parametersPath
@@ -75,8 +81,7 @@ struct GradleScriptFactory {
                 } catch {
                     Logger.shared.logError("❌ ", item: "Could not generate the file for the fastlane variables")
                 }
-            }
-            else {
+            } else {
                 Logger.shared.logError("❌ ", item: "\(fastlaneParamPath) not found. Unable to store configuration value for key \(variant.name) using \"fastlane\" destination.")
             }
         }
@@ -109,14 +114,11 @@ private struct WrapperGradleTask{
 }
 
 
-
 fileprivate extension String {
-    
     func writeToTemporaryFile() -> String? {
         do {
             return try FileManager.default.writeTemporaryFile(withContent: self)
-        }
-        catch {
+        } catch {
             return nil
         }
     }
@@ -128,37 +130,33 @@ fileprivate extension String {
         
         do {
             try fm.createDirectory(atPath: destinationFolderPath, withIntermediateDirectories: true, attributes: nil)
-            fm.createFile(atPath: destionationFilePath, contents: self.data(using: .utf8
-            ), attributes: nil)
-        } catch
-        {
+            fm.createFile(atPath: destionationFilePath, contents: self.data(using: .utf8), attributes: nil)
+        } catch {
             Logger.shared.logError(item: "Could not generate gradle script:\n\(error.localizedDescription)")
         }
     }
     
     mutating func addWrapperGradleTasks(_ tasks: [WrapperGradleTask]) {
-        
         let dependsOnScript = #"""
         %@if (task.name == "%@") {
                 %@.dependsOn(task)
             }
         """#
+        
         var dependsOnScriptList = ""
         
         for (index, element) in tasks.enumerated() {
             self.appendLine(String(format: "def %@ = task %@", element.name,element.name))
             let isFirst = index == 0
-            if(isFirst )
-            { dependsOnScriptList.append(String(format: dependsOnScript,
-                                                "",
-                                                element.dependsOnTaskWithName, element.name)) }
-            else {
-                dependsOnScriptList.append(String(format: dependsOnScript,
-                                                  " else ",
+            if isFirst {
+                dependsOnScriptList.append(String(format: dependsOnScript, "",
+                                                  element.dependsOnTaskWithName, element.name))
+                
+            } else {
+                dependsOnScriptList.append(String(format: dependsOnScript, " else ",
                                                   element.dependsOnTaskWithName, element.name))
             }
         }
-        
         
         let whenTaskAddedScript = """
         tasks.whenTaskAdded { task ->
