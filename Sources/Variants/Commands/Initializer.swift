@@ -21,7 +21,7 @@ struct Initializer: ParsableCommand {
     @Argument(help: "'ios' or 'android'")
     var platform: Platform
     
-    @Flag(name: .shortAndLong, help: "Is verbose")
+    @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
     
     mutating func run() throws {

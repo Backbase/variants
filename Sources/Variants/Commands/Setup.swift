@@ -28,7 +28,7 @@ struct Setup: ParsableCommand {
     @Flag()
     var skipFastlane: Bool = false
     
-    @Flag(name: .shortAndLong, help: "Is verbose")
+    @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
     
     mutating func run() throws {
