@@ -4,7 +4,7 @@
 
 ## Variants
 
-A command line tool to setup deployment variants and full CI/CD pipelines for mobile projects.
+A command line tool to setup deployment variants and working CI/CD setup for mobile projects.
 
 ## Features
 
@@ -59,7 +59,7 @@ swift run variants
 ```sh
 Usage: variants <command> [options]
 
-A command-line tool to setup deployment variants and full CI/CD pipelines
+A command-line tool to setup deployment variants and working CI/CD setup
 
 Commands:
   init            Generate specs file - variants.yml
@@ -71,22 +71,28 @@ Commands:
 
 ### Initialize
 
-Before running setup to create your deployment variants and pipelines you need a YAML configuration file.
+Before running setup to create your deployment variants and Fastlane setup you need a YAML configuration file.
 Run `variants init` in the base folder of your project.
 
 ```sh
-Usage: variants init <platform> [options]
+OVERVIEW: Generate spec file - variants.yml
 
-Generate specs file - variants.yml
+USAGE: variants init [--platform <platform>] [--verbose]
 
-Options:
-  -h, --help       Show help information
-  -v, --verbose    Log tech details for nerds
+OPTIONS:
+  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -v, --verbose 
+  -h, --help                 Show help information.
+      --version              Show the version.
 ```
 
-Example
+Examples
 ```sh
-$ variants init ios
+# Automatically detect platform
+$ variants init
+
+# Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
+$ variants init --platform ios
 ```
 It will generate a variants.yml file in the base folder of your project
 
@@ -141,20 +147,26 @@ ios:
 #### Using default configuration file (variants.yml)
 
 ```sh
-Usage: variants setup <platform> [options]
+OVERVIEW: Setup deployment variants (alongside Fastlane)
 
-Setup deployment variants
+USAGE: variants setup [--platform <platform>] [--spec <spec>] [--skip-fastlane] [--verbose]
 
-Options:
-  -h, --help             Show help information
-      --skip-fastlane    Skip fastlane setup
-  -s, --spec <value>     Use a different yaml configuration spec
-  -v, --verbose          Log tech details for nerds
+OPTIONS:
+  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -s, --spec <spec>          Use a different yaml configuration spec (default: variants.yml)
+      --skip-fastlane
+  -v, --verbose
+  -h, --help                 Show help information.
+      --version              Show the version.
 ```
 
-Example
+Examples
 ```sh
+# Automatically detect platform
 $ variants setup ios
+
+# Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
+$ variants setup --platform ios
 ```
 
 This will generate your `Variants/` folder, containing `variants.xcconfig` and `Variants.swift`. You won't have to do anything with these files.
@@ -174,9 +186,9 @@ Setup will also configure your Xcode project to use this new configuration and m
 You might not always have `variants.yml`  in the base folder of your project or have it with a completely different name, for this reason you can specify its path as an option
 
 ```sh
-variants setup <platform> [-s,--spec] <yml config path>
+variants setup -s (or --spec) <yml spec path>
 
-variants setup ios -s ~/johndoe/custom/path/variants.yml
+variants setup -s ~/johndoe/custom/path/variants.yml
 ```
 
 > NOTE: *variants setup* will automatically assign the `default` variant configuration to the project
@@ -186,22 +198,84 @@ variants setup ios -s ~/johndoe/custom/path/variants.yml
 In order to switch between project variants you don't need to modify the Xcode project nor the `variants.xcconfig`, just make use of one command
 
 ```sh
+<<<<<<< HEAD
 Usage: variants switch <platform> [options]
+=======
+OVERVIEW: Switch variants
 
-Switch variants
+USAGE: variants switch <variant> [--platform <platform>] [--spec <spec>] [--verbose]
+>>>>>>> develop
 
+ARGUMENTS:
+  <variant>
+
+<<<<<<< HEAD
 Options:
       --variant <value>  Desired variant (default: default)
   -s, --spec <value>     Use a different yaml configuration spec (default: variants.yml)
   -h, --help             Show help information
   -v, --verbose          Log tech details for nerds
+=======
+OPTIONS:
+  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -s, --spec <spec>           Use a different yaml configuration spec (default: variants.yml)
+  -v, --verbose
+      --version               Show the version.
+  -h, --help                  Show help information.
+>>>>>>> develop
 ```
 
 Examples
 ```sh
+<<<<<<< HEAD
 $ variants switch ios
 
 $ variants switch ios --variant BETA
 
 $ variants switch ios --variant BETA --spec /Path/to/custom/variants.yml
+=======
+# Automatically detect platform
+$ variants switch BETA
+
+# Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
+$ variants switch BETA --platform ios
+```
+
+## Auto detecting the project's platform
+
+All commands (`init`, `setup` and `switch`) are capable of detecting your mobile project's platform (`iOS` or `Android`).
+However, you can specify a platform directly, with option `--platform <value>` where value is either `ios` or `android`.
+
+```sh
+# Auto detection will happen
+$ variants <command>
+
+# Platform is specified, skip auto detection
+$ variants <command> --platform ios
+$ variants <command> --platform android
+```
+
+### Unable to auto detect platform
+
+There are 2 cases when platform auto detection will present a problem.
+
+1. No Android nor Xcode project were found in the working directory
+
+```sh
+$ variants switch beta
+INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
+INFO  [2020-10-21]: ▸ $ variants switch beta
+INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
+Error: ❌ Could not find an Android or Xcode project in your working directory.
+```
+
+2. When both an Android and a Xcode project were found in the working directory, making it unable to decide which platform to use for a command.
+
+```sh
+$ variants switch beta
+INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
+INFO  [2020-10-21]: ▸ $ variants switch beta
+INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
+Error: ❌ Found an Android and Xcode project in your working directory. Please specify the platform you want using `--platform <value>`
+>>>>>>> develop
 ```

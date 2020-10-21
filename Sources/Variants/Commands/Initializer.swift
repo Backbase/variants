@@ -18,13 +18,26 @@ struct Initializer: ParsableCommand {
     // --------------
     // MARK: Configuration Properties
     
-    @Argument(help: "'ios' or 'android'")
-    var platform: Platform
+    @Option(name: .shortAndLong, help: "'ios' or 'android'")
+    var platform: Platform = .unknown
     
     @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
-    
+
     mutating func run() throws {
+        let logger = Logger(verbose: verbose)
+        logger.logSection("$ ", item: "variants init", color: .ios)
+        
+        // Platform auto detection
+        do {
+            if platform == .unknown {
+                platform = try Platform.detectPlatform()
+            }
+        } catch let error as PlatformScanError {
+            throw error
+        }
+        
+        // 'Templates' folder integrity check
         let templateManager = TemplatesManager()
         guard let path = templateManager.firstFoundTemplateDirectory() else {
             var expectedLocation = templateManager.templateDirectories.joined(separator: ", ")
@@ -34,9 +47,7 @@ struct Initializer: ParsableCommand {
             throw RuntimeError("'Templates' folder not found on \(expectedLocation)")
         }
 
-        let logger = Logger(verbose: verbose)
-        logger.logSection("$ ", item: "variants init \(platform)", color: platform.color)
-
+        // Generate 'variants.yml' spec
         do {
             try VariantSpecFactory().generateSpec(path: path, platform: platform)
         } catch {
