@@ -21,8 +21,8 @@ struct Switch: ParsableCommand {
     @Argument(help: "'ios' or 'android'")
     var platform: Platform
     
-    @Argument()
-    var variant: String
+    @Option()
+    var variant: String = "default"
     
     @Option(name: .shortAndLong, help: "Use a different yaml configuration spec")
     var spec: String = "variants.yml"
