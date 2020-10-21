@@ -186,17 +186,22 @@ variants setup ios -s ~/johndoe/custom/path/variants.yml
 In order to switch between project variants you don't need to modify the Xcode project nor the `variants.xcconfig`, just make use of one command
 
 ```sh
-Usage: variants switch <platform> <variant> [options]
+Usage: variants switch <platform> [options]
 
 Switch variants
 
 Options:
-  -h, --help            Show help information
-  -s, --spec <value>    Use a different yaml configuration spec
-  -v, --verbose         Log tech details for nerds
+      --variant <value>  Desired variant (default: default)
+  -s, --spec <value>     Use a different yaml configuration spec (default: variants.yml)
+  -h, --help             Show help information
+  -v, --verbose          Log tech details for nerds
 ```
 
-Example
+Examples
 ```sh
-$ variants switch ios BETA
+$ variants switch ios
+
+$ variants switch ios --variant BETA
+
+$ variants switch ios --variant BETA --spec /Path/to/custom/variants.yml
 ```
