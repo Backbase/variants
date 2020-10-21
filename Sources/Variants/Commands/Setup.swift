@@ -93,7 +93,7 @@ struct Setup: ParsableCommand {
             
             guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else { return }
             do {
-                _ = try Bash("cp", arguments: "-R", "\(path.absolute())/\(platform)/_fastlane/*", ".").run()
+                try Bash("cp", arguments: "-R", "\(path.absolute())/\(platform)/_fastlane/*", ".").run()
                 Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
                 
                 let setupCompleteMessage = """

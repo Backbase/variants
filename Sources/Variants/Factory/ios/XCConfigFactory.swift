@@ -156,7 +156,7 @@ struct XCConfigFactory {
             
             let (success, _) = write(stringContent, toFile: configFile, force: false)
             if !success {
-                logger.logDebug("⚠️  ", item: "Failed to add item to .xcconfig", indentationLevel: 2)
+                logger.logWarning(item: "Failed to add item to .xcconfig", indentationLevel: 2)
             }
         }
     }

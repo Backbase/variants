@@ -13,16 +13,17 @@ struct Bash {
         self.arguments = arguments
     }
     
-    @discardableResult
-    func run() throws -> String? {
+    func run() throws {
+        _ = try capture()
+    }
+    
+    func capture() throws -> String? {
         guard var bashCommand = try execute(command: "/bin/bash" , arguments: ["-l", "-c", "which \(command)"]) else {
             throw RuntimeError("\(command) not found")
         }
         bashCommand = bashCommand.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
-        let output = try execute(command: bashCommand, arguments: arguments)
-        if (output != nil)
-        {
-            return String(output!.dropLast())
+        if let output = try execute(command: bashCommand, arguments: arguments) {
+            return String(output.dropLast())
         }
         return nil
     }

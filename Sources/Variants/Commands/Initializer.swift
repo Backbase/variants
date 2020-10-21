@@ -33,16 +33,9 @@ struct Initializer: ParsableCommand {
         logger.logSection("$ ", item: "variants init \(platform)", color: platform.color)
 
         do {
-            try generateConfig(path: path, platform: platform)
-            logger.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
+            try VariantSpecFactory().generateSpec(path: path, platform: platform)
         } catch {
             throw RuntimeError.unableToInitializeVariants
         }
-    }
-    
-    // MARK: - Private
-    
-    private func generateConfig(path: Path, platform: Platform) throws {
-        try Bash("cp", arguments: "\(path.absolute())/\(platform.rawValue)/variants-template.yml", "./variants.yml").run()
     }
 }
