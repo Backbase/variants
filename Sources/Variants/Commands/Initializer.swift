@@ -25,8 +25,13 @@ struct Initializer: ParsableCommand {
     var verbose = false
     
     mutating func run() throws {
-        guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else {
-            throw RuntimeError("Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
+        let templateManager = TemplatesManager()
+        guard let path = templateManager.firstFoundTemplateDirectory() else {
+            var expectedLocation = templateManager.templateDirectories.joined(separator: ", ")
+            if #available(macOS 10.15, *) {
+                expectedLocation = ListFormatter.localizedString(byJoining: templateManager.templateDirectories)
+            }
+            throw RuntimeError("'Templates' folder not found on \(expectedLocation)")
         }
 
         let logger = Logger(verbose: verbose)

@@ -106,12 +106,6 @@ struct XCConfigFactory {
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
     }
     
-    func firstTemplateDirectory() -> Path? {
-        templateDirectories
-            .map(Path.init(stringLiteral:))
-            .first(where: \.exists)
-    }
-    
     // MARK: - Private methods
     
     private func addToXcode(_ xcConfigFile: Path,
@@ -120,8 +114,13 @@ struct XCConfigFactory {
                             target: NamedTarget) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
         
-        guard let path = firstTemplateDirectory() else {
-            logger.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
+        let templateManager = TemplatesManager()
+        guard let path = templateManager.firstFoundTemplateDirectory() else {
+            var expectedLocation = templateManager.templateDirectories.joined(separator: ", ")
+            if #available(macOS 10.15, *) {
+                expectedLocation = ListFormatter.localizedString(byJoining: templateManager.templateDirectories)
+            }
+            logger.logFatal("❌ ", item: "'Templates' folder not found on \(expectedLocation)")
             return
         }
         
@@ -192,9 +191,4 @@ struct XCConfigFactory {
             logger.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
         }
     }
-    
-    private var templateDirectories: [String] = [
-        "/usr/local/lib/variants/templates",
-        "./Templates"
-    ]
 }
