@@ -3,58 +3,83 @@
 # TODO: Replace placeholders with real values
 #
 
-# notes:
-# 1. any value can be set to be read from an environement variable
-#    e.g. version_code: "{{ envVars.APP_VERSION_CODE }}"
+#
+# NOTE:
+# 1. Any value can be set to be read from an environement variable. As below:
+#   version_code: "{{ envVars.APP_VERSION_CODE }}"
+#
 
 android:
-  path: { PROJECT }}
+  path: {{ PROJECT_PATH }}
+  app_name: {{ APP_NAME }}
+  app_identifier: {{ APP_IDENTIFIER }}
   variants:
-    - name: dev
+      # Default variant is mandatory, do not remove
+      # Usually regarded as `production` variant.
+    - name: default
       version_name: 0.0.1
       version_code: 1
-      app_identifier: {{ BUNDLE_ID }}
-      app_name: {{ APP_NAME }}
-      task_build: assembleDevDebug
-      task_unittest: testDevDebugUnitTest
-      task_uitest: connectedDevDebugAndroidTest
-      # custom: not mandatory.
-      # You can have as many custom fields as possible.
-      # The value of will be written in 3 possible destination(s):
-      # project => variants.gradle
-      # environment => environment variables file
-      # fastlane => fastlane variables file
-      custom:
-        - name: APPCENTER_APP_NAME
-          value: {{ APP_NAME }}
-          destination: environment
-    - name: prod
-      version_name: 1.0.0
-      version_code: 1
-      app_identifier:  {{ BUNDLE_ID }}
-      app_name: {{ APP_NAME }}
       task_build: bundleProdRelease
       task_unittest: testProdReleaseUnitTest
       task_uitest: connectedProdReleaseAndroidTest
+      # 
+      # custom: - Not required.
+      # You can have as many custom fields as possible.
+      # Only strings allowed.
+      #
+      # The value of will be written to 1 of 3 possible destinations:
+      # - project => variants.gradle
+      # - environment => environment variables file (a temporary file)
+      # - fastlane => fastlane/parameters/variants_params.rb
+      #
       custom:
-        - name: testBuildType
-          value: release
-          destination: project
-  #signing: not mandatory
-  signing:
-      key_alias: android
-      key_password: "{{ envVars.APP_SIGN_KEY_PASSWORD }}"
-      store_file: /usr/local/android/production.keystore
-      store_password: "{{ envVars.APP_SIGN_STORE_PASSWORD }}"
-  # custom: not mandatory.
-  # same as variant's custom but this will be processed regardless the chosen variant
-  custom:
-    - name: privateMavenRepoUrl
-      value: https://repo.private.com/android
-      destination: project
-    - name: mvnUser
-      value: "{{ envVars.MAVEN_USERNAME }}"
-      destination: fastlane
-    - name: mvnPass
-      value: "{{ envVars.MAVEN_PASSWORD }}"
-      destination: project
+        - name: APPCENTER_APP_NAME
+          value: {{ SAMPLE_PLACEHOLDER }}
+          destination: environment
+    - name: BETA
+      id_suffix: beta
+      version_name: 0.0.1
+      version_code: 1
+      task_build: assembleDevDebug
+      task_unittest: testDevDebugUnitTest
+      task_uitest: connectedDevDebugAndroidTest
+      custom:
+        - name: APPCENTER_APP_NAME
+          value: {{ SAMPLE_PLACEHOLDER }}
+          destination: environment
+  
+  # ----------------------------------------------------------------------
+  # signing: - Not required.
+  #
+  # When uncommented, the information below will be available in the file
+  # `variants.gradle`, found in `{{ android.path }}/gradleScripts/` folder
+  #
+  # Uncomment section below if necessary.
+  # ----------------------------------------------------------------------
+
+  #signing:
+  #    key_alias: android
+  #    key_password: "{{ envVars.APP_SIGN_KEY_PASSWORD }}"
+  #    store_file: /usr/local/android/production.keystore
+  #    store_password: "{{ envVars.APP_SIGN_STORE_PASSWORD }}"
+  
+  
+  # ----------------------------------------------------------------------
+  # custom: - Not required.
+  #
+  # Same as variant's `custom`, but this will be processed regardless of
+  # the chosen variant.
+  #
+  # Uncomment section below if necessary.
+  # ----------------------------------------------------------------------
+
+  #custom:
+  #  - name: privateMavenRepoUrl
+  #    value: https://repo.private.com/android
+  #    destination: project
+  #  - name: mvnUser
+  #    value: "{{ envVars.MAVEN_USERNAME }}"
+  #    destination: fastlane
+  #  - name: mvnPass
+  #    value: "{{ envVars.MAVEN_PASSWORD }}"
+  #    destination: project
