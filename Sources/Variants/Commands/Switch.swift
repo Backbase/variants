@@ -37,32 +37,36 @@ struct Switch: ParsableCommand {
         do {
             let configurationHelper = ConfigurationHelper(verbose: verbose)
             guard let configuration = try configurationHelper
-                    .loadConfiguration(spec, platform: platform)
-            else {
+                    .loadConfiguration(spec, platform: platform) else {
                 throw RuntimeError("Unable to load specs '\(spec)'")
             }
-            process(configuration)
             
+            try process(configuration)
+            
+        } catch let error as ConfigurationParserError {
+            throw RuntimeError(error.message)
         } catch {
-            throw RuntimeError("Unable to switch variants - Check your YAML spec")
+            throw RuntimeError.unableToSwitchVariants
         }
     }
     
     // MARK: - Private
     
-    private func process(_ configuration: Configuration) {
-        try? switchTo(configuration)
+    private func process(_ configuration: Configuration) throws {
+        try switchTo(configuration)
     }
     
     private func switchTo(_ configuration: Configuration) throws {
-        
         switch self.platform {
         case .ios:
-            guard let desiredVariant = configuration.ios?.variants.first(where: { $0.name == self.variant })
-            else {
-                throw ValidationError("Variant \(self.variant) not found.")
+            guard let iOSConfiguration = configuration.ios else {
+                throw ConfigurationParserError.platformNotFound(platform)
             }
-            Logger.shared.logInfo(item: "Found: \(desiredVariant.configIdSuffix)")
+            
+            guard let desiredVariant = iOSConfiguration.variants.first(where: { $0.name == self.variant }) else {
+                throw ConfigurationParserError.variantNotFound(variant, platform: platform)
+            }
+            Logger.shared.logInfo(item: "Found variant: \(desiredVariant.configIdSuffix)")
             
             let factory = XCConfigFactory()
             let configPath = Path(spec).absolute().parent()
@@ -77,11 +81,14 @@ struct Switch: ParsableCommand {
                                          addToXcodeProj: false)
                 }
         case .android:
-            guard let desiredVariant = configuration.android?.variants.first(where: { $0.name == self.variant })
-            else {
-                throw ValidationError("Variant \(self.variant) not found.")
+            guard let AndroidConfiguration = configuration.android else {
+                throw ConfigurationParserError.platformNotFound(platform)
             }
-            Logger.shared.logInfo(item: "Found: \(desiredVariant.name)")
+            
+            guard let desiredVariant = AndroidConfiguration.variants.first(where: { $0.name == self.variant }) else {
+                throw ConfigurationParserError.variantNotFound(variant, platform: platform)
+            }
+            Logger.shared.logInfo(item: "Found variant: \(desiredVariant.name)")
 
             let factory = GradleScriptFactory()
             

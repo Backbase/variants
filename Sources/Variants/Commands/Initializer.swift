@@ -26,24 +26,23 @@ struct Initializer: ParsableCommand {
     
     mutating func run() throws {
         guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else {
-            throw RuntimeError("❌ Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
+            throw RuntimeError("Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
         }
 
         let logger = Logger(verbose: verbose)
-        
         logger.logSection("$ ", item: "variants init \(platform)", color: platform.color)
 
         do {
             try generateConfig(path: path, platform: platform)
             logger.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
         } catch {
-            throw RuntimeError(error.localizedDescription)
+            throw RuntimeError.unableToInitializeVariants
         }
     }
     
     // MARK: - Private
     
     private func generateConfig(path: Path, platform: Platform) throws {
-        try _ = Bash("cp", arguments: "\(path.absolute())/\(platform.rawValue)/variants-template.yml", "./variants.yml").run()
+        try Bash("cp", arguments: "\(path.absolute())/\(platform.rawValue)/variants-template.yml", "./variants.yml").run()
     }
 }

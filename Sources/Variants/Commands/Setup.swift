@@ -33,7 +33,6 @@ struct Setup: ParsableCommand {
     
     mutating func run() throws {
         let logger = Logger(verbose: verbose)
-        
         logger.logSection("$ ", item: "variants setup \(platform)", color: .ios)
         
         do {
@@ -45,7 +44,7 @@ struct Setup: ParsableCommand {
             createVariants(with: configuration)
             setupFastlane(skipFastlane)
         } catch {
-            throw RuntimeError("Sorry! Something is wrong with your YAML spec")
+            throw RuntimeError.unableToSetupVariants
         }
     }
     
