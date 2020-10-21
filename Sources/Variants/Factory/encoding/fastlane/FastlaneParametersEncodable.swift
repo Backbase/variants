@@ -7,6 +7,6 @@
 
 import Foundation
 
-public struct FastlaneConfig : Encodable {
-    var parameters: [String:String]
+public struct FastlaneConfig: Encodable {
+    var parameters: [String: String]
 }
