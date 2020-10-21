@@ -63,7 +63,8 @@ struct Switch: ParsableCommand {
                 throw ConfigurationParserError.platformNotFound(platform)
             }
             
-            guard let desiredVariant = iOSConfiguration.variants.first(where: { $0.name == self.variant }) else {
+            guard let desiredVariant = iOSConfiguration.variants
+                    .first(where: { $0.name.lowercased() == self.variant.lowercased() }) else {
                 throw ConfigurationParserError.variantNotFound(variant, platform: platform)
             }
             Logger.shared.logInfo(item: "Found variant: \(desiredVariant.configIdSuffix)")
@@ -85,7 +86,8 @@ struct Switch: ParsableCommand {
                 throw ConfigurationParserError.platformNotFound(platform)
             }
             
-            guard let desiredVariant = AndroidConfiguration.variants.first(where: { $0.name == self.variant }) else {
+            guard let desiredVariant = AndroidConfiguration.variants
+                    .first(where: { $0.name.lowercased() == self.variant.lowercased() }) else {
                 throw ConfigurationParserError.variantNotFound(variant, platform: platform)
             }
             Logger.shared.logInfo(item: "Found variant: \(desiredVariant.name)")
