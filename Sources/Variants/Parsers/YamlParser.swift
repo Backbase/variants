@@ -42,7 +42,7 @@ extension YamlParser {
             
         } catch {
             Logger.shared.logDebug(item: (error as NSError).debugDescription)
-            Logger.shared.logFatal("❌ ", item: "Unable to load your YAML spec - Something must be wrong with it, consider fixing")
+            Logger.shared.logFatal("❌ ", item: "Unable to load your YAML spec - Ensure it does exist, run 'variants init'")
             exit(1) // Reduntant exit, otherwise we must return something
         }
     }
