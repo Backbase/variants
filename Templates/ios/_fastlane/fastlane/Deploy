@@ -6,17 +6,17 @@ EXPORT_METHOD           = MATCH_PARAMS[:EXPORT_METHOD]
 # --- Well, it doesn't deploy
 
 #
-# Runs everything but deploy.
 # Perfect for a PR branch.
 #
 # Example:
 #   fastlane run_all_but_deploy
 
-lane :all_but_deploy do
+desc 'runs everything but deploy'
+lane :run_all_but_deploy do
     run_all_tests
     run_coverage
     run_swiftlint
-    run_cohesion
+    # run_cohesion
     # run_lizard
     # run_sonar
 end
