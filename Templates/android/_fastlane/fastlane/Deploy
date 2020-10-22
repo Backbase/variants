@@ -21,16 +21,20 @@ end
 #  - key: store_destination
 #    value: 'appcenter' or 'playstore'
 #
-#  Example:
+#  EXAMPLE:
 #    fastlane deploy store_destination:'playstore'
 #
 #  If not specified, 'store_destination' will fallback
-#  to 'appcenter'
+#  to 'appcenter'.
+#
+#  NOTE:
+#  This parameter is case insensitive. i.e.: there are
+#  no differences between 'AppCenter' and 'appcenter'.
 #
 
 desc 'run deploy'
 lane :deploy do |options|
-    destination = options[:store_destination] || 'appcenter'
+    destination = options[:store_destination].downcase || 'appcenter'
     
     if not ["appcenter", "playstore"].include?(destination)
         UI.user_error!("Parameter 'store_destination' isn't valid - Expected 'appcenter' or 'playstore'")
