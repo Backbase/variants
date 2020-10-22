@@ -1,0 +1,8 @@
+
+private_lane :run_unit_tests do
+    gradle(task: "vUnitTests")
+end
+
+private_lane :run_ui_tests do
+    gradle(task: "vUITests")
+end

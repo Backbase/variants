@@ -1,0 +1,7 @@
+require File.expand_path('parameters/variants_params.rb', __dir__)
+
+import('AppCenter')
+import('Deploy')
+import('PlayStore')
+import('Slack')
+import('Tests')
