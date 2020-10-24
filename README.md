@@ -80,7 +80,7 @@ OVERVIEW: Generate spec file - variants.yml
 USAGE: variants init [--platform <platform>] [--verbose]
 
 OPTIONS:
-  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -p, --platform <platform>  'ios' or 'android'
   -v, --verbose 
   -h, --help                 Show help information.
       --version              Show the version.
@@ -152,7 +152,7 @@ OVERVIEW: Setup deployment variants (alongside Fastlane)
 USAGE: variants setup [--platform <platform>] [--spec <spec>] [--skip-fastlane] [--verbose]
 
 OPTIONS:
-  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -p, --platform <platform>  'ios' or 'android'
   -s, --spec <spec>          Use a different yaml configuration spec (default: variants.yml)
       --skip-fastlane
   -v, --verbose
@@ -206,7 +206,7 @@ ARGUMENTS:
   <variant>
 
 OPTIONS:
-  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -p, --platform <platform>  'ios' or 'android'
   -s, --spec <spec>           Use a different yaml configuration spec (default: variants.yml)
   -v, --verbose
       --version               Show the version.

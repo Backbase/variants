@@ -9,7 +9,6 @@ import PathKit
 enum Platform: String, ExpressibleByArgument, Codable {
     case ios
     case android
-    case unknown
     
     static func detectPlatform() throws -> Platform {
         var availablePlatforms: [Platform] = []

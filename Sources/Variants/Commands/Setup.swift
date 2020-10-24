@@ -20,7 +20,7 @@ struct Setup: ParsableCommand {
     // MARK: Configuration Properties
     
     @Option(name: .shortAndLong, help: "'ios' or 'android'")
-    var platform: Platform = .unknown
+    var platform: Platform
     
     @Option(name: .shortAndLong, help: "Use a different yaml configuration spec")
     var spec: String = "variants.yml"
@@ -34,14 +34,6 @@ struct Setup: ParsableCommand {
     mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants setup", color: .ios)
-        
-        do {
-            if platform == .unknown {
-                platform = try Platform.detectPlatform()
-            }
-        } catch let error as PlatformScanError {
-            throw error
-        }
         
         do {
             let configurationHelper = ConfigurationHelper(verbose: verbose)
@@ -69,8 +61,6 @@ struct Setup: ParsableCommand {
                                       xcodeProj: configuration.ios?.xcodeproj)
             }
         case .android:
-            break
-        default:
             break
         }
     }

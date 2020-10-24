@@ -14,7 +14,7 @@ protocol YamlParser: VerboseLogger {
 }
 
 extension YamlParser {
-    public func extractConfiguration(from configurationPath: String, platform: Platform? = .unknown) -> Configuration {
+    public func extractConfiguration(from configurationPath: String, platform: Platform?) -> Configuration {
         let decoder = YAMLDecoder()
         let encoder = YAMLEncoder()
         
