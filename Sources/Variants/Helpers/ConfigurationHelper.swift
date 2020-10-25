@@ -22,11 +22,7 @@ struct ConfigurationHelper: YamlParser {
             throw ValidationError("Error: \(configurationPath) is a directory path")
         }
         
-        let configuration = decode(configuration: path, platform: platform)
+        let configuration = extractConfiguration(from: path, platform: platform)
         return configuration
-    }
-    
-    func decode(configuration: String, platform: Platform) -> Configuration? {
-        return extractConfiguration(from: configuration, platform: platform)
     }
 }
