@@ -14,12 +14,11 @@ struct Initializer: ParsableCommand {
         commandName: "init",
         abstract: "Generate spec file - variants.yml"
     )
-    
-    // --------------
-    // MARK: Configuration Properties
+
+    // MARK: - Configuration Properties
     
     @Option(name: .shortAndLong, help: "'ios' or 'android'")
-    var platform: Platform
+    var platform: String = ""
     
     @Flag(name: .shortAndLong)
     var verbose = false
@@ -27,15 +26,10 @@ struct Initializer: ParsableCommand {
     mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants init", color: .ios)
-        
-        guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else {
-            throw RuntimeError("❌ Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
-        }
 
-        do {
-            try VariantSpecFactory().generateSpec(path: path, platform: platform)
-        } catch {
-            throw RuntimeError(error.localizedDescription)
-        }
+        let detectedPlatform = try PlatformDetector.detect(fromArgument: platform)
+        let project = ProjectFactory.from(platform: detectedPlatform)
+        try project.initialize(verbose: verbose)
     }
 }
+
