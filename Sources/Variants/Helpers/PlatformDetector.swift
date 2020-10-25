@@ -37,7 +37,7 @@ struct PlatformDetector {
     /// - Throws: `PlatformDetector.Errors`
     /// - Returns: The parsed or detected Platform
     static func detect(fromArgument argument: String) throws -> Platform {
-        guard let platform = Platform(argument: argument) else {
+        guard let platform = Platform(rawValue: argument) else {
             switch availablePlatforms.count {
             case 0:
                 throw Errors.couldNotDetectPlatform
