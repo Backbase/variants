@@ -11,7 +11,9 @@ struct ProjectFactory {
         case .ios:
             return iOSProject()
         case .android:
-            return AndroidProject()
+            return AndroidProject(
+                specHelper: AndroidSpecHelper()
+            )
         }
     }
 }

@@ -22,29 +22,30 @@ enum iOSProjectKey: String, CaseIterable {
     }
 }
 
-struct VariantSpecFactory {
-    
+protocol SpecHelper {
     /// Generate Variants YAML spec from a template
     /// - Parameters:
     ///   - path: Path to the YAML spec template
-    ///   - platform: `Platform` for which the operation is required
     /// - Throws: Exception for any operation that goes wrong.
-    func generateSpec(path: Path, platform: Platform) throws {
+    func generate(from path: Path) throws
+}
+
+// MARK: - iOS
+
+struct iOSSpecHelper: SpecHelper {
+    func generate(from path: Path) throws {
         guard path.absolute().exists else {
             throw RuntimeError("Couldn't find template path")
         }
-        
-        let variantsPath = Path("./variants.yml")
-        try Bash("cp", arguments: "\(path.absolute())/\(platform.rawValue)/variants-template.yml", "\(variantsPath)").run()
-        
-        if platform == .ios {
-            try populateiOSSpec(path: variantsPath)
-        }
-        
-        Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
 
+        let variantsPath = Path("./variants.yml")
+        try Bash("cp", arguments: "\(path.absolute())/ios/variants-template.yml", "\(variantsPath)").run()
+
+        try populateiOSSpec(path: variantsPath)
+
+        Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
     }
-    
+
     /// Automatically populate this spec for `iOS` platform using the `XcodeProjFactory()`
     /// - Parameter path: Path to Variants YAML spec file.
     /// - Throws: Exception for any operation that goes wrong.
@@ -61,8 +62,28 @@ struct VariantSpecFactory {
         if projectSpecificInformation.count < iOSProjectKey.allCases.count {
             Logger.shared.logWarning("⚠️  ", item: "We were unable to populate './variants.yml' automatically. Please open the file and remove the placeholders.")
         }
-        
+
         // Remove remaining '*-e' file after `sed` in-file replacemnt
         try? Bash("rm", arguments: "-rf", "\(path)-e").run()
+    }
+}
+
+// MARK: - Android
+
+struct AndroidSpecHelper: SpecHelper {
+    
+    /// Generate Variants YAML spec from a template
+    /// - Parameters:
+    ///   - path: Path to the YAML spec template
+    /// - Throws: Exception for any operation that goes wrong.
+    func generate(from path: Path) throws {
+        guard path.absolute().exists else {
+            throw RuntimeError("Couldn't find template path")
+        }
+        
+        let variantsPath = Path("./variants.yml")
+        try Bash("cp", arguments: "\(path.absolute())/android/variants-template.yml", "\(variantsPath)").run()
+        
+        Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path './variants.yml'", color: .green)
     }
 }

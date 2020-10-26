@@ -8,26 +8,9 @@ import PathKit
 import ArgumentParser
 
 class AndroidProject: Project {
-    init(
-        specFactory: VariantSpecFactory = VariantSpecFactory(),
-        yamlParser: YamlParser = YamlParser()
-    ) {
-        self.specFactory = specFactory
-        self.yamlParser = yamlParser
-    }
-
     // MARK: - Public
 
-    func initialize(verbose: Bool) throws {
-        do {
-            let path = try TemplateDirectory().path
-            try specFactory.generateSpec(path: path, platform: .android)
-        } catch {
-            throw error
-        }
-    }
-
-    func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
+    override func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
         guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load spec '\(spec)'")
         }
@@ -36,7 +19,7 @@ class AndroidProject: Project {
         setupFastlane(skipFastlane)
     }
 
-    func `switch`(to variant: String, spec: String, verbose: Bool) throws {
+    override func `switch`(to variant: String, spec: String, verbose: Bool) throws {
         guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load specs '\(spec)'")
         }
@@ -87,7 +70,7 @@ class AndroidProject: Project {
 
             do {
                 let path = try TemplateDirectory().path
-                try Bash("cp", arguments: "-R", "\(path.absolute())/ios/_fastlane/*", ".")
+                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/*", ".")
                     .run()
                 Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
 
@@ -116,7 +99,4 @@ class AndroidProject: Project {
             }
         }
     }
-
-    private let specFactory: VariantSpecFactory
-    private let yamlParser: YamlParser
 }

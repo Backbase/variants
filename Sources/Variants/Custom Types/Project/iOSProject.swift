@@ -9,27 +9,17 @@ import PathKit
 
 class iOSProject: Project {
     init(
-        specFactory: VariantSpecFactory = VariantSpecFactory(),
+        specHelper: SpecHelper = iOSSpecHelper(),
         configFactory: XCConfigFactory = XCConfigFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
-        self.specFactory = specFactory
         self.configFactory = configFactory
-        self.yamlParser = yamlParser
+        super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
 
     // MARK: - Public
 
-    func initialize(verbose: Bool) throws {
-        do {
-            let path = try TemplateDirectory().path
-            try specFactory.generateSpec(path: path, platform: .ios)
-        } catch {
-            throw error
-        }
-    }
-
-    func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
+    override func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
         guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load spec '\(spec)'")
         }
@@ -38,7 +28,7 @@ class iOSProject: Project {
         setupFastlane(skipFastlane)
     }
 
-    func `switch`(to variant: String, spec: String, verbose: Bool) throws {
+    override func `switch`(to variant: String, spec: String, verbose: Bool) throws {
         guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load specs '\(spec)'")
         }
@@ -149,7 +139,5 @@ class iOSProject: Project {
         configFactory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
     }
 
-    private let yamlParser: YamlParser
-    private let specFactory: VariantSpecFactory
     private let configFactory: XCConfigFactory
 }

@@ -5,14 +5,32 @@
 
 import Foundation
 
-protocol Project {
-    func initialize(verbose: Bool) throws
-    func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws
-    func `switch`(to variant: String, spec: String, verbose: Bool) throws
-}
+class Project {
+    init(
+        specHelper: SpecHelper,
+        yamlParser: YamlParser = YamlParser()
+    ) {
+        self.specHelper = specHelper
+        self.yamlParser = yamlParser
+    }
 
-struct SetupOptions {
-    let spec: String
-    let skipFastlane: Bool
-    let verbose: Bool
+    // MARK: - Commands
+
+    func initialize(verbose: Bool) throws {
+        let path = try TemplateDirectory().path
+        try specHelper.generate(from: path)
+    }
+
+    func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
+        // No-op
+    }
+
+    func `switch`(to variant: String, spec: String, verbose: Bool) throws {
+        // No-op
+    }
+
+    // MARK: - Helper functions
+
+    internal let specHelper: SpecHelper
+    internal let yamlParser: YamlParser
 }
