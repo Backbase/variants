@@ -10,10 +10,12 @@ import PathKit
 class iOSProject: Project {
     init(
         specFactory: VariantSpecFactory = VariantSpecFactory(),
-        configFactory: XCConfigFactory = XCConfigFactory()
+        configFactory: XCConfigFactory = XCConfigFactory(),
+        yamlParser: YamlParser = YamlParser()
     ) {
         self.specFactory = specFactory
         self.configFactory = configFactory
+        self.yamlParser = yamlParser
     }
 
     // MARK: - Public
@@ -28,20 +30,16 @@ class iOSProject: Project {
     }
 
     func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
-        let configurationHelper = ConfigurationHelper(verbose: verbose)
-
-        guard let configuration = try configurationHelper.loadConfiguration(spec, platform: .ios) else {
+        guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load spec '\(spec)'")
         }
-        
+
         createVariants(with: configuration, spec: spec)
         setupFastlane(skipFastlane)
     }
 
     func `switch`(to variant: String, spec: String, verbose: Bool) throws {
-        let configurationHelper = ConfigurationHelper(verbose: verbose)
-
-        guard let configuration = try configurationHelper.loadConfiguration(spec, platform: .ios) else {
+        guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load specs '\(spec)'")
         }
 
@@ -57,6 +55,19 @@ class iOSProject: Project {
     }
 
     // MARK: - Private
+
+    private func loadConfiguration(_ path: String?) throws -> Configuration? {
+        guard let path = path else {
+            throw ValidationError("Error: Use '-s' to specify the configuration file")
+        }
+
+        let configurationPath = Path(path)
+        guard !configurationPath.isDirectory else {
+            throw ValidationError("Error: \(configurationPath) is a directory path")
+        }
+
+        return yamlParser.extractConfiguration(from: path, platform: .ios)
+    }
 
     private func switchTo(_ variant: Variant, spec: String, configuration: Configuration) throws {
         Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
@@ -138,6 +149,7 @@ class iOSProject: Project {
         configFactory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
     }
 
+    private let yamlParser: YamlParser
     private let specFactory: VariantSpecFactory
     private let configFactory: XCConfigFactory
 }

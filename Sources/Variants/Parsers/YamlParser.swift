@@ -8,12 +8,7 @@
 import Foundation
 import Yams
 
-protocol YamlParser: VerboseLogger {
-    var verbose: Bool { get }
-    func extractConfiguration(from configurationPath: String, platform: Platform?) -> Configuration
-}
-
-extension YamlParser {
+class YamlParser {
     public func extractConfiguration(from configurationPath: String, platform: Platform?) -> Configuration {
         let decoder = YAMLDecoder()
         let encoder = YAMLEncoder()

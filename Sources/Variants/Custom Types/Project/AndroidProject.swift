@@ -9,9 +9,11 @@ import ArgumentParser
 
 class AndroidProject: Project {
     init(
-        specFactory: VariantSpecFactory = VariantSpecFactory()
+        specFactory: VariantSpecFactory = VariantSpecFactory(),
+        yamlParser: YamlParser = YamlParser()
     ) {
         self.specFactory = specFactory
+        self.yamlParser = yamlParser
     }
 
     // MARK: - Public
@@ -26,9 +28,7 @@ class AndroidProject: Project {
     }
 
     func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
-        let configurationHelper = ConfigurationHelper(verbose: verbose)
-
-        guard let configuration = try configurationHelper.loadConfiguration(spec, platform: .ios) else {
+        guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load spec '\(spec)'")
         }
 
@@ -37,9 +37,7 @@ class AndroidProject: Project {
     }
 
     func `switch`(to variant: String, spec: String, verbose: Bool) throws {
-        let configurationHelper = ConfigurationHelper(verbose: verbose)
-
-        guard let configuration = try configurationHelper.loadConfiguration(spec, platform: .ios) else {
+        guard let configuration = try loadConfiguration(spec) else {
             throw RuntimeError("Unable to load specs '\(spec)'")
         }
 
@@ -55,6 +53,19 @@ class AndroidProject: Project {
     }
 
     // MARK: - Private
+
+    private func loadConfiguration(_ path: String?) throws -> Configuration? {
+        guard let path = path else {
+            throw ValidationError("Error: Use '-s' to specify the configuration file")
+        }
+
+        let configurationPath = Path(path)
+        guard !configurationPath.isDirectory else {
+            throw ValidationError("Error: \(configurationPath) is a directory path")
+        }
+
+        return yamlParser.extractConfiguration(from: path, platform: .android)
+    }
 
     private func process(variant: String, spec: String, configuration: Configuration) throws {
 
@@ -107,4 +118,5 @@ class AndroidProject: Project {
     }
 
     private let specFactory: VariantSpecFactory
+    private let yamlParser: YamlParser
 }
