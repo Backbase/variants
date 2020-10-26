@@ -9,7 +9,7 @@ import PathKit
 
 class iOSProject: Project {
     init(
-        specHelper: SpecHelper = iOSSpecHelper(),
+        specHelper: SpecHelper,
         configFactory: XCConfigFactory = XCConfigFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
