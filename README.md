@@ -4,7 +4,7 @@
 
 ## Variants
 
-A command line tool to setup deployment variants and full CI/CD pipelines for mobile projects.
+A command line tool to setup deployment variants and working CI/CD setup for mobile projects.
 
 ## Features
 
@@ -59,7 +59,7 @@ swift run variants
 ```sh
 Usage: variants <command> [options]
 
-A command-line tool to setup deployment variants and full CI/CD pipelines
+A command-line tool to setup deployment variants and working CI/CD setup
 
 Commands:
   init            Generate specs file - variants.yml
@@ -71,7 +71,7 @@ Commands:
 
 ### Initialize
 
-Before running setup to create your deployment variants and pipelines you need a YAML configuration file.
+Before running setup to create your deployment variants and Fastlane setup you need a YAML configuration file.
 Run `variants init` in the base folder of your project.
 
 ```sh
@@ -198,23 +198,42 @@ variants setup -s ~/johndoe/custom/path/variants.yml
 In order to switch between project variants you don't need to modify the Xcode project nor the `variants.xcconfig`, just make use of one command
 
 ```sh
+<<<<<<< HEAD
+Usage: variants switch <platform> [options]
+=======
 OVERVIEW: Switch variants
 
 USAGE: variants switch <variant> [--platform <platform>] [--spec <spec>] [--verbose]
+>>>>>>> develop
 
 ARGUMENTS:
   <variant>
 
+<<<<<<< HEAD
+Options:
+      --variant <value>  Desired variant (default: default)
+  -s, --spec <value>     Use a different yaml configuration spec (default: variants.yml)
+  -h, --help             Show help information
+  -v, --verbose          Log tech details for nerds
+=======
 OPTIONS:
   -p, --platform <platform>  'ios' or 'android' (default: unknown)
   -s, --spec <spec>           Use a different yaml configuration spec (default: variants.yml)
   -v, --verbose
       --version               Show the version.
   -h, --help                  Show help information.
+>>>>>>> develop
 ```
 
-Example
+Examples
 ```sh
+<<<<<<< HEAD
+$ variants switch ios
+
+$ variants switch ios --variant BETA
+
+$ variants switch ios --variant BETA --spec /Path/to/custom/variants.yml
+=======
 # Automatically detect platform
 $ variants switch BETA
 
@@ -258,4 +277,5 @@ INFO  [2020-10-21]: ▸ --------------------------------------------------------
 INFO  [2020-10-21]: ▸ $ variants switch beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
 Error: ❌ Found an Android and Xcode project in your working directory. Please specify the platform you want using `--platform <value>`
+>>>>>>> develop
 ```

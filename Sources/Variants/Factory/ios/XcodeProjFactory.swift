@@ -175,9 +175,9 @@ struct XcodeProjFactory {
     /// - Parameters:
     ///   - keyValue: Key/value pair to be modified
     ///   - projectPath: Path to Xcode project
-    ///   - target: Target on which the `buildSettings` should be changed.
+    ///   - target: iOSTarget on which the `buildSettings` should be changed.
     ///   - silent: Flag to determine if final logs are necessary
-    func modify(_ keyValue: [String: String], in projectPath: Path, target: Target, silent: Bool = false) {
+    func modify(_ keyValue: [String: String], in projectPath: Path, target: iOSTarget, silent: Bool = false) {
         do {
             let project = try XcodeProj(path: projectPath)
             logger.logInfo("Updating: ", item: projectPath)

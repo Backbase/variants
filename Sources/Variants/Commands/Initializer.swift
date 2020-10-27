@@ -21,13 +21,14 @@ struct Initializer: ParsableCommand {
     @Option(name: .shortAndLong, help: "'ios' or 'android'")
     var platform: Platform = .unknown
     
-    @Flag(name: .shortAndLong)
+    @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
-    
+
     mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants init", color: .ios)
         
+        // Platform auto detection
         do {
             if platform == .unknown {
                 platform = try Platform.detectPlatform()
@@ -36,14 +37,21 @@ struct Initializer: ParsableCommand {
             throw error
         }
         
-        guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else {
-            throw RuntimeError("❌ Templates folder not found in '/usr/local/lib/variants/templates' or './Templates'")
+        // 'Templates' folder integrity check
+        let templateManager = TemplatesManager()
+        guard let path = templateManager.firstFoundTemplateDirectory() else {
+            var expectedLocation = templateManager.templateDirectories.joined(separator: ", ")
+            if #available(macOS 10.15, *) {
+                expectedLocation = ListFormatter.localizedString(byJoining: templateManager.templateDirectories)
+            }
+            throw RuntimeError("'Templates' folder not found on \(expectedLocation)")
         }
 
+        // Generate 'variants.yml' spec
         do {
             try VariantSpecFactory().generateSpec(path: path, platform: platform)
         } catch {
-            throw RuntimeError(error.localizedDescription)
+            throw RuntimeError.unableToInitializeVariants
         }
     }
 }

@@ -14,11 +14,7 @@ struct Bash {
     }
     
     func run() throws {
-        guard var bashCommand = try execute(command: "/bin/bash" , arguments: ["-l", "-c", "which \(command)"]) else {
-            throw RuntimeError("\(command) not found")
-        }
-        bashCommand = bashCommand.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
-        _ = try execute(command: bashCommand, arguments: arguments)
+        _ = try capture()
     }
     
     func capture() throws -> String? {
@@ -26,7 +22,11 @@ struct Bash {
             throw RuntimeError("\(command) not found")
         }
         bashCommand = bashCommand.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
-        return try execute(command: bashCommand, arguments: arguments)
+        if let output = try execute(command: bashCommand, arguments: arguments) {
+            // `dropLast()` is required as the output always contains a new line (`\n`) at the end.
+            return String(output.dropLast())
+        }
+        return nil
     }
     
     // MARK: - Private
