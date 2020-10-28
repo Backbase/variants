@@ -104,7 +104,7 @@ class iOSProject: Project {
                 let projectSourceFolder = configuration.targets.first?.value.source.path ?? "{{ SOURCE_PATH }}"
                 let baseSetupCompletedMessage =
                     """
-                    ✅  You variants configuration was setup
+                    ✅  Your variants configuration was setup
                     ✅  For configuration properties with 'environment' destination, a temporary
                         file has been created. You can source this file directly.
                     ✅  '\(projectSourceFolder)/Variants/' has been created.

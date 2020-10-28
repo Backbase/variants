@@ -87,7 +87,7 @@ class AndroidProject: Project {
 
                 let baseSetupCompletedMessage =
                     """
-                    ✅  You variants configuration was setup
+                    ✅  Your variants configuration was setup
                     ✅  For configuration properties with 'environment' destination, a temporary
                         file has been created. You can source this file directly.
                     ✅  For configuration properties with 'project' destination, they have been
@@ -125,7 +125,7 @@ class AndroidProject: Project {
                         ⚠️  Check the files in '\(projectSourceFolder)/fastlane/parameters/', change the parameters
                             accordingly, provide environment variables when applicable.
                         ⚠️  Note that the values in the file '\(projectSourceFolder)/fastlane/parameters/variants_params.rb'
-                            are generated automatically.
+                            where generated automatically for configuration properties with 'fastlane' destination.
 
                         """
                     
