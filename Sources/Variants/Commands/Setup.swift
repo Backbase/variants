@@ -28,7 +28,7 @@ struct Setup: ParsableCommand {
     @Flag()
     var skipFastlane: Bool = false
     
-    @Flag(name: .shortAndLong)
+    @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
     
     mutating func run() throws {
@@ -52,7 +52,7 @@ struct Setup: ParsableCommand {
             createVariants(with: configuration)
             setupFastlane(skipFastlane)
         } catch {
-            throw RuntimeError("Sorry! Something is wrong with your YAML spec")
+            throw RuntimeError.unableToSetupVariants
         }
     }
     
@@ -77,7 +77,7 @@ struct Setup: ParsableCommand {
     
     // MARK: - iOS
     
-    private func createConfig(with target: NamedTarget, variants: [Variant]?, xcodeProj: String?) throws {
+    private func createConfig(with target: NamedTarget, variants: [iOSVariant]?, xcodeProj: String?) throws {
         guard
             let variants = variants,
             !variants.isEmpty,
@@ -99,10 +99,11 @@ struct Setup: ParsableCommand {
         } else {
             Logger.shared.logInfo("Setting up Fastlane", item: "")
             
-            guard let path = XCConfigFactory(logLevel: verbose).firstTemplateDirectory() else { return }
+            guard let path = TemplatesManager().firstFoundTemplateDirectory()
+            else { return }
+            
             do {
-                try Bash("cp", arguments: "-R", "\(path.absolute())/\(platform)/_fastlane/*", ".")
-                    .run()
+                try Bash("cp", arguments: "-R", "\(path.absolute())/\(platform)/_fastlane/*", ".").run()
                 Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
                 
                 let setupCompleteMessage = """

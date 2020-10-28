@@ -57,7 +57,7 @@ struct XCConfigFactory {
     }
     
     func createConfig(with target: NamedTarget,
-                      variant: Variant,
+                      variant: iOSVariant,
                       xcodeProj: String?,
                       configPath: Path,
                       addToXcodeProj: Bool? = true) {
@@ -82,7 +82,7 @@ struct XCConfigFactory {
         let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/Variants/\(xcconfigFileName)")
         if !xcodeConfigPath.parent().isDirectory {
             logger.logInfo("Creating folder: ", item: "'\(xcodeConfigPath.parent().description)'")
-            try? Bash("mkdir", arguments: xcodeConfigPath.parent().absolute().description).run()
+            _ = try? Bash("mkdir", arguments: xcodeConfigPath.parent().absolute().description).run()
         }
         
         let _ = write("", toFile: xcodeConfigPath, force: true)
@@ -106,12 +106,6 @@ struct XCConfigFactory {
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
     }
     
-    func firstTemplateDirectory() -> Path? {
-        templateDirectories
-            .map(Path.init(stringLiteral:))
-            .first(where: \.exists)
-    }
-    
     // MARK: - Private methods
     
     private func addToXcode(_ xcConfigFile: Path,
@@ -120,8 +114,13 @@ struct XCConfigFactory {
                             target: NamedTarget) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
         
-        guard let path = firstTemplateDirectory() else {
-            logger.logFatal("❌ ", item: "Templates folder not found on '/usr/local/lib/variants/templates' or './Templates'")
+        let templateManager = TemplatesManager()
+        guard let path = templateManager.firstFoundTemplateDirectory() else {
+            var expectedLocation = templateManager.templateDirectories.joined(separator: ", ")
+            if #available(macOS 10.15, *) {
+                expectedLocation = ListFormatter.localizedString(byJoining: templateManager.templateDirectories)
+            }
+            logger.logFatal("❌ ", item: "'Templates' folder not found on \(expectedLocation)")
             return
         }
         
@@ -148,7 +147,7 @@ struct XCConfigFactory {
         }
     }
     
-    private func populateConfig(with target: Target, configFile: Path, variant: Variant) {
+    private func populateConfig(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         logger.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
         variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
@@ -161,7 +160,7 @@ struct XCConfigFactory {
         }
     }
     
-    private func updateInfoPlist(with target: Target, configFile: Path, variant: Variant) {
+    private func updateInfoPlist(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         
         let configFilePath = configFile.absolute().description
         do {
@@ -174,7 +173,7 @@ struct XCConfigFactory {
                 Bash("plutil", arguments: "-replace", "CFBundleIdentifier",             "-string '$(V_BUNDLE_ID)'",      configFilePath)
             ]
             
-            try commands.forEach { try $0.run() }
+            try commands.forEach { try _ = $0.run() }
             
             /*
              * Add custom configs to Info.plist so that it is accessible through Variants.swift
@@ -192,9 +191,4 @@ struct XCConfigFactory {
             logger.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
         }
     }
-    
-    private var templateDirectories: [String] = [
-        "/usr/local/lib/variants/templates",
-        "./Templates"
-    ]
 }

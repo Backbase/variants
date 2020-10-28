@@ -7,8 +7,8 @@
 
 import Foundation
 
-public class Printer {
-    static let shared = Printer()
+public class StdoutPrinter {
+    static let shared = StdoutPrinter()
     private var stdoutTextOutputStream = StandardOutputStream()
     
     func print(item: String) {
