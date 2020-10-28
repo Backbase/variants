@@ -1,0 +1,15 @@
+# --- Sonar
+
+desc 'run a sonar scan using the configuration in sonar-project.properties'
+lane :sonar_report do |options|
+  BRANCH_NAME = options[:branch_name] || ''
+  options.delete :branch
+
+  defaults = {
+    project_name: "#{APP_SCHEME} #{BRANCH_NAME}".strip,
+    project_key: "#{APP_SCHEME}:#{BRANCH_NAME}".strip,
+    project_version: get_version_number(target: APP_SCHEME)
+  }.freeze
+
+  sonar(defaults.merge(options))
+end

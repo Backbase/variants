@@ -1,0 +1,6 @@
+V_APP_NAME = VariantsSample
+V_VERSION_NAME = 0.0.1
+V_VERSION_NUMBER = 1
+OTHER_SWIFT_FLAGS = $(inherited)
+V_BUNDLE_ID = com.backbase.variants.VariantsSample
+V_APP_ICON = AppIcon
