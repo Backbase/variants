@@ -64,13 +64,12 @@ struct GradleScriptFactory {
         
         let fastlaneParamPath = configuration.path + "/" + Constants.Fastlane.parametersPath
         
-        if(!fastlaneConfig.parameters.isEmpty) {
-            if(fm.fileExists(atPath: fastlaneParamPath)) {
+        if !fastlaneConfig.parameters.isEmpty {
+            if fm.fileExists(atPath: fastlaneParamPath) {
                 let fastlaneVariantVariabelsUrl = URL(fileURLWithPath: fastlaneParamPath)
                     .appendingPathComponent(Constants.Fastlane.variantGeneratedParametersFileName)
                 do {
-                    if(fm.fileExists(atPath: fastlaneVariantVariabelsUrl.absoluteString))
-                    {
+                    if fm.fileExists(atPath: fastlaneVariantVariabelsUrl.absoluteString) {
                         try fm.removeItem(at: fastlaneVariantVariabelsUrl)
                     }
                     let fastlanePropsStringData = try RubyPropertiesEncoder().encode(fastlaneConfig).data(using: .utf8)
@@ -88,7 +87,7 @@ struct GradleScriptFactory {
     }
     
     func add(customProperties properties: [CustomProperty]?, header: String, _ gradleFileContent: inout String, _ exportVariablesFileContent: inout String, _ fastlaneParameters: inout FastlaneConfig) {
-        
+
         var customVariablesHeaderAdded = false
         properties?.forEach { prop in
             switch(prop.destination) {
