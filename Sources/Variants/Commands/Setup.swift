@@ -16,8 +16,7 @@ struct Setup: ParsableCommand {
         abstract: "Setup deployment variants (alongside Fastlane)"
     )
     
-    // --------------
-    // MARK: Configuration Properties
+    // MARK: - Configuration Properties
     
     @Option(name: .shortAndLong, help: "'ios' or 'android'")
     var platform: String = ""
@@ -28,13 +27,12 @@ struct Setup: ParsableCommand {
     @Flag()
     var skipFastlane: Bool = false
     
-    @Flag(name: .shortAndLong)
+    @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
     
     mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants setup", color: .ios)
-
         let detectedPlatform = try PlatformDetector.detect(fromArgument: platform)
         let project = ProjectFactory.from(platform: detectedPlatform)
         try project.setup(spec: spec, skipFastlane: skipFastlane, verbose: verbose)

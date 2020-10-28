@@ -4,7 +4,7 @@
 
 ## Variants
 
-A command line tool to setup deployment variants and full CI/CD pipelines for mobile projects.
+A command line tool to setup deployment variants and working CI/CD setup for mobile projects.
 
 ## Features
 
@@ -59,7 +59,7 @@ swift run variants
 ```sh
 Usage: variants <command> [options]
 
-A command-line tool to setup deployment variants and full CI/CD pipelines
+A command-line tool to setup deployment variants and working CI/CD setup
 
 Commands:
   init            Generate specs file - variants.yml
@@ -71,7 +71,7 @@ Commands:
 
 ### Initialize
 
-Before running setup to create your deployment variants and pipelines you need a YAML configuration file.
+Before running setup to create your deployment variants and Fastlane setup you need a YAML configuration file.
 Run `variants init` in the base folder of your project.
 
 ```sh
@@ -163,7 +163,7 @@ OPTIONS:
 Examples
 ```sh
 # Automatically detect platform
-$ variants setup ios
+$ variants setup
 
 # Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
 $ variants setup --platform ios
@@ -200,26 +200,27 @@ In order to switch between project variants you don't need to modify the Xcode p
 ```sh
 OVERVIEW: Switch variants
 
-USAGE: variants switch <variant> [--platform <platform>] [--spec <spec>] [--verbose]
+USAGE: variants switch [--variant <variant>] [--platform <platform>] [--spec <spec>] [--verbose]
 
 ARGUMENTS:
   <variant>
 
 OPTIONS:
-  -p, --platform <platform>  'ios' or 'android'
+      --variant <value>       Desired variant (default: default)
+  -p, --platform <platform>   'ios' or 'android'
   -s, --spec <spec>           Use a different yaml configuration spec (default: variants.yml)
   -v, --verbose
       --version               Show the version.
   -h, --help                  Show help information.
 ```
 
-Example
+Examples
 ```sh
 # Automatically detect platform
-$ variants switch BETA
+$ variants switch --variant beta
 
 # Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
-$ variants switch BETA --platform ios
+$ variants switch --variant beta --platform ios
 ```
 
 ## Auto detecting the project's platform
@@ -243,9 +244,9 @@ There are 2 cases when platform auto detection will present a problem.
 1. No Android nor Xcode project were found in the working directory
 
 ```sh
-$ variants switch beta
+$ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-21]: ▸ $ variants switch beta
+INFO  [2020-10-21]: ▸ $ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
 Error: ❌ Could not find an Android or Xcode project in your working directory.
 ```
@@ -253,9 +254,9 @@ Error: ❌ Could not find an Android or Xcode project in your working directory.
 2. When both an Android and a Xcode project were found in the working directory, making it unable to decide which platform to use for a command.
 
 ```sh
-$ variants switch beta
+$ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-21]: ▸ $ variants switch beta
+INFO  [2020-10-21]: ▸ $ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
 Error: ❌ Found an Android and Xcode project in your working directory. Please specify the platform you want using `--platform <value>`
 ```

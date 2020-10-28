@@ -15,11 +15,10 @@ struct Switch: ParsableCommand {
         abstract: "Switch variants"
     )
     
-    // --------------
-    // MARK: Configuration Properties
+    // MARK: - Configuration Properties
     
-    @Argument()
-    var variant: String
+    @Option(help: "Desired variant")
+    var variant: String = "default"
     
     @Option(name: .shortAndLong, help: "'ios' or 'android'")
     var platform: String = ""
@@ -27,16 +26,14 @@ struct Switch: ParsableCommand {
     @Option(name: .shortAndLong, help: "Use a different yaml configuration spec")
     var spec: String = "variants.yml"
     
-    @Flag(name: .shortAndLong)
+    @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
     
     mutating func run() throws {
         let logger = Logger(verbose: verbose)
-        logger.logSection("$ ", item: "variants switch \(variant)", color: .ios)
-
+        logger.logSection("$ ", item: "variants switch --variant \(variant)", color: .ios)
         let detectedPlatform = try PlatformDetector.detect(fromArgument: platform)
         let project = ProjectFactory.from(platform: detectedPlatform)
         try project.switch(to: variant, spec: spec, verbose: verbose)
     }
 }
-

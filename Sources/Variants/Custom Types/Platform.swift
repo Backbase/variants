@@ -1,5 +1,8 @@
 //
-// Copyright © 2020 Backbase R&D B.V. All rights reserved.
+//  Variants
+//
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Balazs Toth
 //
 
 import Foundation

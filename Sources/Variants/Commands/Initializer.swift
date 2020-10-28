@@ -20,9 +20,9 @@ struct Initializer: ParsableCommand {
     @Option(name: .shortAndLong, help: "'ios' or 'android'")
     var platform: String = ""
     
-    @Flag(name: .shortAndLong)
+    @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
-    
+
     mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants init", color: .ios)

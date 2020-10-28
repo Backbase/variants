@@ -1,7 +1,9 @@
 //
-// Created by Balazs Toth on 25/10/2020.
-// Copyright © 2020. All rights reserved.
-// 
+//  Variants
+//
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Balazs Toth
+//
 
 import Foundation
 

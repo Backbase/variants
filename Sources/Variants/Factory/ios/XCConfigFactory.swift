@@ -57,7 +57,7 @@ struct XCConfigFactory {
     }
     
     func createConfig(with target: NamedTarget,
-                      variant: Variant,
+                      variant: iOSVariant,
                       xcodeProj: String?,
                       configPath: Path,
                       addToXcodeProj: Bool? = true) {
@@ -82,7 +82,7 @@ struct XCConfigFactory {
         let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/Variants/\(xcconfigFileName)")
         if !xcodeConfigPath.parent().isDirectory {
             logger.logInfo("Creating folder: ", item: "'\(xcodeConfigPath.parent().description)'")
-            try? Bash("mkdir", arguments: xcodeConfigPath.parent().absolute().description).run()
+            _ = try? Bash("mkdir", arguments: xcodeConfigPath.parent().absolute().description).run()
         }
         
         let _ = write("", toFile: xcodeConfigPath, force: true)
@@ -113,7 +113,7 @@ struct XCConfigFactory {
                             sourceRoot: Path,
                             target: NamedTarget) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
-        
+
         do {
             let path = try TemplateDirectory().path
             try Bash("cp", arguments:
@@ -138,7 +138,7 @@ struct XCConfigFactory {
         }
     }
     
-    private func populateConfig(with target: Target, configFile: Path, variant: Variant) {
+    private func populateConfig(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         logger.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
         variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
@@ -151,17 +151,17 @@ struct XCConfigFactory {
         }
     }
     
-    private func updateInfoPlist(with target: Target, configFile: Path, variant: Variant) {
+    private func updateInfoPlist(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         
         let configFilePath = configFile.absolute().description
         do {
             // TODO: Add plutil as separate command?
             let commands = [
-                Bash("plutil", arguments: "-replace", "CFBundleVersion",                "-string '$(V_VERSION_NUMBER)'", configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString",     "-string '$(V_VERSION_NAME)'",   configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleName",                   "-string '$(V_APP_NAME)'",       configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleExecutable",             "-string '$(V_APP_NAME)'",       configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleIdentifier",             "-string '$(V_BUNDLE_ID)'",      configFilePath)
+                Bash("plutil", arguments: "-replace", "CFBundleVersion",                "-string", "'$(V_VERSION_NUMBER)'", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString",     "-string", "'$(V_VERSION_NAME)'",   configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleName",                   "-string", "'$(V_APP_NAME)'",       configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleExecutable",             "-string", "'$(V_APP_NAME)'",       configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleIdentifier",             "-string", "'$(V_BUNDLE_ID)'",      configFilePath)
             ]
             
             try commands.forEach { try $0.run() }

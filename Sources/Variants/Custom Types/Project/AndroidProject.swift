@@ -1,13 +1,24 @@
 //
-// Created by Balazs Toth on 25/10/2020.
-// Copyright © 2020. All rights reserved.
-// 
+//  Variants
+//
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Balazs Toth
+//
 
 import Foundation
 import PathKit
 import ArgumentParser
 
 class AndroidProject: Project {
+    init(
+        specHelper: SpecHelper,
+        configFactory: GradleScriptFactory = GradleScriptFactory(),
+        yamlParser: YamlParser = YamlParser()
+    ) {
+        self.configFactory = configFactory
+        super.init(specHelper: specHelper, yamlParser: yamlParser)
+    }
+    
     // MARK: - Public
 
     override func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
@@ -16,15 +27,15 @@ class AndroidProject: Project {
         }
 
         createVariants(with: configuration, spec: spec)
-        setupFastlane(skipFastlane)
+        setupFastlane(with: configuration, skip: skipFastlane)
     }
 
     override func `switch`(to variant: String, spec: String, verbose: Bool) throws {
         guard let configuration = try loadConfiguration(spec) else {
-            throw RuntimeError("Unable to load specs '\(spec)'")
+            throw RuntimeError("Unable to load specs '\(spec)' for platform 'android'")
         }
 
-        guard let desiredVariant = configuration.android?.variants.first(where: { $0.name == variant }) else {
+        guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == variant.lowercased() }) else {
             throw ValidationError("Variant \(variant) not found.")
         }
 
@@ -37,7 +48,7 @@ class AndroidProject: Project {
 
     // MARK: - Private
 
-    private func loadConfiguration(_ path: String?) throws -> Configuration? {
+    private func loadConfiguration(_ path: String?) throws -> AndroidConfiguration? {
         guard let path = path else {
             throw ValidationError("Error: Use '-s' to specify the configuration file")
         }
@@ -47,22 +58,23 @@ class AndroidProject: Project {
             throw ValidationError("Error: \(configurationPath) is a directory path")
         }
 
-        return yamlParser.extractConfiguration(from: path, platform: .android)
+        return yamlParser.extractConfiguration(from: path, platform: .android).android
     }
 
     private func process(variant: String, spec: String, configuration: Configuration) throws {
 
     }
 
-    private func switchTo(_ variant: Variant, spec: String, configuration: Configuration) throws {
+    private func switchTo(_ variant: AndroidVariant, spec: String, configuration: AndroidConfiguration) throws {
         Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
+        configFactory.createScript(with: configuration, variant: variant)
     }
 
-    private func createVariants(with configuration: Configuration, spec: String) {
+    private func createVariants(with configuration: AndroidConfiguration, spec: String) {
 
     }
 
-    private func setupFastlane(_ skip: Bool) {
+    private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
         if skip {
             Logger.shared.logInfo("Skipped Fastlane setup", item: "")
         } else {
@@ -70,26 +82,57 @@ class AndroidProject: Project {
 
             do {
                 let path = try TemplateDirectory().path
-                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/*", ".")
+                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", ".")
                     .run()
-                Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
 
-                let setupCompleteMessage =
+                let projectSourceFolder = configuration.path
+                let baseSetupCompletedMessage =
                     """
-
-                    Your setup is complete, congratulations! 🎉
-
-                    However, you still need to provide some parameters in order for fastlane to run correctly.
-
-                    ⚠️  Check the files in 'fastlane/parameters/', change the parameters accordingly,
-                        provide environment variables when applicable.
-                    ⚠️  If you use Cocoapods-art, enable it in 'fastlane/Cocoapods'
-                    ⚠️  Change your signing configuration in 'fastlane/Match' and potentially 'fastlane/Deploy'
+                    ✅  You variants configuration was setup
+                    ✅  For configuration properties with 'environment' destination, a temporary
+                        file has been created. You can source this file directly.
+                    ✅  For configuration properties with 'project' destination, they have been
+                        stored in '\(projectSourceFolder)/gradleScripts/variants.gradle'.
+                        This gradle file should be used by your 'app/build.gradle' in order to read the app's
+                        information and custom properties you've set with destination 'project'.
+                    🔄  Use 'variants switch --variants <value>' to switch between variants and
+                        update the properties in the files described above.
 
                     That is all.
                     """
+                
+                var setupCompleteMessage =
+                    """
 
-                Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
+                    We got almost everything done!
+
+                    ❌  Fastlane could not be setup. The template wasn't found or something else went wrong when
+                        copying it.
+
+                    """
+                
+                if Path("./fastlane/").isDirectory {
+                    setupCompleteMessage =
+                        """
+
+                        Your setup is complete, congratulations! 🎉
+                        However, you still need to provide some parameters in order for fastlane to run correctly.
+
+                        ⚠️  Check the files in 'fastlane/parameters/', change the parameters accordingly,
+                            provide environment variables when applicable.
+                        ⚠️  Note that the values in the file 'fastlane/parameters/variants_params.rb' are
+                            generated automatically.
+
+                        """
+                    
+                    Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
+                    Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
+                } else {
+                    Logger.shared.logWarning("", item: "Fastlane setup couldn't be completed")
+                    Logger.shared.logInfo("👇  What happened ", item: "", color: .yellow)
+                }
+                
+                setupCompleteMessage += baseSetupCompletedMessage
                 setupCompleteMessage.enumerateLines { (line, _) in
                     Logger.shared.logInfo("", item: line, color: .yellow)
                 }
@@ -99,4 +142,6 @@ class AndroidProject: Project {
             }
         }
     }
+    
+    private let configFactory: GradleScriptFactory
 }

@@ -9,7 +9,7 @@ templatesdir = Templates
 REPODIR = $(shell pwd)
 BUILDDIR = $(REPODIR)/.build
 SOURCES = $(wildcard $(srcdir)/**/*.swift)
-TEMPLATES = $(wildcard $(templatesdir)/*)
+TEMPLATES = $(templatesdir)
 
 .DEFAULT_GOAL = all
 
@@ -26,8 +26,8 @@ variants: $(SOURCES)
 install: variants
 	@install -d "$(bindir)" "$(libdir)"
 	@install "$(BUILDDIR)/release/variants" "$(bindir)"
-	@mkdir -p "$(libdir)/variants/templates"
-	@cp -R "$(TEMPLATES)" "$(libdir)/variants/templates/"
+	@mkdir -p "$(libdir)/variants"
+	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
 
 .PHONY: uninstall
 uninstall:

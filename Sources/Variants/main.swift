@@ -10,8 +10,8 @@ import ArgumentParser
 struct Variants: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "variants",
-        abstract: "A command-line tool to setup deployment variants and full CI/CD pipelines",
-        version: "0.5.0",
+        abstract: "A command-line tool to setup deployment variants and working CI/CD setup",
+        version: "0.0.6",
         subcommands: [
             Initializer.self,
             Setup.self,
