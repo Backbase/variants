@@ -1,0 +1,2 @@
+VARIANTS_PARAMS = {
+}.freeze
