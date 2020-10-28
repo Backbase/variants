@@ -1,0 +1,23 @@
+// ==== Variant values ==== 
+rootProject.ext.versionName = "0.0.1"
+rootProject.ext.versionCode = "1"
+rootProject.ext.appIdentifier = "com.backbase.variants.sample"
+rootProject.ext.appName = "Variants Sample"
+
+// ==== Custom values ==== 
+rootProject.ext.privateMavenRepoUrl = "https://repo.private.com/android"
+rootProject.ext.mvnPass = "{{ envVars.MAVEN_PASSWORD }}"
+
+// ==== Wrapper gradle tasks ==== 
+def vBuild = task vBuild
+def vUnitTests = task vUnitTests
+def vUITests = task vUITests
+tasks.whenTaskAdded { task ->
+    if (task.name == "bundleProdRelease") {
+        vBuild.dependsOn(task)
+    } else if (task.name == "testProdReleaseUnitTest") {
+        vUnitTests.dependsOn(task)
+    } else if (task.name == "connectedProdReleaseAndroidTest") {
+        vUITests.dependsOn(task)
+    }
+}
