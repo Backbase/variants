@@ -113,18 +113,9 @@ struct XCConfigFactory {
                             sourceRoot: Path,
                             target: NamedTarget) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
-        
-        let templateManager = TemplatesManager()
-        guard let path = templateManager.firstFoundTemplateDirectory() else {
-            var expectedLocation = templateManager.templateDirectories.joined(separator: ", ")
-            if #available(macOS 10.15, *) {
-                expectedLocation = ListFormatter.localizedString(byJoining: templateManager.templateDirectories)
-            }
-            logger.logFatal("❌ ", item: "'Templates' folder not found on \(expectedLocation)")
-            return
-        }
-        
+
         do {
+            let path = try TemplateDirectory().path
             try Bash("cp", arguments:
                 "\(path.absolute())/ios/Variants.swift",
                 variantsFile.absolute().description
@@ -166,14 +157,14 @@ struct XCConfigFactory {
         do {
             // TODO: Add plutil as separate command?
             let commands = [
-                Bash("plutil", arguments: "-replace", "CFBundleVersion",                "-string '$(V_VERSION_NUMBER)'", configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString",     "-string '$(V_VERSION_NAME)'",   configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleName",                   "-string '$(V_APP_NAME)'",       configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleExecutable",             "-string '$(V_APP_NAME)'",       configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleIdentifier",             "-string '$(V_BUNDLE_ID)'",      configFilePath)
+                Bash("plutil", arguments: "-replace", "CFBundleVersion",                "-string", "'$(V_VERSION_NUMBER)'", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString",     "-string", "'$(V_VERSION_NAME)'",   configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleName",                   "-string", "'$(V_APP_NAME)'",       configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleExecutable",             "-string", "'$(V_APP_NAME)'",       configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleIdentifier",             "-string", "'$(V_BUNDLE_ID)'",      configFilePath)
             ]
             
-            try commands.forEach { try _ = $0.run() }
+            try commands.forEach { try $0.run() }
             
             /*
              * Add custom configs to Info.plist so that it is accessible through Variants.swift

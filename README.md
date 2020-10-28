@@ -80,7 +80,7 @@ OVERVIEW: Generate spec file - variants.yml
 USAGE: variants init [--platform <platform>] [--verbose]
 
 OPTIONS:
-  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -p, --platform <platform>  'ios' or 'android'
   -v, --verbose 
   -h, --help                 Show help information.
       --version              Show the version.
@@ -152,7 +152,7 @@ OVERVIEW: Setup deployment variants (alongside Fastlane)
 USAGE: variants setup [--platform <platform>] [--spec <spec>] [--skip-fastlane] [--verbose]
 
 OPTIONS:
-  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+  -p, --platform <platform>  'ios' or 'android'
   -s, --spec <spec>          Use a different yaml configuration spec (default: variants.yml)
       --skip-fastlane
   -v, --verbose
@@ -163,7 +163,7 @@ OPTIONS:
 Examples
 ```sh
 # Automatically detect platform
-$ variants setup ios
+$ variants setup
 
 # Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
 $ variants setup --platform ios
@@ -198,47 +198,29 @@ variants setup -s ~/johndoe/custom/path/variants.yml
 In order to switch between project variants you don't need to modify the Xcode project nor the `variants.xcconfig`, just make use of one command
 
 ```sh
-<<<<<<< HEAD
-Usage: variants switch <platform> [options]
-=======
 OVERVIEW: Switch variants
 
-USAGE: variants switch <variant> [--platform <platform>] [--spec <spec>] [--verbose]
->>>>>>> develop
+USAGE: variants switch [--variant <variant>] [--platform <platform>] [--spec <spec>] [--verbose]
 
 ARGUMENTS:
   <variant>
 
-<<<<<<< HEAD
-Options:
-      --variant <value>  Desired variant (default: default)
-  -s, --spec <value>     Use a different yaml configuration spec (default: variants.yml)
-  -h, --help             Show help information
-  -v, --verbose          Log tech details for nerds
-=======
 OPTIONS:
-  -p, --platform <platform>  'ios' or 'android' (default: unknown)
+      --variant <value>       Desired variant (default: default)
+  -p, --platform <platform>   'ios' or 'android'
   -s, --spec <spec>           Use a different yaml configuration spec (default: variants.yml)
   -v, --verbose
       --version               Show the version.
   -h, --help                  Show help information.
->>>>>>> develop
 ```
 
 Examples
 ```sh
-<<<<<<< HEAD
-$ variants switch ios
-
-$ variants switch ios --variant BETA
-
-$ variants switch ios --variant BETA --spec /Path/to/custom/variants.yml
-=======
 # Automatically detect platform
-$ variants switch BETA
+$ variants switch --variant beta
 
 # Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
-$ variants switch BETA --platform ios
+$ variants switch --variant beta --platform ios
 ```
 
 ## Auto detecting the project's platform
@@ -262,9 +244,9 @@ There are 2 cases when platform auto detection will present a problem.
 1. No Android nor Xcode project were found in the working directory
 
 ```sh
-$ variants switch beta
+$ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-21]: ▸ $ variants switch beta
+INFO  [2020-10-21]: ▸ $ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
 Error: ❌ Could not find an Android or Xcode project in your working directory.
 ```
@@ -272,10 +254,9 @@ Error: ❌ Could not find an Android or Xcode project in your working directory.
 2. When both an Android and a Xcode project were found in the working directory, making it unable to decide which platform to use for a command.
 
 ```sh
-$ variants switch beta
+$ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-21]: ▸ $ variants switch beta
+INFO  [2020-10-21]: ▸ $ variants switch --variant beta
 INFO  [2020-10-21]: ▸ --------------------------------------------------------------------------------------
 Error: ❌ Found an Android and Xcode project in your working directory. Please specify the platform you want using `--platform <value>`
->>>>>>> develop
 ```
