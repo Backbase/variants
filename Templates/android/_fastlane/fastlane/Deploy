@@ -9,8 +9,8 @@
 
 desc 'runs everything but deploy'
 lane :run_all_but_deploy do
-    run_unit_tests
-    run_ui_tests
+    unit_tests
+    ui_tests
 end
 
 
@@ -41,12 +41,12 @@ lane :deploy do |options|
     end
     
     run_all_but_deploy
-    run_build
+    build
     
     if destination == 'appcenter'
-        run_appcenter_deploy
+        appcenter_deploy
     elsif destination == 'playstore'
-        run_playstore_deploy
+        playstore_deploy
     end
     
     # Send a Slack message
@@ -63,6 +63,6 @@ end
 
 # --- Private lanes
 
-private_lane :run_build do
+private_lane :build do
     gradle(task: "vBuild")
 end

@@ -14,7 +14,7 @@ APPCENTER_APP_NAME = VARIANTS_PARAM[:APPCENTER_APP_NAME]
 # --- AppCenter
 
 desc 'deploy app to AppCenter'
-private_lane :run_appcenter_deploy do |options|
+private_lane :appcenter_deploy do |options|
     destinations = options[:destinations] || APPCENTER_PARAMS[:APPCENTER_DESTINATION_GROUP] || "Collaborators"
     notify = options[:notify] || true
 
