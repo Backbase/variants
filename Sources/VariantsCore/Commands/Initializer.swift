@@ -6,34 +6,32 @@
 //
 
 import Foundation
-import ArgumentParser
 import PathKit
+import ArgumentParser
 
-struct Switch: ParsableCommand {
-    static var configuration = CommandConfiguration(
-        commandName: "switch",
-        abstract: "Switch variants"
+public struct Initializer: ParsableCommand {
+    public init() {}
+    
+    public static var configuration = CommandConfiguration(
+        commandName: "init",
+        abstract: "Generate spec file - variants.yml"
     )
-    
+
     // MARK: - Configuration Properties
-    
-    @Option(help: "Desired variant")
-    var variant: String = "default"
     
     @Option(name: .shortAndLong, help: "'ios' or 'android'")
     var platform: String = ""
     
-    @Option(name: .shortAndLong, help: "Use a different yaml configuration spec")
-    var spec: String = "variants.yml"
-    
     @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
-    
-    mutating func run() throws {
+
+    public mutating func run() throws {
         let logger = Logger(verbose: verbose)
-        logger.logSection("$ ", item: "variants switch --variant \(variant)", color: .ios)
+        logger.logSection("$ ", item: "variants init", color: .ios)
+
         let detectedPlatform = try PlatformDetector.detect(fromArgument: platform)
         let project = ProjectFactory.from(platform: detectedPlatform)
-        try project.switch(to: variant, spec: spec, verbose: verbose)
+        try project.initialize(verbose: verbose)
     }
 }
+

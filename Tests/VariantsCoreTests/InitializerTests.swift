@@ -1,9 +1,12 @@
 //
-// Copyright © 2020 Backbase R&D B.V. All rights reserved.
+//  Variants
+//
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Arthur Alves
 //
 
 import XCTest
-@testable import variants
+@testable import VariantsCore
 
 final class InitializerTests: XCTestCase {
     

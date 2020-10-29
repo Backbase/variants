@@ -6,19 +6,19 @@
 //
 
 import Foundation
-import PathKit
 import ArgumentParser
+import PathKit
 
-class AndroidProject: Project {
+class iOSProject: Project {
     init(
         specHelper: SpecHelper,
-        configFactory: GradleScriptFactory = GradleScriptFactory(),
+        configFactory: XCConfigFactory = XCConfigFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.configFactory = configFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
-    
+
     // MARK: - Public
 
     override func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
@@ -32,7 +32,7 @@ class AndroidProject: Project {
 
     override func `switch`(to variant: String, spec: String, verbose: Bool) throws {
         guard let configuration = try loadConfiguration(spec) else {
-            throw RuntimeError("Unable to load specs '\(spec)' for platform 'android'")
+            throw RuntimeError("Unable to load specs '\(spec)' for platform 'ios'")
         }
 
         guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == variant.lowercased() }) else {
@@ -48,7 +48,7 @@ class AndroidProject: Project {
 
     // MARK: - Private
 
-    private func loadConfiguration(_ path: String?) throws -> AndroidConfiguration? {
+    private func loadConfiguration(_ path: String?) throws -> iOSConfiguration? {
         guard let path = path else {
             throw ValidationError("Error: Use '-s' to specify the configuration file")
         }
@@ -57,24 +57,46 @@ class AndroidProject: Project {
         guard !configurationPath.isDirectory else {
             throw ValidationError("Error: \(configurationPath) is a directory path")
         }
-
-        return yamlParser.extractConfiguration(from: path, platform: .android).android
+        
+        do {
+            return try yamlParser.extractConfiguration(from: path, platform: .ios).ios
+        } catch {
+            Logger.shared.logError(item: (error as NSError).debugDescription)
+            Logger.shared.logFatal("❌ ", item: "Unable to load your YAML spec")
+            exit(1) // Reduntant exit, otherwise we must return something
+        }
     }
 
-    private func process(variant: String, spec: String, configuration: Configuration) throws {
-
-    }
-
-    private func switchTo(_ variant: AndroidVariant, spec: String, configuration: AndroidConfiguration) throws {
+    private func switchTo(_ variant: iOSVariant, spec: String, configuration: iOSConfiguration) throws {
         Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
-        configFactory.createScript(with: configuration, variant: variant)
+
+        configuration.targets
+            .map { (key: $0.key, value: $0.value)}
+            .forEach { result in
+                configFactory.createConfig(
+                    with: result,
+                    variant: variant,
+                    xcodeProj: configuration.xcodeproj,
+                    configPath: Path(spec).absolute().parent(),
+                    addToXcodeProj: false
+                )
+            }
     }
 
-    private func createVariants(with configuration: AndroidConfiguration, spec: String) {
-
+    private func createVariants(with configuration: iOSConfiguration, spec: String) {
+        configuration.targets
+            .map { (key: $0.key, value: $0.value) }
+            .forEach { result in
+                try? createConfig(
+                    with: result,
+                    spec: spec,
+                    variants: configuration.variants,
+                    xcodeProj: configuration.xcodeproj
+                )
+            }
     }
 
-    private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
+    private func setupFastlane(with configuration: iOSConfiguration, skip: Bool) {
         if skip {
             Logger.shared.logInfo("Skipped Fastlane setup", item: "")
         } else {
@@ -82,19 +104,21 @@ class AndroidProject: Project {
 
             do {
                 let path = try TemplateDirectory().path
-                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", ".")
+                try Bash("cp", arguments: "-R", "\(path.absolute())/ios/_fastlane/", ".")
                     .run()
-
-                let projectSourceFolder = configuration.path
+                
+                let projectSourceFolder = configuration.targets.first?.value.source.path ?? "{{ SOURCE_PATH }}"
                 let baseSetupCompletedMessage =
                     """
                     ✅  You variants configuration was setup
                     ✅  For configuration properties with 'environment' destination, a temporary
                         file has been created. You can source this file directly.
+                    ✅  '\(projectSourceFolder)/Variants/' has been created.
+                        Add that folder to your Xcode project if it wasn't done automatically.
                     ✅  For configuration properties with 'project' destination, they have been
-                        stored in '\(projectSourceFolder)/gradleScripts/variants.gradle'.
-                        This gradle file should be used by your 'app/build.gradle' in order to read the app's
-                        information and custom properties you've set with destination 'project'.
+                        stored in '\(projectSourceFolder)/Variants/variants.xcconfig'.
+                        These values have been made available to your project via your Info.plist.
+                        Use them in your code as 'Variants.configuration["SAMPLE_PROPERTY"]'.
                     🔄  Use 'variants switch --variants <value>' to switch between variants and
                         update the properties in the files described above.
 
@@ -120,8 +144,8 @@ class AndroidProject: Project {
 
                         ⚠️  Check the files in 'fastlane/parameters/', change the parameters accordingly,
                             provide environment variables when applicable.
-                        ⚠️  Note that the values in the file 'fastlane/parameters/variants_params.rb' are
-                            generated automatically.
+                        ⚠️  If you use Cocoapods-art, enable it in 'fastlane/Cocoapods'
+                        ⚠️  Change your signing configuration in 'fastlane/Match' and potentially 'fastlane/Deploy'
 
                         """
                     
@@ -142,6 +166,19 @@ class AndroidProject: Project {
             }
         }
     }
-    
-    private let configFactory: GradleScriptFactory
+
+    private func createConfig(with target: NamedTarget, spec: String, variants: [iOSVariant]?, xcodeProj: String?) throws {
+        guard
+            let variants = variants,
+            !variants.isEmpty,
+            let defaultVariant = variants.first(where: { $0.name == "default" })
+        else {
+            throw ValidationError("Missing mandatory variant: 'default'")
+        }
+
+        let configPath = Path(spec).absolute().parent()
+        configFactory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
+    }
+
+    private let configFactory: XCConfigFactory
 }

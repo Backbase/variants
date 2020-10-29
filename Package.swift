@@ -28,12 +28,18 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Variants",
+            name: "VariantsCore",
             dependencies: [
                 "PathKit",
                 "Yams",
                 "XcodeProj",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ]
+        ),
+        .target(
+            name: "Variants",
+            dependencies: [
+                "VariantsCore"
             ]
         ),
         .testTarget(

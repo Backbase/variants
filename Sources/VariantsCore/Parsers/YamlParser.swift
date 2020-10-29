@@ -9,11 +9,11 @@ import Foundation
 import Yams
 
 class YamlParser {
-    public func extractConfiguration(from configurationPath: String, platform: Platform?) -> Configuration {
+    public func extractConfiguration(from configurationPath: String, platform: Platform?) throws -> Configuration {
         let decoder = YAMLDecoder()
         let encoder = YAMLEncoder()
         
-        do {
+//        do {
             let encodedYAML = try String(contentsOfFile: configurationPath, encoding: .utf8)
             let decoded: Configuration = try decoder.decode(Configuration.self, from: encodedYAML)
             
@@ -35,10 +35,10 @@ class YamlParser {
             
             return decoded
             
-        } catch {
-            Logger.shared.logDebug(item: (error as NSError).debugDescription)
-            Logger.shared.logFatal("❌ ", item: "Unable to load your YAML spec - Ensure it does exist, run 'variants init'")
-            exit(1) // Reduntant exit, otherwise we must return something
-        }
+//        } catch {
+//            Logger.shared.logError(item: (error as NSError).debugDescription)
+//            throw RuntimeError(error.localizedDescription)
+//
+//        }
     }
 }
