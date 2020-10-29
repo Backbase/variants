@@ -141,6 +141,9 @@ class AndroidProject: Project {
                     Logger.shared.logInfo("", item: line, color: .yellow)
                 }
 
+            } catch let error as ValidationError {
+                Logger.shared.logFatal(item: error.description)
+                
             } catch {
                 Logger.shared.logFatal(item: error.localizedDescription)
             }
