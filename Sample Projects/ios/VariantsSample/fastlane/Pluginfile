@@ -1,4 +1,0 @@
-gem 'fastlane-plugin-appcenter'
-gem 'fastlane-plugin-lizard'
-gem 'fastlane-plugin-xcconfig'
-gem 'fastlane-plugin-xchtmlreport'
