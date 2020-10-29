@@ -82,10 +82,10 @@ class YamlParserTests: XCTestCase {
         }
     }
     
-//    static var allTests = [
-//        ("testExtractConfiguration_invalidSpec", testExtractConfiguration_invalidSpec),
-//        ("testExtractConfiguration_valid_iOS", testExtractConfiguration_valid_iOS),
-//        ("testExtractConfiguration_valid_android", testExtractConfiguration_valid_android),
-//    ]
+    static var allTests = [
+        ("testExtractConfiguration_invalidSpec", testExtractConfiguration_invalidSpec),
+        ("testExtractConfiguration_valid_iOS", testExtractConfiguration_valid_iOS),
+        ("testExtractConfiguration_valid_android", testExtractConfiguration_valid_android),
+    ]
 }
 
