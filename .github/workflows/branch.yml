@@ -21,4 +21,4 @@ jobs:
       run: swift test
 
     - name: Test VariantsCore
-      run: xcodebuild test -scheme VariantsCore
+      run: xcodebuild test -target VariantsCore -scheme VariantsCore
