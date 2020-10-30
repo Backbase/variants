@@ -62,8 +62,7 @@ class AndroidProject: Project {
             return try yamlParser.extractConfiguration(from: path, platform: .android).android
         } catch {
             Logger.shared.logError(item: (error as NSError).debugDescription)
-            Logger.shared.logFatal("❌ ", item: "Unable to load your YAML spec")
-            exit(1) // Reduntant exit, otherwise we must return something
+            throw RuntimeError("Unable to load your YAML spec")
         }
     }
 
