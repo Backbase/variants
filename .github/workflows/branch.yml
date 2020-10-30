@@ -5,7 +5,7 @@ on:
     types: [ opened, synchronize ]
     branches: [ develop ]
 env:
-  DEVELOPER_DIR: /Applications/Xcode_11.4.1.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_12.app/Contents/Developer
 
 jobs:
   build:
@@ -13,9 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-#     - name: Build Release
-#       run: swift build -c release
 
     - name: Test CLI Package
       run: swift test
