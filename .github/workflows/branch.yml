@@ -14,11 +14,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build Release
-      run: swift build -c release
+#     - name: Build Release
+#       run: swift build -c release
 
-    - name: Test CLI Package
-      run: swift test
+#     - name: Test CLI Package
+#       run: swift test
 
     - name: Test VariantsCore
-      run: xcodebuild test -scheme VariantsCore
+      run: xcodebuild test -scheme VariantsCoreTests
