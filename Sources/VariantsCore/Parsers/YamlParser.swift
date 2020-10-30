@@ -9,10 +9,15 @@ import Foundation
 import Yams
 
 class YamlParser {
+    public init (
+        decoder: YAMLDecoder = YAMLDecoder(),
+        encoder: YAMLEncoder = YAMLEncoder()
+    ) {
+        self.decoder = decoder
+        self.encoder = encoder
+    }
+    
     public func extractConfiguration(from configurationPath: String, platform: Platform?) throws -> Configuration {
-        let decoder = YAMLDecoder()
-        let encoder = YAMLEncoder()
-        
         let encodedYAML = try String(contentsOfFile: configurationPath, encoding: .utf8)
         let decoded: Configuration = try decoder.decode(Configuration.self, from: encodedYAML)
         
@@ -34,4 +39,7 @@ class YamlParser {
         
         return decoded
     }
+    
+    var decoder: YAMLDecoder
+    var encoder: YAMLEncoder
 }
