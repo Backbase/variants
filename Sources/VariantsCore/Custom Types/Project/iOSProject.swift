@@ -9,6 +9,8 @@ import Foundation
 import ArgumentParser
 import PathKit
 
+// swiftlint:disable type_name
+
 class iOSProject: Project {
     init(
         specHelper: SpecHelper,

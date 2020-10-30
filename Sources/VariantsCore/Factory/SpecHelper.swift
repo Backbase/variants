@@ -8,6 +8,8 @@
 import Foundation
 import PathKit
 
+// swiftlint:disable type_name
+
 enum iOSProjectKey: String, CaseIterable {
     case project = "PROJECT"
     case target = "TARGET"

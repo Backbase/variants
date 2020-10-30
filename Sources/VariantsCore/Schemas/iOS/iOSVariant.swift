@@ -7,6 +7,8 @@
 
 import Foundation
 
+// swiftlint:disable type_name
+
 public struct iOSVariant: Codable {
     let name: String
     let app_icon: String?

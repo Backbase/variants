@@ -7,6 +7,8 @@
 
 import Foundation
 
+// swiftlint:disable type_name
+
 public struct iOSConfiguration: Codable {
     public var xcodeproj: String
     public var targets: [String: iOSTarget]
