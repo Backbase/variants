@@ -6,6 +6,7 @@
 //
 
 import ArgumentParser
+import VariantsCore
 
 struct Variants: ParsableCommand {
     static var configuration = CommandConfiguration(

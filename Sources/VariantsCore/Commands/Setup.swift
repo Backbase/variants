@@ -10,8 +10,10 @@ import ArgumentParser
 import PathKit
 import Yams
 
-struct Setup: ParsableCommand {
-    static var configuration = CommandConfiguration(
+public struct Setup: ParsableCommand {
+    public init() {}
+    
+    public static var configuration = CommandConfiguration(
         commandName: "setup",
         abstract: "Setup deployment variants (alongside Fastlane)"
     )
@@ -30,7 +32,7 @@ struct Setup: ParsableCommand {
     @Flag(name: .shortAndLong, help: "Log tech details for nerds")
     var verbose = false
     
-    mutating func run() throws {
+    public mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants setup", color: .ios)
         let detectedPlatform = try PlatformDetector.detect(fromArgument: platform)
