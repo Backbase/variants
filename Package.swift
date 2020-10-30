@@ -39,7 +39,11 @@ let package = Package(
         .target(
             name: "Variants",
             dependencies: [
-                "VariantsCore"
+                "VariantsCore",
+                "PathKit",
+                "Yams",
+                "XcodeProj",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]
         ),
         .testTarget(
