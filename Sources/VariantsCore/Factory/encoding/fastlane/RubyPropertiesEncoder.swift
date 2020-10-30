@@ -7,6 +7,8 @@
 
 import Foundation
 
+// swiftlint:disable file_length
+
 public class RubyPropertiesEncoder {
     
     public func encode<T: Encodable>(_ value: T) throws -> String {

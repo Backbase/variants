@@ -43,7 +43,7 @@ public struct iOSVariant: Codable {
     }
     
     var configIdSuffix: String {
-       switch name {
+        switch name {
         case "default":
             return ""
         default:

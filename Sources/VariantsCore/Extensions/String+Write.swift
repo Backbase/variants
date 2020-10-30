@@ -14,7 +14,7 @@ extension String {
     }
     
     mutating func appendLine(_ value: String) {
-        self = self + value + "\n"
+        self += value + "\n"
     }
     
     func appendLineToURL(fileURL: URL) throws {
