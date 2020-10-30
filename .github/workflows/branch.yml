@@ -17,8 +17,8 @@ jobs:
 #     - name: Build Release
 #       run: swift build -c release
 
-#     - name: Test CLI Package
-#       run: swift test
+    - name: Test CLI Package
+      run: swift test
 
     - name: Test VariantsCore
       run: xcodebuild test -scheme VariantsCoreTests
