@@ -34,7 +34,7 @@ struct XCConfigFactory {
         }
     }
     
-    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T : Encodable {
+    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T: Encodable {
         let encoder = JSONEncoder()
         if #available(OSX 10.15, *) {
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
@@ -85,7 +85,7 @@ struct XCConfigFactory {
             _ = try? Bash("mkdir", arguments: xcodeConfigPath.parent().absolute().description).run()
         }
         
-        let _ = write("", toFile: xcodeConfigPath, force: true)
+        _ = write("", toFile: xcodeConfigPath, force: true)
         logger.logInfo("Created file: ", item: "'\(xcconfigFileName)' at \(xcodeConfigPath.parent().abbreviate().description)")
         
         populateConfig(with: target.value, configFile: xcodeConfigPath, variant: variant)
@@ -128,7 +128,7 @@ struct XCConfigFactory {
                 [
                     "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
                     "PRODUCT_NAME": "$(V_APP_NAME)",
-                    "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)",
+                    "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
                 ],
                 in: projectPath,
                 target: target.value)
@@ -157,11 +157,11 @@ struct XCConfigFactory {
         do {
             // TODO: Add plutil as separate command?
             let commands = [
-                Bash("plutil", arguments: "-replace", "CFBundleVersion",                "-string", "'$(V_VERSION_NUMBER)'", configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString",     "-string", "'$(V_VERSION_NAME)'",   configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleName",                   "-string", "'$(V_APP_NAME)'",       configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleExecutable",             "-string", "'$(V_APP_NAME)'",       configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleIdentifier",             "-string", "'$(V_BUNDLE_ID)'",      configFilePath)
+                Bash("plutil", arguments: "-replace", "CFBundleVersion", "-string", "'$(V_VERSION_NUMBER)'", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString", "-string", "'$(V_VERSION_NAME)'", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleName", "-string", "'$(V_APP_NAME)'", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleExecutable", "-string", "'$(V_APP_NAME)'", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleIdentifier", "-string", "'$(V_BUNDLE_ID)'", configFilePath)
             ]
             
             try commands.forEach { try $0.run() }

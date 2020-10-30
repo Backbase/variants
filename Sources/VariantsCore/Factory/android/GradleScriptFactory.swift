@@ -48,7 +48,7 @@ struct GradleScriptFactory {
         gradleFileContent.addWrapperGradleTasks([
             WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild, description: "Wrapper Gradle task used for building the application"),
             WrapperGradleTask(name: "vUnitTests", dependsOnTaskWithName: variant.taskUnitTest, description: "Wrapper Gradle task used for executing the Unit Tests"),
-            WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest, description: "Wrapper Gradle task used for executing the UI Tests"),
+            WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest, description: "Wrapper Gradle task used for executing the UI Tests")
         ])
         
         //Write the actual files
@@ -99,7 +99,7 @@ struct GradleScriptFactory {
                 }
                 gradleFileContent.addGradleDefinition(prop.name, value: prop.value)
             case .envVar:
-                exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
+                exportVariablesFileContent.addExportVariable(prop.name, value: prop.value)
             case .fastlane:
                 fastlaneParameters.parameters[prop.name] = prop.value
             }
@@ -113,7 +113,6 @@ private struct WrapperGradleTask{
     let description: String
 }
 
-
 fileprivate extension String {
     func writeToTemporaryFile() -> String? {
         do {
@@ -123,7 +122,7 @@ fileprivate extension String {
         }
     }
     
-    func writeGradleScript(with configuration:AndroidConfiguration) {
+    func writeGradleScript(with configuration: AndroidConfiguration) {
         let fm = FileManager.default
         let destinationFolderPath = configuration.path + "/gradleScripts"
         let destionationFilePath = destinationFolderPath + "/variants.gradle"
@@ -146,7 +145,7 @@ fileprivate extension String {
         var dependsOnScriptList = ""
         
         for (index, element) in tasks.enumerated() {
-            self.appendLine(String(format: "def %@ = task %@", element.name,element.name))
+            self.appendLine(String(format: "def %@ = task %@", element.name, element.name))
             let isFirst = index == 0
             if isFirst {
                 dependsOnScriptList.append(String(format: dependsOnScript, "",

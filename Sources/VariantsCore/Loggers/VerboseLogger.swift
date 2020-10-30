@@ -78,7 +78,7 @@ extension VerboseLogger {
     }
 }
 
-fileprivate struct StandardErrorOutputStream: TextOutputStream {
+private struct StandardErrorOutputStream: TextOutputStream {
     let stderr = FileHandle.standardError
 
     func write(_ string: String) {

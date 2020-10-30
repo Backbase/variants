@@ -15,6 +15,6 @@ final class InitializerTests: XCTestCase {
     }
     
     static var allTests = [
-        ("testGeneratedCommandIsCorrect", testGeneratedCommandIsCorrect),
+        ("testGeneratedCommandIsCorrect", testGeneratedCommandIsCorrect)
     ]
 }
