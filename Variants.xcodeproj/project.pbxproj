@@ -79,8 +79,8 @@
 		8E1BA0FE254C3F9700DD0204 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 8E1BA0FD254C3F9700DD0204 /* Yams */; };
 		8E1BA107254C3FD000DD0204 /* XcodeProj in Frameworks */ = {isa = PBXBuildFile; productRef = 8E1BA106254C3FD000DD0204 /* XcodeProj */; };
 		8E1BA110254C3FFF00DD0204 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 8E1BA10F254C3FFF00DD0204 /* ArgumentParser */; };
-		8E1BA14A254C43A900DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
-		8E1BA14B254C43A900DD0204 /* VariantsCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8E1BA189254C48FD00DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
+		8E1BA18A254C48FD00DD0204 /* VariantsCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -115,14 +115,7 @@
 			remoteGlobalIDString = 8E1B9CCD254AC1E700DD0204;
 			remoteInfo = VariantsCore;
 		};
-		8E1B9F76254AC5B300DD0204 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = OBJ_1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8E1B9CCD254AC1E700DD0204;
-			remoteInfo = VariantsCore;
-		};
-		8E1BA14C254C43A900DD0204 /* PBXContainerItemProxy */ = {
+		8E1BA18B254C48FD00DD0204 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
@@ -138,7 +131,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8E1BA14B254C43A900DD0204 /* VariantsCore.framework in Embed Frameworks */,
+				8E1BA18A254C48FD00DD0204 /* VariantsCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -230,7 +223,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				8E1BA14A254C43A900DD0204 /* VariantsCore.framework in Frameworks */,
+				8E1BA189254C48FD00DD0204 /* VariantsCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,8 +556,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				8E1B9F77254AC5B300DD0204 /* PBXTargetDependency */,
-				8E1BA14D254C43A900DD0204 /* PBXTargetDependency */,
+				8E1BA18C254C48FD00DD0204 /* PBXTargetDependency */,
 			);
 			name = Variants;
 			packageProductDependencies = (
@@ -744,15 +736,10 @@
 			target = 8E1B9CCD254AC1E700DD0204 /* VariantsCore */;
 			targetProxy = 8E1B9CD8254AC1E700DD0204 /* PBXContainerItemProxy */;
 		};
-		8E1B9F77254AC5B300DD0204 /* PBXTargetDependency */ = {
+		8E1BA18C254C48FD00DD0204 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8E1B9CCD254AC1E700DD0204 /* VariantsCore */;
-			targetProxy = 8E1B9F76254AC5B300DD0204 /* PBXContainerItemProxy */;
-		};
-		8E1BA14D254C43A900DD0204 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8E1B9CCD254AC1E700DD0204 /* VariantsCore */;
-			targetProxy = 8E1BA14C254C43A900DD0204 /* PBXContainerItemProxy */;
+			targetProxy = 8E1BA18B254C48FD00DD0204 /* PBXContainerItemProxy */;
 		};
 		OBJ_449 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
