@@ -7,6 +7,8 @@
 
 import Foundation
 
+// swiftlint:disable type_name
+
 public typealias NamedTarget = (key: String, value: iOSTarget)
 
 public struct iOSTarget: Codable {

@@ -46,7 +46,6 @@ final class VariantsTests: XCTestCase {
         XCTAssertEqual(output, expectedOutput)
     }
     
-    
     /// Execute Variants with given arguments
     func run(with arguments: [String]) throws -> String? {
         // Some of the APIs that we use below are available in macOS 10.13 and above.

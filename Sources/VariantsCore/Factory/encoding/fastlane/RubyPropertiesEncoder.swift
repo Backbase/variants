@@ -7,6 +7,8 @@
 
 import Foundation
 
+// swiftlint:disable file_length
+
 public class RubyPropertiesEncoder {
     
     public func encode<T: Encodable>(_ value: T) throws -> String {
@@ -27,7 +29,7 @@ public class RubyPropertiesEncoder {
     }
 }
 
-fileprivate struct RubyPropertiesEncoding: Encoder {
+private struct RubyPropertiesEncoding: Encoder {
     
     fileprivate final class Data {
         private(set) var strings: [String: String] = [:]
@@ -46,7 +48,7 @@ fileprivate struct RubyPropertiesEncoding: Encoder {
 
     var codingPath: [CodingKey] = []
     
-    let userInfo: [CodingUserInfoKey : Any] = [:]
+    let userInfo: [CodingUserInfoKey: Any] = [:]
     
     func container<Key: CodingKey>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
         var container = StringsKeyedEncoding<Key>(to: data)
@@ -67,8 +69,7 @@ fileprivate struct RubyPropertiesEncoding: Encoder {
     }
 }
 
-
-fileprivate struct StringsKeyedEncoding<Key: CodingKey>: KeyedEncodingContainerProtocol {
+private struct StringsKeyedEncoding<Key: CodingKey>: KeyedEncodingContainerProtocol {
 
     private let data: RubyPropertiesEncoding.Data
     
@@ -170,7 +171,7 @@ fileprivate struct StringsKeyedEncoding<Key: CodingKey>: KeyedEncodingContainerP
     }
 }
 
-fileprivate struct StringsUnkeyedEncoding: UnkeyedEncodingContainer {
+private struct StringsUnkeyedEncoding: UnkeyedEncodingContainer {
 
     private let data: RubyPropertiesEncoding.Data
     
@@ -288,7 +289,7 @@ fileprivate struct StringsUnkeyedEncoding: UnkeyedEncodingContainer {
     }
 }
 
-fileprivate struct StringsSingleValueEncoding: SingleValueEncodingContainer {
+private struct StringsSingleValueEncoding: SingleValueEncodingContainer {
     
     private let data: RubyPropertiesEncoding.Data
     

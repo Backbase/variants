@@ -34,4 +34,3 @@ public struct Initializer: ParsableCommand {
         try project.initialize(verbose: verbose)
     }
 }
-

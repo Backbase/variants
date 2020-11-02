@@ -79,6 +79,7 @@ class AndroidProject: Project {
 
     }
 
+    // swiftlint:disable function_body_length
     private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
         if skip {
             Logger.shared.logInfo("Skipped Fastlane setup", item: "")
@@ -147,6 +148,7 @@ class AndroidProject: Project {
             }
         }
     }
+    // swiftlint:enable function_body_length
     
     private let configFactory: GradleScriptFactory
 }

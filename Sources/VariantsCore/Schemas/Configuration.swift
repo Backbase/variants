@@ -22,10 +22,4 @@ public struct CustomProperty: Codable {
         case fastlane = "fastlane"
         case envVar = "environment"
     }
-    
-    enum CodingKeys: String, CodingKey {
-        case name = "name"
-        case value = "value"
-        case destination = "destination"
-    }
 }

@@ -9,6 +9,8 @@ import Foundation
 import ArgumentParser
 import PathKit
 
+// swiftlint:disable type_name
+
 class iOSProject: Project {
     init(
         specHelper: SpecHelper,
@@ -95,6 +97,7 @@ class iOSProject: Project {
             }
     }
 
+    // swiftlint:disable function_body_length
     private func setupFastlane(with configuration: iOSConfiguration, skip: Bool) {
         if skip {
             Logger.shared.logInfo("Skipped Fastlane setup", item: "")
@@ -165,6 +168,7 @@ class iOSProject: Project {
             }
         }
     }
+    // swiftlint:enable function_body_length
 
     private func createConfig(with target: NamedTarget, spec: String, variants: [iOSVariant]?, xcodeProj: String?) throws {
         guard

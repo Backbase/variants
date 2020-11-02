@@ -18,7 +18,7 @@ struct Bash {
     }
     
     func capture() throws -> String? {
-        guard var bashCommand = try execute(command: "/bin/bash" , arguments: ["-l", "-c", "which \(command)"]) else {
+        guard var bashCommand = try execute(command: "/bin/bash", arguments: ["-l", "-c", "which \(command)"]) else {
             throw RuntimeError("\(command) not found")
         }
         bashCommand = bashCommand.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)

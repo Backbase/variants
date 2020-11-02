@@ -16,7 +16,7 @@ public class StdoutPrinter {
     }
 }
 
-fileprivate struct StandardOutputStream: TextOutputStream {
+private struct StandardOutputStream: TextOutputStream {
     let stdoud = FileHandle.standardOutput
 
     func write(_ string: String) {

@@ -10,6 +10,8 @@ import PathKit
 
 struct GradleScriptFactory {
     
+    // swiftlint:disable function_body_length
+    
     /// Create `gradleScripts/variants.gradle` file inside project's path
     /// - Parameters:
     ///   - configuration: Android configuration from `variants.yml`
@@ -26,7 +28,8 @@ struct GradleScriptFactory {
         gradleFileContent.appendLine("// ==== Variant values ==== ")
         gradleFileContent.addGradleDefinition("versionName", value: variant.versionName)
         gradleFileContent.addGradleDefinition("versionCode", value: variant.versionCode)
-        gradleFileContent.addGradleDefinition("appIdentifier", value: configuration.appIdentifier+variant.configIdSuffix)
+        gradleFileContent.addGradleDefinition("appIdentifier",
+                                              value: configuration.appIdentifier+variant.configIdSuffix)
         gradleFileContent.addGradleDefinition("appName", value: configuration.appName+variant.configName)
         
         if let signing = configuration.signing {
@@ -39,16 +42,25 @@ struct GradleScriptFactory {
         }
         
         //Write the custom properties
-        add(customProperties: variant.custom, header: "\n// ==== Variant custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
-        add(customProperties: configuration.custom, header: "\n// ==== Custom values ==== ", &gradleFileContent, &exportVariablesFileContent, &fastlaneConfig)
+        add(customProperties: variant.custom, header: "\n// ==== Variant custom values ==== ",
+            gradleFileContent: &gradleFileContent,
+            exportVariablesFileContent: &exportVariablesFileContent,
+            fastlaneParameters: &fastlaneConfig)
+        add(customProperties: configuration.custom, header: "\n// ==== Custom values ==== ",
+            gradleFileContent: &gradleFileContent,
+            exportVariablesFileContent: &exportVariablesFileContent,
+            fastlaneParameters: &fastlaneConfig)
         
         //Write wrapper gradle tasks
         gradleFileContent.appendLine("\n// ==== Wrapper gradle tasks ==== ")
         
         gradleFileContent.addWrapperGradleTasks([
-            WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild, description: "Wrapper Gradle task used for building the application"),
-            WrapperGradleTask(name: "vUnitTests", dependsOnTaskWithName: variant.taskUnitTest, description: "Wrapper Gradle task used for executing the Unit Tests"),
-            WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest, description: "Wrapper Gradle task used for executing the UI Tests"),
+            WrapperGradleTask(name: "vBuild", dependsOnTaskWithName: variant.taskBuild,
+                              description: "Wrapper Gradle task used for building the application"),
+            WrapperGradleTask(name: "vUnitTests", dependsOnTaskWithName: variant.taskUnitTest,
+                              description: "Wrapper Gradle task used for executing the Unit Tests"),
+            WrapperGradleTask(name: "vUITests", dependsOnTaskWithName: variant.taskUitest,
+                              description: "Wrapper Gradle task used for executing the UI Tests")
         ])
         
         //Write the actual files
@@ -64,42 +76,53 @@ struct GradleScriptFactory {
         
         let fastlaneParamPath = configuration.path + "/" + Constants.Fastlane.parametersPath
         
-        if(!fastlaneConfig.parameters.isEmpty) {
-            if(fm.fileExists(atPath: fastlaneParamPath)) {
+        if !fastlaneConfig.parameters.isEmpty {
+            if fm.fileExists(atPath: fastlaneParamPath) {
                 let fastlaneVariantVariabelsUrl = URL(fileURLWithPath: fastlaneParamPath)
                     .appendingPathComponent(Constants.Fastlane.variantGeneratedParametersFileName)
                 do {
-                    if(fm.fileExists(atPath: fastlaneVariantVariabelsUrl.absoluteString))
-                    {
+                    if fm.fileExists(atPath: fastlaneVariantVariabelsUrl.absoluteString) {
                         try fm.removeItem(at: fastlaneVariantVariabelsUrl)
                     }
-                    let fastlanePropsStringData = try RubyPropertiesEncoder().encode(fastlaneConfig).data(using: .utf8)
-                    let fileCreated = fm.createFile(atPath: fastlaneVariantVariabelsUrl.path, contents: fastlanePropsStringData, attributes: nil)
-                    if(!fileCreated) {
+                    let fastlanePropsStringData = try RubyPropertiesEncoder()
+                        .encode(fastlaneConfig).data(using: .utf8)
+                    let fileCreated = fm.createFile(atPath: fastlaneVariantVariabelsUrl.path,
+                                                    contents: fastlanePropsStringData, attributes: nil)
+                    if !fileCreated {
                         throw "Could not generate the file for the fastlane variables"
                     }
                 } catch {
-                    Logger.shared.logError("❌ ", item: "Could not generate the file for the fastlane variables")
+                    Logger.shared.logError("❌ ", item: """
+                        Could not generate the file for the fastlane variables
+                    """)
                 }
             } else {
-                Logger.shared.logError("❌ ", item: "\(fastlaneParamPath) not found. Unable to store configuration value for key \(variant.name) using \"fastlane\" destination.")
+                Logger.shared.logError("❌ ", item: """
+                        \(fastlaneParamPath) not found. Unable to store configuration
+                        value for key \(variant.name) using \"fastlane\" destination.
+                    """)
             }
         }
     }
+    // swiftlint:enable function_body_length
     
-    func add(customProperties properties: [CustomProperty]?, header: String, _ gradleFileContent: inout String, _ exportVariablesFileContent: inout String, _ fastlaneParameters: inout FastlaneConfig) {
+    func add(customProperties properties: [CustomProperty]?,
+             header: String,
+             gradleFileContent: inout String,
+             exportVariablesFileContent: inout String,
+             fastlaneParameters: inout FastlaneConfig) {
         
         var customVariablesHeaderAdded = false
         properties?.forEach { prop in
-            switch(prop.destination) {
+            switch prop.destination {
             case .gradle:
-                if(!customVariablesHeaderAdded) {
+                if !customVariablesHeaderAdded {
                     gradleFileContent.appendLine(header)
                     customVariablesHeaderAdded = true
                 }
                 gradleFileContent.addGradleDefinition(prop.name, value: prop.value)
             case .envVar:
-                exportVariablesFileContent.addExportVariable(prop.name,value: prop.value)
+                exportVariablesFileContent.addExportVariable(prop.name, value: prop.value)
             case .fastlane:
                 fastlaneParameters.parameters[prop.name] = prop.value
             }
@@ -113,7 +136,6 @@ private struct WrapperGradleTask{
     let description: String
 }
 
-
 fileprivate extension String {
     func writeToTemporaryFile() -> String? {
         do {
@@ -123,16 +145,20 @@ fileprivate extension String {
         }
     }
     
-    func writeGradleScript(with configuration:AndroidConfiguration) {
+    func writeGradleScript(with configuration: AndroidConfiguration) {
         let fm = FileManager.default
         let destinationFolderPath = configuration.path + "/gradleScripts"
         let destionationFilePath = destinationFolderPath + "/variants.gradle"
         
         do {
-            try fm.createDirectory(atPath: destinationFolderPath, withIntermediateDirectories: true, attributes: nil)
-            fm.createFile(atPath: destionationFilePath, contents: self.data(using: .utf8), attributes: nil)
+            try fm.createDirectory(atPath: destinationFolderPath,
+                                   withIntermediateDirectories: true, attributes: nil)
+            fm.createFile(atPath: destionationFilePath,
+                          contents: self.data(using: .utf8), attributes: nil)
         } catch {
-            Logger.shared.logError(item: "Could not generate gradle script:\n\(error.localizedDescription)")
+            Logger.shared.logError(item: """
+                Could not generate gradle script:\n\(error.localizedDescription)
+            """)
         }
     }
     
@@ -146,7 +172,7 @@ fileprivate extension String {
         var dependsOnScriptList = ""
         
         for (index, element) in tasks.enumerated() {
-            self.appendLine(String(format: "def %@ = task %@", element.name,element.name))
+            self.appendLine(String(format: "def %@ = task %@", element.name, element.name))
             let isFirst = index == 0
             if isFirst {
                 dependsOnScriptList.append(String(format: dependsOnScript, "",
