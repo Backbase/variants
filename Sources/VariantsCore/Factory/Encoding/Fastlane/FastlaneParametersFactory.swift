@@ -16,6 +16,11 @@ class FastlaneParametersFactory {
         self.templatePath = templatePath
     }
     
+    func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws {
+        guard let data = try render(parameters: parameters) else { return }
+        try write(data, using: folder)
+    }
+    
     func render(parameters: [CustomProperty]) throws -> Data? {
         let context = [
           "parameters": parameters
