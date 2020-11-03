@@ -423,20 +423,20 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_52 /* Configuration.swift */,
-				OBJ_53 /* android */,
+				OBJ_53 /* Android */,
 				OBJ_57 /* iOS */,
 			);
 			path = Schemas;
 			sourceTree = "<group>";
 		};
-		OBJ_53 /* android */ = {
+		OBJ_53 /* Android */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_54 /* AndroidConfiguration.swift */,
 				OBJ_55 /* AndroidSigning.swift */,
 				OBJ_56 /* AndroidVariant.swift */,
 			);
-			path = android;
+			path = Android;
 			sourceTree = "<group>";
 		};
 		OBJ_57 /* iOS */ = {

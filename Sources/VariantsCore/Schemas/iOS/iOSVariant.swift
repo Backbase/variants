@@ -15,7 +15,7 @@ public struct iOSVariant: Codable {
     let id_suffix: String?
     let version_name: String
     let version_number: Int
-    let custom: [CustomConfig]?
+    let custom: [CustomProperty]?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
         var customDictionary: [String: String] = [
@@ -27,7 +27,7 @@ public struct iOSVariant: Codable {
         ]
        
         custom?.forEach({ config in
-            customDictionary[config.key] = config.value
+            customDictionary[config.name] = config.value
         })
         
         return customDictionary
@@ -50,9 +50,4 @@ public struct iOSVariant: Codable {
             return id_suffix != nil ? "."+id_suffix! : ""
         }
     }
-}
-
-public struct CustomConfig: Codable {
-    let key: String
-    let value: String
 }
