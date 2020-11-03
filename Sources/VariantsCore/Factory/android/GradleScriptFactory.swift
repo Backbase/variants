@@ -197,7 +197,7 @@ fileprivate extension String {
         self.appendLine("rootProject.ext.\(name) = \"\(value.envVarValue() ?? value)\"")
     }
     
-    // This will add the value without parenthesis
+    // This will add the value without quotes
     // This is useful in cases of versionCode which should be
     // represented as an int and not a string.
     mutating func addGradleValueDefinition(_ name: String, value: String) {
