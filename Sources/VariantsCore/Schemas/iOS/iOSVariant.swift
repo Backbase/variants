@@ -26,9 +26,11 @@ public struct iOSVariant: Codable {
             "V_APP_ICON": app_icon ?? target.app_icon
         ]
        
-        custom?.forEach({ config in
-            customDictionary[config.name] = config.value
-        })
+        custom?
+            .filter { $0.destination == .project }
+            .forEach({ config in
+                customDictionary[config.name] = config.value
+            })
         
         return customDictionary
     }
