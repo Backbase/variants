@@ -12,8 +12,8 @@ struct Constants {}
 
 struct StaticPath {
     struct Fastlane {
-        static let baseFolder = Path("fastlane")
-        static let parametersFolder = Path("fastlane/parameters")
+        static let baseFolder = Path("fastlane/")
+        static let parametersFolder = Path("fastlane/parameters/")
         static let variantsParametersFileName = "variants_params.rb"
     }
 }
