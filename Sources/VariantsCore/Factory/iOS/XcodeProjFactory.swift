@@ -45,9 +45,8 @@ struct XcodeProjFactory {
                 applicationData[iOSProjectKey.target] = target.name
                 
                 // Use first `buildSettings` containing entry for `INFOPLIST_FILE`
-                if let buildSettings = target.buildConfigurationList?
-                    .buildConfigurations.first(where: { $0.buildSettings.contains {
-                        (key, _) -> Bool in
+                if let buildSettings = target.buildConfigurationList?.buildConfigurations
+                    .first(where: { $0.buildSettings.contains { (key, _) -> Bool in
                         key == "INFOPLIST_FILE"
                 } }).map(\.buildSettings) {
                     
