@@ -335,45 +335,45 @@
 			children = (
 				OBJ_29 /* ProjectFactory.swift */,
 				OBJ_30 /* SpecHelper.swift */,
-				OBJ_31 /* android */,
-				OBJ_33 /* encoding */,
-				OBJ_37 /* ios */,
+				OBJ_31 /* Android */,
+				OBJ_33 /* Encoding */,
+				OBJ_37 /* iOS */,
 			);
 			path = Factory;
 			sourceTree = "<group>";
 		};
-		OBJ_31 /* android */ = {
+		OBJ_31 /* Android */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_32 /* GradleScriptFactory.swift */,
 			);
-			path = android;
+			path = Android;
 			sourceTree = "<group>";
 		};
-		OBJ_33 /* encoding */ = {
+		OBJ_33 /* Encoding */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_34 /* fastlane */,
+				OBJ_34 /* Fastlane */,
 			);
-			path = encoding;
+			path = Encoding;
 			sourceTree = "<group>";
 		};
-		OBJ_34 /* fastlane */ = {
+		OBJ_34 /* Fastlane */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_35 /* FastlaneParametersEncodable.swift */,
 				OBJ_36 /* RubyPropertiesEncoder.swift */,
 			);
-			path = fastlane;
+			path = Fastlane;
 			sourceTree = "<group>";
 		};
-		OBJ_37 /* ios */ = {
+		OBJ_37 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_38 /* XCConfigFactory.swift */,
 				OBJ_39 /* XcodeProjFactory.swift */,
 			);
-			path = ios;
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		OBJ_40 /* Helpers */ = {
