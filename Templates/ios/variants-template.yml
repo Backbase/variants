@@ -25,8 +25,12 @@ ios:
         # Only strings allowed.
         #
         custom:
-            - key: OTHER_SWIFT_FLAGS
+            - name: OTHER_SWIFT_FLAGS
               value: $(inherited)
+              destination: project
+            - name: SAMPLE_FASTLANE_PROPERTY
+              value: This will be available to fastlane
+              destination: fastlane
         #
         # Sample variant, "beta".
         # Only `name` and `id_suffix` are mandatory fields
@@ -37,3 +41,10 @@ ios:
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 1
+        custom:
+            - name: OTHER_SWIFT_FLAGS
+              value: $(inherited)
+              destination: project
+            - name: SAMPLE_FASTLANE_PROPERTY
+              value: This will be available to fastlane on Beta variant
+              destination: fastlane
