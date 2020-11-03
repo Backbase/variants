@@ -84,13 +84,15 @@ ios:
         version_name: 0.0.1
         version_number: 1
         custom:
-            - key: SAMPLE_CONFIG
+            - name: SAMPLE_CONFIG
               value: Production Value
+              destination: project
       - name: BETA
         id_suffix: beta
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 1
         custom:
-            - key: SAMPLE_CONFIG
+            - name: SAMPLE_CONFIG
               value: BETA Value
+              destination: project

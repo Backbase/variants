@@ -35,13 +35,13 @@ class YamlParserTests: XCTestCase {
             
             let customConfigDefault = configuration.ios?
                 .variants.first(where: { $0.name == "default" })?
-                .custom?.first(where: { $0.key == "SAMPLE_CONFIG" })
+                .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigDefault)
             XCTAssertEqual(customConfigDefault?.value, "Production Value")
             
             let customConfigBeta = configuration.ios?
                 .variants.first(where: { $0.name == "BETA" })?
-                .custom?.first(where: { $0.key == "SAMPLE_CONFIG" })
+                .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigBeta)
             XCTAssertEqual(customConfigBeta?.value, "BETA Value")
             
