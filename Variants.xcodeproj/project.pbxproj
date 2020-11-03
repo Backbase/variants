@@ -340,7 +340,6 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_29 /* ProjectFactory.swift */,
-				OBJ_30 /* SpecHelper.swift */,
 				OBJ_31 /* Android */,
 				OBJ_34 /* Fastlane */,
 				OBJ_37 /* iOS */,
@@ -376,6 +375,7 @@
 		OBJ_40 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				OBJ_30 /* SpecHelper.swift */,
 				OBJ_41 /* Bash.swift */,
 				OBJ_42 /* Constants.swift */,
 				OBJ_43 /* PlatformDetector.swift */,
