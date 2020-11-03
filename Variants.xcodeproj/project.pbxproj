@@ -293,9 +293,9 @@
 		OBJ_13 /* Custom Types */ = {
 			isa = PBXGroup;
 			children = (
+				OBJ_16 /* Project */,
 				OBJ_14 /* ConfigurationParserError.swift */,
 				OBJ_15 /* Platform.swift */,
-				OBJ_16 /* Project */,
 				OBJ_20 /* RuntimeError.swift */,
 				OBJ_21 /* TemplateDirectory.swift */,
 			);

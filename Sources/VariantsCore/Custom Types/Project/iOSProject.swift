@@ -15,9 +15,11 @@ class iOSProject: Project {
     init(
         specHelper: SpecHelper,
         configFactory: XCConfigFactory = XCConfigFactory(),
+        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.configFactory = configFactory
+        self.fastlaneFactory = fastlaneFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
 
@@ -81,6 +83,8 @@ class iOSProject: Project {
                     configPath: Path(spec).absolute().parent(),
                     addToXcodeProj: false
                 )
+                
+                try? storeFastlaneParams(variant: variant)
             }
     }
 
@@ -137,7 +141,14 @@ class iOSProject: Project {
 
                     """
                 
-                if Path("./fastlane/").isDirectory {
+                if StaticPath.Fastlane.baseFolder.isDirectory {
+                    
+                    guard let desiredVariant = configuration
+                            .variants.first(where: { $0.name.lowercased() == "default" }) else {
+                        throw ValidationError("Variant 'default' not found.")
+                    }
+                    try storeFastlaneParams(variant: desiredVariant)
+                    
                     setupCompleteMessage =
                         """
 
@@ -182,6 +193,14 @@ class iOSProject: Project {
         let configPath = Path(spec).absolute().parent()
         configFactory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
     }
+    
+    private func storeFastlaneParams(variant: iOSVariant) throws {
+        let fastlaneProperties = variant.custom?.filter { $0.destination == .fastlane } ?? []
+        guard !fastlaneProperties.isEmpty else { return }
+        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                                                 with: fastlaneProperties)
+    }
 
     private let configFactory: XCConfigFactory
+    private let fastlaneFactory: FastlaneParametersFactory
 }
