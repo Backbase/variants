@@ -49,10 +49,8 @@
 		8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* String+Error.swift */; };
 		8E1B9E35254AC28F00DD0204 /* ProjectFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* ProjectFactory.swift */; };
 		8E1B9E36254AC28F00DD0204 /* GradleScriptFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* GradleScriptFactory.swift */; };
-		8E1B9E37254AC28F00DD0204 /* FastlaneParametersEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* FastlaneParametersEncodable.swift */; };
 		8E1B9E38254AC28F00DD0204 /* XcodeProjFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* XcodeProjFactory.swift */; };
 		8E1B9E39254AC28F00DD0204 /* SpecHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* SpecHelper.swift */; };
-		8E1B9E3A254AC28F00DD0204 /* RubyPropertiesEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_36 /* RubyPropertiesEncoder.swift */; };
 		8E1B9E3B254AC28F00DD0204 /* XCConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_38 /* XCConfigFactory.swift */; };
 		8E1B9E64254AC29500DD0204 /* TemplatesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_44 /* TemplatesManager.swift */; };
 		8E1B9E65254AC29500DD0204 /* Bash.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* Bash.swift */; };
@@ -177,8 +175,6 @@
 		OBJ_291 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		OBJ_30 /* SpecHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecHelper.swift; sourceTree = "<group>"; };
 		OBJ_32 /* GradleScriptFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradleScriptFactory.swift; sourceTree = "<group>"; };
-		OBJ_35 /* FastlaneParametersEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersEncodable.swift; sourceTree = "<group>"; };
-		OBJ_36 /* RubyPropertiesEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RubyPropertiesEncoder.swift; sourceTree = "<group>"; };
 		OBJ_38 /* XCConfigFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCConfigFactory.swift; sourceTree = "<group>"; };
 		OBJ_39 /* XcodeProjFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjFactory.swift; sourceTree = "<group>"; };
 		OBJ_41 /* Bash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bash.swift; sourceTree = "<group>"; };
@@ -346,7 +342,7 @@
 				OBJ_29 /* ProjectFactory.swift */,
 				OBJ_30 /* SpecHelper.swift */,
 				OBJ_31 /* Android */,
-				OBJ_33 /* Encoding */,
+				OBJ_34 /* Fastlane */,
 				OBJ_37 /* iOS */,
 			);
 			path = Factory;
@@ -360,19 +356,9 @@
 			path = Android;
 			sourceTree = "<group>";
 		};
-		OBJ_33 /* Encoding */ = {
-			isa = PBXGroup;
-			children = (
-				OBJ_34 /* Fastlane */,
-			);
-			path = Encoding;
-			sourceTree = "<group>";
-		};
 		OBJ_34 /* Fastlane */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_35 /* FastlaneParametersEncodable.swift */,
-				OBJ_36 /* RubyPropertiesEncoder.swift */,
 				8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */,
 			);
 			path = Fastlane;
@@ -706,13 +692,11 @@
 				8E1B9D9E254AC26F00DD0204 /* ConfigurationParserError.swift in Sources */,
 				8E1B9DF3254AC27900DD0204 /* TemplateDirectory.swift in Sources */,
 				8E1B9DC7254AC27500DD0204 /* Project.swift in Sources */,
-				8E1B9E3A254AC28F00DD0204 /* RubyPropertiesEncoder.swift in Sources */,
 				8E1BA0C2254BFF6400DD0204 /* Initializer.swift in Sources */,
 				8E1B9E38254AC28F00DD0204 /* XcodeProjFactory.swift in Sources */,
 				8E1B9E35254AC28F00DD0204 /* ProjectFactory.swift in Sources */,
 				8E1B9DC9254AC27500DD0204 /* AndroidProject.swift in Sources */,
 				8E1B9E39254AC28F00DD0204 /* SpecHelper.swift in Sources */,
-				8E1B9E37254AC28F00DD0204 /* FastlaneParametersEncodable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
