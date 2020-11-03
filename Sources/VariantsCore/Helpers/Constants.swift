@@ -6,10 +6,14 @@
 //
 
 import Foundation
+import PathKit
 
-struct Constants {
+struct Constants {}
+
+struct StaticPath {
     struct Fastlane {
-        static let parametersPath = "fastlane/parameters"
-        static let variantGeneratedParametersFileName = "variants_params.rb"
+        static let baseFolder = Path("fastlane")
+        static let parametersFolder = Path("fastlane/parameters")
+        static let variantsParametersFileName = "variants_params.rb"
     }
 }
