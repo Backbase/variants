@@ -8,14 +8,17 @@
 import Foundation
 import PathKit
 import ArgumentParser
+import Stencil
 
 class AndroidProject: Project {
     init(
         specHelper: SpecHelper,
-        configFactory: GradleScriptFactory = GradleScriptFactory(),
+        gradleFactory: GradleScriptFactory = GradleScriptFactory(),
+        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
-        self.configFactory = configFactory
+        self.gradleFactory = gradleFactory
+        self.fastlaneFactory = fastlaneFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
     
@@ -41,6 +44,9 @@ class AndroidProject: Project {
 
         do {
             try switchTo(desiredVariant, spec: spec, configuration: configuration)
+        } catch let error as TemplateDoesNotExist {
+            throw error
+            
         } catch {
             throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
@@ -72,7 +78,11 @@ class AndroidProject: Project {
 
     private func switchTo(_ variant: AndroidVariant, spec: String, configuration: AndroidConfiguration) throws {
         Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
-        configFactory.createScript(with: configuration, variant: variant)
+        // Create script 'variants.gradle'
+        gradleFactory.createScript(with: configuration, variant: variant)
+        
+        // Create 'variants_params.rb' with parameters whose destination are set as '.fastlane'
+        try storeFastlaneParams(with: configuration, variant: variant)
     }
 
     private func createVariants(with configuration: AndroidConfiguration, spec: String) {
@@ -150,5 +160,15 @@ class AndroidProject: Project {
     }
     // swiftlint:enable function_body_length
     
-    private let configFactory: GradleScriptFactory
+    private func storeFastlaneParams(with configuration: AndroidConfiguration, variant: AndroidVariant) throws {
+        var fastlaneParams: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        fastlaneParams = fastlaneParams.filter { $0.destination == .fastlane }
+        guard !fastlaneParams.isEmpty else { return }
+        
+        let fastlaneParamPath = try Path(configuration.path).safeJoin(path: StaticPath.Fastlane.parametersFolder)
+        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: fastlaneParams)
+    }
+    
+    private let gradleFactory: GradleScriptFactory
+    private let fastlaneFactory: FastlaneParametersFactory
 }
