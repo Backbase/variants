@@ -14,8 +14,6 @@ class GradleScriptFactory {
         self.consolePrinter = consolePrinter
     }
     
-    // swiftlint:disable function_body_length
-    
     /// Create `gradleScripts/variants.gradle` file inside project's path
     /// - Parameters:
     ///   - configuration: Android configuration from `variants.yml`
@@ -53,7 +51,6 @@ class GradleScriptFactory {
         let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
         storeEnvironmentProperties(customProperties)
         
-        
         // Write wrapper gradle tasks
         gradleFileContent.appendLine("\n// ==== Wrapper gradle tasks ==== ")
         
@@ -69,8 +66,6 @@ class GradleScriptFactory {
         //Write the actual files
         gradleFileContent.writeGradleScript(with: configuration)
     }
-    // swiftlint:enable function_body_length
-    
     
     /// Append properties whose destination is '.project' as gradle properties
     /// to a string content

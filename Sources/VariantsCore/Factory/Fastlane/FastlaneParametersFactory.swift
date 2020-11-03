@@ -12,7 +12,7 @@ import PathKit
 let fastlaneParametersTemplateFileName = "variants_params_template.rb"
 
 class FastlaneParametersFactory {
-    init(templatePath: Path = try! TemplateDirectory().path) {
+    init(templatePath: Path? = try? TemplateDirectory().path) {
         self.templatePath = templatePath
     }
     
@@ -26,7 +26,8 @@ class FastlaneParametersFactory {
           "parameters": parameters
         ]
 
-        let environment = Environment(loader: FileSystemLoader(paths: [templatePath.absolute()]))
+        guard let path = templatePath else { return nil }
+        let environment = Environment(loader: FileSystemLoader(paths: [path.absolute()]))
         let rendered = try environment.renderTemplate(name: fastlaneParametersTemplateFileName,
                                                       context: context)
         
@@ -56,5 +57,5 @@ class FastlaneParametersFactory {
             }
     }
     
-    private let templatePath: Path
+    private let templatePath: Path?
 }

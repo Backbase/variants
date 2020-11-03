@@ -44,24 +44,29 @@ class FastlaneParametersFactoryTests: XCTestCase {
         XCTAssertNoThrow(try temporaryTemplatePath.write(templateFileContent))
         
         let fastlaneParameters = parameters.filter { $0.destination == .fastlane }
-        let factory = FastlaneParametersFactory(path: Path("./"))
+        let factory = FastlaneParametersFactory(templatePath: Path("./"))
         
         XCTAssertNoThrow(try factory.render(parameters: fastlaneParameters))
         XCTAssertNotNil(try factory.render(parameters: fastlaneParameters))
         
-        let renderedData = try! factory.render(parameters: fastlaneParameters)!
-        XCTAssertEqual(String(data: renderedData, encoding: .utf8), correctOutput)
+        do {
+            if let renderedData = try factory.render(parameters: fastlaneParameters) {
+                XCTAssertEqual(String(data: renderedData, encoding: .utf8), correctOutput)
+            }
+        } catch {
+            XCTFail("'Try' should not throw - "+error.localizedDescription)
+        }
     }
     
     func testFileWrite_correctOutput() {
         let basePath = Path("")
         let fastlaneParameters = Path("fastlane/parameters")
         if fastlaneParameters.exists {
-            try! fastlaneParameters.delete()
+            XCTAssertNoThrow(try fastlaneParameters.delete())
         }
         XCTAssertNoThrow(try fastlaneParameters.mkpath())
         
-        let factory = FastlaneParametersFactory(path: basePath)
+        let factory = FastlaneParametersFactory(templatePath: basePath)
         XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: fastlaneParameters))
         
         let fastlaneParametersFile = Path(fastlaneParameters.string+"/variants_params.rb")
