@@ -27,7 +27,7 @@ struct GradleScriptFactory {
         //Write the variant data
         gradleFileContent.appendLine("// ==== Variant values ==== ")
         gradleFileContent.addGradleDefinition("versionName", value: variant.versionName)
-        gradleFileContent.addGradleDefinition("versionCode", value: variant.versionCode)
+        gradleFileContent.addGradleValueDefinition("versionCode", value: variant.versionCode)
         gradleFileContent.addGradleDefinition("appIdentifier",
                                               value: configuration.appIdentifier+variant.configIdSuffix)
         gradleFileContent.addGradleDefinition("appName", value: configuration.appName+variant.configName)
@@ -195,5 +195,12 @@ fileprivate extension String {
     
     mutating func addGradleDefinition(_ name: String, value: String) {
         self.appendLine("rootProject.ext.\(name) = \"\(value.envVarValue() ?? value)\"")
+    }
+    
+    // This will add the value without quotes
+    // This is useful in cases of versionCode which should be
+    // represented as an int and not a string.
+    mutating func addGradleValueDefinition(_ name: String, value: String) {
+        self.appendLine("rootProject.ext.\(name) = \(value.envVarValue() ?? value)")
     }
 }
