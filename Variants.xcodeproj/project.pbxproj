@@ -84,6 +84,7 @@
 		8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */; };
 		8E8A4866255172CF0056F79F /* Path+SafeJoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */; };
 		8E8A48A72552EB020056F79F /* EnvironmentVariablesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */; };
+		8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -157,6 +158,7 @@
 		8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoin.swift"; sourceTree = "<group>"; };
 		8E8A48A52552A3EE0056F79F /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
 		8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariablesFactory.swift; sourceTree = "<group>"; };
+		8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradleScriptFactoryTests.swift; sourceTree = "<group>"; };
 		OBJ_14 /* ConfigurationParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserError.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 				OBJ_64 /* InitializerTests.swift */,
 				OBJ_67 /* YamlParserTests.swift */,
 				8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */,
+				8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */,
 				8E1B9C0E254AB51300DD0204 /* Resources */,
 				8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */,
 				8E1B9CDD254AC1E700DD0204 /* Info.plist */,
@@ -706,6 +709,7 @@
 				8E1B9F3C254AC31A00DD0204 /* InitializerTests.swift in Sources */,
 				8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
+				8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
