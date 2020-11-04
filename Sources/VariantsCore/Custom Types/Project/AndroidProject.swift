@@ -136,7 +136,7 @@ class AndroidProject: Project {
                     guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
                     }
-                    configFactory.createScript(with: configuration, variant: desiredVariant)
+                    try gradleFactory.createScript(with: configuration, variant: desiredVariant)
                     
                     setupCompleteMessage =
                         """
