@@ -24,11 +24,11 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
             from: "0.1.0"
-        ),
+        )
     ],
     targets: [
         .target(
-            name: "Variants",
+            name: "VariantsCore",
             dependencies: [
                 "PathKit",
                 "Yams",
@@ -36,9 +36,15 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]
         ),
+        .target(
+            name: "Variants",
+            dependencies: [
+                "VariantsCore"
+            ]
+        ),
         .testTarget(
             name: "VariantsTests",
             dependencies: ["Variants"]
-        ),
+        )
     ]
 )

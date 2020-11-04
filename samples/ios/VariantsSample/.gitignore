@@ -1,0 +1,8 @@
+fastlane/
+variants.yml
+
+Gemfile
+Gemfile.lock
+VariantsSample/Variants/
+coherent-swift.yml
+swiftlint.yml
