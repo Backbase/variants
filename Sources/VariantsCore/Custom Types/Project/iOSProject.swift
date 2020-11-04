@@ -112,7 +112,6 @@ class iOSProject: Project {
                 }
                 let customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
                 
-                
                 // Create 'variants.xcconfig' with parameters whose
                 // destination are set as '.project'
                 let configPath = Path(spec).absolute().parent()
@@ -178,7 +177,6 @@ class iOSProject: Project {
                     // Create 'variants_params.rb' with parameters whose
                     // destination are set as '.fastlane'
                     try storeFastlaneParams(customProperties)
-                    
                     
                     setupCompleteMessage =
                         """
