@@ -83,6 +83,7 @@ ios:
       - name: default
         version_name: 0.0.1
         version_number: 1
+        store_destination: AppStore
         custom:
             - key: SAMPLE_CONFIG
               value: Production Value
@@ -91,6 +92,7 @@ ios:
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 1
+        store_destination: AppCenter
         custom:
             - key: SAMPLE_CONFIG
               value: BETA Value

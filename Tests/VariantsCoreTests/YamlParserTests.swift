@@ -82,9 +82,29 @@ class YamlParserTests: XCTestCase {
         }
     }
     
+    func testStoreDestination_iOS() {
+        let parser = YamlParser()
+        do {
+            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            let configuration = try parser.extractConfiguration(from: path, platform: .ios)
+            
+            XCTAssertEqual(configuration.ios?
+                .variants.first(where: { $0.name == "default" })?
+                            .destination, iOSVariant.Destination.appStore)
+            
+            XCTAssertEqual(configuration.ios?
+                .variants.first(where: { $0.name == "BETA" })?
+                            .destination, iOSVariant.Destination.appCenter)
+            
+        } catch {
+            XCTAssertTrue(((error as? DecodingError) == nil))
+        }
+    }
+    
     static var allTests = [
         ("testExtractConfiguration_invalidSpec", testExtractConfiguration_invalidSpec),
         ("testExtractConfiguration_valid_iOS", testExtractConfiguration_valid_iOS),
-        ("testExtractConfiguration_valid_android", testExtractConfiguration_valid_android)
+        ("testExtractConfiguration_valid_android", testExtractConfiguration_valid_android),
+        ("testStoreDestination_iOS", testStoreDestination_iOS)
     ]
 }
