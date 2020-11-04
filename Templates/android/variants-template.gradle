@@ -4,7 +4,7 @@
 rootProject.ext.versionName = "{{ variant.versionName }}"
 rootProject.ext.versionCode = {{ variant.versionCode }}
 rootProject.ext.appIdentifier = "{{ configuration.appIdentifier }}{{ variant.configIdSuffix }}"
-rootProject.ext.appName = "{{ configuration.appName }}{{ variant.configName }}"
+rootProject.ext.appName = "{{ configuration.appName }} {{ variant.name }}"
 {% endif %}
 
 {% if configuration.signing %}
