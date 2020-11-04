@@ -9,8 +9,6 @@ import Foundation
 import Stencil
 import PathKit
 
-let fastlaneParametersTemplateFileName = "variants_params_template.rb"
-
 class FastlaneParametersFactory {
     init(templatePath: Path? = try? TemplateDirectory().path) {
         self.templatePath = templatePath
@@ -28,7 +26,7 @@ class FastlaneParametersFactory {
 
         guard let path = templatePath else { return nil }
         let environment = Environment(loader: FileSystemLoader(paths: [path.absolute()]))
-        let rendered = try environment.renderTemplate(name: fastlaneParametersTemplateFileName,
+        let rendered = try environment.renderTemplate(name: StaticPath.Template.fastlaneParametersFileName,
                                                       context: context)
         
         // Replace multiple empty lines by one only
