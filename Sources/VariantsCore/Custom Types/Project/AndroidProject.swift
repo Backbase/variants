@@ -75,11 +75,11 @@ class AndroidProject: Project {
     }
 
     private func switchTo(_ variant: AndroidVariant, spec: String, configuration: AndroidConfiguration) throws {
-        Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
+        Logger.shared.logInfo(item: "Found: \(variant.name)")
         
         // Create script 'variants.gradle' whose
         // destination are set as '.project'
-        gradleFactory.createScript(with: configuration, variant: variant)
+        try gradleFactory.createScript(with: configuration, variant: variant)
         
         let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
         
@@ -166,7 +166,7 @@ class AndroidProject: Project {
     // swiftlint:enable function_body_length
     
     private func storeFastlaneParams(_ properties: [CustomProperty], configuration: AndroidConfiguration) throws {
-        let fastlaneProperties = properties.filter { $0.destination == .fastlane } ?? []
+        let fastlaneProperties = properties.filter { $0.destination == .fastlane }
         guard !fastlaneProperties.isEmpty else { return }
         
         let fastlaneParamPath = try Path(configuration.path).safeJoin(path: StaticPath.Fastlane.parametersFolder)
