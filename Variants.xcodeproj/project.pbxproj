@@ -154,6 +154,7 @@
 		8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactory.swift; sourceTree = "<group>"; };
 		8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoin.swift"; sourceTree = "<group>"; };
+		8E8A48A52552A3EE0056F79F /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
 		OBJ_14 /* ConfigurationParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserError.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
@@ -405,16 +406,17 @@
 		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
+				OBJ_291 /* README.md */,
 				OBJ_6 /* Package.swift */,
+				OBJ_286 /* Templates */,
+				OBJ_287 /* Assets */,
+				8E8A48A52552A3EE0056F79F /* docs */,
 				OBJ_7 /* Sources */,
 				OBJ_62 /* Tests */,
 				OBJ_274 /* Products */,
 				OBJ_284 /* test */,
-				OBJ_286 /* Templates */,
-				OBJ_287 /* Assets */,
 				OBJ_289 /* LICENSE */,
 				OBJ_290 /* Makefile */,
-				OBJ_291 /* README.md */,
 				8E1BA141254C433200DD0204 /* Frameworks */,
 			);
 			sourceTree = "<group>";
