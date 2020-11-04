@@ -15,6 +15,7 @@ public struct iOSVariant: Codable {
     let id_suffix: String?
     let version_name: String
     let version_number: Int
+    private let store_destination: String
     let custom: [CustomConfig]?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
@@ -50,9 +51,21 @@ public struct iOSVariant: Codable {
             return id_suffix != nil ? "."+id_suffix! : ""
         }
     }
+    
+    var destination: Destination {
+        return Destination(rawValue: store_destination.lowercased()) ?? .appCenter
+    }
 }
 
 public struct CustomConfig: Codable {
     let key: String
     let value: String
+}
+
+extension iOSVariant {
+    enum Destination: String, Codable {
+        case appCenter = "appcenter"
+        case appStore = "appstore"
+        case testFlight = "testflight"
+    }
 }
