@@ -142,7 +142,6 @@ ios:
             - key:  OTHER_SWIFT_FLAGS
               value: $(inherited) -DBETA
               destination: project
-            
 ```
 
 #### Custom configuration

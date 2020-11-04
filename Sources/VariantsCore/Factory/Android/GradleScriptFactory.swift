@@ -10,10 +10,6 @@ import PathKit
 
 class GradleScriptFactory {
     
-    init(consolePrinter: StdoutPrinter = StdoutPrinter()) {
-        self.consolePrinter = consolePrinter
-    }
-    
     /// Create `gradleScripts/variants.gradle` file inside project's path
     /// - Parameters:
     ///   - configuration: Android configuration from `variants.yml`
@@ -46,10 +42,6 @@ class GradleScriptFactory {
         gradleFileContent = appendGradleProperties(configuration.custom,
                                                    using: "\n// ==== Custom values ==== ",
                                                    to: gradleFileContent)
-        
-        // Append custom environment variables
-        let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
-        storeEnvironmentProperties(customProperties)
         
         // Write wrapper gradle tasks
         gradleFileContent.appendLine("\n// ==== Wrapper gradle tasks ==== ")
@@ -88,29 +80,6 @@ class GradleScriptFactory {
         }
         return mutableContent
     }
-    
-    /// Store  properties whose destination is '.envVar' as environment variables
-    /// on temporary file.
-    /// - Parameters:
-    ///   - properties: Optional array of CustomProperty
-    func storeEnvironmentProperties(_ properties: [CustomProperty]?) {
-        let environmentProperties = properties?.filter { $0.destination == .envVar } ?? []
-        guard !environmentProperties.isEmpty else { return }
-        var mutableContent = ""
-        environmentProperties.forEach { property in
-            mutableContent.appendAsExportVariable(property.name, value: property.value)
-        }
-        
-        if let path = mutableContent.writeToTemporaryFile() {
-            consolePrinter.print(item: "EXPORT_ENVIRONMENTAL_VARIABLES_PATH=\(path)")
-        } else {
-            Logger.shared.logError(item: """
-            Could not generate the temporary file for the environment variables.
-            """)
-        }
-    }
-    
-    private let consolePrinter: StdoutPrinter
 }
 
 private struct WrapperGradleTask{
@@ -120,14 +89,6 @@ private struct WrapperGradleTask{
 }
 
 fileprivate extension String {
-    func writeToTemporaryFile() -> String? {
-        do {
-            return try FileManager.default.writeTemporaryFile(withContent: self)
-        } catch {
-            return nil
-        }
-    }
-    
     func writeGradleScript(with configuration: AndroidConfiguration) {
         let fm = FileManager.default
         let destinationFolderPath = configuration.path + "/gradleScripts"

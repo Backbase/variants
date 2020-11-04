@@ -15,10 +15,12 @@ class AndroidProject: Project {
         specHelper: SpecHelper,
         gradleFactory: GradleScriptFactory = GradleScriptFactory(),
         fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
+        envVarFactory: EnvironmentVariablesFactory = EnvironmentVariablesFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.gradleFactory = gradleFactory
         self.fastlaneFactory = fastlaneFactory
+        self.envVarFactory = envVarFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
     
@@ -72,22 +74,25 @@ class AndroidProject: Project {
         }
     }
 
-    private func process(variant: String, spec: String, configuration: Configuration) throws {
-
-    }
-
     private func switchTo(_ variant: AndroidVariant, spec: String, configuration: AndroidConfiguration) throws {
         Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
-        // Create script 'variants.gradle'
+        
+        // Create script 'variants.gradle' whose
+        // destination are set as '.project'
         gradleFactory.createScript(with: configuration, variant: variant)
         
-        // Create 'variants_params.rb' with parameters whose destination are set as '.fastlane'
-        try storeFastlaneParams(with: configuration, variant: variant)
+        let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        
+        // Create 'variants_params.rb' with parameters whose
+        // destination are set as '.fastlane'
+        try storeFastlaneParams(customProperties, configuration: configuration)
+        
+        // Set environment variables with parameters whose
+        // destination are set as '.environment'
+        envVarFactory.storeEnvironmentProperties(customProperties)
     }
 
-    private func createVariants(with configuration: AndroidConfiguration, spec: String) {
-
-    }
+    private func createVariants(with configuration: AndroidConfiguration, spec: String) {}
 
     // swiftlint:disable function_body_length
     private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
@@ -160,15 +165,15 @@ class AndroidProject: Project {
     }
     // swiftlint:enable function_body_length
     
-    private func storeFastlaneParams(with configuration: AndroidConfiguration, variant: AndroidVariant) throws {
-        var fastlaneParams: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
-        fastlaneParams = fastlaneParams.filter { $0.destination == .fastlane }
-        guard !fastlaneParams.isEmpty else { return }
+    private func storeFastlaneParams(_ properties: [CustomProperty], configuration: AndroidConfiguration) throws {
+        let fastlaneProperties = properties.filter { $0.destination == .fastlane } ?? []
+        guard !fastlaneProperties.isEmpty else { return }
         
         let fastlaneParamPath = try Path(configuration.path).safeJoin(path: StaticPath.Fastlane.parametersFolder)
-        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: fastlaneParams)
+        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: fastlaneProperties)
     }
     
     private let gradleFactory: GradleScriptFactory
     private let fastlaneFactory: FastlaneParametersFactory
+    private let envVarFactory: EnvironmentVariablesFactory
 }

@@ -83,6 +83,7 @@
 		8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */; };
 		8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */; };
 		8E8A4866255172CF0056F79F /* Path+SafeJoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */; };
+		8E8A48A72552EB020056F79F /* EnvironmentVariablesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -155,6 +156,7 @@
 		8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoin.swift"; sourceTree = "<group>"; };
 		8E8A48A52552A3EE0056F79F /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
+		8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariablesFactory.swift; sourceTree = "<group>"; };
 		OBJ_14 /* ConfigurationParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserError.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
@@ -341,8 +343,9 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_29 /* ProjectFactory.swift */,
+				8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */,
+				8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */,
 				OBJ_31 /* Android */,
-				OBJ_34 /* Fastlane */,
 				OBJ_37 /* iOS */,
 			);
 			path = Factory;
@@ -354,14 +357,6 @@
 				OBJ_32 /* GradleScriptFactory.swift */,
 			);
 			path = Android;
-			sourceTree = "<group>";
-		};
-		OBJ_34 /* Fastlane */ = {
-			isa = PBXGroup;
-			children = (
-				8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */,
-			);
-			path = Fastlane;
 			sourceTree = "<group>";
 		};
 		OBJ_37 /* iOS */ = {
@@ -682,6 +677,7 @@
 				8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */,
 				8E1B9EFE254AC2A900DD0204 /* AndroidVariant.swift in Sources */,
 				8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */,
+				8E8A48A72552EB020056F79F /* EnvironmentVariablesFactory.swift in Sources */,
 				8E1B9EA5254AC29A00DD0204 /* VerboseLogger.swift in Sources */,
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
 				8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */,
