@@ -34,7 +34,8 @@ end
 
 desc 'run deploy'
 lane :deploy do |options|
-    destination = options[:store_destination].downcase || 'appcenter'
+    destination = options[:store_destination] || 'appcenter'
+    destination = destination.downcase
     
     if not ["appcenter", "playstore"].include?(destination)
         UI.user_error!("Parameter 'store_destination' isn't valid - Expected 'appcenter' or 'playstore'")

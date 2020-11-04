@@ -9,12 +9,13 @@ require File.expand_path('parameters/appcenter_params.rb', __dir__)
 # hardcoded value, or anything really.
 #
 
-APPCENTER_APP_NAME = VARIANTS_PARAM[:APPCENTER_APP_NAME]
+APPCENTER_APP_NAME = VARIANTS_PARAMS[:APPCENTER_APP_NAME]
 
 # --- AppCenter
 
 desc 'deploy app to AppCenter'
 private_lane :appcenter_deploy do |options|
+    path = options[:path] || (lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]).to_s
     destinations = options[:destinations] || APPCENTER_PARAMS[:APPCENTER_DESTINATION_GROUP] || "Collaborators"
     notify = options[:notify] || true
 
