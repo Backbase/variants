@@ -15,7 +15,7 @@ public struct iOSVariant: Codable {
     let id_suffix: String?
     let version_name: String
     let version_number: Int
-    private let store_destination: String
+    private let store_destination: String?
     let custom: [CustomConfig]?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
@@ -53,7 +53,11 @@ public struct iOSVariant: Codable {
     }
     
     var destination: Destination {
-        return Destination(rawValue: store_destination.lowercased()) ?? .appCenter
+        guard
+            let storeDestination = store_destination,
+            let destination = Destination(rawValue: storeDestination.lowercased())
+        else { return .appStore }
+        return destination
     }
 }
 
