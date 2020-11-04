@@ -1,0 +1,69 @@
+
+# --- Well, it doesn't deploy
+
+#
+# Perfect for a PR branch.
+#
+# Example:
+#   fastlane run_all_but_deploy
+
+desc 'runs everything but deploy'
+lane :run_all_but_deploy do
+    unit_tests
+    ui_tests
+end
+
+
+# --- Deploy
+
+#
+# 'deploy' accepts the following parameter
+#  - key: store_destination
+#    value: 'appcenter' or 'playstore'
+#
+#  EXAMPLE:
+#    fastlane deploy store_destination:'playstore'
+#
+#  If not specified, 'store_destination' will fallback
+#  to 'appcenter'.
+#
+#  NOTE:
+#  This parameter is case insensitive. i.e.: there are
+#  no differences between 'AppCenter' and 'appcenter'.
+#
+
+desc 'run deploy'
+lane :deploy do |options|
+    destination = options[:store_destination] || 'appcenter'
+    destination = destination.downcase
+    
+    if not ["appcenter", "playstore"].include?(destination)
+        UI.user_error!("Parameter 'store_destination' isn't valid - Expected 'appcenter' or 'playstore'")
+    end
+    
+    run_all_but_deploy
+    build
+    
+    if destination == 'appcenter'
+        appcenter_deploy
+    elsif destination == 'playstore'
+        playstore_deploy
+    end
+    
+    # Send a Slack message
+    #
+    # The following parameters are necessary:
+    # - 'channel' (string)
+    # - 'hook_url' (string)
+    # - 'interactive_url' (string) - URL you'll click to lead you to AppCenter or CI pipeline
+    # - 'message' (string) - What to inform?
+    # - 'success' (boolean) - OPTIONAL value, false by default.
+    #
+    # send_slack_message
+end
+
+# --- Private lanes
+
+private_lane :build do
+    gradle(task: "vBuild")
+end

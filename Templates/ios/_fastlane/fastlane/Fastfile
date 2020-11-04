@@ -70,9 +70,3 @@ private_lane :prepare do |options|
     # Update/Install Pods
     pods_update
 end
-
-# --- Convenience lanes
-
-lane :run_all_but_deploy do
-    all_but_deploy
-end

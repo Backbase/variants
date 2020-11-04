@@ -76,7 +76,6 @@ class AndroidProject: Project {
     }
 
     private func createVariants(with configuration: AndroidConfiguration, spec: String) {
-
     }
 
     // swiftlint:disable function_body_length
@@ -87,14 +86,14 @@ class AndroidProject: Project {
             Logger.shared.logInfo("Setting up Fastlane", item: "")
 
             do {
+                let projectSourceFolder = configuration.path
                 let path = try TemplateDirectory().path
-                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", ".")
+                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", projectSourceFolder)
                     .run()
 
-                let projectSourceFolder = configuration.path
                 let baseSetupCompletedMessage =
                     """
-                    ✅  You variants configuration was setup
+                    ✅  Your variants configuration was setup
                     ✅  For configuration properties with 'environment' destination, a temporary
                         file has been created. You can source this file directly.
                     ✅  For configuration properties with 'project' destination, they have been
@@ -117,17 +116,22 @@ class AndroidProject: Project {
 
                     """
                 
-                if Path("./fastlane/").isDirectory {
+                if Path("\(projectSourceFolder)/fastlane/").isDirectory {
+                    guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == "default" }) else {
+                        throw ValidationError("Variant 'default' not found.")
+                    }
+                    configFactory.createScript(with: configuration, variant: desiredVariant)
+                    
                     setupCompleteMessage =
                         """
 
                         Your setup is complete, congratulations! 🎉
                         However, you still need to provide some parameters in order for fastlane to run correctly.
 
-                        ⚠️  Check the files in 'fastlane/parameters/', change the parameters accordingly,
-                            provide environment variables when applicable.
-                        ⚠️  Note that the values in the file 'fastlane/parameters/variants_params.rb' are
-                            generated automatically.
+                        ⚠️  Check the files in '\(projectSourceFolder)/fastlane/parameters/', change the parameters
+                            accordingly, provide environment variables when applicable.
+                        ⚠️  Note that the values in the file '\(projectSourceFolder)/fastlane/parameters/variants_params.rb'
+                            where generated automatically for configuration properties with 'fastlane' destination.
 
                         """
                     
@@ -143,6 +147,9 @@ class AndroidProject: Project {
                     Logger.shared.logInfo("", item: line, color: .yellow)
                 }
 
+            } catch let error as ValidationError {
+                Logger.shared.logFatal(item: error.description)
+                
             } catch {
                 Logger.shared.logFatal(item: error.localizedDescription)
             }

@@ -35,6 +35,7 @@ public struct Setup: ParsableCommand {
     public mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants setup", color: .ios)
+        
         let detectedPlatform = try PlatformDetector.detect(fromArgument: platform)
         let project = ProjectFactory.from(platform: detectedPlatform)
         try project.setup(spec: spec, skipFastlane: skipFastlane, verbose: verbose)

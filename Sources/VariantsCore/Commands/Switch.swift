@@ -34,6 +34,7 @@ public struct Switch: ParsableCommand {
     public mutating func run() throws {
         let logger = Logger(verbose: verbose)
         logger.logSection("$ ", item: "variants switch --variant \(variant)", color: .ios)
+        
         let detectedPlatform = try PlatformDetector.detect(fromArgument: platform)
         let project = ProjectFactory.from(platform: detectedPlatform)
         try project.switch(to: variant, spec: spec, verbose: verbose)

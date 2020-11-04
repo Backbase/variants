@@ -1,0 +1,31 @@
+require File.expand_path('parameters/playstore_params.rb', __dir__)
+
+#
+# This lane will upload your app bundle (AAB) to Google PlayStore
+#
+# Attention:
+#  It will NOT, however, upload the following:
+#   - Metada
+#   - Images
+#   - Screenshots
+#   - Changelogs
+#   - APK
+#
+
+private_lane :playstore_deploy do |options|
+    package_name = options[:package_name] || VARIANTS_PARAMS[:PACKAGE_NAME]
+    
+    upload_to_play_store(
+        package_name: package_name,
+        track: 'internal',
+        release_status: 'draft',
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+        skip_upload_apk: true,
+        skip_upload_changelogs: true,
+        aab: (lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]).to_s,
+        json_key: PLAYSTORE_PARAMS[:GPLAY_SERVICE_ACCOUNT_PATH]
+    )
+end
+
