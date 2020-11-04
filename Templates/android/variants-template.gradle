@@ -3,7 +3,7 @@
 
 rootProject.ext.versionName = "{{ variant.versionName }}"
 rootProject.ext.versionCode = {{ variant.versionCode }}
-rootProject.ext.appIdentifier = "{{ configuration.appIdentifier }}{{ variant.configIdSuffix }}"
+rootProject.ext.appIdentifier = "{{ configuration.appIdentifier }}.{{ variant.idSuffix }}"
 rootProject.ext.appName = "{{ configuration.appName }} {{ variant.name }}"
 {% endif %}
 
