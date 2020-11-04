@@ -31,7 +31,7 @@ class GradleScriptFactory {
         var context = [
             "variant": variant,
             "configuration": configuration
-        ] as [String : Any]
+        ] as [String: Any]
 
         if let variantProperties = variant.custom?.filter({ $0.destination == .project }) {
             context["variant_properties"] = variantProperties
