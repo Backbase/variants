@@ -1,6 +1,9 @@
 //
-// Copyright © 2020. All rights reserved.
-// 
+//  Variants
+//
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Balazs Toth
+//
 
 import Foundation
 import PathKit
@@ -61,7 +64,7 @@ struct PlatformDetector {
         Path.glob("build.gradle")
     }
 
-    private static var availablePlatforms: [Platform] {
+    internal static var availablePlatforms: [Platform] {
         [
             xcodeProjects.isEmpty ? nil : .ios,
             gradleProjects.isEmpty ? nil : .android
