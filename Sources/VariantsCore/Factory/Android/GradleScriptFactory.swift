@@ -33,6 +33,21 @@ class GradleScriptFactory {
             "configuration": configuration
         ] as [String: Any]
 
+        /*
+         * `Stencil` doesn't support computed properties.
+         *
+         * For this reason, `variant.configIdSuffix` and `variant.configName` won't be added
+         * to the template.
+         *
+         * ISSUE: https://github.com/stencilproject/Stencil/issues/219
+         *
+         * WORKAROUND:
+         * We'll pass both values directly to the context dictionary.
+         *
+         */
+        context["variantIdSuffix"] = variant.configIdSuffix
+        context["variantName"] = variant.configName
+        
         if let variantProperties = variant.custom?.filter({ $0.destination == .project }) {
             context["variant_properties"] = variantProperties
         }
