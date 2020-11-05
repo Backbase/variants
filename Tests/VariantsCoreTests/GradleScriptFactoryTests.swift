@@ -32,7 +32,6 @@ class GradleScriptFactoryTests: XCTestCase {
         }
         """
 
-
     let androidConfiguration = AndroidConfiguration(
         path: "projectPath",
         appName: "TestApp",
