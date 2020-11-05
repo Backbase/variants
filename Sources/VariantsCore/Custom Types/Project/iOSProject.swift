@@ -15,9 +15,13 @@ class iOSProject: Project {
     init(
         specHelper: SpecHelper,
         configFactory: XCConfigFactory = XCConfigFactory(),
+        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
+        envVarFactory: EnvironmentVariablesFactory = EnvironmentVariablesFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.configFactory = configFactory
+        self.fastlaneFactory = fastlaneFactory
+        self.envVarFactory = envVarFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
 
@@ -28,7 +32,7 @@ class iOSProject: Project {
             throw RuntimeError("Unable to load spec '\(spec)'")
         }
 
-        createVariants(with: configuration, spec: spec)
+        try createVariants(with: configuration, spec: spec)
         setupFastlane(with: configuration, skip: skipFastlane)
     }
 
@@ -74,6 +78,9 @@ class iOSProject: Project {
         configuration.targets
             .map { (key: $0.key, value: $0.value)}
             .forEach { result in
+                
+                // Create 'variants.xcconfig' with parameters whose
+                // destination are set as '.project'
                 configFactory.createConfig(
                     with: result,
                     variant: variant,
@@ -81,19 +88,41 @@ class iOSProject: Project {
                     configPath: Path(spec).absolute().parent(),
                     addToXcodeProj: false
                 )
+                
+                let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+                
+                // Create 'variants_params.rb' with parameters whose
+                // destination are set as '.fastlane'
+                try? storeFastlaneParams(customProperties)
+                
+                // Set environment variables with parameters whose
+                // destination are set as '.environment'
+                envVarFactory.storeEnvironmentProperties(customProperties)
             }
     }
 
-    private func createVariants(with configuration: iOSConfiguration, spec: String) {
-        configuration.targets
+    private func createVariants(with configuration: iOSConfiguration, spec: String) throws {
+        try configuration.targets
             .map { (key: $0.key, value: $0.value) }
-            .forEach { result in
-                try? createConfig(
-                    with: result,
-                    spec: spec,
-                    variants: configuration.variants,
-                    xcodeProj: configuration.xcodeproj
-                )
+            .forEach { target in
+                
+                guard let defaultVariant = configuration.variants
+                        .first(where: { $0.name.lowercased() == "default" }) else {
+                    throw ValidationError("Variant 'default' not found.")
+                }
+                let customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
+                
+                // Create 'variants.xcconfig' with parameters whose
+                // destination are set as '.project'
+                let configPath = Path(spec).absolute().parent()
+                configFactory.createConfig(with: target,
+                                           variant: defaultVariant,
+                                           xcodeProj: configuration.xcodeproj,
+                                           configPath: configPath)
+                
+                // Set environment variables with parameters whose
+                // destination are set as '.environment'
+                envVarFactory.storeEnvironmentProperties(customProperties)
             }
     }
 
@@ -137,7 +166,18 @@ class iOSProject: Project {
 
                     """
                 
-                if Path("./fastlane/").isDirectory {
+                if StaticPath.Fastlane.baseFolder.isDirectory {
+                    
+                    guard let defaultVariant = configuration.variants
+                            .first(where: { $0.name.lowercased() == "default" }) else {
+                        throw ValidationError("Variant 'default' not found.")
+                    }
+                    let customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
+                    
+                    // Create 'variants_params.rb' with parameters whose
+                    // destination are set as '.fastlane'
+                    try storeFastlaneParams(customProperties)
+                    
                     setupCompleteMessage =
                         """
 
@@ -169,19 +209,15 @@ class iOSProject: Project {
         }
     }
     // swiftlint:enable function_body_length
-
-    private func createConfig(with target: NamedTarget, spec: String, variants: [iOSVariant]?, xcodeProj: String?) throws {
-        guard
-            let variants = variants,
-            !variants.isEmpty,
-            let defaultVariant = variants.first(where: { $0.name == "default" })
-        else {
-            throw ValidationError("Missing mandatory variant: 'default'")
-        }
-
-        let configPath = Path(spec).absolute().parent()
-        configFactory.createConfig(with: target, variant: defaultVariant, xcodeProj: xcodeProj, configPath: configPath)
+    
+    private func storeFastlaneParams(_ properties: [CustomProperty]) throws {
+        let fastlaneProperties = properties.filter { $0.destination == .fastlane }
+        guard !fastlaneProperties.isEmpty else { return }
+        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                                                 with: fastlaneProperties)
     }
 
     private let configFactory: XCConfigFactory
+    private let fastlaneFactory: FastlaneParametersFactory
+    private let envVarFactory: EnvironmentVariablesFactory
 }

@@ -8,14 +8,19 @@
 import Foundation
 import PathKit
 import ArgumentParser
+import Stencil
 
 class AndroidProject: Project {
     init(
         specHelper: SpecHelper,
-        configFactory: GradleScriptFactory = GradleScriptFactory(),
+        gradleFactory: GradleScriptFactory = GradleScriptFactory(),
+        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
+        envVarFactory: EnvironmentVariablesFactory = EnvironmentVariablesFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
-        self.configFactory = configFactory
+        self.gradleFactory = gradleFactory
+        self.fastlaneFactory = fastlaneFactory
+        self.envVarFactory = envVarFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
     
@@ -41,6 +46,9 @@ class AndroidProject: Project {
 
         do {
             try switchTo(desiredVariant, spec: spec, configuration: configuration)
+        } catch let error as TemplateDoesNotExist {
+            throw error
+            
         } catch {
             throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
@@ -66,17 +74,25 @@ class AndroidProject: Project {
         }
     }
 
-    private func process(variant: String, spec: String, configuration: Configuration) throws {
-
-    }
-
     private func switchTo(_ variant: AndroidVariant, spec: String, configuration: AndroidConfiguration) throws {
-        Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
-        configFactory.createScript(with: configuration, variant: variant)
+        Logger.shared.logInfo(item: "Found: \(variant.name)")
+        
+        // Create script 'variants.gradle' whose
+        // destination are set as '.project'
+        try gradleFactory.createScript(with: configuration, variant: variant)
+        
+        let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        
+        // Create 'variants_params.rb' with parameters whose
+        // destination are set as '.fastlane'
+        try storeFastlaneParams(customProperties, configuration: configuration)
+        
+        // Set environment variables with parameters whose
+        // destination are set as '.environment'
+        envVarFactory.storeEnvironmentProperties(customProperties)
     }
 
-    private func createVariants(with configuration: AndroidConfiguration, spec: String) {
-    }
+    private func createVariants(with configuration: AndroidConfiguration, spec: String) {}
 
     // swiftlint:disable function_body_length
     private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
@@ -120,7 +136,7 @@ class AndroidProject: Project {
                     guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
                     }
-                    configFactory.createScript(with: configuration, variant: desiredVariant)
+                    try gradleFactory.createScript(with: configuration, variant: desiredVariant)
                     
                     setupCompleteMessage =
                         """
@@ -157,5 +173,15 @@ class AndroidProject: Project {
     }
     // swiftlint:enable function_body_length
     
-    private let configFactory: GradleScriptFactory
+    private func storeFastlaneParams(_ properties: [CustomProperty], configuration: AndroidConfiguration) throws {
+        let fastlaneProperties = properties.filter { $0.destination == .fastlane }
+        guard !fastlaneProperties.isEmpty else { return }
+        
+        let fastlaneParamPath = try Path(configuration.path).safeJoin(path: StaticPath.Fastlane.parametersFolder)
+        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: fastlaneProperties)
+    }
+    
+    private let gradleFactory: GradleScriptFactory
+    private let fastlaneFactory: FastlaneParametersFactory
+    private let envVarFactory: EnvironmentVariablesFactory
 }
