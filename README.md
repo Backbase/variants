@@ -1,5 +1,5 @@
 ![develop](https://github.com/Backbase/variants/workflows/develop/badge.svg)
-
+[![codecov](https://codecov.io/gh/arthurpalves/variants/branch/develop/graph/badge.svg?token=EL3KKF0BSW)](https://codecov.io/gh/arthurpalves/variants)
 <p align="center">
 <img src="Assets/Examples/variants_logo.svg" title="variants">
 </p>
