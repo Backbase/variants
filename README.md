@@ -1,3 +1,5 @@
+![develop](https://github.com/Backbase/variants/workflows/develop/badge.svg)
+
 <p align="center">
 <img src="Assets/Examples/variants_logo.svg" title="variants">
 </p>
