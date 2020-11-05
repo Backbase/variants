@@ -10,7 +10,7 @@ import PathKit
 @testable import VariantsCore
 
 let parameters = [
-    CustomProperty(name: "sample", value: "sample-value", destination: .envVar),
+    CustomProperty(name: "sample", value: "sample-value", destination: .project),
     CustomProperty(name: "sample-2", value: "sample-2-value", destination: .fastlane),
     CustomProperty(name: "sample-3", value: "sample-3-value", destination: .project),
     CustomProperty(name: "sample-4", value: "sample-4-value", destination: .fastlane),

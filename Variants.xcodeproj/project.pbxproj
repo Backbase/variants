@@ -43,7 +43,6 @@
 		8E1B9DF2254AC27900DD0204 /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* RuntimeError.swift */; };
 		8E1B9DF3254AC27900DD0204 /* TemplateDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* TemplateDirectory.swift */; };
 		8E1B9E08254AC27E00DD0204 /* String+Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* String+Write.swift */; };
-		8E1B9E09254AC27E00DD0204 /* String+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* String+Encoding.swift */; };
 		8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* Data+Write.swift */; };
 		8E1B9E0B254AC27E00DD0204 /* FileManager+Temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* FileManager+Temp.swift */; };
 		8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* String+Error.swift */; };
@@ -83,7 +82,6 @@
 		8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */; };
 		8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */; };
 		8E8A4866255172CF0056F79F /* Path+SafeJoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */; };
-		8E8A48A72552EB020056F79F /* EnvironmentVariablesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */; };
 		8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */; };
 		8E8A4909255420FD0056F79F /* PlatformDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4908255420FC0056F79F /* PlatformDetectorTests.swift */; };
 		8E8A491025543F920056F79F /* SpecHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A490F25543F910056F79F /* SpecHelperTests.swift */; };
@@ -159,7 +157,6 @@
 		8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoin.swift"; sourceTree = "<group>"; };
 		8E8A48A52552A3EE0056F79F /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
-		8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariablesFactory.swift; sourceTree = "<group>"; };
 		8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradleScriptFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4908255420FC0056F79F /* PlatformDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformDetectorTests.swift; sourceTree = "<group>"; };
 		8E8A490F25543F910056F79F /* SpecHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecHelperTests.swift; sourceTree = "<group>"; };
@@ -172,7 +169,6 @@
 		OBJ_21 /* TemplateDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateDirectory.swift; sourceTree = "<group>"; };
 		OBJ_23 /* Data+Write.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Write.swift"; sourceTree = "<group>"; };
 		OBJ_24 /* FileManager+Temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Temp.swift"; sourceTree = "<group>"; };
-		OBJ_25 /* String+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Encoding.swift"; sourceTree = "<group>"; };
 		OBJ_26 /* String+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Error.swift"; sourceTree = "<group>"; };
 		OBJ_27 /* String+Write.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Write.swift"; sourceTree = "<group>"; };
 		OBJ_284 /* test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test; sourceTree = SOURCE_ROOT; };
@@ -329,7 +325,6 @@
 			children = (
 				OBJ_23 /* Data+Write.swift */,
 				OBJ_24 /* FileManager+Temp.swift */,
-				OBJ_25 /* String+Encoding.swift */,
 				OBJ_26 /* String+Error.swift */,
 				OBJ_27 /* String+Write.swift */,
 				8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */,
@@ -353,7 +348,6 @@
 			children = (
 				OBJ_29 /* ProjectFactory.swift */,
 				8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */,
-				8E8A48A62552EB020056F79F /* EnvironmentVariablesFactory.swift */,
 				OBJ_31 /* Android */,
 				OBJ_37 /* iOS */,
 			);
@@ -669,7 +663,6 @@
 				8E1B9EFD254AC2A900DD0204 /* iOSTarget.swift in Sources */,
 				8E1B9E08254AC27E00DD0204 /* String+Write.swift in Sources */,
 				8E1B9E0B254AC27E00DD0204 /* FileManager+Temp.swift in Sources */,
-				8E1B9E09254AC27E00DD0204 /* String+Encoding.swift in Sources */,
 				8E1B9EF8254AC2A900DD0204 /* iOSVariant.swift in Sources */,
 				8E1B9EFB254AC2A900DD0204 /* AndroidConfiguration.swift in Sources */,
 				8E1B9E65254AC29500DD0204 /* Bash.swift in Sources */,
@@ -686,7 +679,6 @@
 				8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */,
 				8E1B9EFE254AC2A900DD0204 /* AndroidVariant.swift in Sources */,
 				8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */,
-				8E8A48A72552EB020056F79F /* EnvironmentVariablesFactory.swift in Sources */,
 				8E1B9EA5254AC29A00DD0204 /* VerboseLogger.swift in Sources */,
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
 				8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */,

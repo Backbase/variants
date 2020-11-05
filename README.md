@@ -148,7 +148,7 @@ ios:
 
 #### Custom configuration
 
-Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane, or neither but set as an environment variable.
+Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane and vice-versa.
 
 See our [Custom Property documentation](docs/CUSTOM_PROPERTY.md) for a better understanding and examples.
 

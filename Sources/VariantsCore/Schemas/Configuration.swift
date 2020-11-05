@@ -20,6 +20,5 @@ public struct CustomProperty: Codable {
     public enum Destination: String, Codable {
         case project = "project"
         case fastlane = "fastlane"
-        case envVar = "environment"
     }
 }

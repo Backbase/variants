@@ -16,12 +16,10 @@ class iOSProject: Project {
         specHelper: SpecHelper,
         configFactory: XCConfigFactory = XCConfigFactory(),
         fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
-        envVarFactory: EnvironmentVariablesFactory = EnvironmentVariablesFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.configFactory = configFactory
         self.fastlaneFactory = fastlaneFactory
-        self.envVarFactory = envVarFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
 
@@ -94,10 +92,6 @@ class iOSProject: Project {
                 // Create 'variants_params.rb' with parameters whose
                 // destination are set as '.fastlane'
                 try? storeFastlaneParams(customProperties)
-                
-                // Set environment variables with parameters whose
-                // destination are set as '.environment'
-                envVarFactory.storeEnvironmentProperties(customProperties)
             }
     }
 
@@ -119,10 +113,6 @@ class iOSProject: Project {
                                            variant: defaultVariant,
                                            xcodeProj: configuration.xcodeproj,
                                            configPath: configPath)
-                
-                // Set environment variables with parameters whose
-                // destination are set as '.environment'
-                envVarFactory.storeEnvironmentProperties(customProperties)
             }
     }
 
@@ -142,8 +132,6 @@ class iOSProject: Project {
                 let baseSetupCompletedMessage =
                     """
                     ✅  Your variants configuration was setup
-                    ✅  For configuration properties with 'environment' destination, a temporary
-                        file has been created. You can source this file directly.
                     ✅  '\(projectSourceFolder)/Variants/' has been created.
                         Add that folder to your Xcode project if it wasn't done automatically.
                     ✅  For configuration properties with 'project' destination, they have been
@@ -219,5 +207,4 @@ class iOSProject: Project {
 
     private let configFactory: XCConfigFactory
     private let fastlaneFactory: FastlaneParametersFactory
-    private let envVarFactory: EnvironmentVariablesFactory
 }

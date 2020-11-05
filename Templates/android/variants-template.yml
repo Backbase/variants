@@ -3,12 +3,6 @@
 # TODO: Replace placeholders with real values
 #
 
-#
-# NOTE:
-# 1. Any value can be set to be read from an environement variable. As below:
-#   version_code: "{{ envVars.APP_VERSION_CODE }}"
-#
-
 android:
   path: {{ PROJECT_PATH }}
   app_name: {{ APP_NAME }}
@@ -29,13 +23,12 @@ android:
       #
       # The value of will be written to 1 of 3 possible destinations:
       # - project => variants.gradle
-      # - environment => environment variables file (a temporary file)
       # - fastlane => fastlane/parameters/variants_params.rb
       #
       custom:
         - name: APPCENTER_APP_NAME
           value: {{ SAMPLE_PLACEHOLDER }}
-          destination: environment
+          destination: fastlane
     - name: BETA
       id_suffix: beta
       version_name: 0.0.1
@@ -46,7 +39,7 @@ android:
       custom:
         - name: APPCENTER_APP_NAME
           value: {{ SAMPLE_PLACEHOLDER }}
-          destination: environment
+          destination: fastlane
   
   # ----------------------------------------------------------------------
   # signing: - Not required.
@@ -59,9 +52,9 @@ android:
 
   #signing:
   #    key_alias: android
-  #    key_password: "{{ envVars.APP_SIGN_KEY_PASSWORD }}"
+  #    key_password: "{{ APP_SIGN_KEY_PASSWORD }}"
   #    store_file: /usr/local/android/production.keystore
-  #    store_password: "{{ envVars.APP_SIGN_STORE_PASSWORD }}"
+  #    store_password: "{{ APP_SIGN_STORE_PASSWORD }}"
   
   
   # ----------------------------------------------------------------------
@@ -78,8 +71,8 @@ android:
   #    value: https://repo.private.com/android
   #    destination: project
   #  - name: mvnUser
-  #    value: "{{ envVars.MAVEN_USERNAME }}"
+  #    value: "{{ MAVEN_USERNAME }}"
   #    destination: fastlane
   #  - name: mvnPass
-  #    value: "{{ envVars.MAVEN_PASSWORD }}"
+  #    value: "{{ MAVEN_PASSWORD }}"
   #    destination: project

@@ -31,33 +31,6 @@ To use such a property in a fastlane file, you can do so as:
 property = VARIANTS_PARAMS[:NAME_OF_PROPERTY]
 ```
 
-- `environment`:
-Ensures the property will/can be exported as environment variable.
-This creates a temporary file whose path is printed to stderr when running `setup` or `switch` command.
-This is the only thing printed to stderr, so it's easy to be observed/retrieved.
-```sh
-variants switch --platform  android --variant beta
-INFO  [2020-10-20 18:10:12]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-20 18:10:12]: ▸ $ variants switch beta
-INFO  [2020-10-20 18:10:12]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-20 18:10:12]: ▸ Loading configuration
-INFO  [2020-10-20 18:10:12]: ▸ Found variant: BETA
-EXPORT_ENVIRONMENTAL_VARIABLES_PATH=/var/folders/1r/gf8jjzqx7q153_rm9hwm9fq00000gp/T/tmp.ltGjAbZx
-```
-
-The content of this file is in the following format, as example:
-```sh
-export PROPERTY=value
-export ANOTHER_PROPERTY=another-value
-```
-
-The above allows you to fetch the file path from stderr and source the file as below, in order to make those environment variables available:
-```
-source /var/folders/1r/gf8jjzqx7q153_rm9hwm9fq00000gp/T/tmp.ltGjAbZx
-```
-
-If and at which stage you do this is automatically is up to you.
-
 ## Examples
 
 **iOS Example**

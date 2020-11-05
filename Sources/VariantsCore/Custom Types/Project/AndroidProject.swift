@@ -15,12 +15,10 @@ class AndroidProject: Project {
         specHelper: SpecHelper,
         gradleFactory: GradleScriptFactory = GradleScriptFactory(),
         fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
-        envVarFactory: EnvironmentVariablesFactory = EnvironmentVariablesFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.gradleFactory = gradleFactory
         self.fastlaneFactory = fastlaneFactory
-        self.envVarFactory = envVarFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
     
@@ -86,10 +84,6 @@ class AndroidProject: Project {
         // Create 'variants_params.rb' with parameters whose
         // destination are set as '.fastlane'
         try storeFastlaneParams(customProperties, configuration: configuration)
-        
-        // Set environment variables with parameters whose
-        // destination are set as '.environment'
-        envVarFactory.storeEnvironmentProperties(customProperties)
     }
 
     private func createVariants(with configuration: AndroidConfiguration, spec: String) {}
@@ -110,8 +104,6 @@ class AndroidProject: Project {
                 let baseSetupCompletedMessage =
                     """
                     ✅  Your variants configuration was setup
-                    ✅  For configuration properties with 'environment' destination, a temporary
-                        file has been created. You can source this file directly.
                     ✅  For configuration properties with 'project' destination, they have been
                         stored in '\(projectSourceFolder)/gradleScripts/variants.gradle'.
                         This gradle file should be used by your 'app/build.gradle' in order to read the app's
@@ -183,5 +175,4 @@ class AndroidProject: Project {
     
     private let gradleFactory: GradleScriptFactory
     private let fastlaneFactory: FastlaneParametersFactory
-    private let envVarFactory: EnvironmentVariablesFactory
 }
