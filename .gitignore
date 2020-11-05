@@ -3,6 +3,9 @@
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 xcshareddata/
 
+# Codecov
+test-reports/
+
 # OS X temporary files
 .DS_Store
 .AppleDouble

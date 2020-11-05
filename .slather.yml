@@ -1,0 +1,9 @@
+# .slather.yml
+
+coverage_service: cobertura_xml
+xcodeproj: ./Variants.xcodeproj
+scheme: VariantsCore
+output_directory: ./test-reports
+#source_directory: ./Sources/VariantsCore/
+ignore:
+  - "../**/*/Xcode*"
