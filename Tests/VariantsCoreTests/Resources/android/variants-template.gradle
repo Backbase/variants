@@ -1,20 +1,20 @@
 {% if variant and configuration %}
 // ==== Variant values ====
 
-rootProject.ext.versionName: "{{ variant.versionName }}"
-rootProject.ext.versionCode: {{ variant.versionCode }}
-rootProject.ext.appIdentifier: "{{ configuration.appIdentifier }}{{ variant.configIdSuffix }}"
-rootProject.ext.appName: "{{ configuration.appName }}{{ variant.configName }}"
+rootProject.ext.versionName = "{{ variant.versionName }}"
+rootProject.ext.versionCode = {{ variant.versionCode }}
+rootProject.ext.appIdentifier = "{{ configuration.appIdentifier }}{{ variantIdSuffix }}"
+rootProject.ext.appName = "{{ configuration.appName }}{{ variantName }}"
 {% endif %}
 
 {% if configuration.signing %}
 
 // ==== Signing values ====
 
-rootProject.ext.signingKeyAlias: "{{ configuration.signing.keyAlias }}"
-rootProject.ext.signingKeyPassword: {{ configuration.signing.keyPassword }}
-rootProject.ext.signingStoreFile: "{{ configuration.signing.storeFile }}"
-rootProject.ext.signingStorePassword: "{{ configuration.signing.storePassword }}"
+rootProject.ext.signingKeyAlias = "{{ configuration.signing.keyAlias }}"
+rootProject.ext.signingKeyPassword = "{{ configuration.signing.keyPassword }}"
+rootProject.ext.signingStoreFile = "{{ configuration.signing.storeFile }}"
+rootProject.ext.signingStorePassword = "{{ configuration.signing.storePassword }}"
 {% endif %}
 
 {% if variant_properties %}

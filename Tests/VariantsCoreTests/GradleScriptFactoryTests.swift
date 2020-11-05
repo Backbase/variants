@@ -13,10 +13,10 @@ class GradleScriptFactoryTests: XCTestCase {
     let correctOutput =
         """
         // ==== Variant values ====
-        rootProject.ext.versionName: "1.1.0"
-        rootProject.ext.versionCode: 99
-        rootProject.ext.appIdentifier: "com.test.testapp"
-        rootProject.ext.appName: "TestApp"
+        rootProject.ext.versionName = "1.1.3"
+        rootProject.ext.versionCode = 101
+        rootProject.ext.appIdentifier = "com.test.testapp.test"
+        rootProject.ext.appName = "TestApp Test"
         // ==== Wrapper gradle tasks ====
         def vBuild = task vBuild
         def vUnitTests = task vUnitTests
@@ -47,6 +47,16 @@ class GradleScriptFactoryTests: XCTestCase {
                 taskUnitTest: "testProdReleaseUnitTest",
                 taskUitest: "connectedProdReleaseAndroidTest",
                 custom: []
+            ),
+            AndroidVariant(
+                name: "Test",
+                versionName: "1.1.3",
+                versionCode: "101",
+                idSuffix: "test",
+                taskBuild: "bundleProdRelease",
+                taskUnitTest: "testProdReleaseUnitTest",
+                taskUitest: "connectedProdReleaseAndroidTest",
+                custom: []
             )
         ],
         signing: nil,
@@ -65,16 +75,17 @@ class GradleScriptFactoryTests: XCTestCase {
         // template in `private/tmp/`, to be used as `Path` from this test target.
         // Without this Path, `FastlaneParametersFactory` can't be tested as it
         // depends on `Stencil.FileSystemLoader` to load the template.
-        let temporaryTemplatePath = Path("android/variants-template.gradle")
         let androidFolder = Path("./android/")
         if androidFolder.exists {
             XCTAssertNoThrow(try androidFolder.delete())
-            XCTAssertNoThrow(try androidFolder.mkdir())
         }
+        XCTAssertNoThrow(try androidFolder.mkpath())
+        let temporaryTemplatePath = Path("./android/variants-template.gradle")
         XCTAssertNoThrow(try temporaryTemplatePath.write(templateFileContent))
         
         let factory = GradleScriptFactory(templatePath: Path("./"))
-        guard let variant = androidConfiguration.variants.first else { return }
+        guard let variant = androidConfiguration.variants.first(where: { $0.name == "Test" })
+        else { return }
         XCTAssertNoThrow(try factory.render(with: androidConfiguration, variant: variant))
         XCTAssertNotNil(try factory.render(with: androidConfiguration, variant: variant))
         
@@ -87,20 +98,20 @@ class GradleScriptFactoryTests: XCTestCase {
         }
     }
     
-//    func testFileWrite_correctOutput() {
-//        let basePath = Path("")
-//        let fastlaneParameters = Path("fastlane/parameters")
-//        if fastlaneParameters.exists {
-//            XCTAssertNoThrow(try fastlaneParameters.delete())
-//        }
-//        XCTAssertNoThrow(try fastlaneParameters.mkpath())
-//
-//        let factory = FastlaneParametersFactory(templatePath: basePath)
-//        XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: fastlaneParameters))
-//
-//        let fastlaneParametersFile = Path(fastlaneParameters.string+"/variants_params.rb")
-//        if fastlaneParametersFile.exists {
-//            XCTAssertEqual(try fastlaneParametersFile.read(), correctOutput)
-//        }
-//    }
+    func testFileWrite_correctOutput() {
+        do {
+            let variantsScriptPath = try Path(androidConfiguration.path).safeJoin(path: Path("gradleScripts/"))
+            if !variantsScriptPath.exists {
+                try variantsScriptPath.mkpath()
+            }
+            let factory = GradleScriptFactory(templatePath: Path("./"))
+            XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: variantsScriptPath))
+            
+            let variantsScriptFile = Path(variantsScriptPath.string+"/variants.gradle")
+            XCTAssertTrue(variantsScriptFile.exists)
+            XCTAssertEqual(try variantsScriptFile.read(), correctOutput)
+        } catch {
+            XCTFail("'Try' should not throw - "+error.localizedDescription)
+        }
+    }
 }
