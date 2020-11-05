@@ -40,7 +40,6 @@ class SpecHelperTests: XCTestCase {
         else { return nil }
         
         let basePath = Path(path)
-        print("> Drop last: \(basePath.components.dropLast())")
         return Path(components: basePath.components.dropLast())
     }
     
