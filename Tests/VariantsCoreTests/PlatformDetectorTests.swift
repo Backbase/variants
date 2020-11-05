@@ -13,8 +13,6 @@ class PlatformDetectorTests: XCTestCase {
     let xcodeProjectPath = Path("./Test.xcodeproj")
     let gradleProjectPath = Path("./build.gradle")
     
-    
-    
     func testAvailablePlatforms_ios() {
         XCTAssertNoThrow(try cleanup())
         
