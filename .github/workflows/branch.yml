@@ -18,4 +18,17 @@ jobs:
       run: swift test
 
     - name: Test VariantsCore
-      run: xcodebuild test -scheme VariantsCoreTests
+      run: xcodebuild test -scheme VariantsCore
+
+    - name: Bundle install
+      run: bundle install
+      
+    - name: Code coverage report
+      run: bundle exec slather coverage
+
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./test-reports/cobertura.xml
+        fail_ci_if_error: true # optional (default = false)
+        verbose: true # optional (default = false)
