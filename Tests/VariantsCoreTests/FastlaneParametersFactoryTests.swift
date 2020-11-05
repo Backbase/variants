@@ -70,8 +70,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
         XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: fastlaneParameters))
         
         let fastlaneParametersFile = Path(fastlaneParameters.string+"/variants_params.rb")
-        if fastlaneParametersFile.exists {
-            XCTAssertEqual(try fastlaneParametersFile.read(), correctOutput)
-        }
+        XCTAssertTrue(fastlaneParametersFile.exists)
+        XCTAssertEqual(try fastlaneParametersFile.read(), correctOutput)
     }
 }
