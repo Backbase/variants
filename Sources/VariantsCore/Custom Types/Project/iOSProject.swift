@@ -104,7 +104,6 @@ class iOSProject: Project {
                         .first(where: { $0.name.lowercased() == "default" }) else {
                     throw ValidationError("Variant 'default' not found.")
                 }
-                let customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
                 
                 // Create 'variants.xcconfig' with parameters whose
                 // destination are set as '.project'

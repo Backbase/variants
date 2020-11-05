@@ -18,7 +18,7 @@ public struct CustomProperty: Codable {
     public var destination: Destination
     
     public enum Destination: String, Codable {
-        case project = "project"
-        case fastlane = "fastlane"
+        case project
+        case fastlane
     }
 }

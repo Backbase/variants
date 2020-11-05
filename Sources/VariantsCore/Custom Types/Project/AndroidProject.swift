@@ -130,6 +130,12 @@ class AndroidProject: Project {
                     }
                     try gradleFactory.createScript(with: configuration, variant: desiredVariant)
                     
+                    let customProperties: [CustomProperty] = (desiredVariant.custom ?? []) + (configuration.custom ?? [])
+                    
+                    // Create 'variants_params.rb' with parameters whose
+                    // destination are set as '.fastlane'
+                    try storeFastlaneParams(customProperties, configuration: configuration)
+                    
                     setupCompleteMessage =
                         """
 
