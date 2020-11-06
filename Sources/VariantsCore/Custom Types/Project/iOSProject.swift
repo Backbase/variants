@@ -89,7 +89,8 @@ class iOSProject: Project {
                     addToXcodeProj: false
                 )
                 
-                let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+                var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+                customProperties.append(variant.destinationProperty)
                 
                 // Create 'variants_params.rb' with parameters whose
                 // destination are set as '.fastlane'
@@ -172,7 +173,8 @@ class iOSProject: Project {
                             .first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
                     }
-                    let customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
+                    var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
+                    customProperties.append(defaultVariant.destinationProperty)
                     
                     // Create 'variants_params.rb' with parameters whose
                     // destination are set as '.fastlane'

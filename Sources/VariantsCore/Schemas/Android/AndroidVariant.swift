@@ -16,6 +16,7 @@ public struct AndroidVariant: Codable {
     let taskUnitTest: String
     let taskUitest: String
     let custom: [CustomProperty]?
+    internal let store_destination: String?
     
     enum CodingKeys: String, CodingKey {
         case name = "name"
@@ -26,6 +27,7 @@ public struct AndroidVariant: Codable {
         case taskUnitTest = "task_unittest"
         case taskUitest = "task_uitest"
         case custom = "custom"
+        case store_destination
     }
     
     var configName: String {
@@ -44,5 +46,26 @@ public struct AndroidVariant: Codable {
         default:
             return idSuffix != nil ? "."+idSuffix! : ""
         }
+    }
+    
+    var destinationProperty: CustomProperty {
+        var defaultDestination: Destination = .playStore
+        if
+            let storeDestination = store_destination,
+            let destination = Destination(rawValue: storeDestination.lowercased()) {
+            defaultDestination = destination
+        }
+        return CustomProperty(
+            name: "STORE_DESTINATION",
+            value: defaultDestination.rawValue,
+            destination: .fastlane
+        )
+    }
+}
+
+extension AndroidVariant {
+    enum Destination: String, Codable {
+        case appCenter = "appcenter"
+        case playStore = "playstore"
     }
 }

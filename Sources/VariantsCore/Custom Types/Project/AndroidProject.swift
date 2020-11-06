@@ -81,7 +81,8 @@ class AndroidProject: Project {
         // destination are set as '.project'
         try gradleFactory.createScript(with: configuration, variant: variant)
         
-        let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        customProperties.append(variant.destinationProperty)
         
         // Create 'variants_params.rb' with parameters whose
         // destination are set as '.fastlane'
@@ -133,10 +134,18 @@ class AndroidProject: Project {
                     """
                 
                 if Path("\(projectSourceFolder)/fastlane/").isDirectory {
-                    guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == "default" }) else {
+                    guard let defaultVariant = configuration.variants
+                            .first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
                     }
-                    try gradleFactory.createScript(with: configuration, variant: desiredVariant)
+                    try gradleFactory.createScript(with: configuration, variant: defaultVariant)
+                    
+                    var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
+                    customProperties.append(defaultVariant.destinationProperty)
+                    
+                    // Create 'variants_params.rb' with parameters whose
+                    // destination are set as '.fastlane'
+                    try storeFastlaneParams(customProperties, configuration: configuration)
                     
                     setupCompleteMessage =
                         """

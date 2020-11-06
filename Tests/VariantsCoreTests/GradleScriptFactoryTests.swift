@@ -45,7 +45,8 @@ class GradleScriptFactoryTests: XCTestCase {
                 taskBuild: "bundleProdRelease",
                 taskUnitTest: "testProdReleaseUnitTest",
                 taskUitest: "connectedProdReleaseAndroidTest",
-                custom: []
+                custom: [],
+                store_destination: nil
             ),
             AndroidVariant(
                 name: "Test",
@@ -55,7 +56,8 @@ class GradleScriptFactoryTests: XCTestCase {
                 taskBuild: "bundleProdRelease",
                 taskUnitTest: "testProdReleaseUnitTest",
                 taskUitest: "connectedProdReleaseAndroidTest",
-                custom: []
+                custom: [],
+                store_destination: nil
             )
         ],
         signing: nil,

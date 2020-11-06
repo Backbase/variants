@@ -34,7 +34,7 @@ end
 
 desc 'run deploy'
 lane :deploy do |options|
-    destination = options[:store_destination] || 'appcenter'
+    destination = options[:store_destination] || VARIANTS_PARAMS[:STORE_DESTINATION] || 'appcenter'
     destination = destination.downcase
     
     if not ["appcenter", "playstore"].include?(destination)

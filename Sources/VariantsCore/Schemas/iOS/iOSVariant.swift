@@ -16,6 +16,7 @@ public struct iOSVariant: Codable {
     let version_name: String
     let version_number: Int
     let custom: [CustomProperty]?
+    internal let store_destination: String?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
         var customDictionary: [String: String] = [
@@ -51,5 +52,27 @@ public struct iOSVariant: Codable {
         default:
             return id_suffix != nil ? "."+id_suffix! : ""
         }
+    }
+    
+    var destinationProperty: CustomProperty {
+        var defaultDestination: Destination = .appStore
+        if
+            let storeDestination = store_destination,
+            let destination = Destination(rawValue: storeDestination.lowercased()) {
+            defaultDestination = destination
+        }
+        return CustomProperty(
+            name: "STORE_DESTINATION",
+            value: defaultDestination.rawValue,
+            destination: .fastlane
+        )
+    }
+}
+
+extension iOSVariant {
+    enum Destination: String, Codable {
+        case appCenter = "appcenter"
+        case appStore = "appstore"
+        case testFlight = "testflight"
     }
 }

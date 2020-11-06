@@ -14,7 +14,7 @@ APPCENTER_API_TOKEN = APPCENTER_PARAMS[:APPCENTER_API_TOKEN]
 # --- AppCenter
 
 desc 'deploy app to AppCenter'
-lane :run_appcenter_deploy do |options|
+private_lane :appcenter_deploy do |options|
     destinations = options[:destinations] || APPCENTER_DESTINATION_GROUP || "Collaborators"
     notify = options[:notify] || true
 
