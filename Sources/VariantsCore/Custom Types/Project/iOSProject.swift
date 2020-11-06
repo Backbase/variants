@@ -89,7 +89,8 @@ class iOSProject: Project {
                     addToXcodeProj: false
                 )
                 
-                let customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+                var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+                customProperties.append(variant.destinationProperty)
                 
                 // Create 'variants_params.rb' with parameters whose
                 // destination are set as '.fastlane'

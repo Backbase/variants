@@ -54,12 +54,18 @@ public struct iOSVariant: Codable {
         }
     }
     
-    var destination: Destination {
-        guard
+    var destinationProperty: CustomProperty {
+        var defaultDestination: Destination = .appStore
+        if
             let storeDestination = store_destination,
-            let destination = Destination(rawValue: storeDestination.lowercased())
-        else { return .appStore }
-        return destination
+            let destination = Destination(rawValue: storeDestination.lowercased()) {
+            defaultDestination = destination
+        }
+        return CustomProperty(
+            name: "STORE_DESTINATION",
+            value: defaultDestination.rawValue,
+            destination: .fastlane
+        )
     }
 }
 
