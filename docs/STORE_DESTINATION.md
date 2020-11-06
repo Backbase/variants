@@ -3,7 +3,7 @@
 
 This tool not only creates multiple deployment variants of your application but it allows you to use a generated `fastlane` setup, which among other things, allow us to deploy our applications to multiple stores, they being:
 
-- AppStore
+- AppStore (dependent on [Issue #81](https://github.com/Backbase/variants/issues/81))
 - TestFlight
 - AppCenter
 - PlayStore
@@ -46,6 +46,8 @@ Note that by not specifying or specifying an unsupported store will fallback to 
 > which destination `fastlane`.
 >
 >
+
+AppStore is dependent on [Issue #81](https://github.com/Backbase/variants/issues/81)
 
 #### Example
 
