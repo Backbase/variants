@@ -25,7 +25,9 @@ end
 
 desc 'run deploy'
 lane :deploy do |options|
-
+    destination = options[:store_destination] || VARIANTS_PARAMS[:STORE_DESTINATION] || 'appcenter'
+    destination = destination.downcase
+    
     run_all_but_deploy
     
     # If Match is enabled, uncomment line below
@@ -40,8 +42,14 @@ lane :deploy do |options|
     #    badgy(name: badge_name)
     # end
     
-    run_archive
-    run_appcenter_deploy
+    archive
+    
+    if destination == 'appcenter'
+        appcenter_deploy
+    elsif destination == 'testflight'
+        testflight_deploy
+    end
+    
     
     # Send a Slack message
     #
@@ -58,7 +66,7 @@ end
 # --- Build and archive
 
 desc "build and archive"
-private_lane :run_archive do |options|
+private_lane :archive do |options|
     configuration = options[:configuration] || "Release"
 
     defaults = {

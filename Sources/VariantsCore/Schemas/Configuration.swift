@@ -22,3 +22,9 @@ public struct CustomProperty: Codable {
         case fastlane
     }
 }
+
+extension CustomProperty: Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.name == rhs.name
+    }
+}

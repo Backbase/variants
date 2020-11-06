@@ -16,6 +16,8 @@ android:
       task_build: bundleProdRelease
       task_unittest: testProdReleaseUnitTest
       task_uitest: connectedProdReleaseAndroidTest
+      # 'store_destination' can be: AppCenter or PlayStore
+      store_destination: PlayStore
       # 
       # custom: - Not required.
       # You can have as many custom fields as possible.
@@ -36,6 +38,8 @@ android:
       task_build: assembleDevDebug
       task_unittest: testDevDebugUnitTest
       task_uitest: connectedDevDebugAndroidTest
+      # 'store_destination' can be: AppCenter or PlayStore
+      store_destination: AppCenter
       custom:
         - name: APPCENTER_APP_NAME
           value: {{ SAMPLE_PLACEHOLDER }}

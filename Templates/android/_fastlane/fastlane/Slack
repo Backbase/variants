@@ -4,10 +4,7 @@
 desc 'send deployment message to a Slack channel'
 lane :send_slack_message do |options|
     
-    if options[:channel]
-        && options[:hook_url]
-        && options[:interactive_url]
-        && options[:message]
+    if options[:channel] && options[:hook_url] && options[:interactive_url] && options[:message]
     
         channel         = options[:channel]
         hook_url        = options[:hook_url]

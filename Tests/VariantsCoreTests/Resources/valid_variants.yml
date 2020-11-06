@@ -13,6 +13,7 @@ android:
       task_build: bundleProdRelease
       task_unittest: testProdReleaseUnitTest
       task_uitest: connectedProdReleaseAndroidTest
+      store_destination: PlayStore
       custom:
         - name: SAMPLE_PROJECT
           value: Sample Project Default Config
@@ -24,6 +25,7 @@ android:
       task_build: assembleDevelop
       task_unittest: testDevDebugUnitTest
       task_uitest: connectedDevDebugAndroidTest
+      store_destination: AppCenter
       custom:
         - name: SAMPLE_FASTLANE
           value: Sample Fastlane Config
@@ -86,6 +88,7 @@ ios:
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 1
+        store_destination: AppCenter
         custom:
             - name: SAMPLE_CONFIG
               value: BETA Value

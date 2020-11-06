@@ -21,7 +21,7 @@ XCCONFIG_PATH = PROJECT_PARAMS[:XCCONFIG_PATH]
 # https://docs.fastlane.tools/best-practices/continuous-integration/#application-specific-passwords
 #
 
-private_lane :deploy_testflight do |options|
+private_lane :testflight_deploy do |options|
     # Retrieve app identifier from config
     app_identifier = get_xcconfig_value(
       path: XCCONFIG_PATH,
