@@ -49,21 +49,12 @@ class GradleScriptFactory {
         context["variantName"] = variant.configName
         
         if let variantProperties = variant.custom?
-            .filter({ $0.destination == .project })
-            .map({ (property) -> CustomProperty in
-                let processed = property.processForEnvironment()
-                if processed.isEnvVar {
-                    return CustomProperty(name: property.name,
-                                          value: processed.string,
-                                          destination: property.destination)
-                }
-                return property
-        }) {
+            .filter({ $0.destination == .project && !$0.processForEnvironment().isEnvVar }) {
             context["variant_properties"] = variantProperties
         }
         
-        if let globalProperties = configuration.custom?
-            .filter({ $0.destination == .project })
+        if let variantEnvVars = variant.custom?
+            .filter({ $0.destination == .project && $0.processForEnvironment().isEnvVar })
             .map({ (property) -> CustomProperty in
                 let processed = property.processForEnvironment()
                 if processed.isEnvVar {
@@ -73,7 +64,26 @@ class GradleScriptFactory {
                 }
                 return property
         }) {
+            context["variant_env_vars"] = variantEnvVars
+        }
+        
+        if let globalProperties = configuration.custom?
+            .filter({ $0.destination == .project && !$0.processForEnvironment().isEnvVar}) {
             context["global_properties"] = globalProperties
+        }
+        
+        if let globalEnvVars = configuration.custom?
+            .filter({ $0.destination == .project && $0.processForEnvironment().isEnvVar })
+            .map({ (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+        }) {
+            context["global_env_vars"] = globalEnvVars
         }
         
         guard

@@ -14,7 +14,8 @@ let parameters = [
     CustomProperty(name: "sample-2", value: "sample-2-value", destination: .fastlane),
     CustomProperty(name: "sample-3", value: "sample-3-value", destination: .project),
     CustomProperty(name: "sample-4", value: "sample-4-value", destination: .fastlane),
-    CustomProperty(name: "sample-5", value: "sample-5-value", destination: .fastlane)
+    CustomProperty(name: "sample-5", value: "sample-5-value", destination: .fastlane),
+    CustomProperty(name: "sample-env", value: "{{ envVars.API_TOKEN }}", destination: .fastlane)
 ]
 
 let correctOutput =
@@ -24,6 +25,7 @@ let correctOutput =
         sample-2: \"sample-2-value\",
         sample-4: \"sample-4-value\",
         sample-5: \"sample-5-value\",
+        sample-env: ENV[\"API_TOKEN\"],
     }.freeze
     """
 
@@ -43,14 +45,13 @@ class FastlaneParametersFactoryTests: XCTestCase {
         let temporaryTemplatePath = Path("variants_params_template.rb")
         XCTAssertNoThrow(try temporaryTemplatePath.write(templateFileContent))
         
-        let fastlaneParameters = parameters.filter { $0.destination == .fastlane }
         let factory = FastlaneParametersFactory(templatePath: Path("./"))
         
-        XCTAssertNoThrow(try factory.render(parameters: fastlaneParameters))
-        XCTAssertNotNil(try factory.render(parameters: fastlaneParameters))
+        XCTAssertNoThrow(try factory.render(parameters: parameters))
+        XCTAssertNotNil(try factory.render(parameters: parameters))
         
         do {
-            if let renderedData = try factory.render(parameters: fastlaneParameters) {
+            if let renderedData = try factory.render(parameters: parameters) {
                 XCTAssertEqual(String(data: renderedData, encoding: .utf8), correctOutput)
             }
         } catch {

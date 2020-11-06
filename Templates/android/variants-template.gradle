@@ -17,21 +17,27 @@ rootProject.ext.signingStoreFile = "{{ configuration.signing.storeFile }}"
 rootProject.ext.signingStorePassword = "{{ configuration.signing.storePassword }}"
 {% endif %}
 
-{% if variant_properties %}
+{% if variant_properties or variant_env_vars %}
 
 // ==== Variant custom values ====
 
 {% for property in variant_properties %}
 rootProject.ext.{{ property.name }} = "{{ property.value }}"
 {% endfor %}
+{% for env_var in variant_env_vars %}
+rootProject.ext.{{ env_var.name }} = {{ env_var.value }}
+{% endfor %}
 {% endif %}
 
-{% if global_properties %}
+{% if global_properties or global_env_vars %}
 
 // ==== Custom values ====
 
 {% for property in global_properties %}
 rootProject.ext.{{ property.name }} = "{{ property.value }}"
+{% endfor %}
+{% for env_var in global_env_vars %}
+rootProject.ext.{{ env_var.name }} = {{ env_var.value }}
 {% endfor %}
 {% endif %}
 

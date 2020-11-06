@@ -15,8 +15,17 @@ class FastlaneParametersFactory {
     }
     
     func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws {
+        guard let data = try render(parameters: parameters) else { return }
+        try write(data, using: folder)
+    }
+    
+    func render(parameters: [CustomProperty]) throws -> Data? {
+        
         let fastlaneParameters = parameters
-            .filter { $0.destination == .fastlane }
+            .filter { $0.destination == .fastlane && !$0.processForEnvironment().isEnvVar }
+        
+        let fastlaneEnvVars = parameters
+            .filter { $0.destination == .fastlane && $0.processForEnvironment().isEnvVar }
             .map { (property) -> CustomProperty in
                 let processed = property.processForEnvironment()
                 if processed.isEnvVar {
@@ -26,15 +35,11 @@ class FastlaneParametersFactory {
                 }
                 return property
         }
-        guard !fastlaneParameters.isEmpty else { return }
+        guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return nil }
         
-        guard let data = try render(parameters: fastlaneParameters) else { return }
-        try write(data, using: folder)
-    }
-    
-    func render(parameters: [CustomProperty]) throws -> Data? {
         let context = [
-          "parameters": parameters
+            "parameters": fastlaneParameters,
+            "env_vars": fastlaneEnvVars
         ]
 
         guard let path = templatePath else { return nil }
