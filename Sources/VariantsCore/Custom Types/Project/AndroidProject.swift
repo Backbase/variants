@@ -139,12 +139,6 @@ class AndroidProject: Project {
                     // destination are set as '.fastlane'
                     try storeFastlaneParams(customProperties, configuration: configuration)
                     
-                    let customProperties: [CustomProperty] = (desiredVariant.custom ?? []) + (configuration.custom ?? [])
-                    
-                    // Create 'variants_params.rb' with parameters whose
-                    // destination are set as '.fastlane'
-                    try storeFastlaneParams(customProperties, configuration: configuration)
-                    
                     setupCompleteMessage =
                         """
 

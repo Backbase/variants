@@ -88,6 +88,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
                 sample-4: \"sample-4-value\",
                 sample-5: \"sample-5-value\",
                 STORE_DESTINATION: \"testflight\",
+                sample-env: ENV[\"API_TOKEN\"],
             }.freeze
             """
         

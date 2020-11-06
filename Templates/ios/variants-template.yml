@@ -26,6 +26,10 @@ ios:
         # You can have as many custom fields as possible.
         # Only strings allowed.
         #
+        # The value of will be written to 1 of 2 possible destinations:
+        # - project => variants.xcconfig
+        # - fastlane => fastlane/parameters/variants_params.rb
+        #
         custom:
             - name: OTHER_SWIFT_FLAGS
               value: $(inherited)
@@ -52,3 +56,17 @@ ios:
             - name: SAMPLE_FASTLANE_PROPERTY
               value: This will be available to fastlane on Beta variant
               destination: fastlane
+
+    # ----------------------------------------------------------------------
+    # custom: - Not required.
+    #
+    # Same as variant's `custom`, but this will be processed regardless of
+    # the chosen variant.
+    #
+    # Uncomment section below if necessary.
+    # ----------------------------------------------------------------------
+
+    #custom:
+    #    - name: SAMPLE_PROPERTY
+    #      value: Sample value
+    #      destination: project

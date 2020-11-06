@@ -4,79 +4,75 @@
 #
 
 android:
-  path: {{ PROJECT_PATH }}
-  app_name: {{ APP_NAME }}
-  app_identifier: {{ APP_IDENTIFIER }}
-  variants:
+    path: {{ PROJECT_PATH }}
+    app_name: {{ APP_NAME }}
+    app_identifier: {{ APP_IDENTIFIER }}
+    variants:
       # Default variant is mandatory, do not remove
       # Usually regarded as `production` variant.
-    - name: default
-      version_name: 0.0.1
-      version_code: 1
-      task_build: bundleProdRelease
-      task_unittest: testProdReleaseUnitTest
-      task_uitest: connectedProdReleaseAndroidTest
-      # 'store_destination' can be: AppCenter or PlayStore
-      store_destination: PlayStore
-      # 
-      # custom: - Not required.
-      # You can have as many custom fields as possible.
-      # Only strings allowed.
-      #
-      # The value of will be written to 1 of 3 possible destinations:
-      # - project => variants.gradle
-      # - fastlane => fastlane/parameters/variants_params.rb
-      #
-      custom:
-        - name: APPCENTER_APP_NAME
-          value: {{ SAMPLE_PLACEHOLDER }}
-          destination: fastlane
-    - name: BETA
-      id_suffix: beta
-      version_name: 0.0.1
-      version_code: 1
-      task_build: assembleDevDebug
-      task_unittest: testDevDebugUnitTest
-      task_uitest: connectedDevDebugAndroidTest
-      # 'store_destination' can be: AppCenter or PlayStore
-      store_destination: AppCenter
-      custom:
-        - name: APPCENTER_APP_NAME
-          value: {{ SAMPLE_PLACEHOLDER }}
-          destination: fastlane
+        - name: default
+          version_name: 0.0.1
+          version_code: 1
+          task_build: bundleProdRelease
+          task_unittest: testProdReleaseUnitTest
+          task_uitest: connectedProdReleaseAndroidTest
+          # 'store_destination' can be: AppCenter or PlayStore
+          store_destination: PlayStore
+          #
+          # custom: - Not required.
+          # You can have as many custom fields as possible.
+          # Only strings allowed.
+          #
+          # The value of will be written to 1 of 2 possible destinations:
+          # - project => variants.gradle
+          # - fastlane => fastlane/parameters/variants_params.rb
+          #
+          custom:
+            - name: SAMPLE_PROPERTY
+              value: "{{ envVars.SAMPLE_ENVIRONMENT_VARIABLE }}"
+              destination: fastlane
+        - name: BETA
+          id_suffix: beta
+          version_name: 0.0.1
+          version_code: 1
+          task_build: assembleDevDebug
+          task_unittest: testDevDebugUnitTest
+          task_uitest: connectedDevDebugAndroidTest
+          # 'store_destination' can be: AppCenter or PlayStore
+          store_destination: AppCenter
+          custom:
+            - name: SAMPLE_PROPERTY
+              value: "{{ envVars.SAMPLE_ENVIRONMENT_VARIABLE }}"
+              destination: fastlane
   
-  # ----------------------------------------------------------------------
-  # signing: - Not required.
-  #
-  # When uncommented, the information below will be available in the file
-  # `variants.gradle`, found in `{{ android.path }}/gradleScripts/` folder
-  #
-  # Uncomment section below if necessary.
-  # ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
+    # signing: - Not required.
+    #
+    # When uncommented, the information below will be available in the file
+    # `variants.gradle`, found in `{{ android.path }}/gradleScripts/` folder
+    #
+    # Uncomment section below if necessary.
+    # ----------------------------------------------------------------------
 
-  #signing:
-  #    key_alias: android
-  #    key_password: "{{ APP_SIGN_KEY_PASSWORD }}"
-  #    store_file: /usr/local/android/production.keystore
-  #    store_password: "{{ APP_SIGN_STORE_PASSWORD }}"
+    #signing:
+    #    key_alias: android
+    #    key_password: "{{ envVars.APP_SIGN_KEY_PASSWORD }}"
+    #    store_file: /usr/local/android/production.keystore
+    #    store_password: "{{ envVars.APP_SIGN_STORE_PASSWORD }}"
   
-  
-  # ----------------------------------------------------------------------
-  # custom: - Not required.
-  #
-  # Same as variant's `custom`, but this will be processed regardless of
-  # the chosen variant.
-  #
-  # Uncomment section below if necessary.
-  # ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
+    # custom: - Not required.
+    #
+    # Same as variant's `custom`, but this will be processed regardless of
+    # the chosen variant.
+    #
+    # Uncomment section below if necessary.
+    # ----------------------------------------------------------------------
 
-  #custom:
-  #  - name: privateMavenRepoUrl
-  #    value: https://repo.private.com/android
-  #    destination: project
-  #  - name: mvnUser
-  #    value: "{{ MAVEN_USERNAME }}"
-  #    destination: fastlane
-  #  - name: mvnPass
-  #    value: "{{ MAVEN_PASSWORD }}"
-  #    destination: project
+    #custom:
+    #    - name: mvnUser
+    #      value: "{{ envVars.MAVEN_USERNAME }}"
+    #      destination: project
+    #    - name: mvnPass
+    #      value: "{{ envVars.MAVEN_PASSWORD }}"
+    #      destination: project
