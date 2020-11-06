@@ -48,41 +48,19 @@ class GradleScriptFactory {
         context["variantIdSuffix"] = variant.configIdSuffix
         context["variantName"] = variant.configName
         
-        if let variantProperties = variant.custom?
-            .filter({ $0.destination == .project && !$0.processForEnvironment().isEnvVar }) {
+        if let variantProperties = variant.custom?.literal() {
             context["variant_properties"] = variantProperties
         }
         
-        if let variantEnvVars = variant.custom?
-            .filter({ $0.destination == .project && $0.processForEnvironment().isEnvVar })
-            .map({ (property) -> CustomProperty in
-                let processed = property.processForEnvironment()
-                if processed.isEnvVar {
-                    return CustomProperty(name: property.name,
-                                          value: processed.string,
-                                          destination: property.destination)
-                }
-                return property
-        }) {
+        if let variantEnvVars = variant.custom?.envVars()  {
             context["variant_env_vars"] = variantEnvVars
         }
         
-        if let globalProperties = configuration.custom?
-            .filter({ $0.destination == .project && !$0.processForEnvironment().isEnvVar}) {
+        if let globalProperties = configuration.custom?.literal() {
             context["global_properties"] = globalProperties
         }
         
-        if let globalEnvVars = configuration.custom?
-            .filter({ $0.destination == .project && $0.processForEnvironment().isEnvVar })
-            .map({ (property) -> CustomProperty in
-                let processed = property.processForEnvironment()
-                if processed.isEnvVar {
-                    return CustomProperty(name: property.name,
-                                          value: processed.string,
-                                          destination: property.destination)
-                }
-                return property
-        }) {
+        if let globalEnvVars = configuration.custom?.envVars() {
             context["global_env_vars"] = globalEnvVars
         }
         
@@ -122,4 +100,25 @@ class GradleScriptFactory {
     }
     
     private let templatePath: Path?
+}
+
+fileprivate extension Sequence where Iterator.Element == CustomProperty {
+    func envVars() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .project && $0.processForEnvironment().isEnvVar })
+            .map { (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+            }
+    }
+    
+    func literal() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .project && !$0.processForEnvironment().isEnvVar })
+    }
 }
