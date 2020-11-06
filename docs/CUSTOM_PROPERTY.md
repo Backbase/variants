@@ -108,10 +108,10 @@ Custom properties support environment variable values, that will provide the des
 custom:
     - name: NAME_OF_PROPERTY
       value: "{{ envVars.NAME_OF_ENV_VAR }}"
-      destination project
+      destination: project
     - name: DEPLOYMENT_API_TOKEN
       value: "{{ envVars.APPCENTER_API_TOKEN }}"
-      destination fastlane
+      destination: fastlane
 ```
 
 #### Destination `project`
