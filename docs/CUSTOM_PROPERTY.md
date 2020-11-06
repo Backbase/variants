@@ -11,7 +11,7 @@ A custom property consists of 3 values:
 
 ### Destination
 
-Destination is an Enum, with three supported destinations:
+Destination is an Enum, with two supported destinations:
 
 - `project`: 
 Ensures the property is available to be used by your project, either in `variants.gradle` or `variants.xcconfig`, depending on the platform.
@@ -108,10 +108,10 @@ Custom properties support environment variable values, that will provide the des
 custom:
     - name: NAME_OF_PROPERTY
       value: "{{ envVars.NAME_OF_ENV_VAR }}"
-      destination project
+      destination: project
     - name: DEPLOYMENT_API_TOKEN
       value: "{{ envVars.APPCENTER_API_TOKEN }}"
-      destination fastlane
+      destination: fastlane
 ```
 
 #### Destination `project`
