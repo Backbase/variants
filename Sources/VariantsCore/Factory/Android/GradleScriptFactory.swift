@@ -76,7 +76,6 @@ class GradleScriptFactory {
         let lines = rendered.split(whereSeparator: \.isNewline)
         let content = lines.joined(separator: "\n")
         
-        print(content)
         return Data(content.utf8)
     }
     
@@ -94,6 +93,14 @@ class GradleScriptFactory {
                 
                 // Write to file
                 try fastlaneParametersFile.write(data)
+                
+                if
+                    let fileContent = try? fastlaneParametersFile.read(),
+                    fileContent == data {
+                    Logger.shared.logInfo("⚙️  ", item: """
+                        '\(fastlaneParametersFile.abbreviate().string)' has been generated with success
+                        """, color: .green)
+                }
             } else {
                 throw TemplateDoesNotExist(templateNames: [gradleScriptFolder.string])
             }
