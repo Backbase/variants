@@ -23,7 +23,7 @@ extension CustomProperty {
                     let envVarName = String(value[envVarNameIndex])
                     switch destination {
                     case .project:
-                        return (isEnvVar: true, string: envVarName)
+                        return (isEnvVar: true, string: "System.getenv('"+envVarName+"')")
                     case .fastlane:
                         return (isEnvVar: true, string: "ENV[\""+envVarName+"\"]")
                     }

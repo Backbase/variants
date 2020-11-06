@@ -171,12 +171,9 @@ class AndroidProject: Project {
     }
     // swiftlint:enable function_body_length
     
-    private func storeFastlaneParams(_ properties: [CustomProperty], configuration: AndroidConfiguration) throws {
-        let fastlaneProperties = properties.filter { $0.destination == .fastlane }
-        guard !fastlaneProperties.isEmpty else { return }
-        
+    private func storeFastlaneParams(_ parameters: [CustomProperty], configuration: AndroidConfiguration) throws {
         let fastlaneParamPath = try Path(configuration.path).safeJoin(path: StaticPath.Fastlane.parametersFolder)
-        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: fastlaneProperties)
+        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: parameters)
     }
     
     private let gradleFactory: GradleScriptFactory

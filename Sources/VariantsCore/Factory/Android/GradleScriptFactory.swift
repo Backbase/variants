@@ -48,11 +48,31 @@ class GradleScriptFactory {
         context["variantIdSuffix"] = variant.configIdSuffix
         context["variantName"] = variant.configName
         
-        if let variantProperties = variant.custom?.filter({ $0.destination == .project }) {
+        if let variantProperties = variant.custom?
+            .filter({ $0.destination == .project })
+            .map({ (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+        }) {
             context["variant_properties"] = variantProperties
         }
         
-        if let globalProperties = configuration.custom?.filter({ $0.destination == .project }) {
+        if let globalProperties = configuration.custom?
+            .filter({ $0.destination == .project })
+            .map({ (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+        }) {
             context["global_properties"] = globalProperties
         }
         

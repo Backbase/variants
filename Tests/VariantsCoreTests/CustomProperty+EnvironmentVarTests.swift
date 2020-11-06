@@ -24,7 +24,7 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
         
         XCTAssertEqual(
             environmentVarProperty.processForEnvironment().string,
-            "A_SECRET",
+            "System.getenv('A_SECRET')",
             "After processing `string` should be processed to extract env var name"
         )
     }
@@ -84,6 +84,41 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
             environmentVarProperty.value,
             "After processing `string` should be exactly the same"
         )
+    }
+    
+    func testProcessForEnvironment_forFastlane_array() {
+        let propertiesArray = [
+            CustomProperty(
+                name: "A_PROPERTY",
+                value: "A_VALUE",
+                destination: .fastlane
+            ),
+            CustomProperty(
+                name: "AN_ENV_VAR",
+                value: "{{ envVars.A_SECRET }}",
+                destination: .fastlane
+            )
+        ]
+        
+        let fastlaneParameters = propertiesArray
+            .filter { $0.destination == .fastlane }
+            .map { (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+        }
+        
+        XCTAssertEqual(fastlaneParameters.count, 2)
+        
+        XCTAssertEqual(fastlaneParameters.first?.name, "A_PROPERTY")
+        XCTAssertEqual(fastlaneParameters.first?.value, "A_VALUE")
+        
+        XCTAssertEqual(fastlaneParameters.last?.name, "AN_ENV_VAR")
+        XCTAssertEqual(fastlaneParameters.last?.value, "ENV[\"A_SECRET\"]")
     }
     
     static var allTests = [
