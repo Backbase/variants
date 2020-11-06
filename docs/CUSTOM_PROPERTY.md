@@ -11,7 +11,7 @@ A custom property consists of 3 values:
 
 ### Destination
 
-Destination is an Enum, with three supported destinations:
+Destination is an Enum, with twp supported destinations:
 
 - `project`: 
 Ensures the property is available to be used by your project, either in `variants.gradle` or `variants.xcconfig`, depending on the platform.
