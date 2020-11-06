@@ -16,7 +16,7 @@ public struct iOSVariant: Codable {
     let version_name: String
     let version_number: Int
     private let store_destination: String?
-    let custom: [CustomConfig]?
+    let custom: [CustomProperty]?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
         var customDictionary: [String: String] = [
@@ -27,9 +27,11 @@ public struct iOSVariant: Codable {
             "V_APP_ICON": app_icon ?? target.app_icon
         ]
        
-        custom?.forEach({ config in
-            customDictionary[config.key] = config.value
-        })
+        custom?
+            .filter { $0.destination == .project }
+            .forEach({ config in
+                customDictionary[config.name] = config.value
+            })
         
         return customDictionary
     }
@@ -59,11 +61,6 @@ public struct iOSVariant: Codable {
         else { return .appStore }
         return destination
     }
-}
-
-public struct CustomConfig: Codable {
-    let key: String
-    let value: String
 }
 
 extension iOSVariant {

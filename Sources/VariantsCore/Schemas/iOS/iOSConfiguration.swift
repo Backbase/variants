@@ -10,9 +10,10 @@ import Foundation
 // swiftlint:disable type_name
 
 public struct iOSConfiguration: Codable {
-    public var xcodeproj: String
-    public var targets: [String: iOSTarget]
-    public var variants: [iOSVariant]
+    let xcodeproj: String
+    let targets: [String: iOSTarget]
+    let variants: [iOSVariant]
+    let custom: [CustomProperty]?
     
     var pbxproj: String {
         return xcodeproj+"/project.pbxproj"

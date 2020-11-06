@@ -1,0 +1,54 @@
+{% if variant and configuration %}
+// ==== Variant values ====
+
+rootProject.ext.versionName = "{{ variant.versionName }}"
+rootProject.ext.versionCode = {{ variant.versionCode }}
+rootProject.ext.appIdentifier = "{{ configuration.appIdentifier }}{{ variantIdSuffix }}"
+rootProject.ext.appName = "{{ configuration.appName }}{{ variantName }}"
+{% endif %}
+
+{% if configuration.signing %}
+
+// ==== Signing values ====
+
+rootProject.ext.signingKeyAlias = "{{ configuration.signing.keyAlias }}"
+rootProject.ext.signingKeyPassword = "{{ configuration.signing.keyPassword }}"
+rootProject.ext.signingStoreFile = "{{ configuration.signing.storeFile }}"
+rootProject.ext.signingStorePassword = "{{ configuration.signing.storePassword }}"
+{% endif %}
+
+{% if variant_properties %}
+
+// ==== Variant custom values ====
+
+{% for property in variant_properties %}
+rootProject.ext.{{ property.name }} = "{{ property.value }}"
+{% endfor %}
+{% endif %}
+
+{% if global_properties %}
+
+// ==== Custom values ====
+
+{% for property in global_properties %}
+rootProject.ext.{{ property.name }} = "{{ property.value }}"
+{% endfor %}
+{% endif %}
+
+{% if variant %}
+
+// ==== Wrapper gradle tasks ====
+
+def vBuild = task vBuild
+def vUnitTests = task vUnitTests
+def vUITests = task vUITests
+tasks.whenTaskAdded { task ->
+    if (task.name == "{{ variant.taskBuild }}") {
+        vBuild.dependsOn(task)
+    } else if (task.name == "{{ variant.taskUnitTest }}") {
+        vUnitTests.dependsOn(task)
+    } else if (task.name == "{{ variant.taskUitest }}") {
+        vUITests.dependsOn(task)
+    }
+}
+{% endif %}

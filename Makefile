@@ -41,3 +41,21 @@ distclean:
 .PHONY: clean
 clean: distclean
 	@rm -rf $(BUILDDIR)
+
+.PHONY: test
+test:
+	@swift test
+	@xcodebuild test -scheme VariantsCore 
+
+.PHONY: coverage
+coverage: test
+	@bundle install
+	@bundle exec slather coverage --ignore ../**/*/Xcode\* --scheme VariantsCore Variants.xcodeproj/
+
+.PHONY: lint
+lint:
+	@swiftlint --strict
+
+.PHONY: validation
+validation: lint coverage
+	@echo "Ready to go."

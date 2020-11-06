@@ -35,15 +35,23 @@ class YamlParserTests: XCTestCase {
             
             let customConfigDefault = configuration.ios?
                 .variants.first(where: { $0.name == "default" })?
-                .custom?.first(where: { $0.key == "SAMPLE_CONFIG" })
+                .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigDefault)
             XCTAssertEqual(customConfigDefault?.value, "Production Value")
+            XCTAssertEqual(customConfigDefault?.destination, .project)
             
             let customConfigBeta = configuration.ios?
                 .variants.first(where: { $0.name == "BETA" })?
-                .custom?.first(where: { $0.key == "SAMPLE_CONFIG" })
+                .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigBeta)
             XCTAssertEqual(customConfigBeta?.value, "BETA Value")
+            XCTAssertEqual(customConfigBeta?.destination, .fastlane)
+            
+            let customConfigGlobal = configuration.ios?
+                .custom?.first(where: { $0.name == "SAMPLE_GLOBAL" })
+            XCTAssertNotNil(customConfigGlobal)
+            XCTAssertEqual(customConfigGlobal?.value, "GLOBAL Value iOS")
+            XCTAssertEqual(customConfigGlobal?.destination, .project)
             
         } catch {
             XCTAssertTrue(((error as? DecodingError) == nil))
@@ -77,6 +85,12 @@ class YamlParserTests: XCTestCase {
             XCTAssertNotNil(customConfigTest)
             XCTAssertEqual(customConfigTest?.value, "Sample Fastlane Config")
             XCTAssertEqual(customConfigTest?.destination, .fastlane)
+            
+            let customConfigGlobal = configuration.android?
+                .custom?.first(where: { $0.name == "SAMPLE_GLOBAL" })
+            XCTAssertNotNil(customConfigGlobal)
+            XCTAssertEqual(customConfigGlobal?.value, "GLOBAL Value Android")
+            XCTAssertEqual(customConfigGlobal?.destination, .project)
         } catch {
             XCTAssertTrue(((error as? DecodingError) == nil))
         }

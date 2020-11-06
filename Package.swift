@@ -24,6 +24,10 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
             from: "0.1.0"
+        ),
+        .package(
+            url: "https://github.com/stencilproject/Stencil.git",
+            from: "0.13.0"
         )
     ],
     targets: [
@@ -33,7 +37,8 @@ let package = Package(
                 "PathKit",
                 "Yams",
                 "XcodeProj",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "Stencil"
             ]
         ),
         .target(

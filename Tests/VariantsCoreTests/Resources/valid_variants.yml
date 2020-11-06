@@ -58,14 +58,8 @@ android:
   # ----------------------------------------------------------------------
 
   custom:
-    - name: privateMavenRepoUrl
-      value: https://repo.private.com/android
-      destination: project
-    - name: mvnUser
-      value: envVars.MAVEN_USERNAME
-      destination: project
-    - name: mvnPass
-      value: envVars.MAVEN_PASSWORD
+    - name: SAMPLE_GLOBAL
+      value: GLOBAL Value Android
       destination: project
 
 ios:
@@ -84,8 +78,9 @@ ios:
         version_name: 0.0.1
         version_number: 1
         custom:
-            - key: SAMPLE_CONFIG
+            - name: SAMPLE_CONFIG
               value: Production Value
+              destination: project
       - name: BETA
         id_suffix: beta
         app_icon: AppIcon.beta
@@ -93,5 +88,10 @@ ios:
         version_number: 1
         store_destination: AppCenter
         custom:
-            - key: SAMPLE_CONFIG
+            - name: SAMPLE_CONFIG
               value: BETA Value
+              destination: fastlane
+    custom:
+        - name: SAMPLE_GLOBAL
+          value: GLOBAL Value iOS
+          destination: project

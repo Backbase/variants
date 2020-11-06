@@ -1,3 +1,5 @@
+![develop](https://github.com/Backbase/variants/workflows/develop/badge.svg)
+[![codecov](https://codecov.io/gh/Backbase/variants/branch/develop/graph/badge.svg?token=53TWMUH4KE)](https://codecov.io/gh/Backbase/variants)
 <p align="center">
 <img src="Assets/Examples/variants_logo.svg" title="variants">
 </p>
@@ -127,20 +129,28 @@ ios:
         version_name: 0.0.1
         version_number: 1
         custom:
-            - key: apiBaseUrl
+            - name: apiBaseUrl
               value: https://sample.com/
+              destination: project
       - name: BETA
         id_suffix: beta
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 13
         custom:
-            - key: apiBaseUrl
+            - name: apiBaseUrl
               value: https://sample-beta.com/
+              destination: project
             - key:  OTHER_SWIFT_FLAGS
               value: $(inherited) -DBETA
-            
+              destination: project
 ```
+
+#### Custom configuration
+
+Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane, or neither but set as an environment variable.
+
+See our [Custom Property documentation](docs/CUSTOM_PROPERTY.md) for a better understanding and examples.
 
 ### Setup multiple build variants with full fastlane integration.
 

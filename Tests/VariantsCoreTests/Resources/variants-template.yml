@@ -19,8 +19,6 @@ ios:
       - name: default
         version_name: 0.0.1
         version_number: 1
-        # 'store_destination' can be: AppStore, TestFlight or AppCenter
-        store_destination: AppStore
         #
         # custom: - Not required.
         # You can have as many custom fields as possible.
@@ -43,8 +41,6 @@ ios:
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 1
-        # 'store_destination' can be: AppStore, TestFlight or AppCenter
-        store_destination: AppCenter
         custom:
             - name: OTHER_SWIFT_FLAGS
               value: $(inherited)

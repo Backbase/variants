@@ -67,7 +67,7 @@ class iOSSpecHelper: SpecHelper {
         let projectSpecificInformation = XcodeProjFactory().applicationData()
 
         try projectSpecificInformation
-            .filter { (key, value) in !value.isEmpty }
+            .filter { (_, value) in !value.isEmpty }
             .forEach { (key, value) in
                 let escapedValue = value.replacingOccurrences(of: "/", with: "\\/")
                 try Bash("sed", arguments: "-i", "-e", "s/\(key.placeholder)/\(escapedValue)/g", "\(variantsPath)").run()

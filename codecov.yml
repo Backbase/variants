@@ -1,0 +1,9 @@
+coverage:
+  status:
+    project:
+      core:
+        paths:
+          - Sources/VariantsCore
+      tests:
+        paths:
+          - Tests/VariantsCoreTests

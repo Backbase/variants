@@ -4,15 +4,16 @@
 ### How can it be tested
  -
 
-### Screenshots (if any)
-
-
-#### Task
+### Task
 resolves #X (where `#X` is the number of an issue)
+
+### Overall Unit Test Coverage
+Test Coverage: X%
 
 ### Checklist:
 
-- [ ] I have not introduced new bugs :rofl:
+- [ ] I ran `make validation` with success
+- [ ] I have not introduced new bugs
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented on my code, particularly in hard-to-understand areas
