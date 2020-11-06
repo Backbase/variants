@@ -7,8 +7,6 @@
 
 import Foundation
 
-// swiftlint:disable type_name
-
 public struct AndroidVariant: Codable {
     let name: String
     let versionName: String
