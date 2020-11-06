@@ -9,6 +9,7 @@ import XCTest
 @testable import VariantsCore
 
 class YamlParserTests: XCTestCase {
+    
     func testExtractConfiguration_invalidSpec() {
         let parser = YamlParser()
         do {
@@ -97,6 +98,18 @@ class YamlParserTests: XCTestCase {
     }
     
     func testStoreDestination_iOS() {
+        let storeDestinationAppCenter = CustomProperty(
+            name: "STORE_DESTINATION",
+            value: iOSVariant.Destination.appCenter.rawValue,
+            destination: .fastlane
+        )
+        
+        let storeDestinationAppStore = CustomProperty(
+            name: "STORE_DESTINATION",
+            value: iOSVariant.Destination.appStore.rawValue,
+            destination: .fastlane
+        )
+        
         let parser = YamlParser()
         do {
             guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
@@ -104,11 +117,42 @@ class YamlParserTests: XCTestCase {
             
             XCTAssertEqual(configuration.ios?
                 .variants.first(where: { $0.name == "default" })?
-                            .destination, iOSVariant.Destination.appStore)
+                            .destinationProperty, storeDestinationAppStore)
             
             XCTAssertEqual(configuration.ios?
                 .variants.first(where: { $0.name == "BETA" })?
-                            .destination, iOSVariant.Destination.appCenter)
+                            .destinationProperty, storeDestinationAppCenter)
+            
+        } catch {
+            XCTAssertTrue(((error as? DecodingError) == nil))
+        }
+    }
+    
+    func testStoreDestination_android() {
+        let storeDestinationAppCenter = CustomProperty(
+            name: "STORE_DESTINATION",
+            value: AndroidVariant.Destination.appCenter.rawValue,
+            destination: .fastlane
+        )
+        
+        let storeDestinationPlayStore = CustomProperty(
+            name: "STORE_DESTINATION",
+            value: AndroidVariant.Destination.playStore.rawValue,
+            destination: .fastlane
+        )
+        
+        let parser = YamlParser()
+        do {
+            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            let configuration = try parser.extractConfiguration(from: path, platform: .ios)
+            
+            XCTAssertEqual(configuration.android?
+                .variants.first(where: { $0.name == "default" })?
+                            .destinationProperty, storeDestinationPlayStore)
+            
+            XCTAssertEqual(configuration.android?
+                .variants.first(where: { $0.name == "test" })?
+                            .destinationProperty, storeDestinationAppCenter)
             
         } catch {
             XCTAssertTrue(((error as? DecodingError) == nil))

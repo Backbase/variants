@@ -13,6 +13,7 @@ android:
       task_build: bundleProdRelease
       task_unittest: testProdReleaseUnitTest
       task_uitest: connectedProdReleaseAndroidTest
+      store_destination: PlayStore
       custom:
         - name: SAMPLE_ENV
           value: Sample Environment Config
@@ -24,6 +25,7 @@ android:
       task_build: assembleDevelop
       task_unittest: testDevDebugUnitTest
       task_uitest: connectedDevDebugAndroidTest
+      store_destination: AppCenter
       custom:
         - name: SAMPLE_FASTLANE
           value: Sample Fastlane Config

@@ -15,8 +15,8 @@ public struct iOSVariant: Codable {
     let id_suffix: String?
     let version_name: String
     let version_number: Int
-    private let store_destination: String?
     let custom: [CustomProperty]?
+    private let store_destination: String?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
         var customDictionary: [String: String] = [
