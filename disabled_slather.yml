@@ -7,3 +7,4 @@ output_directory: ./test-reports
 #source_directory: ./Sources/VariantsCore/
 ignore:
   - "../**/*/Xcode*"
+  - "Tests/*"
