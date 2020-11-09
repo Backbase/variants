@@ -75,10 +75,10 @@ class YamlParserTests: XCTestCase {
             
             let customConfigDefault = configuration.android?
                 .variants.first(where: { $0.name == "default" })?
-                .custom?.first(where: { $0.name == "SAMPLE_ENV" })
+                .custom?.first(where: { $0.name == "SAMPLE_PROJECT" })
             XCTAssertNotNil(customConfigDefault)
-            XCTAssertEqual(customConfigDefault?.value, "Sample Environment Config")
-            XCTAssertEqual(customConfigDefault?.destination, .envVar)
+            XCTAssertEqual(customConfigDefault?.value, "Sample Project Default Config")
+            XCTAssertEqual(customConfigDefault?.destination, .project)
             
             let customConfigTest = configuration.android?
                 .variants.first(where: { $0.name == "test" })?

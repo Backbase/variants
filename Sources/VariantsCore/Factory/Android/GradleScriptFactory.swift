@@ -48,12 +48,20 @@ class GradleScriptFactory {
         context["variantIdSuffix"] = variant.configIdSuffix
         context["variantName"] = variant.configName
         
-        if let variantProperties = variant.custom?.filter({ $0.destination == .project }) {
+        if let variantProperties = variant.custom?.literal() {
             context["variant_properties"] = variantProperties
         }
         
-        if let globalProperties = configuration.custom?.filter({ $0.destination == .project }) {
+        if let variantEnvVars = variant.custom?.envVars()  {
+            context["variant_env_vars"] = variantEnvVars
+        }
+        
+        if let globalProperties = configuration.custom?.literal() {
             context["global_properties"] = globalProperties
+        }
+        
+        if let globalEnvVars = configuration.custom?.envVars() {
+            context["global_env_vars"] = globalEnvVars
         }
         
         guard
@@ -68,7 +76,6 @@ class GradleScriptFactory {
         let lines = rendered.split(whereSeparator: \.isNewline)
         let content = lines.joined(separator: "\n")
         
-        print(content)
         return Data(content.utf8)
     }
     
@@ -86,10 +93,39 @@ class GradleScriptFactory {
                 
                 // Write to file
                 try fastlaneParametersFile.write(data)
+                
+                if
+                    let fileContent = try? fastlaneParametersFile.read(),
+                    fileContent == data {
+                    Logger.shared.logInfo("⚙️  ", item: """
+                        '\(fastlaneParametersFile.abbreviate().string)' has been generated with success
+                        """, color: .green)
+                }
             } else {
                 throw TemplateDoesNotExist(templateNames: [gradleScriptFolder.string])
             }
     }
     
     private let templatePath: Path?
+}
+
+fileprivate extension Sequence where Iterator.Element == CustomProperty {
+    func envVars() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .project && $0.processForEnvironment().isEnvVar })
+            .map { (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+            }
+    }
+    
+    func literal() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .project && !$0.processForEnvironment().isEnvVar })
+    }
 }

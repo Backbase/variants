@@ -20,8 +20,13 @@ class FastlaneParametersFactory {
     }
     
     func render(parameters: [CustomProperty]) throws -> Data? {
+        let fastlaneParameters = parameters.literal()
+        let fastlaneEnvVars = parameters.envVars()
+        guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return nil }
+        
         let context = [
-          "parameters": parameters
+            "parameters": fastlaneParameters,
+            "env_vars": fastlaneEnvVars
         ]
 
         guard let path = templatePath else { return nil }
@@ -56,4 +61,25 @@ class FastlaneParametersFactory {
     }
     
     private let templatePath: Path?
+}
+
+fileprivate extension Sequence where Iterator.Element == CustomProperty {
+    func envVars() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .fastlane && $0.processForEnvironment().isEnvVar })
+            .map { (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+            }
+    }
+    
+    func literal() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .fastlane && !$0.processForEnvironment().isEnvVar })
+    }
 }

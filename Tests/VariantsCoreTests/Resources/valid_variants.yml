@@ -15,9 +15,9 @@ android:
       task_uitest: connectedProdReleaseAndroidTest
       store_destination: PlayStore
       custom:
-        - name: SAMPLE_ENV
-          value: Sample Environment Config
-          destination: environment
+        - name: SAMPLE_PROJECT
+          value: Sample Project Default Config
+          destination: project
     - name: test
       id_suffix: dev
       version_name: 0.0.1
@@ -45,9 +45,9 @@ android:
 
   signing:
       key_alias: android
-      key_password: envVars.APP_SIGN_KEY_PASSWORD
+      key_password: APP_SIGN_KEY_PASSWORD
       store_file: /usr/local/android/production.keystore
-      store_password: envVars.APP_SIGN_STORE_PASSWORD
+      store_password: APP_SIGN_STORE_PASSWORD
   
   
   # ----------------------------------------------------------------------

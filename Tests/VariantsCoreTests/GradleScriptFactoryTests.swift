@@ -17,6 +17,8 @@ class GradleScriptFactoryTests: XCTestCase {
         rootProject.ext.versionCode = 101
         rootProject.ext.appIdentifier = "com.test.testapp.test"
         rootProject.ext.appName = "TestApp Test"
+        // ==== Custom values ====
+        rootProject.ext.API_TOKEN = System.getenv('API_TOKEN')
         // ==== Wrapper gradle tasks ====
         def vBuild = task vBuild
         def vUnitTests = task vUnitTests
@@ -61,7 +63,13 @@ class GradleScriptFactoryTests: XCTestCase {
             )
         ],
         signing: nil,
-        custom: []
+        custom: [
+            CustomProperty(
+                name: "API_TOKEN",
+                value: "{{ envVars.API_TOKEN }}",
+                destination: .project
+            )
+        ]
     )
     
     func testRender_correctData() {

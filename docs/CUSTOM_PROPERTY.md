@@ -11,7 +11,7 @@ A custom property consists of 3 values:
 
 ### Destination
 
-Destination is an Enum, with three supported destinations:
+Destination is an Enum, with two supported destinations:
 
 - `project`: 
 Ensures the property is available to be used by your project, either in `variants.gradle` or `variants.xcconfig`, depending on the platform.
@@ -30,33 +30,6 @@ To use such a property in a fastlane file, you can do so as:
 ```ruby
 property = VARIANTS_PARAMS[:NAME_OF_PROPERTY]
 ```
-
-- `environment`:
-Ensures the property will/can be exported as environment variable.
-This creates a temporary file whose path is printed to stderr when running `setup` or `switch` command.
-This is the only thing printed to stderr, so it's easy to be observed/retrieved.
-```sh
-variants switch --platform  android --variant beta
-INFO  [2020-10-20 18:10:12]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-20 18:10:12]: ▸ $ variants switch beta
-INFO  [2020-10-20 18:10:12]: ▸ --------------------------------------------------------------------------------------
-INFO  [2020-10-20 18:10:12]: ▸ Loading configuration
-INFO  [2020-10-20 18:10:12]: ▸ Found variant: BETA
-EXPORT_ENVIRONMENTAL_VARIABLES_PATH=/var/folders/1r/gf8jjzqx7q153_rm9hwm9fq00000gp/T/tmp.ltGjAbZx
-```
-
-The content of this file is in the following format, as example:
-```sh
-export PROPERTY=value
-export ANOTHER_PROPERTY=another-value
-```
-
-The above allows you to fetch the file path from stderr and source the file as below, in order to make those environment variables available:
-```
-source /var/folders/1r/gf8jjzqx7q153_rm9hwm9fq00000gp/T/tmp.ltGjAbZx
-```
-
-If and at which stage you do this is automatically is up to you.
 
 ## Examples
 
@@ -124,3 +97,42 @@ android:
           destination: project
 ```
 Above, both `default` and `BETA` contain a `"BASE_URL"` property, which can be used in your project's network services as base URL, whose value will change depending on the variant you choose. Meanwhile, regardless of the variant chosen, `MAVEN_USERNAME` and `MAVEN_PASSWORD` will be available, allowing you to potentially fetch artefacts from a private repository.
+
+## Working with Environment Variables
+
+We often find ourselves in need to use an API token - or any other secret - in our codebase or CD setup that shouldn't, by any means, be hardcoded nor committed in the repository. It's common in these situations to use _environment variables_.
+
+Custom properties support environment variable values, that will provide the destination (`fastlane` or `project`) access to those values in the appropriate manner. The syntax is simple:
+
+```yaml
+custom:
+    - name: NAME_OF_PROPERTY
+      value: "{{ envVars.NAME_OF_ENV_VAR }}"
+      destination: project
+    - name: DEPLOYMENT_API_TOKEN
+      value: "{{ envVars.APPCENTER_API_TOKEN }}"
+      destination: fastlane
+```
+
+#### Destination `project`
+
+- Android
+Such a property will be written to `variants.gradle`
+```gradle
+// ==== Custom values ====
+rootProject.ext.NAME_OF_PROPERTY = System.getenv('NAME_OF_ENV_VAR')
+```
+- iOS
+Currently, destination `project` with an environment variable value is not supported. It will not write anything to `variants.xcconfig`.
+iOS implementation depends on [Issue #87](https://github.com/Backbase/variants/issues/87)
+
+#### Destination `fastlane`
+
+These properties will continue to be written to `fastlane/parameters/variants_params.rb` and used the same way as a normal property.
+The only difference is where the value comes from:
+
+```ruby
+VARIANTS_PARAMS = {
+    DEPLOYMENT_API_TOKEN: ENV["APPCENTER_API_TOKEN"],
+}.freeze
+```
