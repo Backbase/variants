@@ -14,8 +14,8 @@ import PathKit
 class iOSProject: Project {
     init(
         specHelper: SpecHelper,
-        configFactory: XCConfigFactory = XCConfigFactory(),
-        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
+        configFactory: XCFactory = XCConfigFactory(),
+        fastlaneFactory: FastlaneFactory = FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.configFactory = configFactory
@@ -40,7 +40,7 @@ class iOSProject: Project {
         }
 
         guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == variant.lowercased() }) else {
-            throw ValidationError("Variant \(variant) not found.")
+            throw ValidationError("Variant '\(variant)' not found.")
         }
 
         do {
@@ -112,7 +112,8 @@ class iOSProject: Project {
                 configFactory.createConfig(with: target,
                                            variant: defaultVariant,
                                            xcodeProj: configuration.xcodeproj,
-                                           configPath: configPath)
+                                           configPath: configPath,
+                                           addToXcodeProj: true)
             }
     }
 
@@ -206,6 +207,6 @@ class iOSProject: Project {
                                                  with: fastlaneProperties)
     }
 
-    private let configFactory: XCConfigFactory
-    private let fastlaneFactory: FastlaneParametersFactory
+    private let configFactory: XCFactory
+    private let fastlaneFactory: FastlaneFactory
 }

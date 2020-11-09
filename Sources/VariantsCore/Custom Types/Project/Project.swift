@@ -23,13 +23,9 @@ class Project {
         try specHelper.generate(from: path)
     }
 
-    func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {
-        // No-op
-    }
-
-    func `switch`(to variant: String, spec: String, verbose: Bool) throws {
-        // No-op
-    }
+    // MARK: - No-op
+    func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {}
+    func `switch`(to variant: String, spec: String, verbose: Bool) throws {}
 
     // MARK: - Helper functions
 
