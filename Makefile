@@ -50,7 +50,7 @@ test:
 .PHONY: coverage
 coverage: test
 	@bundle install
-	@bundle exec slather coverage --ignore ../**/*/Xcode\* --scheme VariantsCore Variants.xcodeproj/
+	@bundle exec slather coverage --ignore ../**/*/Xcode\* --ignore Tests/\* --scheme VariantsCore Variants.xcodeproj/
 
 .PHONY: lint
 lint:

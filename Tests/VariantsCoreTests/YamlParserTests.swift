@@ -27,12 +27,15 @@ class YamlParserTests: XCTestCase {
             let configuration = try parser.extractConfiguration(from: path, platform: .ios)
             
             XCTAssertNotNil(configuration.ios)
-            XCTAssertEqual(configuration.ios?.targets.count, 1)
-            XCTAssertEqual(configuration.ios?.targets.first?.value.name, "FrankBank")
-            XCTAssertEqual(configuration.ios?.targets.first?.value.bundleId, "com.backbase.frank.ios")
-            XCTAssertEqual(configuration.ios?.variants.count, 2)
-            XCTAssertEqual(configuration.ios?.variants.first?.name, "default")
-            XCTAssertEqual(configuration.ios?.variants.last?.name, "BETA")
+            if let iosConfiguration = configuration.ios {
+                XCTAssertEqual(iosConfiguration.targets.count, 1)
+                XCTAssertEqual(iosConfiguration.targets.first?.value.name, "FrankBank")
+                XCTAssertEqual(iosConfiguration.targets.first?.value.bundleId, "com.backbase.frank.ios")
+                XCTAssertEqual(iosConfiguration.variants.count, 3)
+                XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("default"))
+                XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("BETA"))
+                XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("STG"))
+            }
             
             let customConfigDefault = configuration.ios?
                 .variants.first(where: { $0.name == "default" })?

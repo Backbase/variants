@@ -11,10 +11,17 @@ import PathKit
 
 public typealias DoesFileExist = (exists: Bool, path: Path?)
 
-struct XCConfigFactory {
-    let xcconfigFileName: String = "variants.xcconfig"
-    let logger: Logger
-    
+protocol XCFactory {
+    func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?)
+    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T: Encodable
+    func createConfig(with target: NamedTarget,
+                      variant: iOSVariant,
+                      xcodeProj: String?,
+                      configPath: Path,
+                      addToXcodeProj: Bool?)
+}
+
+class XCConfigFactory: XCFactory {
     init(logLevel: Bool = false) {
         logger = Logger(verbose: logLevel)
     }
@@ -182,4 +189,7 @@ struct XCConfigFactory {
             logger.logFatal("❌ ", item: "Something went wrong while updating the Info.plist")
         }
     }
+    
+    let xcconfigFileName: String = "variants.xcconfig"
+    let logger: Logger
 }

@@ -93,6 +93,15 @@ ios:
             - name: SAMPLE_CONFIG
               value: BETA Value
               destination: fastlane
+      - name: STG
+        id_suffix: staging
+        version_name: 0.0.1
+        version_number: 1
+        store_destination: AppCenter
+        custom:
+            - name: SAMPLE_CONFIG
+              value: STG Value
+              destination: project
     custom:
         - name: SAMPLE_GLOBAL
           value: GLOBAL Value iOS
