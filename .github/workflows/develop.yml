@@ -16,6 +16,9 @@ jobs:
     - name: Test CLI Package
       run: swift test -v
 
+    - name: Make install
+      run: make install
+      
     - name: Test VariantsCore
       run: xcodebuild test -scheme VariantsCore
 
