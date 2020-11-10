@@ -1,18 +1,15 @@
 ### What does this PR do
- -
+-
 
 ### How can it be tested
- -
+Tell us how to test these changes
 
 ### Task
 resolves #X (where `#X` is the number of an issue)
 
-### Overall Unit Test Coverage
-Test Coverage: X%
-
 ### Checklist:
 
-- [ ] I ran `make validation` with success
+- [ ] I ran `make validation` locally with success
 - [ ] I have not introduced new bugs
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
