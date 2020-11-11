@@ -30,7 +30,7 @@ jobs:
       run: bundle exec slather coverage
 
     - name: Danger
-      run: danger-swift ci
+      run: swift run danger-swift ci
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
