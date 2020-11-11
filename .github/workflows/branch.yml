@@ -29,6 +29,11 @@ jobs:
     - name: Code coverage report
       run: bundle exec slather coverage
 
+    - name: Danger
+      run: danger-swift ci
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
