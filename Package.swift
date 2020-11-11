@@ -28,6 +28,11 @@ let package = Package(
         .package(
             url: "https://github.com/stencilproject/Stencil.git",
             from: "0.13.0"
+        ),
+        .package(
+            name: "danger-swift",
+            url: "https://github.com/danger/swift.git",
+            from: "3.5.0"
         )
     ],
     targets: [
@@ -44,7 +49,8 @@ let package = Package(
         .target(
             name: "Variants",
             dependencies: [
-                "VariantsCore"
+                "VariantsCore",
+                .product(name: "Danger", package: "danger-swift"),
             ]
         ),
         .testTarget(
