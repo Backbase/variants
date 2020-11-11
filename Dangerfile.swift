@@ -27,7 +27,7 @@ let changedFiles = (git.modifiedFiles + git.createdFiles).filter { $0.isInSource
 let hasSourceChanges = (git.modifiedFiles + git.createdFiles).contains { $0.isInSources }
 
 let allSourceFiles = danger.git.modifiedFiles + danger.git.createdFiles
-var bigPRThreshold = 2;
+var bigPRThreshold = 500;
 
 let swiftFilesWithoutCopyright = changedFiles.filter {
     $0.fileType == .swift
@@ -51,7 +51,7 @@ if danger.github?.pullRequest.title.contains("WIP") == true {
 }
 
 // Warn when there is a big PR
-if let additions = danger.github?.pullRequest.additions, let deletions = danger.github?.pullRequest.deletions, additions + deletions > 500 {
+if let additions = danger.github?.pullRequest.additions, let deletions = danger.github?.pullRequest.deletions, additions + deletions > bigPRThreshold {
     warn("Pull request is relatively big. If this PR contains multiple changes, consider splitting it into separate PRs for easier reviews.")
 }
 
