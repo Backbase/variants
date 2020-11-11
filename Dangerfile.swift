@@ -1,3 +1,4 @@
+// swiftlint:disable all
 import Danger
 
 fileprivate extension Danger.File {
@@ -65,4 +66,4 @@ if let additions = danger.github?.pullRequest.additions, let deletions = danger.
 if hasSourceChanges && !git.modifiedFiles.contains(where: { $0.isInTests }) {
     warn("The library files were changed, but the tests remained unmodified. Consider updating or adding to the tests to match the library changes.")
 }
-
+// swiftlint:enable all
