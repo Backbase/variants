@@ -1,4 +1,3 @@
-// swiftlint:disable all
 import Danger
 
 fileprivate extension Danger.File {
@@ -28,7 +27,7 @@ let changedFiles = (git.modifiedFiles + git.createdFiles).filter { $0.isInSource
 let hasSourceChanges = (git.modifiedFiles + git.createdFiles).contains { $0.isInSources }
 
 let allSourceFiles = danger.git.modifiedFiles + danger.git.createdFiles
-var bigPRThreshold = 500;
+var bigPRThreshold = 500
 
 let swiftFilesWithoutCopyright = changedFiles.filter {
     $0.fileType == .swift
@@ -52,8 +51,12 @@ if danger.github?.pullRequest.title.contains("WIP") == true {
 }
 
 // Warn when there is a big PR
-if let additions = danger.github?.pullRequest.additions, let deletions = danger.github?.pullRequest.deletions, additions + deletions > bigPRThreshold {
-    warn("Pull request is relatively big. If this PR contains multiple changes, consider splitting it into separate PRs for easier reviews.")
+if let additions = danger.github?.pullRequest.additions,
+   let deletions = danger.github?.pullRequest.deletions, additions + deletions > bigPRThreshold {
+    warn("""
+        Pull request is relatively big. If this PR contains multiple changes,
+        consider splitting it into separate PRs for easier reviews.
+        """)
 }
 
 // Changelog entries are required for changes to library files.
@@ -64,6 +67,8 @@ if let additions = danger.github?.pullRequest.additions, let deletions = danger.
 
 // Warn when library files has been updated but not tests.
 if hasSourceChanges && !git.modifiedFiles.contains(where: { $0.isInTests }) {
-    warn("The library files were changed, but the tests remained unmodified. Consider updating or adding to the tests to match the library changes.")
+    warn("""
+        The library files were changed, but the tests remained unmodified.
+        Consider updating or adding to the tests to match the library changes.
+        """)
 }
-// swiftlint:enable all

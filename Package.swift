@@ -50,7 +50,7 @@ let package = Package(
             name: "Variants",
             dependencies: [
                 "VariantsCore",
-                .product(name: "Danger", package: "danger-swift"),
+                .product(name: "Danger", package: "danger-swift")
             ]
         ),
         .testTarget(
