@@ -3,8 +3,6 @@ name: "Danger Swift"
 on:
   pull_request:
     types: [ opened, synchronize ]
-    paths:
-      - '**/*.swift'
 
 jobs:
   danger-scan:

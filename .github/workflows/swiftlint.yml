@@ -3,10 +3,6 @@ name: SwiftLint
 on:
   pull_request:
     types: [ opened, synchronize ]
-    paths:
-      - '.github/workflows/swiftlint.yml'
-      - '.swiftlint.yml'
-      - '**/*.swift'
 
 jobs:
   SwiftLint:
