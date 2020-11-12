@@ -13,8 +13,9 @@ import Stencil
 class AndroidProject: Project {
     init(
         specHelper: SpecHelper,
-        gradleFactory: GradleScriptFactory = GradleScriptFactory(),
-        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
+        gradleFactory: GradleFactory = GradleScriptFactory(),
+        fastlaneFactory: FastlaneFactory =
+            FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.gradleFactory = gradleFactory
@@ -179,6 +180,6 @@ class AndroidProject: Project {
         try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: parameters)
     }
     
-    private let gradleFactory: GradleScriptFactory
-    private let fastlaneFactory: FastlaneParametersFactory
+    private let gradleFactory: GradleFactory
+    private let fastlaneFactory: FastlaneFactory
 }

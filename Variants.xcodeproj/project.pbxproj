@@ -88,6 +88,7 @@
 		8EDC54D625554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC54D525554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift */; };
 		8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */; };
 		8EDC550C25592F5800A9CDFF /* iOSProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */; };
+		BEAA71ED255A012900E9D4D9 /* AndroidProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -166,6 +167,7 @@
 		8EDC54D525554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomProperty+EnvironmentVar.swift"; sourceTree = "<group>"; };
 		8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomProperty+EnvironmentVarTests.swift"; sourceTree = "<group>"; };
 		8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSProjectTests.swift; sourceTree = "<group>"; };
+		BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProjectTests.swift; sourceTree = "<group>"; };
 		OBJ_14 /* ConfigurationParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserError.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
@@ -177,7 +179,6 @@
 		OBJ_24 /* FileManager+Temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Temp.swift"; sourceTree = "<group>"; };
 		OBJ_26 /* String+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Error.swift"; sourceTree = "<group>"; };
 		OBJ_27 /* String+Write.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Write.swift"; sourceTree = "<group>"; };
-		OBJ_284 /* test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test; sourceTree = SOURCE_ROOT; };
 		OBJ_286 /* Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Templates; sourceTree = SOURCE_ROOT; };
 		OBJ_287 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = SOURCE_ROOT; };
 		OBJ_289 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -280,6 +281,7 @@
 				8E8A4908255420FC0056F79F /* PlatformDetectorTests.swift */,
 				8E8A490F25543F910056F79F /* SpecHelperTests.swift */,
 				8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */,
+				BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */,
 				8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */,
 				8E1B9C0E254AB51300DD0204 /* Resources */,
 				8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */,
@@ -421,7 +423,6 @@
 				OBJ_7 /* Sources */,
 				OBJ_62 /* Tests */,
 				OBJ_274 /* Products */,
-				OBJ_284 /* test */,
 				OBJ_289 /* LICENSE */,
 				OBJ_290 /* Makefile */,
 				8E1BA141254C433200DD0204 /* Frameworks */,
@@ -718,6 +719,7 @@
 				8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
 				8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */,
+				BEAA71ED255A012900E9D4D9 /* AndroidProjectTests.swift in Sources */,
 				8EDC550C25592F5800A9CDFF /* iOSProjectTests.swift in Sources */,
 				8E8A4909255420FD0056F79F /* PlatformDetectorTests.swift in Sources */,
 				8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */,
