@@ -10,7 +10,6 @@ import PathKit
 import ArgumentParser
 @testable import VariantsCore
 // swiftlint:disable type_name
-// swiftlint:disable colon
 
 class iOSProjectTests: XCTestCase {
     func testProject_initialize() {
@@ -140,70 +139,4 @@ class iOSProjectTests: XCTestCase {
         ("testProject_setup", testProject_setup),
         ("testProject_switch", testProject_switch)
     ]
-}
-
-class MockXCcodeConfigFactory: XCFactory {
-    var writeContentCache: [(content: String, file: Path, force: Bool)] = []
-    var writeJSONCache: [(encodableObject: Encodable, file: Path)] = []
-    var createConfigCache: [(target: NamedTarget,
-                             variant: iOSVariant,
-                             xcodeProj: String?,
-                             configPath: Path,
-                             addToXcodeProj: Bool?)] = []
-    
-    init(logLevel: Bool = false) {
-        logger = Logger(verbose: logLevel)
-    }
-    
-    func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
-        writeContentCache.append((content: stringContent, file: file, force: force))
-        return (true, file)
-    }
-    
-    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T : Encodable {
-        writeJSONCache.append((encodableObject: encodableObject, file: file))
-        return (true, file)
-    }
-    
-    func createConfig(with target: NamedTarget,
-                      variant: iOSVariant,
-                      xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool?) {
-        createConfigCache.append((target: target,
-                                  variant: variant,
-                                  xcodeProj: xcodeProj,
-                                  configPath: configPath,
-                                  addToXcodeProj: addToXcodeProj))
-    }
-    
-    var xcconfigFileName: String = "variants.xcconfig"
-    var logger: Logger
-}
-
-class MockFastlaneFactory: FastlaneFactory {
-    var createParametersCache: [(folder: Path, parameters: [CustomProperty])] = []
-    var renderCache: [[CustomProperty]] = []
-    var writeCache: [(data: Data, fastlaneParametersFolder: Path)] = []
-    
-    func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws {
-        createParametersCache.append((folder: folder, parameters: parameters))
-    }
-    
-    func render(parameters: [CustomProperty]) throws -> Data? {
-        renderCache.append(parameters)
-        return nil
-    }
-    
-    func write(_ data: Data, using fastlaneParametersFolder: Path) throws {
-        writeCache.append((data: data, fastlaneParametersFolder: fastlaneParametersFolder))
-    }
-}
-
-class SpecHelperMock: SpecHelper {
-    var generateCache: [Path] = []
-    
-    override func generate(from path: Path) throws {
-        generateCache.append(path)
-    }
 }

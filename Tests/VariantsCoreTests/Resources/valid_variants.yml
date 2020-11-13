@@ -3,7 +3,7 @@
 #
 
 android:
-  path: path/to/android-project/
+  path: .
   app_name: FrankBank
   app_identifier: com.backbase.frank
   variants:

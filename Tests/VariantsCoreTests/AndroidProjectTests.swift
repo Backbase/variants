@@ -40,7 +40,7 @@ class AndroidProjectTests: XCTestCase {
             fastlaneFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
-
+        
         let wrongSpecPath = "wrong_variants.yml"
         XCTAssertThrowsError(try project.setup(spec: wrongSpecPath, skipFastlane: true, verbose: true),
                              "Spec doesn't exist") { (error) in
@@ -56,17 +56,17 @@ class AndroidProjectTests: XCTestCase {
         if let spec = specPath() {
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: true, verbose: true))
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 0)
-            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
-            XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "default")
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 0)
 
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: false, verbose: true))
-            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 2)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "default")
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.folder.string, "fastlane/parameters/")
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 1)
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.name, "STORE_DESTINATION")
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.value, "appstore")
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.destination, .fastlane)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 3)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.name, "SAMPLE_PROJECT")
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.value, "Sample Project Default Config")
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.destination, .project)
         }
     }
     
@@ -109,19 +109,19 @@ class AndroidProjectTests: XCTestCase {
                 }
             }
 
-            let betaVariant = "beta"
-            XCTAssertNoThrow(try project.switch(to: betaVariant, spec: spec.string, verbose: true))
+            let testVariant = "test"
+            XCTAssertNoThrow(try project.switch(to: testVariant, spec: spec.string, verbose: true))
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.first?.parameters.count, 2)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.first?.parameters.count, 4)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
-            XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "BETA")
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "test")
 
-            let stgVariant = "stg"
-            XCTAssertNoThrow(try project.switch(to: stgVariant, spec: spec.string, verbose: true))
+            let defaultVariant = "default"
+            XCTAssertNoThrow(try project.switch(to: defaultVariant, spec: spec.string, verbose: true))
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 2)
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 1)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 3)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 2)
-            XCTAssertEqual(gradleFactoryMock.createScriptCache.last?.variant.name, "STG")
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.last?.variant.name, "default")
         }
     }
     
@@ -139,57 +139,3 @@ class AndroidProjectTests: XCTestCase {
         ("testProject_switch", testProject_switch)
     ]
 }
-
-class MockGradleScriptFactory: GradleFactory {
-    var writeContentCache: [(data: Data, gradleScriptFolder: Path)] = []
-    var renderContentCache: [(configuration: AndroidConfiguration,
-                            variant: AndroidVariant)] = []
-    var createScriptCache: [(configuration: AndroidConfiguration,
-                             variant: AndroidVariant)] = []
-    
-    init(templatePath: Path? = try? TemplateDirectory().path) {
-        self.templatePath = templatePath
-    }
-    
-    func createScript(with configuration: AndroidConfiguration, variant: AndroidVariant) {
-        createScriptCache.append((configuration: configuration, variant: variant))
-    }
-    
-    func render(with configuration: AndroidConfiguration, variant: AndroidVariant) throws -> Data? {
-        renderContentCache.append((configuration: configuration, variant: variant))
-        return nil
-    }
-    
-    func write(_ data: Data, using gradleScriptFolder: Path) throws {
-        writeContentCache.append((data: data, gradleScriptFolder: gradleScriptFolder))
-    }
-    
-    private let templatePath: Path?
-}
-//
-//class MockFastlaneFactory: FastlaneFactory {
-//    var createParametersCache: [(folder: Path, parameters: [CustomProperty])] = []
-//    var renderCache: [[CustomProperty]] = []
-//    var writeCache: [(data: Data, fastlaneParametersFolder: Path)] = []
-//
-//    func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws {
-//        createParametersCache.append((folder: folder, parameters: parameters))
-//    }
-//
-//    func render(parameters: [CustomProperty]) throws -> Data? {
-//        renderCache.append(parameters)
-//        return nil
-//    }
-//
-//    func write(_ data: Data, using fastlaneParametersFolder: Path) throws {
-//        writeCache.append((data: data, fastlaneParametersFolder: fastlaneParametersFolder))
-//    }
-//}
-//
-//class SpecHelperMock: SpecHelper {
-//    var generateCache: [Path] = []
-//
-//    override func generate(from path: Path) throws {
-//        generateCache.append(path)
-//    }
-//}
