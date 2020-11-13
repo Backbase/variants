@@ -30,7 +30,7 @@ class AndroidProject: Project {
             throw RuntimeError("Unable to load spec '\(spec)'")
         }
 
-        createVariants(with: configuration, spec: spec)
+        try createVariants(with: configuration, spec: spec)
         setupFastlane(with: configuration, skip: skipFastlane)
     }
 
@@ -88,7 +88,13 @@ class AndroidProject: Project {
         try storeFastlaneParams(customProperties, configuration: configuration)
     }
 
-    private func createVariants(with configuration: AndroidConfiguration, spec: String) {}
+    private func createVariants(with configuration: AndroidConfiguration, spec: String) throws {
+        guard let defaultVariant = configuration.variants
+                .first(where: { $0.name.lowercased() == "default" }) else {
+            throw ValidationError("Variant 'default' not found.")
+        }
+        try gradleFactory.createScript(with: configuration, variant: defaultVariant)
+    }
 
     // swiftlint:disable function_body_length
     private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
@@ -131,7 +137,6 @@ class AndroidProject: Project {
                             .first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
                     }
-                    try gradleFactory.createScript(with: configuration, variant: defaultVariant)
                     
                     var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
                     customProperties.append(defaultVariant.destinationProperty)
