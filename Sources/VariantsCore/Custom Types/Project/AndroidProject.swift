@@ -13,8 +13,9 @@ import Stencil
 class AndroidProject: Project {
     init(
         specHelper: SpecHelper,
-        gradleFactory: GradleScriptFactory = GradleScriptFactory(),
-        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
+        gradleFactory: GradleFactory = GradleScriptFactory(),
+        fastlaneFactory: FastlaneFactory =
+            FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.gradleFactory = gradleFactory
@@ -39,7 +40,7 @@ class AndroidProject: Project {
         }
 
         guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == variant.lowercased() }) else {
-            throw ValidationError("Variant \(variant) not found.")
+            throw ValidationError("Variant '\(variant)' not found.")
         }
 
         do {
@@ -175,10 +176,10 @@ class AndroidProject: Project {
     // swiftlint:enable function_body_length
     
     private func storeFastlaneParams(_ parameters: [CustomProperty], configuration: AndroidConfiguration) throws {
-        let fastlaneParamPath = try Path(configuration.path).safeJoin(path: StaticPath.Fastlane.parametersFolder)
-        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: parameters)
+         
+        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder, with: parameters)
     }
     
-    private let gradleFactory: GradleScriptFactory
-    private let fastlaneFactory: FastlaneParametersFactory
+    private let gradleFactory: GradleFactory
+    private let fastlaneFactory: FastlaneFactory
 }
