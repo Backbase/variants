@@ -56,10 +56,10 @@ class AndroidProjectTests: XCTestCase {
         if let spec = specPath() {
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: true, verbose: true))
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 0)
-            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 0)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
 
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: false, verbose: true))
-            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 2)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "default")
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.folder.string, "fastlane/parameters/")
