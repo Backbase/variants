@@ -3,6 +3,9 @@
 
 If `variants init` has been run successfully, you will see a `variants.yml` file in your project directory. This is where we configure the variants for our project.
 
+### Where do values go?
+First, it is important to note that the values from the configuration will be placed in multiple locations. For example, values for fastlane are stored in `./fastlane/parameters`, while gradle values are stored in `./gradleScripts/variants.gradle`. For custom properties, these locations are explicity set with the `destination` value. For others, they are placed in a location by default, since we already know where those values should be used.
+
 ### Configuring project
 - `path`: Path to the base directory of the Android project. Typically this would be `.` if you generated the variants template in the base directory.
 - `app_name`: The name of the application, ex: `Frank Bank`
@@ -23,3 +26,13 @@ Each variant can also have custom values if your needs were not met by the stand
 
 ### Generating files
 Once your project has been configured, you can setup the project with `variants setup`. Note that this generates files for your default variant. If you wish to setup a project for a non-default variant, first run the setup command `variants setup` and then switch to your chosen variant, `variants switch --platform android --variant test`. More information on commands can be found in the project README.
+
+### Updating module `build.gradle`
+Lastly, after your project has generated all the necessary files using variants, you must update your `build.gradle` to access these variables. This is simple, just add the reference to your gradle variants inside `build.gradle`, ex: `apply from: '../gradleScripts/variants.gradle'`, and then refer to those variables.
+```defaultConfig {
+        applicationId rootProject.ext.appIdentifier
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+    }
