@@ -79,13 +79,10 @@ class AndroidProject: Project {
         // Create script 'variants.gradle' whose
         // destination are set as '.project'
         try gradleFactory.createScript(with: configuration, variant: variant)
-        
-        var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
-        customProperties.append(variant.destinationProperty)
-        
+
         // Create 'variants_params.rb' with parameters whose
         // destination are set as '.fastlane'
-        try storeFastlaneParams(customProperties, configuration: configuration)
+        try storeFastlaneParams(for: variant, configuration: configuration)
     }
 
     private func createVariants(with configuration: AndroidConfiguration, spec: String) throws {
@@ -137,13 +134,10 @@ class AndroidProject: Project {
                             .first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
                     }
-                    
-                    var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
-                    customProperties.append(defaultVariant.destinationProperty)
-                    
+
                     // Create 'variants_params.rb' with parameters whose
                     // destination are set as '.fastlane'
-                    try storeFastlaneParams(customProperties, configuration: configuration)
+                    try storeFastlaneParams(for: defaultVariant, configuration: configuration)
                     
                     setupCompleteMessage =
                         """
@@ -180,9 +174,14 @@ class AndroidProject: Project {
     }
     // swiftlint:enable function_body_length
     
-    private func storeFastlaneParams(_ parameters: [CustomProperty], configuration: AndroidConfiguration) throws {
-         
-        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder, with: parameters)
+    private func storeFastlaneParams(for variant: AndroidVariant, configuration: AndroidConfiguration) throws {
+        var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        let packageNameProperty = CustomProperty(name: Constants.packageNameKey,
+                                                 value: configuration.appIdentifier+variant.configIdSuffix,
+                                                 destination: .fastlane)
+        customProperties.append(packageNameProperty)
+        customProperties.append(variant.destinationProperty)
+        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder, with: customProperties)
     }
     
     private let gradleFactory: GradleFactory
