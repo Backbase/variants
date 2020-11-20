@@ -13,8 +13,9 @@ import Stencil
 class AndroidProject: Project {
     init(
         specHelper: SpecHelper,
-        gradleFactory: GradleScriptFactory = GradleScriptFactory(),
-        fastlaneFactory: FastlaneParametersFactory = FastlaneParametersFactory(),
+        gradleFactory: GradleFactory = GradleScriptFactory(),
+        fastlaneFactory: FastlaneFactory =
+            FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.gradleFactory = gradleFactory
@@ -29,7 +30,7 @@ class AndroidProject: Project {
             throw RuntimeError("Unable to load spec '\(spec)'")
         }
 
-        createVariants(with: configuration, spec: spec)
+        try createVariants(with: configuration, spec: spec)
         setupFastlane(with: configuration, skip: skipFastlane)
     }
 
@@ -39,7 +40,7 @@ class AndroidProject: Project {
         }
 
         guard let desiredVariant = configuration.variants.first(where: { $0.name.lowercased() == variant.lowercased() }) else {
-            throw ValidationError("Variant \(variant) not found.")
+            throw ValidationError("Variant '\(variant)' not found.")
         }
 
         do {
@@ -78,16 +79,19 @@ class AndroidProject: Project {
         // Create script 'variants.gradle' whose
         // destination are set as '.project'
         try gradleFactory.createScript(with: configuration, variant: variant)
-        
-        var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
-        customProperties.append(variant.destinationProperty)
-        
+
         // Create 'variants_params.rb' with parameters whose
         // destination are set as '.fastlane'
-        try storeFastlaneParams(customProperties, configuration: configuration)
+        try storeFastlaneParams(for: variant, configuration: configuration)
     }
 
-    private func createVariants(with configuration: AndroidConfiguration, spec: String) {}
+    private func createVariants(with configuration: AndroidConfiguration, spec: String) throws {
+        guard let defaultVariant = configuration.variants
+                .first(where: { $0.name.lowercased() == "default" }) else {
+            throw ValidationError("Variant 'default' not found.")
+        }
+        try gradleFactory.createScript(with: configuration, variant: defaultVariant)
+    }
 
     // swiftlint:disable function_body_length
     private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
@@ -130,14 +134,10 @@ class AndroidProject: Project {
                             .first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
                     }
-                    try gradleFactory.createScript(with: configuration, variant: defaultVariant)
-                    
-                    var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
-                    customProperties.append(defaultVariant.destinationProperty)
-                    
+
                     // Create 'variants_params.rb' with parameters whose
                     // destination are set as '.fastlane'
-                    try storeFastlaneParams(customProperties, configuration: configuration)
+                    try storeFastlaneParams(for: defaultVariant, configuration: configuration)
                     
                     setupCompleteMessage =
                         """
@@ -174,11 +174,16 @@ class AndroidProject: Project {
     }
     // swiftlint:enable function_body_length
     
-    private func storeFastlaneParams(_ parameters: [CustomProperty], configuration: AndroidConfiguration) throws {
-        let fastlaneParamPath = try Path(configuration.path).safeJoin(path: StaticPath.Fastlane.parametersFolder)
-        try fastlaneFactory.createParametersFile(in: fastlaneParamPath, with: parameters)
+    private func storeFastlaneParams(for variant: AndroidVariant, configuration: AndroidConfiguration) throws {
+        var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        let packageNameProperty = CustomProperty(name: Constants.packageNameKey,
+                                                 value: configuration.appIdentifier+variant.configIdSuffix,
+                                                 destination: .fastlane)
+        customProperties.append(packageNameProperty)
+        customProperties.append(variant.destinationProperty)
+        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder, with: customProperties)
     }
     
-    private let gradleFactory: GradleScriptFactory
-    private let fastlaneFactory: FastlaneParametersFactory
+    private let gradleFactory: GradleFactory
+    private let fastlaneFactory: FastlaneFactory
 }

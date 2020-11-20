@@ -96,7 +96,7 @@ class YamlParserTests: XCTestCase {
             XCTAssertNotNil(configuration.android)
             XCTAssertEqual(configuration.android?.appName, "FrankBank")
             XCTAssertEqual(configuration.android?.appIdentifier, "com.backbase.frank")
-            XCTAssertEqual(configuration.android?.path, "path/to/android-project/")
+            XCTAssertEqual(configuration.android?.path, ".")
             XCTAssertEqual(configuration.android?.variants.count, 2)
             XCTAssertEqual(configuration.android?.variants.first?.name, "default")
             XCTAssertEqual(configuration.android?.variants.last?.name, "test")
