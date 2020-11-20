@@ -79,6 +79,9 @@ ios:
       - name: default
         version_name: 0.0.1
         version_number: 1
+        match:
+            url: "git@github.com:sample/match.git"
+            type: appstore
         custom:
             - name: SAMPLE_CONFIG
               value: Production Value
@@ -89,6 +92,9 @@ ios:
         version_name: 0.0.1
         version_number: 1
         store_destination: AppCenter
+        match:
+            url: "git@github.com:sample/enterprise-match.git"
+            type: enterprise
         custom:
             - name: SAMPLE_CONFIG
               value: BETA Value
@@ -98,6 +104,9 @@ ios:
         version_name: 0.0.1
         version_number: 1
         store_destination: AppCenter
+        match:
+            url: "git@github.com:sample/enterprise-match.git"
+            type: enterprise
         custom:
             - name: SAMPLE_CONFIG
               value: STG Value

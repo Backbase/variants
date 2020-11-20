@@ -13,7 +13,8 @@ class YamlParserTests: XCTestCase {
     func testExtractConfiguration_invalidSpec() {
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/invalid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/invalid_variants", ofType: "yml") else { return }
             _ = try parser.extractConfiguration(from: path, platform: .ios)
         } catch {
             XCTAssertTrue(((error as? DecodingError) != nil))
@@ -23,8 +24,11 @@ class YamlParserTests: XCTestCase {
     func testExtractConfiguration_valid_iOS() {
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .ios)
+            
+            // MARK: - iOS Target Information
             
             XCTAssertNotNil(configuration.ios)
             if let iosConfiguration = configuration.ios {
@@ -36,6 +40,8 @@ class YamlParserTests: XCTestCase {
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("BETA"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("STG"))
             }
+            
+            // MARK: - iOS Custom Properties
             
             let customConfigDefault = configuration.ios?
                 .variants.first(where: { $0.name == "default" })?
@@ -57,6 +63,22 @@ class YamlParserTests: XCTestCase {
             XCTAssertEqual(customConfigGlobal?.value, "GLOBAL Value iOS")
             XCTAssertEqual(customConfigGlobal?.destination, .project)
             
+            // MARK: - iOS Match Configuration
+            
+            let defaultMatchConfiguration = configuration.ios?
+                .variants.first(where: { $0.name == "default" })?
+                .match
+            XCTAssertNotNil(defaultMatchConfiguration)
+            XCTAssertEqual(defaultMatchConfiguration?.gitURL, "git@github.com:sample/match.git")
+            XCTAssertEqual(defaultMatchConfiguration?.type, .appstore)
+            
+            let stagingMatchConfiguration = configuration.ios?
+                .variants.first(where: { $0.name == "STG" })?
+                .match
+            XCTAssertNotNil(stagingMatchConfiguration)
+            XCTAssertEqual(stagingMatchConfiguration?.gitURL, "git@github.com:sample/enterprise-match.git")
+            XCTAssertEqual(stagingMatchConfiguration?.type, .enterprise)
+            
         } catch {
             XCTAssertTrue(((error as? DecodingError) == nil))
         }
@@ -65,7 +87,8 @@ class YamlParserTests: XCTestCase {
     func testExtractConfiguration_valid_android() {
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .android)
             
             XCTAssertNotNil(configuration.android)
@@ -115,7 +138,8 @@ class YamlParserTests: XCTestCase {
         
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .ios)
             
             XCTAssertEqual(configuration.ios?
@@ -146,7 +170,8 @@ class YamlParserTests: XCTestCase {
         
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .ios)
             
             XCTAssertEqual(configuration.android?
