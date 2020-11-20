@@ -8,6 +8,8 @@
 import XCTest
 @testable import VariantsCore
 
+// swiftlint:disable function_body_length
+
 class YamlParserTests: XCTestCase {
     
     func testExtractConfiguration_invalidSpec() {
@@ -194,3 +196,4 @@ class YamlParserTests: XCTestCase {
         ("testStoreDestination_iOS", testStoreDestination_iOS)
     ]
 }
+// swiftlint:enable function_body_length
