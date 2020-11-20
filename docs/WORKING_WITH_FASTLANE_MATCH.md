@@ -12,6 +12,8 @@ If you desire to use Match, follow the instructions provided in the [Fastlane do
 
 Now that your Match repo(s) exist, you can work in your `variants.yml` spec, where you can provide a `match` section with a few properties for each variant. It takes `url` and `type`:
 
+| Property | Explanation |
+| ------- | ------------- |
 | `url` | The URL to a Match git repository |
 | `type` | One of _development_, _adhoc_, _appstore_, _enterprise_ (For more information, see [Match documentation](https://docs.fastlane.tools/actions/match/) |
 
@@ -88,6 +90,8 @@ MATCH_PARAMS = {
 }.freeze
 ```
 
+| Key(s) | Explanation |
+| ------- | ------------- |
 | _MATCH_KEYCHAIN_NAME_, _MATCH_KEYCHAIN_PASSWORD_  | A temporary keychain is created only when running on CI, therfore the values for the environment variables `MATCH_KEYCHAIN_*` could be anything you desire on that CI machine, as the keychain will be deleted after every run. However, since a keychain won't be created when running this locally, you have to set local environment variables `MATCH_KEYCHAIN_NAME` and `MATCH_KEYCHAIN_PASSWORD` to an existing keychain name and password in your machine. |
 | _MATCH_GIT_BASIC_AUTHORIZATION_ | If your machine is currently using SSH to authenticate with GitHub, you'll want to use a git URL, otherwise, you may see an authentication error when you attempt to use match. Alternatively, you can set a basic authorization for match. See [Match documentation](https://docs.fastlane.tools/actions/match/#git-storage-on-github). |
 | _MATCH_PASSWORD_ | Git repo encryption password, the password used to encrypt the Match git repository when it was created in the first place. |
