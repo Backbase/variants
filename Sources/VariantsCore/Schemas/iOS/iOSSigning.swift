@@ -50,7 +50,7 @@ extension iOSSigning {
                 let stringValue = property.value as? String
                 let typeValue = (property.value as? Type)?.rawValue
                 if let value = stringValue ?? typeValue {
-                    customProperties.append(CustomProperty(name: label,
+                    customProperties.append(CustomProperty(name: label.uppercased(),
                                                            value: value,
                                                            destination: .fastlane))
                 }
