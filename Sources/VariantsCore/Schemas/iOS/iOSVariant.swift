@@ -15,7 +15,7 @@ public struct iOSVariant: Codable {
     let id_suffix: String?
     let version_name: String
     let version_number: Int
-    let match: Match?
+    let signing: iOSSigning?
     let custom: [CustomProperty]?
     internal let store_destination: String?
     
