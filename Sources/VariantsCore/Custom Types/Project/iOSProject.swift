@@ -15,11 +15,11 @@ class iOSProject: Project {
     init(
         specHelper: SpecHelper,
         configFactory: XCFactory = XCConfigFactory(),
-        fastlaneFactory: ParametersFactory = FastlaneParametersFactory(),
+        parametersFactory: ParametersFactory = FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.configFactory = configFactory
-        self.fastlaneFactory = fastlaneFactory
+        self.parametersFactory = parametersFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
 
@@ -93,6 +93,10 @@ class iOSProject: Project {
                 // Create 'variants_params.rb' with parameters whose
                 // destination are set as '.fastlane'
                 try? storeFastlaneParams(customProperties)
+                
+                try? parametersFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                                                         renderTemplate: StaticPath.Template.matchParametersFileName,
+                                                         with: variant.signing?.customProperties() ?? [])
             }
     }
 
@@ -168,6 +172,10 @@ class iOSProject: Project {
                     // destination are set as '.fastlane'
                     try storeFastlaneParams(customProperties)
                     
+                    try parametersFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                                                             renderTemplate: StaticPath.Template.matchParametersFileName,
+                                                             with: defaultVariant.signing?.customProperties() ?? [])
+                    
                     setupCompleteMessage =
                         """
 
@@ -203,11 +211,11 @@ class iOSProject: Project {
     private func storeFastlaneParams(_ properties: [CustomProperty]) throws {
         let fastlaneProperties = properties.filter { $0.destination == .fastlane }
         guard !fastlaneProperties.isEmpty else { return }
-        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+        try parametersFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
                                                  renderTemplate: StaticPath.Template.fastlaneParametersFileName,
                                                  with: fastlaneProperties)
     }
 
     private let configFactory: XCFactory
-    private let fastlaneFactory: ParametersFactory
+    private let parametersFactory: ParametersFactory
 }

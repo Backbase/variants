@@ -41,6 +41,25 @@ extension iOSSigning {
     }
 }
 
+extension iOSSigning {
+    func customProperties() -> [CustomProperty] {
+        var customProperties: [CustomProperty] = []
+        let mirroredObject = Mirror(reflecting: self)
+        for (_, property) in mirroredObject.children.enumerated() {
+            if let label = property.label {
+                let stringValue = property.value as? String
+                let typeValue = (property.value as? Type)?.rawValue
+                if let value = stringValue ?? typeValue {
+                    customProperties.append(CustomProperty(name: label,
+                                                           value: value,
+                                                           destination: .fastlane))
+                }
+            }
+        }
+        return customProperties
+    }
+}
+
 infix operator ~: AdditionPrecedence
 extension iOSSigning {
     static func ~ (lhs: iOSSigning, rhs: iOSSigning?) throws -> iOSSigning {

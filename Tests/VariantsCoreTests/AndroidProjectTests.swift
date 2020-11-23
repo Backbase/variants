@@ -19,7 +19,7 @@ class AndroidProjectTests: XCTestCase {
         let project = AndroidProject(
             specHelper: specHelperMock,
             gradleFactory: gradleFactoryMock,
-            fastlaneFactory: fastlaneFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
 
@@ -37,7 +37,7 @@ class AndroidProjectTests: XCTestCase {
         let project = AndroidProject(
             specHelper: specHelperMock,
             gradleFactory: gradleFactoryMock,
-            fastlaneFactory: fastlaneFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
         
@@ -88,7 +88,7 @@ class AndroidProjectTests: XCTestCase {
         let project = AndroidProject(
             specHelper: specHelperMock,
             gradleFactory: gradleFactoryMock,
-            fastlaneFactory: fastlaneFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
 
