@@ -94,7 +94,7 @@ class iOSProject: Project {
                 // destination are set as '.fastlane'
                 try? storeFastlaneParams(customProperties)
                 
-                try? parametersFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                try? parametersFactory.createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
                                                          renderTemplate: StaticPath.Template.matchParametersFileName,
                                                          with: variant.signing?.customProperties() ?? [])
             }
@@ -172,7 +172,7 @@ class iOSProject: Project {
                     // destination are set as '.fastlane'
                     try storeFastlaneParams(customProperties)
                     
-                    try parametersFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                    try parametersFactory.createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
                                                              renderTemplate: StaticPath.Template.matchParametersFileName,
                                                              with: defaultVariant.signing?.customProperties() ?? [])
                     
@@ -211,7 +211,7 @@ class iOSProject: Project {
     private func storeFastlaneParams(_ properties: [CustomProperty]) throws {
         let fastlaneProperties = properties.filter { $0.destination == .fastlane }
         guard !fastlaneProperties.isEmpty else { return }
-        try parametersFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+        try parametersFactory.createParametersFile(in: StaticPath.Fastlane.variantsParametersFile,
                                                  renderTemplate: StaticPath.Template.fastlaneParametersFileName,
                                                  with: fastlaneProperties)
     }

@@ -65,7 +65,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
     func testFileWrite_correctOutput() {
         let basePath = Path("./")
         do {
-            let fastlaneParametersPath = try Path("fastlane").safeJoin(path: Path("parameters/"))
+            let fastlaneParametersPath = try Path("fastlane").safeJoin(path: Path("parameters/variants_params.rb"))
             if !fastlaneParametersPath.exists {
                 XCTAssertNoThrow(try fastlaneParametersPath.mkpath())
             }
@@ -73,9 +73,8 @@ class FastlaneParametersFactoryTests: XCTestCase {
             let factory = FastlaneParametersFactory(templatePath: basePath)
             XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: fastlaneParametersPath))
             
-            let fastlaneParametersFile = Path(fastlaneParametersPath.string+"/variants_params.rb")
-            XCTAssertTrue(fastlaneParametersFile.exists)
-            XCTAssertEqual(try fastlaneParametersFile.read(), correctOutput)
+            XCTAssertTrue(fastlaneParametersPath.exists)
+            XCTAssertEqual(try fastlaneParametersPath.read(), correctOutput)
             
         } catch {
             XCTFail("'Try' should not throw - "+error.localizedDescription)

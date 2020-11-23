@@ -63,9 +63,9 @@ class iOSProjectTests: XCTestCase {
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: false, verbose: true))
             XCTAssertEqual(xcFactoryMock.createConfigCache.count, 2)
             XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 2)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.folder.string, "fastlane/parameters/")
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.file.string, "fastlane/parameters/match_params.rb")
             XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.count, 4)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.name, "teamName")
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.name, "TEAMNAME")
             XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.value, "BACKBASE EUROPE B.V.")
             XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.destination, .fastlane)
         }

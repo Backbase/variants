@@ -181,7 +181,7 @@ class AndroidProject: Project {
                                                  destination: .fastlane)
         customProperties.append(packageNameProperty)
         customProperties.append(variant.destinationProperty)
-        try parametersFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+        try parametersFactory.createParametersFile(in: StaticPath.Fastlane.variantsParametersFile,
                                                  renderTemplate: StaticPath.Template.fastlaneParametersFileName,
                                                  with: customProperties)
     }

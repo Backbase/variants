@@ -10,12 +10,12 @@ import PathKit
 @testable import VariantsCore
 
 class MockFastlaneFactory: ParametersFactory {
-    var createParametersCache: [(folder: Path, renderTemplate: String, parameters: [CustomProperty])] = []
+    var createParametersCache: [(file: Path, renderTemplate: String, parameters: [CustomProperty])] = []
     var renderCache: [[CustomProperty]] = []
-    var writeCache: [(data: Data, fastlaneParametersFolder: Path)] = []
+    var writeCache: [(data: Data, parametersFile: Path)] = []
     
-    func createParametersFile(in folder: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
-        createParametersCache.append((folder: folder, renderTemplate: renderTemplate, parameters: parameters))
+    func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
+        createParametersCache.append((file: file, renderTemplate: renderTemplate, parameters: parameters))
     }
     
     func render(parameters: [CustomProperty], renderTemplate: String) throws -> Data? {
@@ -23,8 +23,8 @@ class MockFastlaneFactory: ParametersFactory {
         return nil
     }
     
-    func write(_ data: Data, using fastlaneParametersFolder: Path) throws {
-        writeCache.append((data: data, fastlaneParametersFolder: fastlaneParametersFolder))
+    func write(_ data: Data, using parametersFile: Path) throws {
+        writeCache.append((data: data, parametersFile: parametersFile))
     }
 }
 

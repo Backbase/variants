@@ -16,7 +16,8 @@ struct StaticPath {
     struct Fastlane {
         static let baseFolder = Path("fastlane/")
         static let parametersFolder = Path("fastlane/parameters/")
-        static let variantsParametersFileName = "variants_params.rb"
+        static let variantsParametersFile = Path("fastlane/parameters/variants_params.rb")
+        static let matchParametersFile = Path("fastlane/parameters/match_params.rb")
     }
     
     struct Gradle {

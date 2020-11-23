@@ -10,9 +10,9 @@ import Stencil
 import PathKit
 
 protocol ParametersFactory {
-    func createParametersFile(in folder: Path, renderTemplate: String, with parameters: [CustomProperty]) throws
+    func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws
     func render(parameters: [CustomProperty], renderTemplate: String) throws -> Data?
-    func write(_ data: Data, using fastlaneParametersFolder: Path) throws
+    func write(_ data: Data, using parametersFile: Path) throws
 }
 
 class FastlaneParametersFactory: ParametersFactory {
@@ -20,9 +20,9 @@ class FastlaneParametersFactory: ParametersFactory {
         self.templatePath = templatePath
     }
     
-    func createParametersFile(in folder: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
+    func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
         guard let data = try render(parameters: parameters, renderTemplate: renderTemplate) else { return }
-        try write(data, using: folder)
+        try write(data, using: file)
     }
     
     func render(parameters: [CustomProperty], renderTemplate: String) throws -> Data? {
@@ -47,23 +47,22 @@ class FastlaneParametersFactory: ParametersFactory {
         return Data(content.utf8)
     }
     
-    func write(_ data: Data, using fastlaneParametersFolder: Path) throws {
-            if fastlaneParametersFolder.isDirectory, fastlaneParametersFolder.exists {
-                let fastlaneParametersFile = Path(fastlaneParametersFolder.string+StaticPath
-                                                    .Fastlane.variantsParametersFileName)
-                
-                // Only proceed to write to file if such doesn't yet exist
-                // Or does exist and 'isWritable'
-                guard !fastlaneParametersFile.exists
-                        || fastlaneParametersFile.isWritable else {
-                    throw TemplateDoesNotExist(templateNames: [fastlaneParametersFolder.string])
-                }
-                
-                // Write to file
-                try fastlaneParametersFile.write(data)
-            } else {
-                throw TemplateDoesNotExist(templateNames: [fastlaneParametersFolder.string])
+    func write(_ data: Data, using parametersFile: Path) throws {
+        let parentFolder = parametersFile.parent()
+        if parentFolder.isDirectory, parentFolder.exists {
+            
+            // Only proceed to write to file if such doesn't yet exist
+            // Or does exist and 'isWritable'
+            guard !parametersFile.exists
+                    || parametersFile.isWritable else {
+                throw TemplateDoesNotExist(templateNames: [parentFolder.string])
             }
+            
+            // Write to file
+            try parametersFile.write(data)
+        } else {
+            throw TemplateDoesNotExist(templateNames: [parentFolder.string])
+        }
     }
     
     private let templatePath: Path?

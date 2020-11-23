@@ -10,10 +10,11 @@ MATCH_PARAMS = {
   # Match repository password, used to decrypt files
   MATCH_PASSWORD: ENV['MATCH_PASSWORD'],
   
-{% if parameterss %}
+{% if parameters %}
   # Signing properties coming from Variants YAML spec. Do not change manually
 {% for param in parameters %}
   {{ param.name }}: "{{ param.value }}",
 {% endfor %}
+
 {% endif %}
 }.freeze

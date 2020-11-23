@@ -59,6 +59,6 @@ public struct iOSConfiguration: Codable {
         self.targets = try container.decode([String: iOSTarget].self, forKey: .targets)
         self.variants = definiteVariants
         self.signing = nil
-        self.custom = try container.decode([CustomProperty].self, forKey: .custom)
+        self.custom = try? container.decode([CustomProperty].self, forKey: .custom)
     }
 }
