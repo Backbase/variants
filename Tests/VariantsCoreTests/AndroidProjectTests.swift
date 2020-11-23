@@ -62,11 +62,21 @@ class AndroidProjectTests: XCTestCase {
             XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 2)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "default")
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.folder.string, "fastlane/parameters/")
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 3)
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.name, "SAMPLE_PROJECT")
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.value, "Sample Project Default Config")
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.first?.destination, .project)
+            
+            let fastlaneFactoryLastRequest = fastlaneFactoryMock.createParametersCache.last
+            XCTAssertEqual(fastlaneFactoryLastRequest?.folder.string, "fastlane/parameters/")
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.count, 4)
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.name, "SAMPLE_PROJECT")
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.value, "Sample Project Default Config")
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.destination, .project)
+            
+            let packageProperty = fastlaneFactoryMock.createParametersCache
+                .last?.parameters.first(where: { $0.name == "PACKAGE_NAME" })
+            XCTAssertNotNil(packageProperty)
+            if let packageProperty = packageProperty {
+                XCTAssertEqual(packageProperty.value, "com.backbase.frank")
+                XCTAssertEqual(packageProperty.destination, .fastlane)
+            }
         }
     }
     
@@ -112,14 +122,14 @@ class AndroidProjectTests: XCTestCase {
             let testVariant = "test"
             XCTAssertNoThrow(try project.switch(to: testVariant, spec: spec.string, verbose: true))
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.first?.parameters.count, 4)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.first?.parameters.count, 5)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "test")
 
             let defaultVariant = "default"
             XCTAssertNoThrow(try project.switch(to: defaultVariant, spec: spec.string, verbose: true))
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 2)
-            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 3)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 4)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 2)
             XCTAssertEqual(gradleFactoryMock.createScriptCache.last?.variant.name, "default")
         }

@@ -8,7 +8,9 @@
 import Foundation
 import PathKit
 
-struct Constants {}
+struct Constants {
+    static let packageNameKey = "PACKAGE_NAME"
+}
 
 struct StaticPath {
     struct Fastlane {
