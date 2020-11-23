@@ -49,8 +49,7 @@ let package = Package(
         .target(
             name: "Variants",
             dependencies: [
-                "VariantsCore",
-                .product(name: "Danger", package: "danger-swift")
+                "VariantsCore"
             ]
         ),
         .testTarget(
