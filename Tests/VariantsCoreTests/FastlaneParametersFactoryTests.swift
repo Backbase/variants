@@ -9,6 +9,8 @@ import XCTest
 import PathKit
 @testable import VariantsCore
 
+// swiftlint:disable function_body_length
+
 let parameters = [
     CustomProperty(name: "sample", value: "sample-value", destination: .project),
     CustomProperty(name: "sample-2", value: "sample-2-value", destination: .fastlane),
@@ -138,3 +140,4 @@ class FastlaneParametersFactoryTests: XCTestCase {
         }
     }
 }
+// swiftlint:enable function_body_length

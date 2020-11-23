@@ -7,6 +7,8 @@
 
 import Foundation
 
+// swiftlint:disable type_name
+
 struct iOSSigning: Codable {
     let teamName: String?
     let teamID: String?
@@ -45,7 +47,7 @@ extension iOSSigning {
     func customProperties() -> [CustomProperty] {
         var customProperties: [CustomProperty] = []
         let mirroredObject = Mirror(reflecting: self)
-        for (_, property) in mirroredObject.children.enumerated() {
+        for property in mirroredObject.children {
             if let label = property.label {
                 let stringValue = property.value as? String
                 let typeValue = (property.value as? Type)?.rawValue

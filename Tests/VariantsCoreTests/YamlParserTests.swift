@@ -9,6 +9,7 @@ import XCTest
 @testable import VariantsCore
 
 // swiftlint:disable function_body_length
+// swiftlint:disable file_length
 
 class YamlParserTests: XCTestCase {
     
@@ -255,12 +256,19 @@ class YamlParserTests: XCTestCase {
     }
     
     static var allTests = [
-        ("testExtractConfiguration_invalidSpec", testExtractConfiguration_invalidSpec),
-        ("testExtractConfiguration_invalid_iOS_missingExportMethod", testExtractConfiguration_invalid_iOS_missingExportMethod),
-        ("testExtractConfiguration_invalid_iOS_missingSigningConfiguration", testExtractConfiguration_invalid_iOS_missingSigningConfiguration),
-        ("testExtractConfiguration_valid_iOS", testExtractConfiguration_valid_iOS),
-        ("testExtractConfiguration_valid_android", testExtractConfiguration_valid_android),
-        ("testStoreDestination_iOS", testStoreDestination_iOS)
+        ("testExtractConfiguration_invalidSpec",
+         testExtractConfiguration_invalidSpec),
+        ("testExtractConfiguration_invalid_iOS_missingExportMethod",
+         testExtractConfiguration_invalid_iOS_missingExportMethod),
+        ("testExtractConfiguration_invalid_iOS_missingSigningConfiguration",
+         testExtractConfiguration_invalid_iOS_missingSigningConfiguration),
+        ("testExtractConfiguration_valid_iOS",
+         testExtractConfiguration_valid_iOS),
+        ("testExtractConfiguration_valid_android",
+         testExtractConfiguration_valid_android),
+        ("testStoreDestination_iOS",
+         testStoreDestination_iOS)
     ]
 }
 // swiftlint:enable function_body_length
+// swiftlint:enable file_length
