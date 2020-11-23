@@ -79,9 +79,11 @@ ios:
       - name: default
         version_name: 0.0.1
         version_number: 1
-        match:
-            url: "git@github.com:sample/match.git"
-            type: appstore
+        signing:
+            team_name: "BACKBASE EUROPE B.V."
+            team_id: "ABC4CG124D"
+            match_url: "git@github.com:sample/match.git"
+            export_method: appstore
         custom:
             - name: SAMPLE_CONFIG
               value: Production Value
@@ -92,9 +94,6 @@ ios:
         version_name: 0.0.1
         version_number: 1
         store_destination: AppCenter
-        match:
-            url: "git@github.com:sample/enterprise-match.git"
-            type: enterprise
         custom:
             - name: SAMPLE_CONFIG
               value: BETA Value
@@ -104,13 +103,19 @@ ios:
         version_name: 0.0.1
         version_number: 1
         store_destination: AppCenter
-        match:
-            url: "git@github.com:sample/enterprise-match.git"
-            type: enterprise
+        signing:
+            match_url: "git@github.com:sample/enterprise-match.git"
+            export_method: enterprise
         custom:
             - name: SAMPLE_CONFIG
               value: STG Value
               destination: project
+              
+    signing:
+        team_name: "iPhone Distribution: BACKBASE EUROPE B.V."
+        team_id: "LMC4CG556D"
+        export_method: "enterprise"
+        
     custom:
         - name: SAMPLE_GLOBAL
           value: GLOBAL Value iOS

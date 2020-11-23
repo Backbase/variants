@@ -98,7 +98,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
             id_suffix: "sample",
             version_name: "2.3.4",
             version_number: 99,
-            match: nil,
+            signing: nil,
             custom: nil,
             store_destination: "TestFlight"
         )
