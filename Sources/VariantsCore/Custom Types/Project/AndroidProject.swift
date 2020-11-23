@@ -14,7 +14,7 @@ class AndroidProject: Project {
     init(
         specHelper: SpecHelper,
         gradleFactory: GradleFactory = GradleScriptFactory(),
-        fastlaneFactory: FastlaneFactory =
+        fastlaneFactory: ParametersFactory =
             FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
@@ -185,5 +185,5 @@ class AndroidProject: Project {
     }
     
     private let gradleFactory: GradleFactory
-    private let fastlaneFactory: FastlaneFactory
+    private let fastlaneFactory: ParametersFactory
 }

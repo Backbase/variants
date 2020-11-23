@@ -9,13 +9,13 @@ import Foundation
 import Stencil
 import PathKit
 
-protocol FastlaneFactory {
+protocol ParametersFactory {
     func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws
     func render(parameters: [CustomProperty]) throws -> Data?
     func write(_ data: Data, using fastlaneParametersFolder: Path) throws
 }
 
-class FastlaneParametersFactory: FastlaneFactory {
+class FastlaneParametersFactory: ParametersFactory {
     init(templatePath: Path? = try? TemplateDirectory().path) {
         self.templatePath = templatePath
     }

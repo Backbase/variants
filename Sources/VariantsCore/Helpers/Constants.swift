@@ -26,5 +26,6 @@ struct StaticPath {
     struct Template {
         static let variantsScriptFileName = "variants-template.gradle"
         static let fastlaneParametersFileName = "variants_params_template.rb"
+        static let matchParametersFileName = "ios/match_params_template.rb"
     }
 }

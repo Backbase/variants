@@ -9,7 +9,7 @@ import Foundation
 import PathKit
 @testable import VariantsCore
 
-class MockFastlaneFactory: FastlaneFactory {
+class MockFastlaneFactory: ParametersFactory {
     var createParametersCache: [(folder: Path, parameters: [CustomProperty])] = []
     var renderCache: [[CustomProperty]] = []
     var writeCache: [(data: Data, fastlaneParametersFolder: Path)] = []

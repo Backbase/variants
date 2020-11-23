@@ -15,7 +15,7 @@ class iOSProject: Project {
     init(
         specHelper: SpecHelper,
         configFactory: XCFactory = XCConfigFactory(),
-        fastlaneFactory: FastlaneFactory = FastlaneParametersFactory(),
+        fastlaneFactory: ParametersFactory = FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.configFactory = configFactory
@@ -208,5 +208,5 @@ class iOSProject: Project {
     }
 
     private let configFactory: XCFactory
-    private let fastlaneFactory: FastlaneFactory
+    private let fastlaneFactory: ParametersFactory
 }
