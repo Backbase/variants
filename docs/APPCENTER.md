@@ -36,3 +36,5 @@ GitHub secrets is a good way to store sensitive information, in this situation t
          
 **Note**: By default, when Variants generates your files, it stores the AppCenter owner and AppCenter API token as a resource retrieved from the Environment. This allows it to read those values we set in GitHub Secrets without any extra work!
 ### Deploying to AppCenter without Secrets
+
+If you aren't using GitHub or prefer not to use secrets, you can add the `APPCENTER_OWNER_NAME` and `APPCENTER_API_TOKEN` values as custom properties, similarly to how you add the `APPCENTER_APP_NAME` value in the final step above. You may want to add your `variants.yml` file and the generated `variants_params.rb` file to your .gitignore, in order to keep your API token private.
