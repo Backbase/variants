@@ -47,11 +47,14 @@ class FastlaneParametersFactoryTests: XCTestCase {
         
         let factory = FastlaneParametersFactory(templatePath: Path("./"))
         
-        XCTAssertNoThrow(try factory.render(parameters: parameters))
-        XCTAssertNotNil(try factory.render(parameters: parameters))
+        XCTAssertNoThrow(try factory.render(parameters: parameters,
+                                            renderTemplate: StaticPath.Template.fastlaneParametersFileName))
+        XCTAssertNotNil(try factory.render(parameters: parameters,
+                                           renderTemplate: StaticPath.Template.fastlaneParametersFileName))
         
         do {
-            if let renderedData = try factory.render(parameters: parameters) {
+            if let renderedData = try factory.render(parameters: parameters,
+                                                     renderTemplate: StaticPath.Template.fastlaneParametersFileName) {
                 XCTAssertEqual(String(data: renderedData, encoding: .utf8), correctOutput)
             }
         } catch {
@@ -121,11 +124,14 @@ class FastlaneParametersFactoryTests: XCTestCase {
         fastlaneParameters.append(variant.destinationProperty)
         let factory = FastlaneParametersFactory(templatePath: Path("./"))
         
-        XCTAssertNoThrow(try factory.render(parameters: fastlaneParameters))
-        XCTAssertNotNil(try factory.render(parameters: fastlaneParameters))
+        XCTAssertNoThrow(try factory.render(parameters: fastlaneParameters,
+                                            renderTemplate: StaticPath.Template.fastlaneParametersFileName))
+        XCTAssertNotNil(try factory.render(parameters: fastlaneParameters,
+                                           renderTemplate: StaticPath.Template.fastlaneParametersFileName))
         
         do {
-            if let renderedData = try factory.render(parameters: fastlaneParameters) {
+            if let renderedData = try factory.render(parameters: fastlaneParameters,
+                                                     renderTemplate: StaticPath.Template.fastlaneParametersFileName) {
                 XCTAssertEqual(String(data: renderedData, encoding: .utf8), expectedOutput)
             }
         } catch {

@@ -10,8 +10,8 @@ import Stencil
 import PathKit
 
 protocol ParametersFactory {
-    func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws
-    func render(parameters: [CustomProperty]) throws -> Data?
+    func createParametersFile(in folder: Path, renderTemplate: String, with parameters: [CustomProperty]) throws
+    func render(parameters: [CustomProperty], renderTemplate: String) throws -> Data?
     func write(_ data: Data, using fastlaneParametersFolder: Path) throws
 }
 
@@ -20,12 +20,12 @@ class FastlaneParametersFactory: ParametersFactory {
         self.templatePath = templatePath
     }
     
-    func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws {
-        guard let data = try render(parameters: parameters) else { return }
+    func createParametersFile(in folder: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
+        guard let data = try render(parameters: parameters, renderTemplate: renderTemplate) else { return }
         try write(data, using: folder)
     }
     
-    func render(parameters: [CustomProperty]) throws -> Data? {
+    func render(parameters: [CustomProperty], renderTemplate: String) throws -> Data? {
         let fastlaneParameters = parameters.literal()
         let fastlaneEnvVars = parameters.envVars()
         guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return nil }
@@ -37,7 +37,7 @@ class FastlaneParametersFactory: ParametersFactory {
 
         guard let path = templatePath else { return nil }
         let environment = Environment(loader: FileSystemLoader(paths: [path.absolute()]))
-        let rendered = try environment.renderTemplate(name: StaticPath.Template.fastlaneParametersFileName,
+        let rendered = try environment.renderTemplate(name: renderTemplate,
                                                       context: context)
         
         // Replace multiple empty lines by one only

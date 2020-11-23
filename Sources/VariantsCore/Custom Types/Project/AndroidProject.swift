@@ -181,7 +181,9 @@ class AndroidProject: Project {
                                                  destination: .fastlane)
         customProperties.append(packageNameProperty)
         customProperties.append(variant.destinationProperty)
-        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder, with: customProperties)
+        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                                                 renderTemplate: StaticPath.Template.fastlaneParametersFileName,
+                                                 with: customProperties)
     }
     
     private let gradleFactory: GradleFactory

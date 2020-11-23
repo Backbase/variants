@@ -204,6 +204,7 @@ class iOSProject: Project {
         let fastlaneProperties = properties.filter { $0.destination == .fastlane }
         guard !fastlaneProperties.isEmpty else { return }
         try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder,
+                                                 renderTemplate: StaticPath.Template.fastlaneParametersFileName,
                                                  with: fastlaneProperties)
     }
 
