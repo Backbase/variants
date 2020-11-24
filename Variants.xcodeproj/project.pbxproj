@@ -36,7 +36,6 @@
 		8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */; };
 		8E1B9CDE254AC1E700DD0204 /* VariantsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Platform.swift */; };
-		8E1B9D9E254AC26F00DD0204 /* ConfigurationParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* ConfigurationParserError.swift */; };
 		8E1B9DC7254AC27500DD0204 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* Project.swift */; };
 		8E1B9DC8254AC27500DD0204 /* iOSProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* iOSProject.swift */; };
 		8E1B9DC9254AC27500DD0204 /* AndroidProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* AndroidProject.swift */; };
@@ -44,14 +43,12 @@
 		8E1B9DF3254AC27900DD0204 /* TemplateDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* TemplateDirectory.swift */; };
 		8E1B9E08254AC27E00DD0204 /* String+Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* String+Write.swift */; };
 		8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* Data+Write.swift */; };
-		8E1B9E0B254AC27E00DD0204 /* FileManager+Temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* FileManager+Temp.swift */; };
 		8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* String+Error.swift */; };
 		8E1B9E35254AC28F00DD0204 /* ProjectFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* ProjectFactory.swift */; };
 		8E1B9E36254AC28F00DD0204 /* GradleScriptFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* GradleScriptFactory.swift */; };
 		8E1B9E38254AC28F00DD0204 /* XcodeProjFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* XcodeProjFactory.swift */; };
 		8E1B9E39254AC28F00DD0204 /* SpecHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* SpecHelper.swift */; };
 		8E1B9E3B254AC28F00DD0204 /* XCConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_38 /* XCConfigFactory.swift */; };
-		8E1B9E64254AC29500DD0204 /* TemplatesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_44 /* TemplatesManager.swift */; };
 		8E1B9E65254AC29500DD0204 /* Bash.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* Bash.swift */; };
 		8E1B9E66254AC29500DD0204 /* PlatformDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_43 /* PlatformDetector.swift */; };
 		8E1B9E67254AC29500DD0204 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_42 /* Constants.swift */; };
@@ -92,6 +89,8 @@
 		BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */; };
 		BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */; };
 		BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */; };
+		E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502A8256DB16B00484DCE /* String+WriteTests.swift */; };
+		E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -174,7 +173,8 @@
 		BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGradleScriptFactory.swift; sourceTree = "<group>"; };
 		BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockXCcodeConfigFactory.swift; sourceTree = "<group>"; };
 		BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFastlaneFactory.swift; sourceTree = "<group>"; };
-		OBJ_14 /* ConfigurationParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserError.swift; sourceTree = "<group>"; };
+		E39502A8256DB16B00484DCE /* String+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WriteTests.swift"; sourceTree = "<group>"; };
+		E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFactoryTests.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
 		OBJ_18 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -182,7 +182,6 @@
 		OBJ_20 /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
 		OBJ_21 /* TemplateDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateDirectory.swift; sourceTree = "<group>"; };
 		OBJ_23 /* Data+Write.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Write.swift"; sourceTree = "<group>"; };
-		OBJ_24 /* FileManager+Temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Temp.swift"; sourceTree = "<group>"; };
 		OBJ_26 /* String+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Error.swift"; sourceTree = "<group>"; };
 		OBJ_27 /* String+Write.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Write.swift"; sourceTree = "<group>"; };
 		OBJ_286 /* Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Templates; sourceTree = SOURCE_ROOT; };
@@ -198,7 +197,6 @@
 		OBJ_41 /* Bash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bash.swift; sourceTree = "<group>"; };
 		OBJ_42 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		OBJ_43 /* PlatformDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformDetector.swift; sourceTree = "<group>"; };
-		OBJ_44 /* TemplatesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesManager.swift; sourceTree = "<group>"; };
 		OBJ_46 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		OBJ_47 /* StdoutPrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StdoutPrinter.swift; sourceTree = "<group>"; };
 		OBJ_48 /* VerboseLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerboseLogger.swift; sourceTree = "<group>"; };
@@ -293,6 +291,8 @@
 				8E1B9C0E254AB51300DD0204 /* Resources */,
 				8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */,
 				8E1B9CDD254AC1E700DD0204 /* Info.plist */,
+				E39502A8256DB16B00484DCE /* String+WriteTests.swift */,
+				E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */,
 			);
 			name = VariantsCoreTests;
 			path = Tests/VariantsCoreTests;
@@ -329,7 +329,6 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_16 /* Project */,
-				OBJ_14 /* ConfigurationParserError.swift */,
 				OBJ_15 /* Platform.swift */,
 				OBJ_20 /* RuntimeError.swift */,
 				OBJ_21 /* TemplateDirectory.swift */,
@@ -351,7 +350,6 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_23 /* Data+Write.swift */,
-				OBJ_24 /* FileManager+Temp.swift */,
 				OBJ_26 /* String+Error.swift */,
 				OBJ_27 /* String+Write.swift */,
 				8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */,
@@ -406,7 +404,6 @@
 				OBJ_41 /* Bash.swift */,
 				OBJ_42 /* Constants.swift */,
 				OBJ_43 /* PlatformDetector.swift */,
-				OBJ_44 /* TemplatesManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -689,14 +686,12 @@
 			files = (
 				8E1B9EFD254AC2A900DD0204 /* iOSTarget.swift in Sources */,
 				8E1B9E08254AC27E00DD0204 /* String+Write.swift in Sources */,
-				8E1B9E0B254AC27E00DD0204 /* FileManager+Temp.swift in Sources */,
 				8E1B9EF8254AC2A900DD0204 /* iOSVariant.swift in Sources */,
 				8E1B9EFB254AC2A900DD0204 /* AndroidConfiguration.swift in Sources */,
 				8E1B9E65254AC29500DD0204 /* Bash.swift in Sources */,
 				8E1B9EA4254AC29A00DD0204 /* Logger.swift in Sources */,
 				8E1B9EF9254AC2A900DD0204 /* Configuration.swift in Sources */,
 				8E1B9E66254AC29500DD0204 /* PlatformDetector.swift in Sources */,
-				8E1B9E64254AC29500DD0204 /* TemplatesManager.swift in Sources */,
 				8E1B9ECF254AC29D00DD0204 /* YamlParser.swift in Sources */,
 				8E8A4866255172CF0056F79F /* Path+SafeJoin.swift in Sources */,
 				8E1B9DC8254AC27500DD0204 /* iOSProject.swift in Sources */,
@@ -716,7 +711,6 @@
 				8E1B9E3B254AC28F00DD0204 /* XCConfigFactory.swift in Sources */,
 				8EDC54D625554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift in Sources */,
 				8E1B9E36254AC28F00DD0204 /* GradleScriptFactory.swift in Sources */,
-				8E1B9D9E254AC26F00DD0204 /* ConfigurationParserError.swift in Sources */,
 				8E1B9DF3254AC27900DD0204 /* TemplateDirectory.swift in Sources */,
 				8E1B9DC7254AC27500DD0204 /* Project.swift in Sources */,
 				8E1BA0C2254BFF6400DD0204 /* Initializer.swift in Sources */,
@@ -731,10 +725,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */,
 				8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */,
 				8E1B9F3C254AC31A00DD0204 /* InitializerTests.swift in Sources */,
 				BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */,
 				BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */,
+				E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */,
 				8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
 				8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */,

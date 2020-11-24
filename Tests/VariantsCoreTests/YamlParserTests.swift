@@ -35,11 +35,32 @@ class YamlParserTests: XCTestCase {
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("default"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("BETA"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("STG"))
+                XCTAssertEqual(iosConfiguration.xcodeproj,"FrankBank.xcodeproj")
+                XCTAssertEqual(iosConfiguration.pbxproj,"FrankBank.xcodeproj/project.pbxproj")
             }
             
-            let customConfigDefault = configuration.ios?
-                .variants.first(where: { $0.name == "default" })?
-                .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
+            let sourcePath = "sourcePath"
+            let sourceInfo = "sourceInfo"
+            let sourceConfig = "sourceConfig"
+            let source = iOSSource.init(path: sourcePath, info: sourceInfo, config: sourceConfig)
+            
+            let targetName = "FrankBank"
+            let bundleId = "com.backbase.frank.ios"
+            let appIcon = "AppIcon"
+            let iosTarget = iOSTarget(name: targetName, bundleId: bundleId, app_icon: appIcon, source: source)
+            
+            let firstVariant = configuration.ios?.variants.first(where: { $0.name == "default" })
+            XCTAssertNotNil(firstVariant)
+            let firstVariantDefaultValues = firstVariant?.getDefaultValues(for: iosTarget)
+            XCTAssertNotNil(firstVariantDefaultValues)
+            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NUMBER"],"1")
+            XCTAssertEqual(firstVariantDefaultValues?["SAMPLE_CONFIG"],"Production Value")
+            XCTAssertEqual(firstVariantDefaultValues?["V_APP_NAME"], targetName)
+            XCTAssertEqual(firstVariantDefaultValues?["V_BUNDLE_ID"],bundleId)
+            XCTAssertEqual(firstVariantDefaultValues?["V_APP_ICON"],appIcon)
+            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NAME"],"0.0.1")
+                
+            let customConfigDefault = firstVariant?.custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigDefault)
             XCTAssertEqual(customConfigDefault?.value, "Production Value")
             XCTAssertEqual(customConfigDefault?.destination, .project)
