@@ -73,14 +73,14 @@ class iOSProject: Project {
     private func switchTo(_ variant: iOSVariant, spec: String, configuration: iOSConfiguration) throws {
         Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
 
-        configuration.targets
+        try configuration.targets
             .map { (key: $0.key, value: $0.value)}
-            .forEach { result in
+            .forEach { namedTarget in
                 
                 // Create 'variants.xcconfig' with parameters whose
                 // destination are set as '.project'
                 configFactory.createConfig(
-                    with: result,
+                    with: namedTarget,
                     variant: variant,
                     xcodeProj: configuration.xcodeproj,
                     configPath: Path(spec).absolute().parent(),
@@ -94,9 +94,7 @@ class iOSProject: Project {
                 // destination are set as '.fastlane'
                 try? storeFastlaneParams(customProperties)
                 
-                try? parametersFactory.createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
-                                                         renderTemplate: StaticPath.Template.matchParametersFileName,
-                                                         with: variant.signing?.customProperties() ?? [])
+                try parametersFactory.createMatchFile(using: variant, target: namedTarget.value)
             }
     }
 
@@ -162,7 +160,9 @@ class iOSProject: Project {
                 if StaticPath.Fastlane.baseFolder.isDirectory {
                     
                     guard let defaultVariant = configuration.variants
-                            .first(where: { $0.name.lowercased() == "default" }) else {
+                            .first(where: { $0.name.lowercased() == "default" }),
+                          let namedTarget = configuration.targets.first
+                    else {
                         throw ValidationError("Variant 'default' not found.")
                     }
                     var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
@@ -171,10 +171,8 @@ class iOSProject: Project {
                     // Create 'variants_params.rb' with parameters whose
                     // destination are set as '.fastlane'
                     try storeFastlaneParams(customProperties)
-                    
-                    try parametersFactory.createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
-                                                             renderTemplate: StaticPath.Template.matchParametersFileName,
-                                                             with: defaultVariant.signing?.customProperties() ?? [])
+                
+                    try parametersFactory.createMatchFile(using: defaultVariant, target: namedTarget.value)
                     
                     setupCompleteMessage =
                         """

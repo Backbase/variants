@@ -11,7 +11,8 @@ import PathKit
 
 protocol ParametersFactory {
     func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws
-    func render(parameters: [CustomProperty], renderTemplate: String) throws -> Data?
+    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws
+    func render(context: [String: Any], renderTemplate: String) throws -> Data?
     func write(_ data: Data, using parametersFile: Path) throws
 }
 
@@ -21,20 +22,47 @@ class FastlaneParametersFactory: ParametersFactory {
     }
     
     func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
-        guard let data = try render(parameters: parameters, renderTemplate: renderTemplate) else { return }
+        guard
+            let context = context(for: parameters),
+            let data = try render(context: context, renderTemplate: renderTemplate)
+        else { return }
         try write(data, using: file)
     }
     
-    func render(parameters: [CustomProperty], renderTemplate: String) throws -> Data? {
-        let fastlaneParameters = parameters.literal()
-        let fastlaneEnvVars = parameters.envVars()
-        guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return nil }
+    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws {
+        // Return immediately if folder 'fastlane/' doesn't exist.
+        guard StaticPath.Fastlane.baseFolder.exists && StaticPath.Fastlane.baseFolder.isDirectory
+        else { return }
         
-        let context = [
-            "parameters": fastlaneParameters,
-            "env_vars": fastlaneEnvVars
+        // Populate 'fastlane/parameters/match_params.rb' from template
+        let parameters: [CustomProperty] = variant.signing?.customProperties() ?? []
+        try? createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
+                                  renderTemplate: StaticPath.Template.matchParametersFileName,
+                                  with: parameters)
+        
+        // Populate 'fastlane/Matchfile' from template
+        var context = [
+            "export_method": (variant.signing?.exportMethod ?? .appstore).rawValue,
+            "bundle_id": target.bundleId+variant.configIdSuffix
         ]
-
+        
+        if let matchURL = variant.signing?.matchURL {
+            context["git_url"] = matchURL
+        } else {
+            Logger.shared.logWarning(item:
+                """
+                We couldn't add 'git_url' to 'fastlane/Matchfile' as we failed to find a 'matchURL' in your variants spec,
+                either in 'ios.signing' or 'ios.variants.\(variant.name).signing'. Please add it manually.
+                """
+            )
+        }
+        
+        guard let data = try render(context: context, renderTemplate: StaticPath.Template.matchFileName)
+        else { return }
+        try write(data, using: StaticPath.Fastlane.matchFile)
+    }
+    
+    func render(context: [String: Any], renderTemplate: String) throws -> Data? {
         guard let path = templatePath else { return nil }
         let environment = Environment(loader: FileSystemLoader(paths: [path.absolute()]))
         let rendered = try environment.renderTemplate(name: renderTemplate,
@@ -63,6 +91,18 @@ class FastlaneParametersFactory: ParametersFactory {
         } else {
             throw TemplateDoesNotExist(templateNames: [parentFolder.string])
         }
+    }
+    
+    private func context(for parameters: [CustomProperty]) -> [String: Any]? {
+        let fastlaneParameters = parameters.literal()
+        let fastlaneEnvVars = parameters.envVars()
+        guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return nil }
+        
+        let context = [
+            "parameters": fastlaneParameters,
+            "env_vars": fastlaneEnvVars
+        ]
+        return context
     }
     
     private let templatePath: Path?
