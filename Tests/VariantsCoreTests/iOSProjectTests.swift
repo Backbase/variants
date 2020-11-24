@@ -62,12 +62,13 @@ class iOSProjectTests: XCTestCase {
             
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: false, verbose: true))
             XCTAssertEqual(xcFactoryMock.createConfigCache.count, 2)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 2)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.file.string, "fastlane/parameters/match_params.rb")
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.count, 4)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.name, "TEAMNAME")
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.value, "BACKBASE EUROPE B.V.")
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 1)
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.file.string, "fastlane/parameters/variants_params.rb")
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.count, 1)
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.name, "STORE_DESTINATION")
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.value, "appstore")
             XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.destination, .fastlane)
+            XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 1)
         }
     }
     
@@ -112,15 +113,17 @@ class iOSProjectTests: XCTestCase {
             
             let betaVariant = "beta"
             XCTAssertNoThrow(try project.switch(to: betaVariant, spec: spec.string, verbose: true))
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 2)
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 1)
             XCTAssertEqual(parametersFactoryMock.createParametersCache.first?.parameters.count, 2)
+            XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 1)
             XCTAssertEqual(xcFactoryMock.createConfigCache.count, 1)
             XCTAssertEqual(xcFactoryMock.createConfigCache.first?.variant.name, "BETA")
 
             let stgVariant = "stg"
             XCTAssertNoThrow(try project.switch(to: stgVariant, spec: spec.string, verbose: true))
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 4)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.count, 4)
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 2)
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.count, 1)
+            XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 2)
             XCTAssertEqual(xcFactoryMock.createConfigCache.count, 2)
             XCTAssertEqual(xcFactoryMock.createConfigCache.last?.variant.name, "STG")
         }
