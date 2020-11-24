@@ -10,48 +10,65 @@ If you desire to use Match, follow the instructions provided in the [Fastlane do
 
 ### Working with your Variants spec
 
-Now that your Match repo(s) exist, you can work in your `variants.yml` spec, where you can provide a `match` section with a few properties for each variant. It takes `url` and `type`:
+Now that your Match repo(s) exist, you can work in your `variants.yml` spec, where you can provide a `signing` section with a few properties, either globally or for each variant. It takes `match_url`, `team_name`, `team_id` and `export_method`:
 
 | Property | Explanation |
 | ------- | ------------- |
-| `url` | The URL to a Match git repository |
-| `type` | One of _development_, _adhoc_, _appstore_, _enterprise_ (For more information, see [Match documentation](https://docs.fastlane.tools/actions/match/) |
+| `match_url` | The URL to a Match git repository. |
+| `team_name` | The name of your Developer Portal team. i.e.: `"iPhone Developer: BACKBASE EUROPE B.V."` |
+| `team_id` | The ID of your Developer Portal team. |
+| `export_method` | One of: _development_, _adhoc_, _appstore_ or _enterprise_ (For more information, see [Match documentation](https://docs.fastlane.tools/actions/match/). |
 
 **Example:**
+
+* You'll notice that `signing` can be specified globally. In such a case all variants will be signed used this configuration.
+
 ```yaml
-variants:
-  - name: default
-    version_name: 0.0.1
-    version_number: 1
-    store_destination: AppStore
-    match:
-        url: "git@github.com:sample/match.git"
-        type: appstore
-    custom:
+ios:
+    ...
+    variants:
         ...
-  - name: BETA
-    id_suffix: beta
-    app_icon: AppIcon.beta
-    version_name: 0.0.1
-    version_number: 1
-    store_destination: TestFlight
-    match:
-        url: "git@github.com:sample/match.git"
-        type: adhoc
-    custom:
-        ...
-  - name: INTERNAL
-    id_suffix: internal
-    app_icon: AppIcon.internal
-    version_name: 0.0.1
-    version_number: 1
-    store_destination: AppCenter
-    match:
-        url: "git@github.com:sample/enterprise-match.git"
-        type: enterprise
-    custom:
-        ...
+    signing:
+        match_url: "git@github.com:sample/match.git"
+        team_name: "iPhone Developer: Sample Organization"
+        team_id: "ABC1234567D"
+        export_method: "appstore"
 ```
+
+* Another option is to specify it for each variant. In this case, the variant's configuration override the global one.
+
+```yaml
+ios:
+    ...
+    variants:
+        # Variant 'default' doesn't implement it's signing, thus it will use the global one.
+        - name: default
+          ...
+          
+        # Variant 'beta' only overrides the 'export_method', thus all the rest will be used
+        # from the global configuration.
+        - name: beta
+          ...
+          signing:
+              export_method: "adhoc"
+              
+        # Variant 'internal_enterprisse_release' overrides everything, in this example
+        # using a completely different match repository and signing identity.
+        - name: internal_enterprisse_release
+          ...
+          signing:
+              match_url: "git@github.com:sample-enterprise/match.git"
+              team_name: "iPhone Developer: Enterprise Organization"
+              team_id: "JKI1234567F"
+              export_method: "enterprise"
+          
+    signing:
+        match_url: "git@github.com:sample/match.git"
+        team_name: "iPhone Developer: Sample Organization"
+        team_id: "ABC1234567D"
+        export_method: "appstore"
+```
+
 
 Based on the above, whenever you run `setup` and/or `switch` commands, the file `fastlane/Matchfile` will be modified to reflect this information. Take, for instance, if you switch to _"BETA"_ variant:
 
@@ -87,6 +104,12 @@ MATCH_PARAMS = {
   
   # Match repository password, used to decrypt files
   MATCH_PASSWORD: ENV['MATCH_PASSWORD']
+  
+  # Signing properties coming from Variants YAML spec.
+  # Do not change manually!
+  TEAMNAME: "iPhone Distribution: Enterprise Sample",
+  TEAMID: "7A1234567D",
+  EXPORTMETHOD: "enterprise"
 }.freeze
 ```
 
@@ -95,6 +118,7 @@ MATCH_PARAMS = {
 | _MATCH_KEYCHAIN_NAME_, _MATCH_KEYCHAIN_PASSWORD_  | A temporary keychain is created only when running on CI, therfore the values for the environment variables `MATCH_KEYCHAIN_*` could be anything you desire on that CI machine, as the keychain will be deleted after every run. However, since a keychain won't be created when running this locally, you have to set local environment variables `MATCH_KEYCHAIN_NAME` and `MATCH_KEYCHAIN_PASSWORD` to an existing keychain name and password in your machine. |
 | _MATCH_GIT_BASIC_AUTHORIZATION_ | If your machine is currently using SSH to authenticate with GitHub, you'll want to use a git URL, otherwise, you may see an authentication error when you attempt to use match. Alternatively, you can set a basic authorization for match. See [Match documentation](https://docs.fastlane.tools/actions/match/#git-storage-on-github). |
 | _MATCH_PASSWORD_ | Git repo encryption password, the password used to encrypt the Match git repository when it was created in the first place. |
+| Other properties | All other properties are populated automatically on `variants setup` | `variants switch`. |
 
 
 ### Validate it works
