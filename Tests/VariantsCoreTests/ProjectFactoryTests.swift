@@ -1,8 +1,8 @@
 //
-//  ProjectFactoryTests.swift
-//  VariantsCoreTests
+//  Variants
 //
-//  Created by Giuseppe Deraco on 24/11/2020.
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Giuseppe Deraco
 //
 
 import XCTest
