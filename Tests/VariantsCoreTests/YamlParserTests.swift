@@ -39,10 +39,7 @@ class YamlParserTests: XCTestCase {
                 XCTAssertEqual(iosConfiguration.pbxproj,"FrankBank.xcodeproj/project.pbxproj")
             }
             
-            let sourcePath = "sourcePath"
-            let sourceInfo = "sourceInfo"
-            let sourceConfig = "sourceConfig"
-            let source = iOSSource.init(path: sourcePath, info: sourceInfo, config: sourceConfig)
+            let source = iOSSource.init(path: "sourcePath", info: "sourceInfo", config: "sourceConfig")
             
             let targetName = "FrankBank"
             let bundleId = "com.backbase.frank.ios"
