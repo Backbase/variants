@@ -9,12 +9,12 @@ import XCTest
 import PathKit
 @testable import VariantsCore
 
-class String_WriteTests: XCTestCase {
+class StringWriteTests: XCTestCase {
 
     func testWrite_appendLine() throws {
         var hello = "hello"
         hello.appendLine("world")
-        XCTAssertEqual(hello,"helloworld\n")
+        XCTAssertEqual(hello, "helloworld\n")
     }
 
 }

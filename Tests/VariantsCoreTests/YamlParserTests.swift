@@ -20,6 +20,11 @@ class YamlParserTests: XCTestCase {
         }
     }
     
+    fileprivate func assertCustom(_ custom: CustomProperty, value: String, destination: CustomProperty.Destination) {
+        XCTAssertEqual(custom.value, value)
+        XCTAssertEqual(custom.destination, destination)
+    }
+    
     func testExtractConfiguration_valid_iOS() {
         let parser = YamlParser()
         do {
@@ -35,45 +40,37 @@ class YamlParserTests: XCTestCase {
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("default"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("BETA"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("STG"))
-                XCTAssertEqual(iosConfiguration.xcodeproj,"FrankBank.xcodeproj")
-                XCTAssertEqual(iosConfiguration.pbxproj,"FrankBank.xcodeproj/project.pbxproj")
+                XCTAssertEqual(iosConfiguration.xcodeproj, "FrankBank.xcodeproj")
+                XCTAssertEqual(iosConfiguration.pbxproj, "FrankBank.xcodeproj/project.pbxproj")
             }
             
             let source = iOSSource.init(path: "sourcePath", info: "sourceInfo", config: "sourceConfig")
-            
-            let targetName = "FrankBank"
-            let bundleId = "com.backbase.frank.ios"
-            let appIcon = "AppIcon"
-            let iosTarget = iOSTarget(name: targetName, bundleId: bundleId, app_icon: appIcon, source: source)
-            
             let firstVariant = configuration.ios?.variants.first(where: { $0.name == "default" })
             XCTAssertNotNil(firstVariant)
-            let firstVariantDefaultValues = firstVariant?.getDefaultValues(for: iosTarget)
-            XCTAssertNotNil(firstVariantDefaultValues)
-            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NUMBER"],"1")
-            XCTAssertEqual(firstVariantDefaultValues?["SAMPLE_CONFIG"],"Production Value")
-            XCTAssertEqual(firstVariantDefaultValues?["V_APP_NAME"], targetName)
-            XCTAssertEqual(firstVariantDefaultValues?["V_BUNDLE_ID"],bundleId)
-            XCTAssertEqual(firstVariantDefaultValues?["V_APP_ICON"],appIcon)
-            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NAME"],"0.0.1")
+            let firstVariantDefaultValues = firstVariant?.getDefaultValues(for:
+                iOSTarget(name: "FrankBank", bundleId: "com.backbase.frank.ios", app_icon: "AppIcon", source: source)
+            )
+            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NUMBER"], "1")
+            XCTAssertEqual(firstVariantDefaultValues?["SAMPLE_CONFIG"], "Production Value")
+            XCTAssertEqual(firstVariantDefaultValues?["V_APP_NAME"], "FrankBank")
+            XCTAssertEqual(firstVariantDefaultValues?["V_BUNDLE_ID"], "com.backbase.frank.ios")
+            XCTAssertEqual(firstVariantDefaultValues?["V_APP_ICON"], "AppIcon")
+            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NAME"], "0.0.1")
                 
             let customConfigDefault = firstVariant?.custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigDefault)
-            XCTAssertEqual(customConfigDefault?.value, "Production Value")
-            XCTAssertEqual(customConfigDefault?.destination, .project)
+            assertCustom(customConfigDefault!, value: "Production Value", destination: .project)
             
             let customConfigBeta = configuration.ios?
                 .variants.first(where: { $0.name == "BETA" })?
                 .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigBeta)
-            XCTAssertEqual(customConfigBeta?.value, "BETA Value")
-            XCTAssertEqual(customConfigBeta?.destination, .fastlane)
+            assertCustom(customConfigBeta!, value: "BETA Value", destination: .fastlane)
             
             let customConfigGlobal = configuration.ios?
                 .custom?.first(where: { $0.name == "SAMPLE_GLOBAL" })
             XCTAssertNotNil(customConfigGlobal)
-            XCTAssertEqual(customConfigGlobal?.value, "GLOBAL Value iOS")
-            XCTAssertEqual(customConfigGlobal?.destination, .project)
+            assertCustom(customConfigGlobal!, value: "GLOBAL Value iOS", destination: .project)
             
         } catch {
             XCTAssertTrue(((error as? DecodingError) == nil))
