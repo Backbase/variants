@@ -8,23 +8,81 @@
 import XCTest
 @testable import VariantsCore
 
+// swiftlint:disable function_body_length
+// swiftlint:disable file_length
+
 class YamlParserTests: XCTestCase {
     
     func testExtractConfiguration_invalidSpec() {
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/invalid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/invalid_variants", ofType: "yml") else { return }
             _ = try parser.extractConfiguration(from: path, platform: .ios)
         } catch {
             XCTAssertTrue(((error as? DecodingError) != nil))
         }
     }
     
+    func testExtractConfiguration_invalid_iOS_missingExportMethod() {
+        let expectedUnderlyingError = RuntimeError(
+            """
+            Missing: 'signing.export_method'
+            At least one variant doesn't contain 'signing.export_method' in its configuration.
+            Create a global 'signing' configuration with 'export_method' or make sure all variants have this property.
+            """
+        )
+        
+        let parser = YamlParser()
+        guard let path = Bundle(for: type(of: self))
+                .path(forResource: "Resources/ios/invalid_missing_export_method", ofType: "yml") else { return }
+        XCTAssertThrowsError(try parser.extractConfiguration(from: path, platform: .ios),
+                             "No export method found globally or in variant BETA") { (error) in
+            
+            XCTAssertNotNil(error as? Swift.DecodingError)
+            switch error as? Swift.DecodingError {
+            case .dataCorrupted(let context):
+                XCTAssertEqual(context.debugDescription, "The given data was not valid YAML.")
+                XCTAssertNotNil(context.underlyingError as? RuntimeError)
+                XCTAssertEqual(context.underlyingError as? RuntimeError, expectedUnderlyingError)
+            default: break
+            }
+        }
+    }
+    
+    func testExtractConfiguration_invalid_iOS_missingSigningConfiguration() {
+        let expectedUnderlyingError = RuntimeError(
+            """
+            At least one variant doesn't contain a 'signing' configuration.
+            Create a global 'signing' configuration or make sure all variants have this property.
+            """
+        )
+        
+        let parser = YamlParser()
+        guard let path = Bundle(for: type(of: self))
+                .path(forResource: "Resources/ios/invalid_missing_signing_configuration", ofType: "yml") else { return }
+        XCTAssertThrowsError(try parser.extractConfiguration(from: path, platform: .ios),
+                             "No signing configuration found globally or in variant BETA") { (error) in
+            
+            XCTAssertNotNil(error as? Swift.DecodingError)
+            switch error as? Swift.DecodingError {
+            case .dataCorrupted(let context):
+                XCTAssertEqual(context.debugDescription, "The given data was not valid YAML.")
+                XCTAssertNotNil(context.underlyingError as? RuntimeError)
+                XCTAssertEqual(context.underlyingError as? RuntimeError, expectedUnderlyingError)
+            default: break
+            }
+        }
+    }
+    
     func testExtractConfiguration_valid_iOS() {
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .ios)
+            
+            // MARK: - iOS Target Information
             
             XCTAssertNotNil(configuration.ios)
             if let iosConfiguration = configuration.ios {
@@ -36,6 +94,8 @@ class YamlParserTests: XCTestCase {
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("BETA"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("STG"))
             }
+            
+            // MARK: - iOS Custom Properties
             
             let customConfigDefault = configuration.ios?
                 .variants.first(where: { $0.name == "default" })?
@@ -57,7 +117,37 @@ class YamlParserTests: XCTestCase {
             XCTAssertEqual(customConfigGlobal?.value, "GLOBAL Value iOS")
             XCTAssertEqual(customConfigGlobal?.destination, .project)
             
+            // MARK: - iOS Signing Configuration
+            
+            let defaultMatchConfiguration = configuration.ios?
+                .variants.first(where: { $0.name == "default" })?
+                .signing
+            XCTAssertNotNil(defaultMatchConfiguration)
+            XCTAssertEqual(defaultMatchConfiguration?.teamName, "BACKBASE EUROPE B.V.")
+            XCTAssertEqual(defaultMatchConfiguration?.teamID, "ABC4CG124D")
+            XCTAssertEqual(defaultMatchConfiguration?.matchURL, "git@github.com:sample/match.git")
+            XCTAssertEqual(defaultMatchConfiguration?.exportMethod, .appstore)
+            
+            let betaMatchConfiguration = configuration.ios?
+                .variants.first(where: { $0.name == "BETA" })?
+                .signing
+            XCTAssertNotNil(betaMatchConfiguration)
+            XCTAssertEqual(betaMatchConfiguration?.teamName, "iPhone Distribution: BACKBASE EUROPE B.V.")
+            XCTAssertEqual(betaMatchConfiguration?.teamID, "LMC4CG556D")
+            XCTAssertNil(betaMatchConfiguration?.matchURL)
+            XCTAssertEqual(betaMatchConfiguration?.exportMethod, .enterprise)
+            
+            let stagingMatchConfiguration = configuration.ios?
+                .variants.first(where: { $0.name == "STG" })?
+                .signing
+            XCTAssertNotNil(stagingMatchConfiguration)
+            XCTAssertEqual(stagingMatchConfiguration?.teamName, "iPhone Distribution: BACKBASE EUROPE B.V.")
+            XCTAssertEqual(stagingMatchConfiguration?.teamID, "LMC4CG556D")
+            XCTAssertEqual(stagingMatchConfiguration?.matchURL, "git@github.com:sample/enterprise-match.git")
+            XCTAssertEqual(stagingMatchConfiguration?.exportMethod, .enterprise)
+            
         } catch {
+            dump(error)
             XCTAssertTrue(((error as? DecodingError) == nil))
         }
     }
@@ -65,7 +155,8 @@ class YamlParserTests: XCTestCase {
     func testExtractConfiguration_valid_android() {
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .android)
             
             XCTAssertNotNil(configuration.android)
@@ -115,7 +206,8 @@ class YamlParserTests: XCTestCase {
         
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .ios)
             
             XCTAssertEqual(configuration.ios?
@@ -146,7 +238,8 @@ class YamlParserTests: XCTestCase {
         
         let parser = YamlParser()
         do {
-            guard let path = Bundle(for: type(of: self)).path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
+            guard let path = Bundle(for: type(of: self))
+                    .path(forResource: "Resources/valid_variants", ofType: "yml") else { return }
             let configuration = try parser.extractConfiguration(from: path, platform: .ios)
             
             XCTAssertEqual(configuration.android?
@@ -163,9 +256,19 @@ class YamlParserTests: XCTestCase {
     }
     
     static var allTests = [
-        ("testExtractConfiguration_invalidSpec", testExtractConfiguration_invalidSpec),
-        ("testExtractConfiguration_valid_iOS", testExtractConfiguration_valid_iOS),
-        ("testExtractConfiguration_valid_android", testExtractConfiguration_valid_android),
-        ("testStoreDestination_iOS", testStoreDestination_iOS)
+        ("testExtractConfiguration_invalidSpec",
+         testExtractConfiguration_invalidSpec),
+        ("testExtractConfiguration_invalid_iOS_missingExportMethod",
+         testExtractConfiguration_invalid_iOS_missingExportMethod),
+        ("testExtractConfiguration_invalid_iOS_missingSigningConfiguration",
+         testExtractConfiguration_invalid_iOS_missingSigningConfiguration),
+        ("testExtractConfiguration_valid_iOS",
+         testExtractConfiguration_valid_iOS),
+        ("testExtractConfiguration_valid_android",
+         testExtractConfiguration_valid_android),
+        ("testStoreDestination_iOS",
+         testStoreDestination_iOS)
     ]
 }
+// swiftlint:enable function_body_length
+// swiftlint:enable file_length
