@@ -1,0 +1,57 @@
+name: 'variants-switch'
+description: 'Switch to a custom variant of your deployment flavours. This requires Variants (https://github.com/Backbase/variants)'
+author: 'Backbase B.V. <oss@backbase.com>'
+branding:
+  icon: "code"
+  color: "blue"
+  
+inputs:
+  spec:
+    description: 'Specify the path to a Variants YAML configuration spec. Default is "variants.yml".'
+    required: false
+    default: 'variants.yml'
+  platform:
+    description: '"ios" or "android".'
+    required: false
+  variant:
+    description: 'Variant you would like to switch to.'
+    required: true
+    default: 'default'
+  verbose:
+    description: 'Log tech details for nerds.'
+    required: true
+    default: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Variants Switch
+      shell: bash
+      run: |
+        cd ${{ github.action_path }}
+        if [[ ${{ inputs.platform }} != '' ]]; then
+            if [[ ${{ inputs.verbose }} == true ]]; then
+                swift run variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }} \
+                --verbose
+            else
+                swift run variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }}
+            fi
+        
+        else
+            if [[ ${{ inputs.verbose }} == true ]]; then
+                swift run variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --verbose
+            else
+                swift run variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }}
+            fi
+        fi
