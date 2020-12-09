@@ -29,9 +29,10 @@ runs:
       shell: bash
       run: |
         echo "Repository: ${{ github.repository }}"
+        echo ::set-env name=PROJECT_PATH::$(pwd)
         cd ${{ github.action_path }}
         make install
-        cd /Users/runner/work/${{ github.repository }}
+        cd ${{ env.PROJECT_PATH }}
         
         if [[ ${{ inputs.platform }} != '' ]]; then
             if [[ ${{ inputs.verbose }} == true ]]; then
