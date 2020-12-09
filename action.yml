@@ -28,19 +28,20 @@ runs:
     - name: Variants Switch
       shell: bash
       run: |
-        pwd
-        echo ${{ github.event_path }}
+        echo "Repository: ${{ github.repository }}"
         cd ${{ github.action_path }}
-        pwd
+        make install
+        cd /Users/runner/work/${{ github.repository }}
+        
         if [[ ${{ inputs.platform }} != '' ]]; then
             if [[ ${{ inputs.verbose }} == true ]]; then
-                swift run variants switch \
+                variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
                 --platform ${{ inputs.platform }} \
                 --verbose
             else
-                swift run variants switch \
+                variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
                 --platform ${{ inputs.platform }}
@@ -48,12 +49,12 @@ runs:
         
         else
             if [[ ${{ inputs.verbose }} == true ]]; then
-                swift run variants switch \
+                variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
                 --verbose
             else
-                swift run variants switch \
+                variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }}
             fi
