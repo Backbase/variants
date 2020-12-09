@@ -28,7 +28,10 @@ runs:
     - name: Variants Switch
       shell: bash
       run: |
+        pwd
+        echo ${{ github.event_path }}
         cd ${{ github.action_path }}
+        pwd
         if [[ ${{ inputs.platform }} != '' ]]; then
             if [[ ${{ inputs.verbose }} == true ]]; then
                 swift run variants switch \
