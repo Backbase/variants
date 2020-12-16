@@ -25,14 +25,18 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Add PROJECT_PATH to GITHUB_ENV
+      shell: bash
+      run: |
+        echo "project_path=$(pwd)" >> $GITHUB_ENV
+          
     - name: Variants Switch
       shell: bash
       run: |
         echo "Repository: ${{ github.repository }}"
-        echo ::set-env name=PROJECT_PATH::$(pwd)
         cd ${{ github.action_path }}
         make install
-        cd ${{ env.PROJECT_PATH }}
+        cd ${{ env.project_path }}
         
         if [[ ${{ inputs.platform }} != '' ]]; then
             if [[ ${{ inputs.verbose }} == true ]]; then
