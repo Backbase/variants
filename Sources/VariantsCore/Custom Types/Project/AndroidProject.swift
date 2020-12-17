@@ -14,12 +14,12 @@ class AndroidProject: Project {
     init(
         specHelper: SpecHelper,
         gradleFactory: GradleFactory = GradleScriptFactory(),
-        fastlaneFactory: FastlaneFactory =
+        parametersFactory: ParametersFactory =
             FastlaneParametersFactory(),
         yamlParser: YamlParser = YamlParser()
     ) {
         self.gradleFactory = gradleFactory
-        self.fastlaneFactory = fastlaneFactory
+        self.parametersFactory = parametersFactory
         super.init(specHelper: specHelper, yamlParser: yamlParser)
     }
     
@@ -181,9 +181,11 @@ class AndroidProject: Project {
                                                  destination: .fastlane)
         customProperties.append(packageNameProperty)
         customProperties.append(variant.destinationProperty)
-        try fastlaneFactory.createParametersFile(in: StaticPath.Fastlane.parametersFolder, with: customProperties)
+        try parametersFactory.createParametersFile(in: StaticPath.Fastlane.variantsParametersFile,
+                                                 renderTemplate: StaticPath.Template.fastlaneParametersFileName,
+                                                 with: customProperties)
     }
     
     private let gradleFactory: GradleFactory
-    private let fastlaneFactory: FastlaneFactory
+    private let parametersFactory: ParametersFactory
 }

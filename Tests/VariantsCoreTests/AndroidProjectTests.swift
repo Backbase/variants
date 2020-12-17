@@ -19,7 +19,7 @@ class AndroidProjectTests: XCTestCase {
         let project = AndroidProject(
             specHelper: specHelperMock,
             gradleFactory: gradleFactoryMock,
-            fastlaneFactory: fastlaneFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
 
@@ -37,7 +37,7 @@ class AndroidProjectTests: XCTestCase {
         let project = AndroidProject(
             specHelper: specHelperMock,
             gradleFactory: gradleFactoryMock,
-            fastlaneFactory: fastlaneFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
         
@@ -64,7 +64,7 @@ class AndroidProjectTests: XCTestCase {
             XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
             
             let fastlaneFactoryLastRequest = fastlaneFactoryMock.createParametersCache.last
-            XCTAssertEqual(fastlaneFactoryLastRequest?.folder.string, "fastlane/parameters/")
+            XCTAssertEqual(fastlaneFactoryLastRequest?.file.string, "fastlane/parameters/variants_params.rb")
             XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.count, 4)
             XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.name, "SAMPLE_PROJECT")
             XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.value, "Sample Project Default Config")
@@ -88,7 +88,7 @@ class AndroidProjectTests: XCTestCase {
         let project = AndroidProject(
             specHelper: specHelperMock,
             gradleFactory: gradleFactoryMock,
-            fastlaneFactory: fastlaneFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
 
