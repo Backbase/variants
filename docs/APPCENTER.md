@@ -1,11 +1,11 @@
 
 ## Deploying to AppCenter
 
-Running the `variants setup` command generates fastlane files that can deploy your app to [AppCenter or other stores](https://github.com/Backbase/variants/blob/main/docs/STORE_DESTINATION.md). Deploying to AppCenter can be achieved solely by making changes to your `variants.yml` spec.
+Running the `variants setup` command generates fastlane files that can deploy your app to [AppCenter or other stores](https://github.com/Backbase/variants/blob/main/docs/STORE_DESTINATION.md). Deploying to AppCenter can be achieved solely by making changes to your `variants.yml` spec. It is assumed you have an AppCenter account and a project has already been created.
 
 ### Preparation
 
-1. Create an app on AppCenter, or open an existing one
+1. Create an app in your AppCenter project, or open an existing one
 1. Record the Owner name, this is in the URL after `orgs/` or `users/`
     1. For example https://<span></span>appcenter.ms/orgs/ **product-owner-org** /apps/variants-project
 1. Record the App name, this is int he URL after `apps/`
