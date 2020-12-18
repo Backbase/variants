@@ -18,3 +18,9 @@ struct RuntimeError: Error, CustomStringConvertible {
     static let unableToSetupVariants = RuntimeError("Unable to setup variants - Check your YAML spec")
     static let unableToSwitchVariants = RuntimeError("Unable to switch variants - Check your YAML spec")
 }
+
+extension RuntimeError: Equatable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.description == rhs.description
+    }
+}

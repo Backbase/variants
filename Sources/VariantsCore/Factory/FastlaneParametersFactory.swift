@@ -9,35 +9,63 @@ import Foundation
 import Stencil
 import PathKit
 
-protocol FastlaneFactory {
-    func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws
-    func render(parameters: [CustomProperty]) throws -> Data?
-    func write(_ data: Data, using fastlaneParametersFolder: Path) throws
+protocol ParametersFactory {
+    func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws
+    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws
+    func render(context: [String: Any], renderTemplate: String) throws -> Data?
+    func write(_ data: Data, using parametersFile: Path) throws
 }
 
-class FastlaneParametersFactory: FastlaneFactory {
+class FastlaneParametersFactory: ParametersFactory {
     init(templatePath: Path? = try? TemplateDirectory().path) {
         self.templatePath = templatePath
     }
     
-    func createParametersFile(in folder: Path, with parameters: [CustomProperty]) throws {
-        guard let data = try render(parameters: parameters) else { return }
-        try write(data, using: folder)
+    func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
+        guard
+            let context = context(for: parameters),
+            let data = try render(context: context, renderTemplate: renderTemplate)
+        else { return }
+        try write(data, using: file)
     }
     
-    func render(parameters: [CustomProperty]) throws -> Data? {
-        let fastlaneParameters = parameters.literal()
-        let fastlaneEnvVars = parameters.envVars()
-        guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return nil }
+    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws {
+        // Return immediately if folder 'fastlane/' doesn't exist.
+        guard StaticPath.Fastlane.baseFolder.exists && StaticPath.Fastlane.baseFolder.isDirectory
+        else { return }
         
-        let context = [
-            "parameters": fastlaneParameters,
-            "env_vars": fastlaneEnvVars
+        // Populate 'fastlane/parameters/match_params.rb' from template
+        let parameters: [CustomProperty] = variant.signing?.customProperties() ?? []
+        try? createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
+                                  renderTemplate: StaticPath.Template.matchParametersFileName,
+                                  with: parameters)
+        
+        // Populate 'fastlane/Matchfile' from template
+        var context = [
+            "export_method": (variant.signing?.exportMethod ?? .appstore).rawValue,
+            "bundle_id": target.bundleId+variant.configIdSuffix
         ]
-
+        
+        if let matchURL = variant.signing?.matchURL {
+            context["git_url"] = matchURL
+        } else {
+            Logger.shared.logWarning(item:
+                """
+                We couldn't add 'git_url' to 'fastlane/Matchfile' as we failed to find a 'matchURL' in your variants spec,
+                either in 'ios.signing' or 'ios.variants.\(variant.name).signing'. Please add it manually.
+                """
+            )
+        }
+        
+        guard let data = try render(context: context, renderTemplate: StaticPath.Template.matchFileName)
+        else { return }
+        try write(data, using: StaticPath.Fastlane.matchFile)
+    }
+    
+    func render(context: [String: Any], renderTemplate: String) throws -> Data? {
         guard let path = templatePath else { return nil }
         let environment = Environment(loader: FileSystemLoader(paths: [path.absolute()]))
-        let rendered = try environment.renderTemplate(name: StaticPath.Template.fastlaneParametersFileName,
+        let rendered = try environment.renderTemplate(name: renderTemplate,
                                                       context: context)
         
         // Replace multiple empty lines by one only
@@ -47,23 +75,34 @@ class FastlaneParametersFactory: FastlaneFactory {
         return Data(content.utf8)
     }
     
-    func write(_ data: Data, using fastlaneParametersFolder: Path) throws {
-            if fastlaneParametersFolder.isDirectory, fastlaneParametersFolder.exists {
-                let fastlaneParametersFile = Path(fastlaneParametersFolder.string+StaticPath
-                                                    .Fastlane.variantsParametersFileName)
-                
-                // Only proceed to write to file if such doesn't yet exist
-                // Or does exist and 'isWritable'
-                guard !fastlaneParametersFile.exists
-                        || fastlaneParametersFile.isWritable else {
-                    throw TemplateDoesNotExist(templateNames: [fastlaneParametersFolder.string])
-                }
-                
-                // Write to file
-                try fastlaneParametersFile.write(data)
-            } else {
-                throw TemplateDoesNotExist(templateNames: [fastlaneParametersFolder.string])
+    func write(_ data: Data, using parametersFile: Path) throws {
+        let parentFolder = parametersFile.parent()
+        if parentFolder.isDirectory, parentFolder.exists {
+            
+            // Only proceed to write to file if such doesn't yet exist
+            // Or does exist and 'isWritable'
+            guard !parametersFile.exists
+                    || parametersFile.isWritable else {
+                throw TemplateDoesNotExist(templateNames: [parentFolder.string])
             }
+            
+            // Write to file
+            try parametersFile.write(data)
+        } else {
+            throw TemplateDoesNotExist(templateNames: [parentFolder.string])
+        }
+    }
+    
+    private func context(for parameters: [CustomProperty]) -> [String: Any]? {
+        let fastlaneParameters = parameters.literal()
+        let fastlaneEnvVars = parameters.envVars()
+        guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return nil }
+        
+        let context = [
+            "parameters": fastlaneParameters,
+            "env_vars": fastlaneEnvVars
+        ]
+        return context
     }
     
     private let templatePath: Path?
