@@ -1,7 +1,7 @@
 
 ## Deploying to AppCenter
 
-Running the `variants setup` command generates fastlane files that can deploy your app to [AppCenter or other stores](https://github.com/Backbase/variants/blob/main/docs/STORE_DESTINATION.md). Deploying to AppCenter can be achieved solely by making changes to your `variants.yml` spec. It is assumed you have an AppCenter account and a project has already been created.
+Running the `variants setup` command generates fastlane files that can deploy your app to [AppCenter or other stores](STORE_DESTINATION.md). Deploying to AppCenter can be achieved solely by making changes to your `variants.yml` spec. It is assumed you have an AppCenter account and a project has already been created.
 
 ### Preparation
 

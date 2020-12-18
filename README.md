@@ -71,7 +71,7 @@ cd variants
 swift run variants
 ```
 
-## Usage
+## CLI Usage
 
 For usage and examples see [USAGE](docs/USAGE.md).
 
