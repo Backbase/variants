@@ -93,35 +93,41 @@ class YamlParserTests: XCTestCase {
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("default"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("BETA"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("STG"))
+                XCTAssertEqual(iosConfiguration.xcodeproj, "FrankBank.xcodeproj")
+                XCTAssertEqual(iosConfiguration.pbxproj, "FrankBank.xcodeproj/project.pbxproj")
             }
             
+            let source = iOSSource(path: "sourcePath", info: "sourceInfo", config: "sourceConfig")
+            let firstVariant = configuration.ios?.variants.first(where: { $0.name == "default" })
+            XCTAssertNotNil(firstVariant)
+            let firstVariantDefaultValues = firstVariant?.getDefaultValues(for:
+                iOSTarget(name: "FrankBank", bundleId: "com.backbase.frank.ios", app_icon: "AppIcon", source: source)
+            )
+            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NUMBER"], "1")
+            XCTAssertEqual(firstVariantDefaultValues?["V_APP_NAME"], "FrankBank")
+            XCTAssertEqual(firstVariantDefaultValues?["V_BUNDLE_ID"], "com.backbase.frank.ios")
+            XCTAssertEqual(firstVariantDefaultValues?["V_APP_ICON"], "AppIcon")
+            XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NAME"], "0.0.1")
+            XCTAssertEqual(firstVariantDefaultValues?["SAMPLE_CONFIG"], "Production Value")
+            
+            // MARK: - iOS Global Properties
+            
+            let customGlobalConfig = configuration.ios?
+                .custom?.first(where: { $0.name == "SAMPLE_GLOBAL" })
+            XCTAssertNotNil(customGlobalConfig)
+            assertCustom(customGlobalConfig!, value: "GLOBAL Value iOS", destination: .project)
+                
             // MARK: - iOS Custom Properties
-            
-            let customConfigDefault = configuration.ios?
-                .variants.first(where: { $0.name == "default" })?
-                .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
-            XCTAssertNotNil(customConfigDefault)
-            XCTAssertEqual(customConfigDefault?.value, "Production Value")
-            XCTAssertEqual(customConfigDefault?.destination, .project)
-            
+                        
             let customConfigBeta = configuration.ios?
                 .variants.first(where: { $0.name == "BETA" })?
                 .custom?.first(where: { $0.name == "SAMPLE_CONFIG" })
             XCTAssertNotNil(customConfigBeta)
-            XCTAssertEqual(customConfigBeta?.value, "BETA Value")
-            XCTAssertEqual(customConfigBeta?.destination, .fastlane)
-            
-            let customConfigGlobal = configuration.ios?
-                .custom?.first(where: { $0.name == "SAMPLE_GLOBAL" })
-            XCTAssertNotNil(customConfigGlobal)
-            XCTAssertEqual(customConfigGlobal?.value, "GLOBAL Value iOS")
-            XCTAssertEqual(customConfigGlobal?.destination, .project)
-            
+            assertCustom(customConfigBeta!, value: "BETA Value", destination: .fastlane)
+                        
             // MARK: - iOS Signing Configuration
             
-            let defaultMatchConfiguration = configuration.ios?
-                .variants.first(where: { $0.name == "default" })?
-                .signing
+            let defaultMatchConfiguration = firstVariant?.signing
             XCTAssertNotNil(defaultMatchConfiguration)
             XCTAssertEqual(defaultMatchConfiguration?.teamName, "BACKBASE EUROPE B.V.")
             XCTAssertEqual(defaultMatchConfiguration?.teamID, "ABC4CG124D")
@@ -253,6 +259,11 @@ class YamlParserTests: XCTestCase {
         } catch {
             XCTAssertTrue(((error as? DecodingError) == nil))
         }
+    }
+
+    fileprivate func assertCustom(_ custom: CustomProperty, value: String, destination: CustomProperty.Destination) {
+        XCTAssertEqual(custom.value, value)
+        XCTAssertEqual(custom.destination, destination)
     }
     
     static var allTests = [
