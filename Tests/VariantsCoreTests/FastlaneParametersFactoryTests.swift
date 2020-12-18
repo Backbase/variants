@@ -9,6 +9,8 @@ import XCTest
 import PathKit
 @testable import VariantsCore
 
+// swiftlint:disable function_body_length
+
 let parameters = [
     CustomProperty(name: "sample", value: "sample-value", destination: .project),
     CustomProperty(name: "sample-2", value: "sample-2-value", destination: .fastlane),
@@ -47,11 +49,14 @@ class FastlaneParametersFactoryTests: XCTestCase {
         
         let factory = FastlaneParametersFactory(templatePath: Path("./"))
         
-        XCTAssertNoThrow(try factory.render(parameters: parameters))
-        XCTAssertNotNil(try factory.render(parameters: parameters))
+        XCTAssertNoThrow(try factory.render(context: context(for: parameters),
+                                            renderTemplate: StaticPath.Template.fastlaneParametersFileName))
+        XCTAssertNotNil(try factory.render(context: context(for: parameters),
+                                           renderTemplate: StaticPath.Template.fastlaneParametersFileName))
         
         do {
-            if let renderedData = try factory.render(parameters: parameters) {
+            if let renderedData = try factory.render(context: context(for: parameters),
+                                                     renderTemplate: StaticPath.Template.fastlaneParametersFileName) {
                 XCTAssertEqual(String(data: renderedData, encoding: .utf8), correctOutput)
             }
         } catch {
@@ -62,7 +67,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
     func testFileWrite_correctOutput() {
         let basePath = Path("./")
         do {
-            let fastlaneParametersPath = try Path("fastlane").safeJoin(path: Path("parameters/"))
+            let fastlaneParametersPath = try Path("fastlane").safeJoin(path: Path("parameters/variants_params.rb"))
             if !fastlaneParametersPath.exists {
                 XCTAssertNoThrow(try fastlaneParametersPath.mkpath())
             }
@@ -70,9 +75,8 @@ class FastlaneParametersFactoryTests: XCTestCase {
             let factory = FastlaneParametersFactory(templatePath: basePath)
             XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: fastlaneParametersPath))
             
-            let fastlaneParametersFile = Path(fastlaneParametersPath.string+"/variants_params.rb")
-            XCTAssertTrue(fastlaneParametersFile.exists)
-            XCTAssertEqual(try fastlaneParametersFile.read(), correctOutput)
+            XCTAssertTrue(fastlaneParametersPath.exists)
+            XCTAssertEqual(try fastlaneParametersPath.read(), correctOutput)
             
         } catch {
             XCTFail("'Try' should not throw - "+error.localizedDescription)
@@ -98,6 +102,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
             id_suffix: "sample",
             version_name: "2.3.4",
             version_number: 99,
+            signing: nil,
             custom: nil,
             store_destination: "TestFlight"
         )
@@ -120,15 +125,52 @@ class FastlaneParametersFactoryTests: XCTestCase {
         fastlaneParameters.append(variant.destinationProperty)
         let factory = FastlaneParametersFactory(templatePath: Path("./"))
         
-        XCTAssertNoThrow(try factory.render(parameters: fastlaneParameters))
-        XCTAssertNotNil(try factory.render(parameters: fastlaneParameters))
+        XCTAssertNoThrow(try factory.render(context: context(for: fastlaneParameters),
+                                            renderTemplate: StaticPath.Template.fastlaneParametersFileName))
+        XCTAssertNotNil(try factory.render(context: context(for: fastlaneParameters),
+                                           renderTemplate: StaticPath.Template.fastlaneParametersFileName))
         
         do {
-            if let renderedData = try factory.render(parameters: fastlaneParameters) {
+            if let renderedData = try factory.render(context: context(for: fastlaneParameters),
+                                                     renderTemplate: StaticPath.Template.fastlaneParametersFileName) {
                 XCTAssertEqual(String(data: renderedData, encoding: .utf8), expectedOutput)
             }
         } catch {
             XCTFail("'Try' should not throw - "+error.localizedDescription)
         }
+    }
+    
+    private func context(for parameters: [CustomProperty]) -> [String: Any] {
+        let fastlaneParameters = parameters.literal()
+        let fastlaneEnvVars = parameters.envVars()
+        guard !fastlaneParameters.isEmpty || !fastlaneEnvVars.isEmpty else { return [:] }
+        
+        let context = [
+            "parameters": fastlaneParameters,
+            "env_vars": fastlaneEnvVars
+        ]
+        return context
+    }
+}
+// swiftlint:enable function_body_length
+
+fileprivate extension Sequence where Iterator.Element == CustomProperty {
+    func envVars() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .fastlane && $0.processForEnvironment().isEnvVar })
+            .map { (property) -> CustomProperty in
+                let processed = property.processForEnvironment()
+                if processed.isEnvVar {
+                    return CustomProperty(name: property.name,
+                                          value: processed.string,
+                                          destination: property.destination)
+                }
+                return property
+            }
+    }
+    
+    func literal() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .fastlane && !$0.processForEnvironment().isEnvVar })
     }
 }

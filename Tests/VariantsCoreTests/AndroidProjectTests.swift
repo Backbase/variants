@@ -2,28 +2,27 @@
 //  Variants
 //
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
-//  Created by Arthur Alves
+//  Created by Will Nasby
 //
 
 import XCTest
 import PathKit
 import ArgumentParser
 @testable import VariantsCore
-// swiftlint:disable type_name
 
-class iOSProjectTests: XCTestCase {
+class AndroidProjectTests: XCTestCase {
     func testProject_initialize() {
         let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
-        let parametersFactoryMock = MockFastlaneFactory()
-        
-        let project = iOSProject(
+        let gradleFactoryMock = MockGradleScriptFactory()
+        let fastlaneFactoryMock = MockFastlaneFactory()
+
+        let project = AndroidProject(
             specHelper: specHelperMock,
-            configFactory: xcFactoryMock,
-            parametersFactory: parametersFactoryMock,
+            gradleFactory: gradleFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
-        
+
         XCTAssertNoThrow(try project.initialize(verbose: true))
         XCTAssertEqual(specHelperMock.generateCache.count, 1)
         XCTAssertNoThrow(try project.initialize(verbose: true))
@@ -32,13 +31,13 @@ class iOSProjectTests: XCTestCase {
     
     func testProject_setup() {
         let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
-        let parametersFactoryMock = MockFastlaneFactory()
-        
-        let project = iOSProject(
+        let gradleFactoryMock = MockGradleScriptFactory()
+        let fastlaneFactoryMock = MockFastlaneFactory()
+
+        let project = AndroidProject(
             specHelper: specHelperMock,
-            configFactory: xcFactoryMock,
-            parametersFactory: parametersFactoryMock,
+            gradleFactory: gradleFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
         
@@ -52,38 +51,47 @@ class iOSProjectTests: XCTestCase {
                     """)
             }
         }
-        
+
         XCTAssertNotNil(specPath())
         if let spec = specPath() {
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: true, verbose: true))
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 0)
-            XCTAssertEqual(xcFactoryMock.createConfigCache.count, 1)
-            XCTAssertEqual(xcFactoryMock.createConfigCache.first?.variant.name, "default")
-            
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 0)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
+
             XCTAssertNoThrow(try project.setup(spec: spec.string, skipFastlane: false, verbose: true))
-            XCTAssertEqual(xcFactoryMock.createConfigCache.count, 2)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 1)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.file.string, "fastlane/parameters/variants_params.rb")
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.count, 1)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.name, "STORE_DESTINATION")
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.value, "appstore")
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.first?.destination, .fastlane)
-            XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 1)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 2)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "default")
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
+            
+            let fastlaneFactoryLastRequest = fastlaneFactoryMock.createParametersCache.last
+            XCTAssertEqual(fastlaneFactoryLastRequest?.file.string, "fastlane/parameters/variants_params.rb")
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.count, 4)
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.name, "SAMPLE_PROJECT")
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.value, "Sample Project Default Config")
+            XCTAssertEqual(fastlaneFactoryLastRequest?.parameters.first?.destination, .project)
+            
+            let packageProperty = fastlaneFactoryMock.createParametersCache
+                .last?.parameters.first(where: { $0.name == "PACKAGE_NAME" })
+            XCTAssertNotNil(packageProperty)
+            if let packageProperty = packageProperty {
+                XCTAssertEqual(packageProperty.value, "com.backbase.frank")
+                XCTAssertEqual(packageProperty.destination, .fastlane)
+            }
         }
     }
     
     func testProject_switch() {
         let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
-        let parametersFactoryMock = MockFastlaneFactory()
-        
-        let project = iOSProject(
+        let gradleFactoryMock = MockGradleScriptFactory()
+        let fastlaneFactoryMock = MockFastlaneFactory()
+
+        let project = AndroidProject(
             specHelper: specHelperMock,
-            configFactory: xcFactoryMock,
-            parametersFactory: parametersFactoryMock,
+            gradleFactory: gradleFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
             yamlParser: YamlParser()
         )
-        
+
         // Path to Variants spec is wrong
         let wrongSpecPath = "wrong_variants.yml"
         let inexistentVariant = "variant"
@@ -96,10 +104,10 @@ class iOSProjectTests: XCTestCase {
                     """)
             }
         }
-        
+
         XCTAssertNotNil(specPath())
         if let spec = specPath() {
-            
+
             // Variant 'variant' doesn't exist
             XCTAssertThrowsError(try project.switch(to: inexistentVariant, spec: spec.string, verbose: true),
                                  "Variant doesn't exist") { (error) in
@@ -110,22 +118,20 @@ class iOSProjectTests: XCTestCase {
                         """)
                 }
             }
-            
-            let betaVariant = "beta"
-            XCTAssertNoThrow(try project.switch(to: betaVariant, spec: spec.string, verbose: true))
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 1)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.first?.parameters.count, 2)
-            XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 1)
-            XCTAssertEqual(xcFactoryMock.createConfigCache.count, 1)
-            XCTAssertEqual(xcFactoryMock.createConfigCache.first?.variant.name, "BETA")
 
-            let stgVariant = "stg"
-            XCTAssertNoThrow(try project.switch(to: stgVariant, spec: spec.string, verbose: true))
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 2)
-            XCTAssertEqual(parametersFactoryMock.createParametersCache.last?.parameters.count, 1)
-            XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 2)
-            XCTAssertEqual(xcFactoryMock.createConfigCache.count, 2)
-            XCTAssertEqual(xcFactoryMock.createConfigCache.last?.variant.name, "STG")
+            let testVariant = "test"
+            XCTAssertNoThrow(try project.switch(to: testVariant, spec: spec.string, verbose: true))
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 1)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.first?.parameters.count, 5)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 1)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.first?.variant.name, "test")
+
+            let defaultVariant = "default"
+            XCTAssertNoThrow(try project.switch(to: defaultVariant, spec: spec.string, verbose: true))
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.count, 2)
+            XCTAssertEqual(fastlaneFactoryMock.createParametersCache.last?.parameters.count, 4)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.count, 2)
+            XCTAssertEqual(gradleFactoryMock.createScriptCache.last?.variant.name, "default")
         }
     }
     

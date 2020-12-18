@@ -19,10 +19,21 @@ ios:
       - name: default
         version_name: 0.0.1
         version_number: 1
+        #
         # 'store_destination' can be: AppStore, TestFlight or AppCenter
         store_destination: AppStore
+        
+        #
+        # Same as `ios.signing`, but this will override those values.
+        signing:
+            # 'match_url' isn't mandatory, only if you use Match to sign your app
+            # match_url: "git@github.com:sample/match.git"
+            team_name: "iPhone Distribution"
+            team_id: "AB1234567D"
+        
         #
         # custom: - Not required.
+        #
         # You can have as many custom fields as possible.
         # Only strings allowed.
         #
@@ -47,8 +58,20 @@ ios:
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 1
+        
+        #
         # 'store_destination' can be: AppStore, TestFlight or AppCenter
         store_destination: AppCenter
+        
+        #
+        # Same as `ios.signing`, but this will override those values.
+        signing:
+            # 'match_url' isn't mandatory, only if you use Match to sign your app
+            # match_url: "git@github.com:sample/match.git"
+            team_name: "iPhone Distribution: Enterprise Sample"
+            team_id: "7A1234567D"
+            export_method: "enterprise"
+            
         custom:
             - name: OTHER_SWIFT_FLAGS
               value: $(inherited)
@@ -57,16 +80,23 @@ ios:
               value: This will be available to fastlane on Beta variant
               destination: fastlane
 
+    signing:
+        # 'match_url' isn't mandatory, only if you use Match to sign your app
+        #match_url: "git@github.com:sample/match.git"
+        team_name: "iPhone Distribution"
+        team_id: "AB1234567D"
+        export_method: "appstore"
+    
     # ----------------------------------------------------------------------
     # custom: - Not required.
     #
     # Same as variant's `custom`, but this will be processed regardless of
     # the chosen variant.
     #
-    # Uncomment section below if necessary.
+    # Comment or delete section below if necessary.
     # ----------------------------------------------------------------------
 
-    #custom:
-    #    - name: SAMPLE_PROPERTY
-    #      value: Sample value
-    #      destination: project
+    custom:
+        - name: SAMPLE_PROPERTY
+          value: Sample value
+          destination: project

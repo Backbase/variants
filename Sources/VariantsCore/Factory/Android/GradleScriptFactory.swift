@@ -9,7 +9,13 @@ import Foundation
 import PathKit
 import Stencil
 
-class GradleScriptFactory {
+protocol GradleFactory {
+    func createScript(with configuration: AndroidConfiguration, variant: AndroidVariant) throws
+    func render(with configuration: AndroidConfiguration, variant: AndroidVariant) throws -> Data?
+    func write(_ data: Data, using gradleScriptFolder: Path) throws
+}
+
+class GradleScriptFactory: GradleFactory {
     init(templatePath: Path? = try? TemplateDirectory().path) {
         self.templatePath = templatePath
     }

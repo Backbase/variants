@@ -1,7 +1,8 @@
 require File.expand_path('parameters/match_params.rb', __dir__)
 
-CODE_SIGNING_IDENTITY   = MATCH_PARAMS[:CODE_SIGNING_IDENTITY]
-EXPORT_METHOD           = MATCH_PARAMS[:EXPORT_METHOD]
+CODE_SIGNING_IDENTITY   = MATCH_PARAMS[:TEAMNAME]
+TEAM_ID                 = MATCH_PARAMS[:TEAMID]
+EXPORT_METHOD           = MATCH_PARAMS[:EXPORTMETHOD]
 
 # --- Well, it doesn't deploy
 
@@ -56,7 +57,7 @@ lane :deploy do |options|
     # The following parameters are necessary:
     # - 'channel' (string)
     # - 'hook_url' (string)
-    # - 'interactive_url' (string) - URL you'll click to lead you to AppCenter or CI pipeline
+    # - 'interactive_url' (string) - URL you'll click to lead you to AppCenter/AppStore or CI pipeline
     # - 'message' (string) - What to inform?
     # - 'success' (boolean) - OPTIONAL value, false by default.
     #
@@ -75,6 +76,7 @@ private_lane :archive do |options|
         scheme: APP_SCHEME,
         silent: false,
         clean: true,
+        export_team_id: TEAM_ID,
         codesigning_identity: CODE_SIGNING_IDENTITY,
         export_options: {
           method: EXPORT_METHOD
