@@ -8,6 +8,7 @@ templatesdir = Templates
 
 REPODIR = $(shell pwd)
 BUILDDIR = $(REPODIR)/.build
+CIBUILDDIR = $(REPODIR)/.ci-build
 SOURCES = $(wildcard $(srcdir)/**/*.swift)
 TEMPLATES = $(templatesdir)
 
@@ -28,6 +29,17 @@ install: variants
 	@install "$(BUILDDIR)/release/variants" "$(bindir)"
 	@mkdir -p "$(libdir)/variants"
 	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
+
+.PHONY: ci
+ci:
+	@install -d "$(bindir)" "$(libdir)"
+	@install "$(CIBUILDDIR)/release/variants" "$(bindir)"
+	@mkdir -p "$(libdir)/variants"
+	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
+
+.PHONY: pre-ci
+pre-ci: variants
+	@cp "$(BUILDDIR)/release/variants" "$(CIBUILDDIR)/release/variants"
 
 .PHONY: uninstall
 uninstall:
