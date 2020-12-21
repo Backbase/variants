@@ -164,11 +164,11 @@ class XCConfigFactory: XCFactory {
         do {
             // TODO: Add plutil as separate command?
             let commands = [
-                Bash("plutil", arguments: "-replace", "CFBundleVersion", "-string", "'$(V_VERSION_NUMBER)'", configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString", "-string", "'$(V_VERSION_NAME)'", configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleName", "-string", "'$(V_APP_NAME)'", configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleExecutable", "-string", "'$(V_APP_NAME)'", configFilePath),
-                Bash("plutil", arguments: "-replace", "CFBundleIdentifier", "-string", "'$(V_BUNDLE_ID)'", configFilePath)
+                Bash("plutil", arguments: "-replace", "CFBundleVersion", "-string", "$(V_VERSION_NUMBER)", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleShortVersionString", "-string", "$(V_VERSION_NAME)", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleName", "-string", "$(V_APP_NAME)", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleExecutable", "-string", "$(V_APP_NAME)", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleIdentifier", "-string", "$(V_BUNDLE_ID)", configFilePath)
             ]
             
             try commands.forEach { try $0.run() }
