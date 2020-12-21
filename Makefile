@@ -37,6 +37,10 @@ ci:
 	@mkdir -p "$(libdir)/variants"
 	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
 
+.PHONY: pre-ci
+pre-ci: variants
+	@cp "$(BUILDDIR)/release/variants" "$(CIBUILDDIR)/release/variants"
+
 .PHONY: uninstall
 uninstall:
 	@rm -rf "$(bindir)/variants"
