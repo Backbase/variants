@@ -1,4 +1,5 @@
 require File.expand_path('parameters/project_params.rb', __dir__)
+require File.expand_path('parameters/variants_params.rb', __dir__)
 
 DERIVED_DATA_PATH = PROJECT_PARAMS[:DERIVED_DATA_PATH]
 REPORTS_FOLDER = PROJECT_PARAMS[:REPORTS_FOLDER]
@@ -48,7 +49,7 @@ end
 # --- Preparation phase
 
 desc 'prepares the environment'
-private_lane :prepare do |options|
+lane :prepare do |options|
     defaults = {
         derived_data_path: DERIVED_DATA_PATH
     }.freeze
