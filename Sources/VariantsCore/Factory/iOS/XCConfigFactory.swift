@@ -180,8 +180,8 @@ class XCConfigFactory: XCFactory {
                 .getDefaultValues(for: target)
                 .filter { !$0.key.starts(with: "V_") }
                 .forEach { (key, _) in
-                    try Bash("plutil", arguments: "-remove '\(key)'", configFilePath).run()
-                    try Bash("plutil", arguments: "-insert '\(key)'", "-string '$(\(key))'", configFilePath).run()
+                    try Bash("plutil", arguments: "-remove", "\(key)", configFilePath).run()
+                    try Bash("plutil", arguments: "-insert", "\(key)", "-string", "$(\(key))", configFilePath).run()
             }
             
         } catch {
