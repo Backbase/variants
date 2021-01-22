@@ -7,7 +7,7 @@ android:
   app_name: FrankBank
   app_identifier: com.backbase.frank
   variants:
-    - name: default
+    default:
       version_name: 0.0.1
       version_code: 1
       task_build: bundleProdRelease
@@ -17,7 +17,7 @@ android:
         - name: SAMPLE_PROJECT
           value: Sample Project Default Config
           destination: project
-    - name: test
+    test:
       id_suffix: dev
       task_build: assembleDevelop
       task_unittest: testDevDebugUnitTest

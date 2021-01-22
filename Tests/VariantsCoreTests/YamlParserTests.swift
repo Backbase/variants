@@ -170,8 +170,8 @@ class YamlParserTests: XCTestCase {
             XCTAssertEqual(configuration.android?.appIdentifier, "com.backbase.frank")
             XCTAssertEqual(configuration.android?.path, ".")
             XCTAssertEqual(configuration.android?.variants.count, 2)
-            XCTAssertEqual(configuration.android?.variants.first?.name, "default")
-            XCTAssertEqual(configuration.android?.variants.last?.name, "test")
+            XCTAssertTrue(((configuration.android?.variants.map(\.name).contains("default")) != nil))
+            XCTAssertTrue(((configuration.android?.variants.map(\.name).contains("test")) != nil))
             
             let customConfigDefault = configuration.android?
                 .variants.first(where: { $0.name == "default" })?

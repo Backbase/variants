@@ -96,7 +96,7 @@ ios:
     # Comment or delete section below if necessary.
     # ----------------------------------------------------------------------
 
-    custom:
-        - name: SAMPLE_PROPERTY
-          value: Sample value
-          destination: project
+    #custom:
+    #    - name: SAMPLE_PROPERTY
+    #      value: Sample value
+    #      destination: project

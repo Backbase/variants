@@ -56,7 +56,7 @@ android:
     path: ...
     ...
     variants:
-      - name: default
+      default:
         version_name: 0.0.1
         version_number: 1
         ...
@@ -72,7 +72,7 @@ As seen above, custom properties that are specific to a variant will only be ava
 android:
     ...
     variants:
-      - name: default
+      default:
         version_name: 1.0.0
         version_number: 10
         ...
@@ -80,7 +80,7 @@ android:
             - name: BASE_URL
               value: https://api.service.com/
               destination: project
-      - name: BETA
+      BETA:
         version_name: 1.1.8
         version_number: 23
         ...
