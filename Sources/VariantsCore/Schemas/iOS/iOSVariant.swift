@@ -77,3 +77,17 @@ extension iOSVariant {
         case testFlight = "testflight"
     }
 }
+
+/*
+ * Used by `iOSConfiguration` decode variant from YAML spec
+ * as dictionary `[String: UnnamediOSVariant]` and expose array `[iOSVariant]`.
+ */
+struct UnnamediOSVariant: Codable {
+    let app_icon: String?
+    let id_suffix: String?
+    let version_name: String
+    let version_number: Int
+    let signing: iOSSigning?
+    let custom: [CustomProperty]?
+    internal let store_destination: String?
+}

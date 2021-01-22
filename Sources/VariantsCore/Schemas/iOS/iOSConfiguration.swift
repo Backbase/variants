@@ -22,10 +22,10 @@ public struct iOSConfiguration: Codable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let variants = try container.decode([iOSVariant].self, forKey: .variants)
+        let variants = try container.decode([String: UnnamediOSVariant].self, forKey: .variants)
         let globalSigning = try? container.decode(iOSSigning.self, forKey: .signing)
         
-        guard globalSigning != nil || variants.filter({ $0.signing == nil }).isEmpty else {
+        guard globalSigning != nil || variants.map(\.value).filter({ $0.signing == nil }).isEmpty else {
             throw RuntimeError(
                 """
                 At least one variant doesn't contain a 'signing' configuration.
@@ -34,7 +34,8 @@ public struct iOSConfiguration: Codable {
         }
         
         var definiteVariants: [iOSVariant] = []
-        try variants.forEach { variant in
+        
+        try variants.forEach({ (name, variant) in
             var signing = globalSigning
             
             if let variantSigning = variant.signing {
@@ -44,7 +45,7 @@ public struct iOSConfiguration: Codable {
             }
             
             definiteVariants.append(
-                iOSVariant(name: variant.name,
+                iOSVariant(name: name,
                            app_icon: variant.app_icon,
                            id_suffix: variant.id_suffix,
                            version_name: variant.version_name,
@@ -53,7 +54,7 @@ public struct iOSConfiguration: Codable {
                            custom: variant.custom,
                            store_destination: variant.store_destination)
             )
-        }
+        })
         
         self.xcodeproj = try container.decode(String.self, forKey: .xcodeproj)
         self.targets = try container.decode([String: iOSTarget].self, forKey: .targets)
