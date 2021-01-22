@@ -77,13 +77,13 @@ ios:
           info: Sources/Info.plist
           config: Sources
     variants:
-      - name: default
+      default:
         version_name: 0.0.1
         version_number: 1
         custom:
             - key: SAMPLE_CONFIG
               value: Production Value
-      - name: BETA
+      BETA:
         id_suffix: beta
         app_icon: AppIcon.beta
         version_name: 0.0.1

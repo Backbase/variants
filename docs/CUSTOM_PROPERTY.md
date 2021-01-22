@@ -40,7 +40,7 @@ ios:
     targets:
       ...
     variants:
-      - name: default
+      default:
         version_name: 0.0.1
         version_number: 1
         ...

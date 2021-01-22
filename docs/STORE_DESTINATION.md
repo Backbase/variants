@@ -59,17 +59,17 @@ ios:
     targets:
       ...
     variants:
-      - name: default
+      default:
         version_name: 0.0.1
         version_number: 1
         store_destination: AppStore
         ...
-      - name: beta
+      beta:
         version_name: 0.0.1
         version_number: 1
         store_destination: TestFlight
         ...
-      - name: enterprise_release
+      enterprise_release:
         version_name: 0.0.1
         version_number: 1
         store_destination: AppCenter

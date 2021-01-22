@@ -66,15 +66,15 @@ ios:
           # Path to folder that will serve as parent to folder Variants/
           config: Sources
     variants:
-        # Default variant is mandatory, do not remove
-      - name: default
+      # Default variant is mandatory, do not remove
+      default:
         version_name: 0.0.1
         version_number: 1
         custom:
             - name: apiBaseUrl
               value: https://sample.com/
               destination: project
-      - name: BETA
+      BETA:
         id_suffix: beta
         app_icon: AppIcon.beta
         version_name: 0.0.1
