@@ -23,4 +23,47 @@ public struct AndroidConfiguration: Codable {
         case signing = "signing"
         case custom = "custom"
     }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let variants = try container.decode([String: UnnamedAndroidVariant].self, forKey: .variants)
+        
+        var definiteVariants: [AndroidVariant] = []
+        variants.forEach({ (name, variant) in
+            definiteVariants.append(
+                AndroidVariant(name: name,
+                               versionName: variant.versionName,
+                               versionCode: variant.versionCode,
+                               idSuffix: variant.idSuffix,
+                               taskBuild: variant.taskBuild,
+                               taskUnitTest: variant.taskUnitTest,
+                               taskUitest: variant.taskUitest,
+                               custom: variant.custom,
+                               store_destination: variant.store_destination)
+            )
+        })
+        
+        self.path = try container.decode(String.self, forKey: .path)
+        self.appName = try container.decode(String.self, forKey: .appName)
+        self.appIdentifier = try container.decode(String.self, forKey: .appIdentifier)
+        self.variants = definiteVariants
+        self.signing = try container.decode(AndroidSigning.self, forKey: .signing)
+        self.custom = try? container.decode([CustomProperty].self, forKey: .custom)
+    }
+    
+    public init(
+        path: String,
+        appName: String,
+        appIdentifier: String,
+        variants: [AndroidVariant],
+        signing: AndroidSigning?,
+        custom: [CustomProperty]?
+    ) {
+        self.path = path
+        self.appName = appName
+        self.appIdentifier = appIdentifier
+        self.variants = variants
+        self.signing = signing
+        self.custom = custom
+    }
 }

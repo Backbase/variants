@@ -8,9 +8,9 @@ android:
     app_name: {{ APP_NAME }}
     app_identifier: {{ APP_IDENTIFIER }}
     variants:
-      # Default variant is mandatory, do not remove
-      # Usually regarded as `production` variant.
-        - name: default
+        # Default variant is mandatory, do not remove
+        # Usually regarded as `production` variant.
+        default:
           version_name: 0.0.1
           version_code: 1
           task_build: bundleProdRelease
@@ -31,7 +31,9 @@ android:
             - name: SAMPLE_PROPERTY
               value: "{{ envVars.SAMPLE_ENVIRONMENT_VARIABLE }}"
               destination: fastlane
-        - name: BETA
+              
+        # Sample variant "BETA"
+        BETA:
           id_suffix: beta
           version_name: 0.0.1
           version_code: 1

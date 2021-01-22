@@ -15,8 +15,8 @@ ios:
           info: {{ INFO_PLIST }}
           config: {{ SOURCE }}
     variants:
-        # Default variant is mandatory, do not remove
-      - name: default
+      # Default variant is mandatory, do not remove
+      default:
         version_name: 0.0.1
         version_number: 1
         #
@@ -48,11 +48,11 @@ ios:
             - name: SAMPLE_FASTLANE_PROPERTY
               value: This will be available to fastlane
               destination: fastlane
-        #
-        # Sample variant, "beta".
-        # Only `name` and `id_suffix` are mandatory fields
-        #
-      - name: BETA
+      #
+      # Sample variant, "beta".
+      # Only `name` and `id_suffix` are mandatory fields
+      #
+      BETA:
         id_suffix: beta
         # If app_icon isn't specified, the value fallbacks to target.app_icon
         app_icon: AppIcon.beta
@@ -96,7 +96,7 @@ ios:
     # Comment or delete section below if necessary.
     # ----------------------------------------------------------------------
 
-    custom:
-        - name: SAMPLE_PROPERTY
-          value: Sample value
-          destination: project
+    #custom:
+    #    - name: SAMPLE_PROPERTY
+    #      value: Sample value
+    #      destination: project
