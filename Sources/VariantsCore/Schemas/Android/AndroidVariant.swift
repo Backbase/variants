@@ -69,3 +69,29 @@ extension AndroidVariant {
         case playStore = "playstore"
     }
 }
+
+/*
+ * Used by `AndroidConfiguration` decode variant from YAML spec
+ * as dictionary `[String: UnnamedAndroidVariant]` and expose array `[AndroidVariant]`.
+ */
+struct UnnamedAndroidVariant: Codable {
+    let versionName: String
+    let versionCode: String
+    let idSuffix: String?
+    let taskBuild: String
+    let taskUnitTest: String
+    let taskUitest: String
+    let custom: [CustomProperty]?
+    internal let store_destination: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case versionName = "version_name"
+        case versionCode = "version_code"
+        case idSuffix = "id_suffix"
+        case taskBuild = "task_build"
+        case taskUnitTest = "task_unittest"
+        case taskUitest = "task_uitest"
+        case custom = "custom"
+        case store_destination
+    }
+}
