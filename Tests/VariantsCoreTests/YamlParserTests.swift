@@ -100,8 +100,12 @@ class YamlParserTests: XCTestCase {
             let source = iOSSource(path: "sourcePath", info: "sourceInfo", config: "sourceConfig")
             let firstVariant = configuration.ios?.variants.first(where: { $0.name == "default" })
             XCTAssertNotNil(firstVariant)
-            let firstVariantDefaultValues = firstVariant?.getDefaultValues(for:
-                iOSTarget(name: "FrankBank", bundleId: "com.backbase.frank.ios", app_icon: "AppIcon", source: source)
+            let firstVariantDefaultValues = firstVariant?
+                .getDefaultValues(for:iOSTarget(name: "FrankBank",
+                                                app_icon: "AppIcon",
+                                                bundleId: "com.backbase.frank.ios",
+                                                testTarget: "FrankBankTests",
+                                                source: source)
             )
             XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NUMBER"], "1")
             XCTAssertEqual(firstVariantDefaultValues?["V_APP_NAME"], "FrankBank")

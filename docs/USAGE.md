@@ -59,6 +59,7 @@ ios:
       SampleProject:
         name: SampleApp
         bundle_id: com.sample.app
+        test_target: SampleProjectTests
         app_icon: AppIcon
         source:
           path: Sources

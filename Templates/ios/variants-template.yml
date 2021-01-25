@@ -9,6 +9,7 @@ ios:
       {{ TARGET }}:
         name: {{ APP_NAME }}
         bundle_id: {{ APP_BUNDLE_ID }}
+        test_target: {{ TEST_TARGET }}
         app_icon: {{ APP_ICON }}
         source:
           path: {{ SOURCE }}
