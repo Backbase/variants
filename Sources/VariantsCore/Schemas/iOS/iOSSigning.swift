@@ -29,6 +29,19 @@ extension iOSSigning {
         case development
         case adhoc
         case enterprise
+        
+        var prefix: String {
+            switch self {
+            case .development:
+                return "match Development"
+            case .adhoc:
+                return "match AdHoc"
+            case .appstore:
+                return "match AppStore"
+            case .enterprise:
+                return "match InHouse"
+            }
+        }
     }
 }
 

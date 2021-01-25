@@ -101,7 +101,7 @@ class XCConfigFactory: XCFactory {
          * If template files should be added to Xcode Project
          */
         if addToXcodeProj ?? false {
-            addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target)
+            addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target, variant: variant)
         }
         
         /*
@@ -118,7 +118,8 @@ class XCConfigFactory: XCFactory {
     private func addToXcode(_ xcConfigFile: Path,
                             toProject projectPath: Path,
                             sourceRoot: Path,
-                            target: NamedTarget) {
+                            target: NamedTarget,
+                            variant: iOSVariant) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
 
         do {
@@ -131,14 +132,19 @@ class XCConfigFactory: XCFactory {
             let xcodeFactory = XcodeProjFactory()
             xcodeFactory.add([xcConfigFile, variantsFile], toProject: projectPath, sourceRoot: sourceRoot, target: target)
             
-            xcodeFactory.modify(
-                [
-                    "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
-                    "PRODUCT_NAME": "$(V_APP_NAME)",
-                    "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
-                ],
-                in: projectPath,
-                target: target.value)
+            var mainTargetSettings = [
+                "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
+                "PRODUCT_NAME": "$(V_APP_NAME)",
+                "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
+            ]
+            
+            if
+                let _ = variant.signing?.matchURL,
+                let _ = variant.signing?.exportMethod {
+                mainTargetSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
+            }
+            
+            xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
             
             xcodeFactory.modify(
                 [

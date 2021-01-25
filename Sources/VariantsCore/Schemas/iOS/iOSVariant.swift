@@ -20,14 +20,22 @@ public struct iOSVariant: Codable {
     internal let store_destination: String?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
+        let bundleId = target.bundleId+configIdSuffix
+        
         var customDictionary: [String: String] = [
             "V_APP_NAME": target.name+configName,
-            "V_BUNDLE_ID": target.bundleId+configIdSuffix,
+            "V_BUNDLE_ID": bundleId,
             "V_VERSION_NAME": version_name,
             "V_VERSION_NUMBER": String(version_number),
             "V_APP_ICON": app_icon ?? target.app_icon
         ]
        
+        if
+            let _ = signing?.matchURL,
+            let exportMethod = signing?.exportMethod {
+            customDictionary["V_MATCH_PROFILE"] = exportMethod.prefix+" "+bundleId
+        }
+        
         custom?
             .filter { $0.destination == .project && !$0.processForEnvironment().isEnvVar }
             .forEach({ config in
