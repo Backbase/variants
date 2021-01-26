@@ -43,7 +43,6 @@ class SecretsFactory {
                 let variantsGybFile = try configFilePath.parent().absolute()
                     .safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
                 try variantsGybFile.delete()
-                
             }
         } catch {
             let variantsFile = try? configFilePath.parent().absolute()
