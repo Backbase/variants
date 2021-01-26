@@ -139,8 +139,8 @@ class XCConfigFactory: XCFactory {
             ]
             
             if
-                let _ = variant.signing?.matchURL,
-                let _ = variant.signing?.exportMethod {
+                variant.signing?.matchURL != nil,
+                variant.signing?.exportMethod != nil {
                 mainTargetSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
             }
             

@@ -31,7 +31,7 @@ public struct iOSVariant: Codable {
         ]
        
         if
-            let _ = signing?.matchURL,
+            signing?.matchURL != nil,
             let exportMethod = signing?.exportMethod {
             customDictionary["V_MATCH_PROFILE"] = exportMethod.prefix+" "+bundleId
         }
