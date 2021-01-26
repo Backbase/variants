@@ -27,6 +27,7 @@ struct StaticPath {
     
     struct Xcode {
         static let variantsGybFileName = "Variants.swift.gyb"
+        static let variantsFileName = "Variants.swift"
     }
     
     struct Template {

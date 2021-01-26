@@ -24,7 +24,7 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
         
         XCTAssertEqual(
             environmentVarProperty.processForEnvironment().string,
-            "System.getenv('A_SECRET')",
+            "A_SECRET",
             "After processing `string` should be processed to extract env var name"
         )
     }

@@ -10,7 +10,16 @@ import PathKit
 import Stencil
 
 class SecretsFactory {
-    func updateSecrets(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
+    init(logger: Logger = Logger(verbose: false)) {
+        self.logger = logger
+    }
+    
+    /// Updates `Variants.swift` with `Variants.Secrets` containing
+    /// encrypted static variables
+    /// - Parameters:
+    ///   - configFilePath: Path to XCConfig file
+    ///   - variant: Chosen variant, as seen in `variants.yml`
+    func updateSecrets(with configFilePath: Path, variant: iOSVariant) {
         do {
             let path = try TemplateDirectory().path
             guard let variantsGybTemplatePath = try? path.safeJoin(path: Path("ios/"))
@@ -29,19 +38,24 @@ class SecretsFactory {
                 let lines = rendered.split(whereSeparator: \.isNewline)
                 let content = lines.joined(separator: "\n")
                 
-                try write(Data(content.utf8), using: configFile.parent().absolute())
+                try write(Data(content.utf8), using: configFilePath.parent().absolute())
                 
-                let variantsGybFile = try configFile.parent().absolute().safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
+                let variantsGybFile = try configFilePath.parent().absolute()
+                    .safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
                 try variantsGybFile.delete()
                 
             }
         } catch {
-            // TODO: Handle error
+            let variantsFile = try? configFilePath.parent().absolute()
+                .safeJoin(path: Path(StaticPath.Xcode.variantsFileName))
+            logger.logWarning(item: """
+                Something went wrong while generating 'Variants.Secrets' in '\(variantsFile ?? "Variants.swift")'
+                """)
             dump(error)
         }
     }
     
-    func write(_ data: Data, using folder: Path = Path("/tmp/")) throws {
+    private func write(_ data: Data, using folder: Path = Path("/tmp/")) throws {
         if folder.isDirectory, folder.exists {
             let variantsGybFile = try folder.safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
             
@@ -70,7 +84,7 @@ class SecretsFactory {
                             variantsGybFile.absolute().description
                 ).run()
                 
-                Logger.shared.logInfo("⚙️  ", item: """
+                logger.logInfo("⚙️  ", item: """
                     '\(variantsGybFile.parent().abbreviate().string)/Variants.swift' has been generated with success
                     """, color: .green)
             }
@@ -78,6 +92,8 @@ class SecretsFactory {
             throw TemplateDoesNotExist(templateNames: [folder.string])
         }
     }
+    
+    let logger: Logger
 }
 
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
