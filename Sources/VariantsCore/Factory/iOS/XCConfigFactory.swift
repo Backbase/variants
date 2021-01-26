@@ -140,6 +140,14 @@ class XCConfigFactory: XCFactory {
                 in: projectPath,
                 target: target.value)
             
+            xcodeFactory.modify(
+                [
+                    "TEST_HOST": "$(BUILT_PRODUCTS_DIR)/$(V_APP_NAME).app/$(V_APP_NAME)"
+                ],
+                in: projectPath,
+                target: target.value,
+                asTestSettings: true)
+            
         } catch {
             logger.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
         }

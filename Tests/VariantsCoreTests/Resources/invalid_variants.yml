@@ -71,6 +71,7 @@ ios:
       FrankBank:
         name: FrankBank
         bundle_id: com.backbase.frank.ios
+        test_target: FrankBankTests
         app_icon: AppIcon
         source:
           path: Sources
