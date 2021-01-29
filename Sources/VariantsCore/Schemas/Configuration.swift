@@ -52,7 +52,6 @@ public struct CustomProperty: Codable {
         self.destination = destination
     }
     
-    
     public enum Destination: String, Codable {
         case project
         case fastlane
