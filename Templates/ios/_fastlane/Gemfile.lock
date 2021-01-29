@@ -185,7 +185,7 @@ GEM
     method_source (1.0.0)
     mini_magick (4.10.1)
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.0)
     minitest (5.14.0)
     molinillo (0.6.6)
     multi_json (1.14.1)
@@ -195,14 +195,16 @@ GEM
     nap (1.1.0)
     naturally (2.2.0)
     netrc (0.11.0)
-    nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.0)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     os (1.1.0)
     plist (3.5.0)
     pry (0.13.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (2.0.5)
+    racc (1.5.2)
     representable (3.0.4)
       declarative (< 0.1.0)
       declarative-option (< 0.2.0)
@@ -268,6 +270,7 @@ DEPENDENCIES
   fastlane-plugin-xcconfig
   fastlane-plugin-xchtmlreport
   json (= 2.3.0)
+  nokogiri (= 1.11.0)
   slather
 
 BUNDLED WITH
