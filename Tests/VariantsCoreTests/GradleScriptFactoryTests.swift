@@ -66,7 +66,8 @@ class GradleScriptFactoryTests: XCTestCase {
         custom: [
             CustomProperty(
                 name: "API_TOKEN",
-                value: "{{ envVars.API_TOKEN }}",
+                value: "API_TOKEN",
+                env: true,
                 destination: .project
             )
         ]

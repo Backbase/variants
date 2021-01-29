@@ -37,7 +37,7 @@ public struct iOSVariant: Codable {
         }
         
         custom?
-            .filter { $0.destination == .project && !$0.processForEnvironment().isEnvVar }
+            .filter { $0.destination == .project && !$0.isEnvironmentVariable }
             .forEach({ config in
                 customDictionary[config.name] = config.value
             })
