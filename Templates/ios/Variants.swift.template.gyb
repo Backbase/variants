@@ -1,0 +1,60 @@
+%{
+import os
+
+def chunks(seq, size):
+    return (seq[i:(i + size)] for i in range(0, len(seq), size))
+
+def encode(string, cipher):
+    bytes = string.encode("UTF-8")
+    return [ord(bytes[i]) ^ cipher[i % len(cipher)] for i in range(0, len(bytes))]
+}%
+
+//
+//  Variants
+//
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Arthur Alves
+//
+
+import Foundation
+
+public struct Variants {
+    static let configuration: [String: Any] = {
+        guard let infoDictionary = Bundle.main.infoDictionary else {
+            fatalError("Info.plist file not found")
+        }
+        return infoDictionary
+    }()
+    
+    {% if secrets %}
+    // Encrypted secrets coming from variants.yml as environment variables
+    
+    public struct Secrets {
+    
+        private static let salt: [UInt8] = [
+        %{ salt = [ord(byte) for byte in os.urandom(64)] }%
+        % for chunk in chunks(salt, 8):
+            ${"".join(["0x%02x, " % byte for byte in chunk])}
+        % end
+        ]
+    
+    {% for secret in secrets %}
+        static var {{ secret.name }}: String {
+            let encoded: [UInt8] = [
+            % for chunk in chunks(encode({{ secret.value }}, salt), 8):
+                ${"".join(["0x%02x, " % byte for byte in chunk])}
+            % end
+            ]
+
+            return decode(encoded, cipher: salt)
+        }
+    {% endfor %}
+    
+        private static func decode(_ encoded: [UInt8], cipher: [UInt8]) -> String {
+            String(decoding: encoded.enumerated().map { (offset, element) in
+                element ^ cipher[offset % cipher.count]
+            }, as: UTF8.self)
+        }
+    }
+    {% endif %}
+}

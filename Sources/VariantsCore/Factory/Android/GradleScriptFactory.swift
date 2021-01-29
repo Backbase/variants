@@ -123,7 +123,7 @@ fileprivate extension Sequence where Iterator.Element == CustomProperty {
                 let processed = property.processForEnvironment()
                 if processed.isEnvVar {
                     return CustomProperty(name: property.name,
-                                          value: processed.string,
+                                          value: "System.getenv('"+processed.string+"')",
                                           destination: property.destination)
                 }
                 return property

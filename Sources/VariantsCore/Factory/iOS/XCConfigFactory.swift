@@ -8,6 +8,7 @@
 import Foundation
 import ArgumentParser
 import PathKit
+import Stencil
 
 public typealias DoesFileExist = (exists: Bool, path: Path?)
 
@@ -111,6 +112,13 @@ class XCConfigFactory: XCFactory {
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
         
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
+        
+        /*
+         * Add custom properties whose values should be read from environment variables
+         * to `Variants.Secret` as encrypted secrets.
+         */
+        let secretsFactory = SecretsFactory(logger: logger)
+        secretsFactory.updateSecrets(with: xcodeConfigPath, variant: variant)
     }
     
     // MARK: - Private methods
