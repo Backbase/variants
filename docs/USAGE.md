@@ -41,7 +41,7 @@ $ variants init --platform ios
 It will generate a variants.yml file in the base folder of your project
 
 <p align="center">
-<img src="Assets/Examples/Project_Example_Step_2.png" title="variants.yml">
+<img src="../Assets/Examples/Project_Example_Step_2.png" title="variants.yml">
 </p>
 
 > NOTE: Edit the file variants.yml accordingly.
@@ -71,6 +71,7 @@ ios:
       default:
         version_name: 0.0.1
         version_number: 1
+        store_destination: AppStore
         custom:
             - name: apiBaseUrl
               value: https://sample.com/
@@ -80,6 +81,7 @@ ios:
         app_icon: AppIcon.beta
         version_name: 0.0.1
         version_number: 13
+        store_destination: TestFlight
         custom:
             - name: apiBaseUrl
               value: https://sample-beta.com/
@@ -93,7 +95,13 @@ ios:
 
 Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane and vice-versa.
 
-See our [Custom Property documentation](docs/CUSTOM_PROPERTY.md) for a better understanding and examples.
+See our [Custom Property documentation](CUSTOM_PROPERTY.md) for a better understanding and examples.
+
+#### Signing iOS apps
+
+Code signing for iOS apps can also be handled through `variants.yml` as long as Fastlane Match is used.
+
+For more information see [Working with Fastlane Match](ios/WORKING_WITH_FASTLANE_MATCH.md).
 
 ### Setup multiple build variants with full fastlane integration.
 
@@ -131,7 +139,7 @@ let baseUrl = Variants.configuration["apiBaseURL"]
 Setup will also configure your Xcode project to use this new configuration and map configs (such as `name`, `bundle_id`, `app_icon`, `version_name` and `version_number`).
 
 <p align="center">
-<img src="Assets/Examples/Project_Example_Step_3.png" title="Setup completed">
+<img src="../Assets/Examples/Project_Example_Step_3.png" title="Setup completed">
 </p>
 
 #### Using a configuration file other than the default one
