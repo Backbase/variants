@@ -97,12 +97,6 @@ Configuration through custom properties can bring a lot of value to your variant
 
 See our [Custom Property documentation](CUSTOM_PROPERTY.md) for a better understanding and examples.
 
-#### Signing iOS apps
-
-Code signing for iOS apps can also be handled through `variants.yml` as long as Fastlane Match is used.
-
-For more information see [Working with Fastlane Match](ios/WORKING_WITH_FASTLANE_MATCH.md).
-
 ### Setup multiple build variants with full fastlane integration.
 
 #### Using default configuration file (variants.yml)
@@ -183,3 +177,8 @@ $ variants switch --variant beta
 # Specify platform (in case there are projects for different platforms in the working directory, this will be mandatory)
 $ variants switch --variant beta --platform ios
 ```
+
+### Signing iOS apps
+
+Code signing for iOS apps can also be handled through `variants.yml` as long as Fastlane Match is used.
+For more information see [Working with Fastlane Match](ios/WORKING_WITH_FASTLANE_MATCH.md).
