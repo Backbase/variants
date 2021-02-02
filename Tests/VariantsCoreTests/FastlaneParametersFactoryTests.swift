@@ -17,7 +17,7 @@ let parameters = [
     CustomProperty(name: "sample-3", value: "sample-3-value", destination: .project),
     CustomProperty(name: "sample-4", value: "sample-4-value", destination: .fastlane),
     CustomProperty(name: "sample-5", value: "sample-5-value", destination: .fastlane),
-    CustomProperty(name: "sample-env", value: "{{ envVars.API_TOKEN }}", destination: .fastlane)
+    CustomProperty(name: "sample-env", value: "API_TOKEN", env: true, destination: .fastlane)
 ]
 
 let correctOutput =
@@ -157,20 +157,16 @@ class FastlaneParametersFactoryTests: XCTestCase {
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
     func envVars() -> [CustomProperty] {
         return self
-            .filter({ $0.destination == .fastlane && $0.processForEnvironment().isEnvVar })
+            .filter({ $0.destination == .fastlane && $0.isEnvironmentVariable })
             .map { (property) -> CustomProperty in
-                let processed = property.processForEnvironment()
-                if processed.isEnvVar {
-                    return CustomProperty(name: property.name,
-                                          value: processed.string,
-                                          destination: property.destination)
-                }
-                return property
+                return CustomProperty(name: property.name,
+                                      value: property.environmentValue,
+                                      destination: property.destination)
             }
     }
     
     func literal() -> [CustomProperty] {
         return self
-            .filter({ $0.destination == .fastlane && !$0.processForEnvironment().isEnvVar })
+            .filter({ $0.destination == .fastlane && !$0.isEnvironmentVariable })
     }
 }

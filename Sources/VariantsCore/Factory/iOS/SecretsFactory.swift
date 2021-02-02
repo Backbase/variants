@@ -98,20 +98,16 @@ class SecretsFactory {
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
     func envVars() -> [CustomProperty] {
         return self
-            .filter({ $0.destination == .project && $0.processForEnvironment().isEnvVar })
+            .filter({ $0.destination == .project && $0.isEnvironmentVariable })
             .map { (property) -> CustomProperty in
-                let processed = property.processForEnvironment()
-                if processed.isEnvVar {
-                    return CustomProperty(name: property.name,
-                                          value: "os.environ.get('"+processed.string+"')",
-                                          destination: property.destination)
-                }
-                return property
+                return CustomProperty(name: property.name,
+                                      value: "os.environ.get('"+property.environmentValue+"')",
+                                      destination: property.destination)
             }
     }
     
     func literal() -> [CustomProperty] {
         return self
-            .filter({ $0.destination == .project && !$0.processForEnvironment().isEnvVar })
+            .filter({ $0.destination == .project && !$0.isEnvironmentVariable })
     }
 }

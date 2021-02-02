@@ -28,9 +28,11 @@ ios:
         custom:
             - name: OTHER_SWIFT_FLAGS
               value: $(inherited)
+              env: false
               destination: project
             - name: SAMPLE_FASTLANE_PROPERTY
               value: This will be available to fastlane
+              env: false
               destination: fastlane
       #
       # Sample variant, "beta".
@@ -45,7 +47,9 @@ ios:
         custom:
             - name: OTHER_SWIFT_FLAGS
               value: $(inherited)
+              env: false
               destination: project
             - name: SAMPLE_FASTLANE_PROPERTY
               value: This will be available to fastlane on Beta variant
+              env: false
               destination: fastlane

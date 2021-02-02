@@ -13,19 +13,20 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
     func testProcessForEnvironment_forProject_true() {
         let environmentVarProperty = CustomProperty(
             name: "AN_ENV_VAR",
-            value: "{{ envVars.A_SECRET }}",
+            value: "A_SECRET",
+            env: true,
             destination: .project
         )
         
         XCTAssertTrue(
-            environmentVarProperty.processForEnvironment().isEnvVar,
-            "After processing `isEnvVar` should be true as it matches the pattern"
+            environmentVarProperty.isEnvironmentVariable,
+            "`isEnvironmentVariable` should be true as `env` is set to true"
         )
         
         XCTAssertEqual(
-            environmentVarProperty.processForEnvironment().string,
+            environmentVarProperty.environmentValue,
             "A_SECRET",
-            "After processing `string` should be processed to extract env var name"
+            "`environmentValue` should be equal to `value` as `destination` is project"
         )
     }
     
@@ -37,33 +38,34 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
         )
         
         XCTAssertFalse(
-            environmentVarProperty.processForEnvironment().isEnvVar,
-            "After processing `isEnvVar` should be false as it ddoesn't match the pattern"
+            environmentVarProperty.isEnvironmentVariable,
+            "`isEnvironmentVariable` should be false as `env` is not set and defaults to false"
         )
         
         XCTAssertEqual(
-            environmentVarProperty.processForEnvironment().string,
+            environmentVarProperty.environmentValue,
             environmentVarProperty.value,
-            "After processing `string` should be exactly the same"
+            "`environmentValue` should be equal to `value` as `destination` is project and/or `env` isn't set and defaults to false"
         )
     }
     
     func testProcessForEnvironment_forFastlane_true() {
         let environmentVarProperty = CustomProperty(
             name: "AN_ENV_VAR",
-            value: "{{ envVars.A_SECRET }}",
+            value: "A_SECRET",
+            env: true,
             destination: .fastlane
         )
         
         XCTAssertTrue(
-            environmentVarProperty.processForEnvironment().isEnvVar,
-            "After processing `isEnvVar` should be true as it matches the pattern"
+            environmentVarProperty.isEnvironmentVariable,
+            "`isEnvironmentVariable` should be true as `env` is set to true"
         )
         
         XCTAssertEqual(
-            environmentVarProperty.processForEnvironment().string,
+            environmentVarProperty.environmentValue,
             "ENV[\"A_SECRET\"]",
-            "After processing `string` should be processed to extract env var name"
+            "`environmentValue` should be contained within 'ENV[\"\"]' as `destination` is fastlane and `env` is set to true"
         )
     }
     
@@ -75,14 +77,14 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
         )
         
         XCTAssertFalse(
-            environmentVarProperty.processForEnvironment().isEnvVar,
-            "After processing `isEnvVar` should be false as it ddoesn't match the pattern"
+            environmentVarProperty.isEnvironmentVariable,
+            "`isEnvironmentVariable` should be false as `env` is not set and defaults to false"
         )
         
         XCTAssertEqual(
-            environmentVarProperty.processForEnvironment().string,
+            environmentVarProperty.environmentValue,
             environmentVarProperty.value,
-            "After processing `string` should be exactly the same"
+            "`environmentValue` should be equal to `value` as `destination`, as `env` isn't set and defaults to false"
         )
     }
     
@@ -95,7 +97,8 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
             ),
             CustomProperty(
                 name: "AN_ENV_VAR",
-                value: "{{ envVars.A_SECRET }}",
+                value: "A_SECRET",
+                env: true,
                 destination: .fastlane
             )
         ]
@@ -103,10 +106,9 @@ class CustomPropertyEnvironmentVarTests: XCTestCase {
         let fastlaneParameters = propertiesArray
             .filter { $0.destination == .fastlane }
             .map { (property) -> CustomProperty in
-                let processed = property.processForEnvironment()
-                if processed.isEnvVar {
+                if property.isEnvironmentVariable {
                     return CustomProperty(name: property.name,
-                                          value: processed.string,
+                                          value: property.environmentValue,
                                           destination: property.destination)
                 }
                 return property
