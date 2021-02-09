@@ -49,10 +49,10 @@ enum iOSProjectKey: String, CaseIterable {
 class SpecHelper {
     init(
         templatePath: Path,
-        userInputHelper: UserInputHelper
+        userInput: UserInput
     ) {
         self.templatePath = templatePath
-        self.userInputHelper = userInputHelper
+        self.userInput = userInput
     }
 
     /// Generate Variants YAML spec from a template
@@ -66,7 +66,7 @@ class SpecHelper {
         }
 
         if variantsPath.exists {
-            if userInputEnabled && !userInputHelper.doesUserGrantPermissionToOverrideSpec() {
+            if userInputEnabled && !userInput.doesUserGrantPermissionToOverrideSpec() {
                 shouldPopulateSpec = false
                 return
             } else {
@@ -84,7 +84,7 @@ class SpecHelper {
     }
 
     var shouldPopulateSpec: Bool = true
-    let userInputHelper: UserInputHelper
+    let userInput: UserInput
     let variantsPath = Path("./variants.yml")
     let templatePath: Path
 }

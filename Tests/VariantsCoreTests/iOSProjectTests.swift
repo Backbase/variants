@@ -12,10 +12,12 @@ import ArgumentParser
 // swiftlint:disable type_name
 
 class iOSProjectTests: XCTestCase {
+    let silentUserInput = UserInput { false }
+    
     func testProject_initialize() {
         let specHelperMock = SpecHelperMock(
             templatePath: Path("variants-template.yml"),
-            userInputHelper: UserInputHelper()
+            userInput: silentUserInput
         )
         let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
@@ -36,7 +38,7 @@ class iOSProjectTests: XCTestCase {
     func testProject_setup() {
         let specHelperMock = SpecHelperMock(
             templatePath: Path("variants-template.yml"),
-            userInputHelper: UserInputHelper()
+            userInput: silentUserInput
         )
         let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
@@ -81,7 +83,7 @@ class iOSProjectTests: XCTestCase {
     func testProject_switch() {
         let specHelperMock = SpecHelperMock(
             templatePath: Path("variants-template.yml"),
-            userInputHelper: UserInputHelper()
+            userInput: silentUserInput
         )
         let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
