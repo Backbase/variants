@@ -19,8 +19,14 @@ class SpecHelperTests: XCTestCase {
     
     func testGenerateSpec_incorrectPath() {
         if let basePath = basePath() {
-            let specHelper = iOSSpecHelper(templatePath: incorrectTemplatePath)
-            XCTAssertThrowsError(try specHelper.generate(from: basePath), "Attempt to use an invalid path") { error in
+            let specHelper = iOSSpecHelper(
+                templatePath: incorrectTemplatePath,
+                userInputHelper: UserInputHelper()
+            )
+            XCTAssertThrowsError(
+                try specHelper.generate(from: basePath, userInputEnabled: false),
+                "Attempt to use an invalid path"
+            ) { error in
                 XCTAssertEqual(error.localizedDescription, """
                     The file “unknown-variants-template.yml” couldn’t be opened because there is no such file.
                     """)
@@ -34,7 +40,10 @@ class SpecHelperTests: XCTestCase {
             if variantsPath.exists {
                 XCTAssertNoThrow(try variantsPath.delete())
             }
-            let specHelper = iOSSpecHelper(templatePath: correctTemplatePath)
+            let specHelper = iOSSpecHelper(
+                templatePath: correctTemplatePath,
+                userInputHelper: UserInputHelper()
+            )
             XCTAssertNoThrow(try specHelper.generate(from: basePath))
             
             XCTAssertTrue(variantsPath.exists)

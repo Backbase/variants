@@ -36,7 +36,7 @@ class MockFastlaneFactory: ParametersFactory {
 class SpecHelperMock: SpecHelper {
     var generateCache: [Path] = []
     
-    override func generate(from path: Path) throws {
+    override func generate(from path: Path, userInputEnabled: Bool = false) throws {
         generateCache.append(path)
     }
 }

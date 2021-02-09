@@ -12,7 +12,10 @@ import ArgumentParser
 
 class AndroidProjectTests: XCTestCase {
     func testProject_initialize() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
+        let specHelperMock = SpecHelperMock(
+            templatePath: Path("variants-template.yml"),
+            userInputHelper: UserInputHelper()
+        )
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
 
@@ -30,7 +33,10 @@ class AndroidProjectTests: XCTestCase {
     }
     
     func testProject_setup() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
+        let specHelperMock = SpecHelperMock(
+            templatePath: Path("variants-template.yml"),
+            userInputHelper: UserInputHelper()
+        )
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
 
@@ -81,7 +87,10 @@ class AndroidProjectTests: XCTestCase {
     }
     
     func testProject_switch() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
+        let specHelperMock = SpecHelperMock(
+            templatePath: Path("variants-template.yml"),
+            userInputHelper: UserInputHelper()
+        )
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
 

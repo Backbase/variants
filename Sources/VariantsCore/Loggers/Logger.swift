@@ -8,7 +8,7 @@
 import Foundation
 
 public class Logger: VerboseLogger, Codable {
-    static let shared = Logger(verbose: false)
+    public static let shared = Logger(verbose: false)
     
     init(verbose: Bool) {
         self.isVerbose = verbose

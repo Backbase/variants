@@ -47,19 +47,33 @@ enum iOSProjectKey: String, CaseIterable {
 }
 
 class SpecHelper {
-    init(templatePath: Path) {
+    init(
+        templatePath: Path,
+        userInputHelper: UserInputHelper
+    ) {
         self.templatePath = templatePath
+        self.userInputHelper = userInputHelper
     }
 
     /// Generate Variants YAML spec from a template
     /// - Parameters:
     ///   - path: Path to the YAML spec template
+    ///   - userInputEnabled: Bool. Defines it should use interactive shell.
     /// - Throws: Exception for any operation that goes wrong.
-    func generate(from path: Path) throws {
+    func generate(from path: Path, userInputEnabled: Bool = true) throws {
         guard path.absolute().exists else {
             throw RuntimeError("Couldn't find template path")
         }
 
+        if variantsPath.exists {
+            if userInputEnabled && !userInputHelper.doesUserGrantPermissionToOverrideSpec() {
+                shouldPopulateSpec = false
+                return
+            } else {
+                try variantsPath.delete()
+            }
+        }
+        
         // TODO: Maybe look for different path library?
         // It's weird that PathKit does not offer an API to merge two paths.
         // Also seems like the repo is no longer maintained.
@@ -69,6 +83,8 @@ class SpecHelper {
         Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path '\(variantsPath)'", color: .green)
     }
 
+    var shouldPopulateSpec: Bool = true
+    let userInputHelper: UserInputHelper
     let variantsPath = Path("./variants.yml")
     let templatePath: Path
 }
@@ -76,10 +92,12 @@ class SpecHelper {
 // MARK: - iOS
 
 class iOSSpecHelper: SpecHelper {
-    override func generate(from path: Path) throws {
-        try super.generate(from: path)
+    override func generate(from path: Path, userInputEnabled: Bool = true) throws {
+        try super.generate(from: path, userInputEnabled: userInputEnabled)
         // TODO: The log step was after populate. Are we okay with this change?
-        try populateiOSSpec()
+        if shouldPopulateSpec {
+            try populateiOSSpec()
+        }
     }
 
     /// Automatically populate this spec for `iOS` platform using the `XcodeProjFactory()`
