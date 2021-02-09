@@ -15,12 +15,34 @@ enum iOSProjectKey: String, CaseIterable {
     case target = "TARGET"
     case appName = "APP_NAME"
     case appBundleID = "APP_BUNDLE_ID"
+    case testTarget = "TEST_TARGET"
     case appIcon = "APP_ICON"
     case source = "SOURCE"
     case infoPlist = "INFO_PLIST"
     
     var placeholder: String {
         "{{ "+rawValue+" }}"
+    }
+    
+    var ymlKeyPath: String {
+        switch self {
+        case .project:
+            return "ios.xcodeproj"
+        case .target:
+            return "ios.targets.fooTarget"
+        case .appName:
+            return "ios.targets.fooTarget.name"
+        case .appBundleID:
+            return "ios.targets.fooTarget.bundle_id"
+        case .testTarget:
+            return "ios.targets.fooTarget.test_target"
+        case .appIcon:
+            return "ios.targets.fooTarget.app_icon"
+        case .source:
+            return "ios.targets.fooTarget.source.path"
+        case .infoPlist:
+            return "ios.targets.fooTarget.source.info"
+        }
     }
 }
 
@@ -73,12 +95,33 @@ class iOSSpecHelper: SpecHelper {
                 try Bash("sed", arguments: "-i", "-e", "s/\(key.placeholder)/\(escapedValue)/g", "\(variantsPath)").run()
         }
 
-        if projectSpecificInformation.count < iOSProjectKey.allCases.count {
+        if projectSpecificInformation.isEmpty {
             Logger.shared.logWarning("⚠️  ", item: """
                 We were unable to populate './variants.yml' automatically.
-                Please open the file and remove the placeholders.
+                Please open the file and remove the placeholder values.
+                i.e.: '{{ VALUE }}'
                 """
             )
+        } else if projectSpecificInformation.count < iOSProjectKey.allCases.count {
+            var warningMessage = """
+                We were unable to populate the following fields in the './variants.yml' spec:
+
+
+                """
+            
+            iOSProjectKey.allCases
+                .filter { !projectSpecificInformation.keys.contains($0) }
+                .forEach { projectKey in
+                    var ymlKeyPath = projectKey.ymlKeyPath
+                    if let targetName = projectSpecificInformation[.target] {
+                        ymlKeyPath = ymlKeyPath.replacingOccurrences(of: "fooTarget", with: targetName)
+                    }
+                    warningMessage.appendLine("    * "+ymlKeyPath)
+                }
+            
+            warningMessage.appendLine("\nPlease replace their placeholders manually.")
+            
+            Logger.shared.logWarning("⚠️  ", item: warningMessage)
         }
 
         // Remove remaining '*-e' file after `sed` in-file replacemnt
