@@ -104,8 +104,8 @@ class iOSSpecHelper: SpecHelper {
             )
         } else if projectSpecificInformation.count < iOSProjectKey.allCases.count {
             var warningMessage = """
-                We were unable to populate the following fields in the './variants.yml' spec.
-                Please add them manually by replacing the placeholders:
+                We were unable to populate the following fields in the './variants.yml' spec:
+
 
                 """
             
@@ -118,6 +118,8 @@ class iOSSpecHelper: SpecHelper {
                     }
                     warningMessage.appendLine("    * "+ymlKeyPath)
                 }
+            
+            warningMessage.appendLine("\nPlease replace their placeholders manually.")
             
             Logger.shared.logWarning("⚠️  ", item: warningMessage)
         }
