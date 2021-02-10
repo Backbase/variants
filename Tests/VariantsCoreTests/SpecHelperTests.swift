@@ -20,12 +20,18 @@ class SpecHelperTests: XCTestCase {
     
     func testGenerateSpec_incorrectPath() {
         if let basePath = basePath() {
+            let variantsPath = Path("./variants.yml")
+            if variantsPath.exists {
+                XCTAssertNoThrow(try variantsPath.delete())
+            }
+            
             let specHelper = iOSSpecHelper(
                 templatePath: incorrectTemplatePath,
                 userInput: silentUserInput
             )
+            
             XCTAssertThrowsError(
-                try specHelper.generate(from: basePath, userInputEnabled: false),
+                try specHelper.generate(from: basePath),
                 "Attempt to use an invalid path"
             ) { error in
                 XCTAssertEqual(error.localizedDescription, """

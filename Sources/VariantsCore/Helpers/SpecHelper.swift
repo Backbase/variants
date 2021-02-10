@@ -58,15 +58,14 @@ class SpecHelper {
     /// Generate Variants YAML spec from a template
     /// - Parameters:
     ///   - path: Path to the YAML spec template
-    ///   - userInputEnabled: Bool. Defines it should use interactive shell.
     /// - Throws: Exception for any operation that goes wrong.
-    func generate(from path: Path, userInputEnabled: Bool = true) throws {
+    func generate(from path: Path) throws {
         guard path.absolute().exists else {
             throw RuntimeError("Couldn't find template path")
         }
 
         if variantsPath.exists {
-            if userInputEnabled && !userInput.doesUserGrantPermissionToOverrideSpec() {
+            if !userInput.doesUserGrantPermissionToOverrideSpec() {
                 shouldPopulateSpec = false
                 return
             } else {
@@ -92,8 +91,8 @@ class SpecHelper {
 // MARK: - iOS
 
 class iOSSpecHelper: SpecHelper {
-    override func generate(from path: Path, userInputEnabled: Bool = true) throws {
-        try super.generate(from: path, userInputEnabled: userInputEnabled)
+    override func generate(from path: Path) throws {
+        try super.generate(from: path)
         // TODO: The log step was after populate. Are we okay with this change?
         if shouldPopulateSpec {
             try populateiOSSpec()
