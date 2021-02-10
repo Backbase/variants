@@ -15,36 +15,18 @@ struct ProjectFactory {
             return iOSProject(
                 specHelper: iOSSpecHelper(
                     templatePath: Path("/ios/variants-template.yml"),
-                    userInput: interactiveShell
+                    userInputSource: interactiveShell,
+                    userInput: { readLine() }
                 )
             )
         case .android:
             return AndroidProject(
                 specHelper: AndroidSpecHelper(
                     templatePath: Path("/android/variants-template.yml"),
-                    userInput: interactiveShell
+                    userInputSource: interactiveShell,
+                    userInput: { readLine() }
                 )
             )
         }
     }
-}
-
-let interactiveShell = UserInput { () -> Bool in
-    return interactiveShellInput(
-        with: "'variants.yml' spec already exists! Should we override it?",
-        suggestion: "[Y]es / [N]o") { input -> Bool in
-        return ["y", "yes", "n", "no"].contains(input.lowercased())
-    }
-}
-
-func interactiveShellInput(with description: String, suggestion: String, validation: (String) -> Bool) -> Bool  {
-    let logger = Logger(verbose: false)
-    logger.logInfo("*  ", item: description)
-    logger.logInfo(suggestion, item: "")
-    guard let input = readLine(), validation(input) else {
-        logger.logInfo(item: " ")
-        return interactiveShellInput(with: description, suggestion: suggestion, validation: validation)
-    }
-    if ["y", "yes"].contains(input.lowercased()) { return true }
-    return false
 }

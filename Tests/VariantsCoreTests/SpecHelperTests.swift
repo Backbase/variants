@@ -12,7 +12,6 @@ import PathKit
 class SpecHelperTests: XCTestCase {
     let correctTemplatePath = Path("variants-template.yml")
     let incorrectTemplatePath = Path("unknown-variants-template.yml")
-    let silentUserInput = UserInput { false }
     
     func testGenerateSpec_basePathShouldNotBeNil() {
         XCTAssertNotNil(basePath())
@@ -20,14 +19,10 @@ class SpecHelperTests: XCTestCase {
     
     func testGenerateSpec_incorrectPath() {
         if let basePath = basePath() {
-            let variantsPath = Path("./variants.yml")
-            if variantsPath.exists {
-                XCTAssertNoThrow(try variantsPath.delete())
-            }
-            
             let specHelper = iOSSpecHelper(
                 templatePath: incorrectTemplatePath,
-                userInput: silentUserInput
+                userInputSource: interactiveShell,
+                userInput: { "yes" }
             )
             
             XCTAssertThrowsError(
@@ -44,12 +39,10 @@ class SpecHelperTests: XCTestCase {
     func testGenerateSpec_correctPath() {
         if let basePath = basePath() {
             let variantsPath = Path("./variants.yml")
-            if variantsPath.exists {
-                XCTAssertNoThrow(try variantsPath.delete())
-            }
             let specHelper = iOSSpecHelper(
                 templatePath: correctTemplatePath,
-                userInput: silentUserInput
+                userInputSource: interactiveShell,
+                userInput: { "yes" }
             )
             XCTAssertNoThrow(try specHelper.generate(from: basePath))
             
