@@ -14,13 +14,17 @@ struct ProjectFactory {
         case .ios:
             return iOSProject(
                 specHelper: iOSSpecHelper(
-                    templatePath: Path("/ios/variants-template.yml")
+                    templatePath: Path("/ios/variants-template.yml"),
+                    userInputSource: interactiveShell,
+                    userInput: { readLine() }
                 )
             )
         case .android:
             return AndroidProject(
                 specHelper: AndroidSpecHelper(
-                    templatePath: Path("/android/variants-template.yml")
+                    templatePath: Path("/android/variants-template.yml"),
+                    userInputSource: interactiveShell,
+                    userInput: { readLine() }
                 )
             )
         }

@@ -47,8 +47,14 @@ enum iOSProjectKey: String, CaseIterable {
 }
 
 class SpecHelper {
-    init(templatePath: Path) {
+    init(
+        templatePath: Path,
+        userInputSource: UserInputSource,
+        userInput: @escaping UserInput
+    ) {
         self.templatePath = templatePath
+        self.userInputSource = userInputSource
+        self.userInput = userInput
     }
 
     /// Generate Variants YAML spec from a template
@@ -60,6 +66,15 @@ class SpecHelper {
             throw RuntimeError("Couldn't find template path")
         }
 
+        if variantsPath.exists {
+            if !userInputSource.doesUserGrantPermissionToOverrideSpec(userInput) {
+                shouldPopulateSpec = false
+                return
+            } else {
+                try variantsPath.delete()
+            }
+        }
+        
         // TODO: Maybe look for different path library?
         // It's weird that PathKit does not offer an API to merge two paths.
         // Also seems like the repo is no longer maintained.
@@ -68,7 +83,10 @@ class SpecHelper {
 
         Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path '\(variantsPath)'", color: .green)
     }
-
+    
+    var shouldPopulateSpec: Bool = true
+    let userInputSource: UserInputSource
+    let userInput: UserInput
     let variantsPath = Path("./variants.yml")
     let templatePath: Path
 }
@@ -79,7 +97,9 @@ class iOSSpecHelper: SpecHelper {
     override func generate(from path: Path) throws {
         try super.generate(from: path)
         // TODO: The log step was after populate. Are we okay with this change?
-        try populateiOSSpec()
+        if shouldPopulateSpec {
+            try populateiOSSpec()
+        }
     }
 
     /// Automatically populate this spec for `iOS` platform using the `XcodeProjFactory()`

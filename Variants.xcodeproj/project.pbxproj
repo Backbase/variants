@@ -78,6 +78,7 @@
 		8E6ABB9D25C031AB006A62FE /* UtilsDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABB9C25C031AB006A62FE /* UtilsDirectory.swift */; };
 		8E6ABBA425C03639006A62FE /* SecretsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABBA325C03639006A62FE /* SecretsFactory.swift */; };
 		8E6ABBB625C03F2C006A62FE /* SecretsFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */; };
+		8E866A1725D2CCEA00A7EC19 /* UserInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E866A1625D2CCEA00A7EC19 /* UserInput.swift */; };
 		8E8A483525514BE00056F79F /* Stencil in Frameworks */ = {isa = PBXBuildFile; productRef = 8E8A483425514BE00056F79F /* Stencil */; };
 		8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */; };
 		8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */; };
@@ -166,6 +167,7 @@
 		8E6ABB9C25C031AB006A62FE /* UtilsDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsDirectory.swift; sourceTree = "<group>"; };
 		8E6ABBA325C03639006A62FE /* SecretsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SecretsFactory.swift; path = Sources/VariantsCore/Factory/ios/SecretsFactory.swift; sourceTree = SOURCE_ROOT; };
 		8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretsFactoryTests.swift; sourceTree = "<group>"; };
+		8E866A1625D2CCEA00A7EC19 /* UserInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInput.swift; sourceTree = "<group>"; };
 		8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactory.swift; sourceTree = "<group>"; };
 		8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoin.swift"; sourceTree = "<group>"; };
@@ -413,6 +415,7 @@
 				OBJ_41 /* Bash.swift */,
 				OBJ_42 /* Constants.swift */,
 				OBJ_43 /* PlatformDetector.swift */,
+				8E866A1625D2CCEA00A7EC19 /* UserInput.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -707,6 +710,7 @@
 				8E1B9ECF254AC29D00DD0204 /* YamlParser.swift in Sources */,
 				8E8A4866255172CF0056F79F /* Path+SafeJoin.swift in Sources */,
 				8E1B9DC8254AC27500DD0204 /* iOSProject.swift in Sources */,
+				8E866A1725D2CCEA00A7EC19 /* UserInput.swift in Sources */,
 				8E1B9E67254AC29500DD0204 /* Constants.swift in Sources */,
 				8E1B9EFA254AC2A900DD0204 /* AndroidSigning.swift in Sources */,
 				8E6ABBA425C03639006A62FE /* SecretsFactory.swift in Sources */,
