@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Close issue
         run: |
-          echo "Column name ${{ github.event.moved_columns_in_project.column_name }}"
+          echo "Column name #${{ github.event.moved_columns_in_project.column_name }}"
