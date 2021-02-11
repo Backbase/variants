@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Close issue
         run: |
-          echo "Column name ${{ github.event.project_card.card_id }}"
+          echo "Column name ${{ github.event.sender }}"
