@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Close issue
         run: |
-          echo "Column name ${{ github.event.issue.number }}"
+          echo "Column name ${{ github.event.project_column }}"
