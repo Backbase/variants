@@ -10,6 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close issue
-        if: startsWith(github.event.moved_columns_in_project.column_name, 'Done')
         run: |
-          echo "Moved to done"
+          echo github.event.moved_columns_in_project.column_name
