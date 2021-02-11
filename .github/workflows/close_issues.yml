@@ -11,4 +11,28 @@ jobs:
     steps:
       - name: Close issue
         run: |
-          echo "Column name ${{ github.event.project_card.id }}"
+          CARD=$(curl \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.inertia-preview+json" \
+            https://api.github.com/projects/columns/cards/${{ github.event.project_card.id }})
+            
+          COLUMN_URL=$(echo $CARD | jq -r '.column_url')
+            
+          COLUMN_NAME=$(curl \
+            -H "Accept: application/vnd.github.inertia-preview+json" \
+            $COLUMN_URL \
+            | jq -r '.name')
+            
+          if [ $COLUMN_NAME == "\"Done\"" ]; then
+            ISSUE_URL=$(echo $CARD | jq -r '.content_url')
+            
+            curl \
+              -X PATCH \
+              -H 'Accept: application/vnd.github.v3+json' \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              $ISSUE_URL \
+              -d '{"state":"closed"}'
+          else
+            echo "Not closing issue as it was moved to column $COLUMN_NAME"
+          fi
