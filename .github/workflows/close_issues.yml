@@ -26,7 +26,7 @@ jobs:
             $COLUMN_URL \
             | jq -r '.name')
             
-          if [ $COLUMN_NAME == "\"Done\"" ]; then
+          if [[ $COLUMN_NAME == *"Done"* ]]; then
             ISSUE_URL=$(echo $CARD | jq -r '.content_url')
             
             echo "Closing issue: $ISSUE_URL"
