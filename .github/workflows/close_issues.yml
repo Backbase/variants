@@ -29,6 +29,8 @@ jobs:
           if [ $COLUMN_NAME == "\"Done\"" ]; then
             ISSUE_URL=$(echo $CARD | jq -r '.content_url')
             
+            echo "Closing issue: ${{ ISSUE_URL }}"
+            
             curl \
               -X PATCH \
               -H 'Accept: application/vnd.github.v3+json' \
