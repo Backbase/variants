@@ -1,4 +1,4 @@
-name "Close issue"
+name: "Close issue"
 
 on:
   project_card:
