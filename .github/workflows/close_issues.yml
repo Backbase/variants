@@ -8,8 +8,8 @@ jobs:
   close-issue:
     name: "Close issue when card moves to Done column"
     runs-on: ubuntu-latest
-
-    - name: Close issue
+    steps:
+      - name: Close issue
         if: startsWith(github.event.moved_columns_in_project.column_name, 'Done')
         run: |
           echo "Moved to done"
