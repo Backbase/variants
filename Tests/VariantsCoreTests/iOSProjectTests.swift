@@ -13,6 +13,7 @@ import ArgumentParser
 
 class iOSProjectTests: XCTestCase {
     let specHelperMock = SpecHelperMock(
+        logger: Logger.shared,
         templatePath: Path("variants-template.yml"),
         userInputSource: interactiveShell,
         userInput: { "yes" }

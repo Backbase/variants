@@ -20,6 +20,7 @@ class SpecHelperTests: XCTestCase {
     func testGenerateSpec_incorrectPath() {
         if let basePath = basePath() {
             let specHelper = iOSSpecHelper(
+                logger: Logger.shared,
                 templatePath: incorrectTemplatePath,
                 userInputSource: interactiveShell,
                 userInput: { "yes" }
@@ -40,6 +41,7 @@ class SpecHelperTests: XCTestCase {
         if let basePath = basePath() {
             let variantsPath = Path("./variants.yml")
             let specHelper = iOSSpecHelper(
+                logger: Logger.shared,
                 templatePath: correctTemplatePath,
                 userInputSource: interactiveShell,
                 userInput: { "yes" }

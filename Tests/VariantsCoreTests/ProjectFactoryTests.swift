@@ -12,11 +12,15 @@ class ProjectFactoryTests: XCTestCase {
 
     func test_from() throws {
         XCTAssertEqual(
-            ProjectFactory.from(platform: .ios).specHelper.templatePath.string,
+            ProjectFactory
+                .from(platform: .ios, logger: Logger.shared)
+                .specHelper.templatePath.string,
             "/ios/variants-template.yml")
         
         XCTAssertEqual(
-            ProjectFactory.from(platform: .android).specHelper.templatePath.string,
+            ProjectFactory
+                .from(platform: .android, logger: Logger.shared)
+                .specHelper.templatePath.string,
             "/android/variants-template.yml")
     }
 
