@@ -10,12 +10,13 @@ import Foundation
 public class Logger: VerboseLogger, Codable {
     public static let shared = Logger(verbose: false)
     
-    init(verbose: Bool) {
+    init(verbose: Bool, showTimestamp: Bool = false) {
         self.isVerbose = verbose
+        self.shouldShowTimestamp = showTimestamp
     }
     
-    private let isVerbose: Bool
     public var verbose: Bool { return isVerbose }
+    public var showTimestamp: Bool { return shouldShowTimestamp }
     
     func logFatal(_ prefix: Any = "❌ ", item: Any, color: ShellColor = .red) {
         logError(prefix, item: item, color: color)
@@ -51,4 +52,7 @@ public class Logger: VerboseLogger, Codable {
     private func divider(logLevel: LogLevel) {
         log(item: "--------------------------------------------------------------------------------------", logLevel: logLevel)
     }
+    
+    private let isVerbose: Bool
+    private let shouldShowTimestamp: Bool
 }
