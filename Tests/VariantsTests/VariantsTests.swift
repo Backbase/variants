@@ -32,26 +32,17 @@ final class VariantsTests: XCTestCase {
 
             """
 
-        let output = try run(with: arguments)
+        let output = try CLIExecutor.shared.run(with: arguments)
         XCTAssertEqual(output, expectedOutput)
     }
-    
-    func testInit_unknownArgument() throws {
-        
-        let arguments = ["init",
-                         "unknown-argument"]
-        
-        let expectedOutput =
-            """
-            Error: Unexpected argument \'unknown-argument\'
-            Usage: variants init [--platform <platform>] [--verbose]
-              See \'variants init --help\' for more information.
 
-            """
-        
-        let output = try run(with: arguments)
-        XCTAssertEqual(output, expectedOutput)
-    }
+    static var allTests = [
+        ("testUsage_noCommands", testUsage_noCommands)
+    ]
+}
+
+class CLIExecutor {
+    static var shared = CLIExecutor()
     
     /// Execute Variants with given arguments
     func run(with arguments: [String]) throws -> String? {
@@ -89,9 +80,4 @@ final class VariantsTests: XCTestCase {
         return Bundle.main.bundleURL
       #endif
     }
-
-    static var allTests = [
-        ("testUsage_noCommands", testUsage_noCommands),
-        ("testInit_unknownArgument", testInit_unknownArgument)
-    ]
 }

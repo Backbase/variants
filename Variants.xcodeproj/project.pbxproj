@@ -79,6 +79,7 @@
 		8E6ABBA425C03639006A62FE /* SecretsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABBA325C03639006A62FE /* SecretsFactory.swift */; };
 		8E6ABBB625C03F2C006A62FE /* SecretsFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */; };
 		8E866A1725D2CCEA00A7EC19 /* UserInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E866A1625D2CCEA00A7EC19 /* UserInput.swift */; };
+		8E866B0725D68CA900A7EC19 /* InitCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E866B0625D68CA900A7EC19 /* InitCommandTests.swift */; };
 		8E8A483525514BE00056F79F /* Stencil in Frameworks */ = {isa = PBXBuildFile; productRef = 8E8A483425514BE00056F79F /* Stencil */; };
 		8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */; };
 		8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */; };
@@ -168,6 +169,7 @@
 		8E6ABBA325C03639006A62FE /* SecretsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SecretsFactory.swift; path = Sources/VariantsCore/Factory/ios/SecretsFactory.swift; sourceTree = SOURCE_ROOT; };
 		8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretsFactoryTests.swift; sourceTree = "<group>"; };
 		8E866A1625D2CCEA00A7EC19 /* UserInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInput.swift; sourceTree = "<group>"; };
+		8E866B0625D68CA900A7EC19 /* InitCommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitCommandTests.swift; sourceTree = "<group>"; };
 		8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactory.swift; sourceTree = "<group>"; };
 		8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoin.swift"; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_65 /* VariantsTests.swift */,
+				8E866B0625D68CA900A7EC19 /* InitCommandTests.swift */,
 				OBJ_66 /* XCTestManifests.swift */,
 			);
 			name = VariantsTests;
@@ -775,6 +778,7 @@
 			files = (
 				OBJ_456 /* VariantsTests.swift in Sources */,
 				OBJ_457 /* XCTestManifests.swift in Sources */,
+				8E866B0725D68CA900A7EC19 /* InitCommandTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
