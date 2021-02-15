@@ -58,8 +58,12 @@ distclean:
 clean: distclean
 	@rm -rf $(BUILDDIR)
 
+.PHONY: prepare_for_test
+prepare_for_test:
+	@rm -rf variants.yml
+
 .PHONY: test
-test:
+test: prepare_for_test
 	@swift test
 	@xcodebuild test -scheme VariantsCore 
 
@@ -74,4 +78,5 @@ lint:
 
 .PHONY: validation
 validation: lint coverage
+	@rm -rf variants.yml
 	@echo "Ready to go."

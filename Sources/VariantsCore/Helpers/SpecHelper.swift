@@ -48,10 +48,12 @@ enum iOSProjectKey: String, CaseIterable {
 
 class SpecHelper {
     init(
+        logger: Logger,
         templatePath: Path,
         userInputSource: UserInputSource,
         userInput: @escaping UserInput
     ) {
+        self.logger = logger
         self.templatePath = templatePath
         self.userInputSource = userInputSource
         self.userInput = userInput
@@ -81,7 +83,7 @@ class SpecHelper {
         let sourcePath = Path(components: [path.absolute().string, templatePath.string])
         try sourcePath.copy(variantsPath)
 
-        Logger.shared.logInfo("📝  ", item: "Variants' spec generated with success at path '\(variantsPath)'", color: .green)
+        logger.logInfo("📝  ", item: "Variants' spec generated with success at path '\(variantsPath)'", color: .green)
     }
     
     var shouldPopulateSpec: Bool = true
@@ -89,6 +91,7 @@ class SpecHelper {
     let userInput: UserInput
     let variantsPath = Path("./variants.yml")
     let templatePath: Path
+    let logger: Logger
 }
 
 // MARK: - iOS
@@ -116,7 +119,7 @@ class iOSSpecHelper: SpecHelper {
         }
 
         if projectSpecificInformation.isEmpty {
-            Logger.shared.logWarning("⚠️  ", item: """
+            logger.logWarning("⚠️  ", item: """
                 We were unable to populate './variants.yml' automatically.
                 Please open the file and remove the placeholder values.
                 i.e.: '{{ VALUE }}'
@@ -141,7 +144,7 @@ class iOSSpecHelper: SpecHelper {
             
             warningMessage.appendLine("\nPlease replace their placeholders manually.")
             
-            Logger.shared.logWarning("⚠️  ", item: warningMessage)
+            logger.logWarning("⚠️  ", item: warningMessage)
         }
 
         // Remove remaining '*-e' file after `sed` in-file replacemnt
