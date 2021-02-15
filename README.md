@@ -1,4 +1,4 @@
-![develop](https://github.com/Backbase/variants/workflows/develop/badge.svg)
+![CI](https://github.com/Backbase/variants/workflows/develop/badge.svg)
 [![codecov](https://codecov.io/gh/Backbase/variants/branch/develop/graph/badge.svg?token=53TWMUH4KE)](https://codecov.io/gh/Backbase/variants)
 <p align="center">
 <img src="Assets/Examples/variants_logo.svg" title="variants">
@@ -16,7 +16,7 @@ Variants spec - by default located at `./variants.yml`, relative to your project
 This file is responsible for:
 * Specifying how many deployment variants you desire for this project and the differences between these variants (Name, Icon, Identifier, Version, and more with [Custom Properties](docs/CUSTOM_PROPERTY.md));
 * [Which store](docs/STORE_DESTINATION.md) do you want Fastlane to deploy each variant to;
-* Signing configuration, in case they differ per variant.
+* [Signing configuration](docs/ios/WORKING_WITH_FASTLANE_MATCH.md). Both global (applies to all) and variant specific (overrides global);
 * [Custom properties](docs/CUSTOM_PROPERTY.md). Both global (applies to all) and variant specific (overrides global). Custom properties have different destinations, so that certain properties aren't available to Fastlane but to Project and vice-versa. These can also be sourced from environment variables, perfect for secrets and tokens.
 
 ## Features
