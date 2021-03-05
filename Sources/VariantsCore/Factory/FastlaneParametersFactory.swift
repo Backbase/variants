@@ -83,13 +83,13 @@ class FastlaneParametersFactory: ParametersFactory {
             // Or does exist and 'isWritable'
             guard !parametersFile.exists
                     || parametersFile.isWritable else {
-                throw TemplateDoesNotExist(templateNames: [parentFolder.string])
+                throw RuntimeError("'\(parametersFile.abbreviate())' can't be modified, you don't have write permission.")
             }
             
             // Write to file
             try parametersFile.write(data)
         } else {
-            throw TemplateDoesNotExist(templateNames: [parentFolder.string])
+            throw RuntimeError("'\(parentFolder.abbreviate())' doesn't exist or isn't a directory.")
         }
     }
     
