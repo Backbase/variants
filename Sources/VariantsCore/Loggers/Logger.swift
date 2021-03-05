@@ -19,7 +19,11 @@ public class Logger: VerboseLogger, Codable {
     public var showTimestamp: Bool { return shouldShowTimestamp }
     
     func logFatal(_ prefix: Any = "❌ ", item: Any, color: ShellColor = .red) {
-        logError(prefix, item: item, color: color)
+        if prefix == "❌ " && (item as? String)?.contains("❌") {
+            logError(item: item, color: color)
+        } else {
+            logError(prefix, item: item, color: color)
+        }
         exit(1)
     }
     

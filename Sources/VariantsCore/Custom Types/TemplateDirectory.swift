@@ -25,7 +25,7 @@ struct TemplateDirectory {
 
         guard let path = firstDirectory else {
             let dirs = directories.joined(separator: " or ")
-            throw RuntimeError("❌ Templates folder not found in \(dirs)")
+            throw RuntimeError("Templates folder not found in \(dirs)")
         }
 
         self.path = path

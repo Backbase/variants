@@ -25,7 +25,7 @@ struct UtilsDirectory {
 
         guard let path = firstDirectory else {
             let dirs = directories.joined(separator: " or ")
-            throw RuntimeError("❌ Utils folder not found in \(dirs)")
+            throw RuntimeError("Utils folder not found in \(dirs)")
         }
 
         self.path = path
