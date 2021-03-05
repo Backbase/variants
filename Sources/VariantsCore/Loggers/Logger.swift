@@ -18,8 +18,8 @@ public class Logger: VerboseLogger, Codable {
     public var verbose: Bool { return isVerbose }
     public var showTimestamp: Bool { return shouldShowTimestamp }
     
-    func logFatal(_ prefix: Any = "❌ ", item: Any, color: ShellColor = .red) {
-        if prefix == "❌ " && (item as? String)?.contains("❌") {
+    func logFatal(_ prefix: String = "❌ ", item: String, color: ShellColor = .red) {
+        if prefix == "❌ " && item.contains("❌") {
             logError(item: item, color: color)
         } else {
             logError(prefix, item: item, color: color)
