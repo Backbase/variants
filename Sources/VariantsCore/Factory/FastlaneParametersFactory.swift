@@ -83,13 +83,13 @@ class FastlaneParametersFactory: ParametersFactory {
             // Or does exist and 'isWritable'
             guard !parametersFile.exists
                     || parametersFile.isWritable else {
-                throw TemplateDoesNotExist(templateNames: [parentFolder.string])
+                throw RuntimeError("'\(parametersFile.abbreviate())' can't be modified, you don't have write permission.")
             }
             
             // Write to file
             try parametersFile.write(data)
         } else {
-            throw TemplateDoesNotExist(templateNames: [parentFolder.string])
+            throw RuntimeError("'\(parentFolder.abbreviate())' doesn't exist or isn't a directory.")
         }
     }
     
@@ -111,20 +111,16 @@ class FastlaneParametersFactory: ParametersFactory {
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
     func envVars() -> [CustomProperty] {
         return self
-            .filter({ $0.destination == .fastlane && $0.processForEnvironment().isEnvVar })
+            .filter({ $0.destination == .fastlane && $0.isEnvironmentVariable })
             .map { (property) -> CustomProperty in
-                let processed = property.processForEnvironment()
-                if processed.isEnvVar {
-                    return CustomProperty(name: property.name,
-                                          value: processed.string,
-                                          destination: property.destination)
-                }
-                return property
+                return CustomProperty(name: property.name,
+                                      value: property.environmentValue,
+                                      destination: property.destination)
             }
     }
     
     func literal() -> [CustomProperty] {
         return self
-            .filter({ $0.destination == .fastlane && !$0.processForEnvironment().isEnvVar })
+            .filter({ $0.destination == .fastlane && !$0.isEnvironmentVariable })
     }
 }

@@ -8,13 +8,14 @@ ios:
       FrankBank:
         name: FrankBank
         bundle_id: com.backbase.frank.ios
+        test_target: FrankBankTests
         app_icon: AppIcon
         source:
           path: Sources
           info: Sources/Info.plist
           config: Sources
     variants:
-      - name: default
+      default:
         version_name: 0.0.1
         version_number: 1
         signing:
@@ -26,7 +27,7 @@ ios:
             - name: SAMPLE_CONFIG
               value: Production Value
               destination: project
-      - name: BETA
+      BETA:
         id_suffix: beta
         app_icon: AppIcon.beta
         version_name: 0.0.1
@@ -36,7 +37,7 @@ ios:
             - name: SAMPLE_CONFIG
               value: BETA Value
               destination: fastlane
-      - name: STG
+      STG:
         id_suffix: staging
         version_name: 0.0.1
         version_number: 1

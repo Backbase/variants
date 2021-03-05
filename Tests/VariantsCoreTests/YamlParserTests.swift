@@ -101,7 +101,8 @@ class YamlParserTests: XCTestCase {
             let firstVariant = configuration.ios?.variants.first(where: { $0.name == "default" })
             XCTAssertNotNil(firstVariant)
             let firstVariantDefaultValues = firstVariant?.getDefaultValues(for:
-                iOSTarget(name: "FrankBank", bundleId: "com.backbase.frank.ios", app_icon: "AppIcon", source: source)
+                    iOSTarget(name: "FrankBank", app_icon: "AppIcon", bundleId: "com.backbase.frank.ios",
+                              testTarget: "FrankBankTests", source: source)
             )
             XCTAssertEqual(firstVariantDefaultValues?["V_VERSION_NUMBER"], "1")
             XCTAssertEqual(firstVariantDefaultValues?["V_APP_NAME"], "FrankBank")
@@ -170,8 +171,8 @@ class YamlParserTests: XCTestCase {
             XCTAssertEqual(configuration.android?.appIdentifier, "com.backbase.frank")
             XCTAssertEqual(configuration.android?.path, ".")
             XCTAssertEqual(configuration.android?.variants.count, 2)
-            XCTAssertEqual(configuration.android?.variants.first?.name, "default")
-            XCTAssertEqual(configuration.android?.variants.last?.name, "test")
+            XCTAssertTrue(((configuration.android?.variants.map(\.name).contains("default")) != nil))
+            XCTAssertTrue(((configuration.android?.variants.map(\.name).contains("test")) != nil))
             
             let customConfigDefault = configuration.android?
                 .variants.first(where: { $0.name == "default" })?

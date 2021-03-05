@@ -12,8 +12,14 @@ import ArgumentParser
 // swiftlint:disable type_name
 
 class iOSProjectTests: XCTestCase {
+    let specHelperMock = SpecHelperMock(
+        logger: Logger.shared,
+        templatePath: Path("variants-template.yml"),
+        userInputSource: interactiveShell,
+        userInput: { "yes" }
+    )
+    
     func testProject_initialize() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
         let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
@@ -31,7 +37,6 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_setup() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
         let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
@@ -73,7 +78,6 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_switch() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
         let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
@@ -99,15 +103,12 @@ class iOSProjectTests: XCTestCase {
         
         XCTAssertNotNil(specPath())
         if let spec = specPath() {
-            
             // Variant 'variant' doesn't exist
             XCTAssertThrowsError(try project.switch(to: inexistentVariant, spec: spec.string, verbose: true),
                                  "Variant doesn't exist") { (error) in
                 XCTAssertNotNil(error as? ValidationError)
                 if let validationError = error as? ValidationError {
-                    XCTAssertEqual(validationError.description, """
-                        Variant '\(inexistentVariant)' not found.
-                        """)
+                    XCTAssertEqual(validationError.description, "Variant '\(inexistentVariant)' not found.")
                 }
             }
             
@@ -118,7 +119,7 @@ class iOSProjectTests: XCTestCase {
             XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 1)
             XCTAssertEqual(xcFactoryMock.createConfigCache.count, 1)
             XCTAssertEqual(xcFactoryMock.createConfigCache.first?.variant.name, "BETA")
-
+            
             let stgVariant = "stg"
             XCTAssertNoThrow(try project.switch(to: stgVariant, spec: spec.string, verbose: true))
             XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 2)

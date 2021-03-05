@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ develop ]
+env:
+  DEVELOPER_DIR: /Applications/Xcode_12.app/Contents/Developer
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Test CLI Package
+      run: swift test -v
+
+    - name: Make install
+      run: make install
+      
+    - name: Test VariantsCore
+      run: xcodebuild test -scheme VariantsCore
+
+    - name: Bundle install
+      run: bundle install
+      
+    - name: Code coverage report
+      run: bundle exec slather coverage
+
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./test-reports/cobertura.xml
+        fail_ci_if_error: false # optional (default = false)
+        verbose: true # optional (default = false)

@@ -34,6 +34,7 @@ public enum LogLevel: String {
 
 public protocol VerboseLogger {
     var verbose: Bool { get }
+    var showTimestamp: Bool { get }
     func log(_ prefix: Any, item: Any, indentationLevel: Int, color: ShellColor, logLevel: LogLevel)
 }
 
@@ -52,13 +53,21 @@ extension VerboseLogger {
         }
         let indentation = String(repeating: "   ", count: indentationLevel)
         var command = ""
-        let arguments =  [
-            "\(logLevel.rawValue)",
-            "[\(Date().logTimestamp())]: ▸ ",
+        var arguments: [String] = []
+        
+        if showTimestamp {
+            arguments.append(contentsOf: [
+                "\(logLevel.rawValue)",
+                "[\(Date().logTimestamp())]: ▸ "
+            ])
+        }
+        
+        arguments.append(contentsOf: [
             "\(indentation)",
             "\(color.bold())\(prefix)",
             "\(color.rawValue)\(item)\(ShellColor.neutral.rawValue)"
-        ]
+        ])
+        
         arguments.forEach { command.append($0) }
         var outputStream = StandardErrorOutputStream()
         Swift.print(command, to: &outputStream)

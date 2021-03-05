@@ -75,6 +75,11 @@
 		8E1BA110254C3FFF00DD0204 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 8E1BA10F254C3FFF00DD0204 /* ArgumentParser */; };
 		8E1BA189254C48FD00DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
 		8E1BA18A254C48FD00DD0204 /* VariantsCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8E6ABB9D25C031AB006A62FE /* UtilsDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABB9C25C031AB006A62FE /* UtilsDirectory.swift */; };
+		8E6ABBA425C03639006A62FE /* SecretsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABBA325C03639006A62FE /* SecretsFactory.swift */; };
+		8E6ABBB625C03F2C006A62FE /* SecretsFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */; };
+		8E866A1725D2CCEA00A7EC19 /* UserInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E866A1625D2CCEA00A7EC19 /* UserInput.swift */; };
+		8E866B0725D68CA900A7EC19 /* InitCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E866B0625D68CA900A7EC19 /* InitCommandTests.swift */; };
 		8E8A483525514BE00056F79F /* Stencil in Frameworks */ = {isa = PBXBuildFile; productRef = 8E8A483425514BE00056F79F /* Stencil */; };
 		8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */; };
 		8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */; };
@@ -82,7 +87,6 @@
 		8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */; };
 		8E8A4909255420FD0056F79F /* PlatformDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A4908255420FC0056F79F /* PlatformDetectorTests.swift */; };
 		8E8A491025543F920056F79F /* SpecHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8A490F25543F910056F79F /* SpecHelperTests.swift */; };
-		8EDC54D625554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC54D525554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift */; };
 		8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */; };
 		8EDC550C25592F5800A9CDFF /* iOSProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */; };
 		8EE24235256BA98C00F66F61 /* iOSSigning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE24234256BA98C00F66F61 /* iOSSigning.swift */; };
@@ -160,6 +164,12 @@
 		8E1BA0BF254BFF6400DD0204 /* Initializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Initializer.swift; sourceTree = "<group>"; };
 		8E1BA0C0254BFF6400DD0204 /* Switch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
 		8E1BA0C1254BFF6400DD0204 /* Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Setup.swift; sourceTree = "<group>"; };
+		8E6ABB8D25C01BD8006A62FE /* utils */ = {isa = PBXFileReference; lastKnownFileType = folder; path = utils; sourceTree = "<group>"; };
+		8E6ABB9C25C031AB006A62FE /* UtilsDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsDirectory.swift; sourceTree = "<group>"; };
+		8E6ABBA325C03639006A62FE /* SecretsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SecretsFactory.swift; path = Sources/VariantsCore/Factory/ios/SecretsFactory.swift; sourceTree = SOURCE_ROOT; };
+		8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretsFactoryTests.swift; sourceTree = "<group>"; };
+		8E866A1625D2CCEA00A7EC19 /* UserInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInput.swift; sourceTree = "<group>"; };
+		8E866B0625D68CA900A7EC19 /* InitCommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitCommandTests.swift; sourceTree = "<group>"; };
 		8E8A483B25514D3A0056F79F /* FastlaneParametersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactory.swift; sourceTree = "<group>"; };
 		8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastlaneParametersFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoin.swift"; sourceTree = "<group>"; };
@@ -167,7 +177,6 @@
 		8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradleScriptFactoryTests.swift; sourceTree = "<group>"; };
 		8E8A4908255420FC0056F79F /* PlatformDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformDetectorTests.swift; sourceTree = "<group>"; };
 		8E8A490F25543F910056F79F /* SpecHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecHelperTests.swift; sourceTree = "<group>"; };
-		8EDC54D525554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomProperty+EnvironmentVar.swift"; sourceTree = "<group>"; };
 		8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomProperty+EnvironmentVarTests.swift"; sourceTree = "<group>"; };
 		8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSProjectTests.swift; sourceTree = "<group>"; };
 		8EE24234256BA98C00F66F61 /* iOSSigning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSSigning.swift; sourceTree = "<group>"; };
@@ -290,6 +299,7 @@
 				8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */,
 				BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */,
 				8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */,
+				8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */,
 				8E1B9C0E254AB51300DD0204 /* Resources */,
 				8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */,
 				8E1B9CDD254AC1E700DD0204 /* Info.plist */,
@@ -334,6 +344,7 @@
 				OBJ_15 /* Platform.swift */,
 				OBJ_20 /* RuntimeError.swift */,
 				OBJ_21 /* TemplateDirectory.swift */,
+				8E6ABB9C25C031AB006A62FE /* UtilsDirectory.swift */,
 			);
 			path = "Custom Types";
 			sourceTree = "<group>";
@@ -355,7 +366,6 @@
 				OBJ_26 /* String+Error.swift */,
 				OBJ_27 /* String+Write.swift */,
 				8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */,
-				8EDC54D525554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -395,6 +405,7 @@
 			children = (
 				OBJ_38 /* XCConfigFactory.swift */,
 				OBJ_39 /* XcodeProjFactory.swift */,
+				8E6ABBA325C03639006A62FE /* SecretsFactory.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -406,6 +417,7 @@
 				OBJ_41 /* Bash.swift */,
 				OBJ_42 /* Constants.swift */,
 				OBJ_43 /* PlatformDetector.swift */,
+				8E866A1625D2CCEA00A7EC19 /* UserInput.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -435,6 +447,7 @@
 				OBJ_6 /* Package.swift */,
 				OBJ_286 /* Templates */,
 				OBJ_287 /* Assets */,
+				8E6ABB8D25C01BD8006A62FE /* utils */,
 				8E8A48A52552A3EE0056F79F /* docs */,
 				OBJ_7 /* Sources */,
 				OBJ_62 /* Tests */,
@@ -489,6 +502,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_65 /* VariantsTests.swift */,
+				8E866B0625D68CA900A7EC19 /* InitCommandTests.swift */,
 				OBJ_66 /* XCTestManifests.swift */,
 			);
 			name = VariantsTests;
@@ -699,11 +713,14 @@
 				8E1B9ECF254AC29D00DD0204 /* YamlParser.swift in Sources */,
 				8E8A4866255172CF0056F79F /* Path+SafeJoin.swift in Sources */,
 				8E1B9DC8254AC27500DD0204 /* iOSProject.swift in Sources */,
+				8E866A1725D2CCEA00A7EC19 /* UserInput.swift in Sources */,
 				8E1B9E67254AC29500DD0204 /* Constants.swift in Sources */,
 				8E1B9EFA254AC2A900DD0204 /* AndroidSigning.swift in Sources */,
+				8E6ABBA425C03639006A62FE /* SecretsFactory.swift in Sources */,
 				8E1BA0C4254BFF6400DD0204 /* Setup.swift in Sources */,
 				8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */,
 				8E1B9EFE254AC2A900DD0204 /* AndroidVariant.swift in Sources */,
+				8E6ABB9D25C031AB006A62FE /* UtilsDirectory.swift in Sources */,
 				8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */,
 				8E1B9EA5254AC29A00DD0204 /* VerboseLogger.swift in Sources */,
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
@@ -713,7 +730,6 @@
 				8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */,
 				8E1B9EFC254AC2A900DD0204 /* iOSConfiguration.swift in Sources */,
 				8E1B9E3B254AC28F00DD0204 /* XCConfigFactory.swift in Sources */,
-				8EDC54D625554A3D00A9CDFF /* CustomProperty+EnvironmentVar.swift in Sources */,
 				8E1B9E36254AC28F00DD0204 /* GradleScriptFactory.swift in Sources */,
 				8E1B9DF3254AC27900DD0204 /* TemplateDirectory.swift in Sources */,
 				8E1B9DC7254AC27500DD0204 /* Project.swift in Sources */,
@@ -737,6 +753,7 @@
 				E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */,
 				8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
+				8E6ABBB625C03F2C006A62FE /* SecretsFactoryTests.swift in Sources */,
 				8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */,
 				BEAA71ED255A012900E9D4D9 /* AndroidProjectTests.swift in Sources */,
 				8EDC550C25592F5800A9CDFF /* iOSProjectTests.swift in Sources */,
@@ -761,6 +778,7 @@
 			files = (
 				OBJ_456 /* VariantsTests.swift in Sources */,
 				OBJ_457 /* XCTestManifests.swift in Sources */,
+				8E866B0725D68CA900A7EC19 /* InitCommandTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

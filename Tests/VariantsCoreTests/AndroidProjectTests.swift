@@ -11,8 +11,14 @@ import ArgumentParser
 @testable import VariantsCore
 
 class AndroidProjectTests: XCTestCase {
+    let specHelperMock = SpecHelperMock(
+        logger: Logger.shared,
+        templatePath: Path("variants-template.yml"),
+        userInputSource: interactiveShell,
+        userInput: { "yes" }
+    )
+    
     func testProject_initialize() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
 
@@ -30,7 +36,6 @@ class AndroidProjectTests: XCTestCase {
     }
     
     func testProject_setup() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
 
@@ -81,7 +86,6 @@ class AndroidProjectTests: XCTestCase {
     }
     
     func testProject_switch() {
-        let specHelperMock = SpecHelperMock(templatePath: Path("variants-template.yml"))
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
 

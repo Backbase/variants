@@ -41,19 +41,19 @@ ios:
     ...
     variants:
         # Variant 'default' doesn't implement it's signing, thus it will use the global one.
-        - name: default
+        default:
           ...
           
         # Variant 'beta' only overrides the 'export_method', thus all the rest will be used
         # from the global configuration.
-        - name: beta
+        beta:
           ...
           signing:
               export_method: "adhoc"
               
         # Variant 'internal_enterprisse_release' overrides everything, in this example
         # using a completely different match repository and signing identity.
-        - name: internal_enterprisse_release
+        internal_enterprisse_release:
           ...
           signing:
               match_url: "git@github.com:sample-enterprise/match.git"

@@ -5,12 +5,14 @@ bindir ?= $(prefix)/bin
 libdir ?= $(prefix)/lib
 srcdir = Sources
 templatesdir = Templates
+utilsdir = utils
 
 REPODIR = $(shell pwd)
 BUILDDIR = $(REPODIR)/.build
 CIBUILDDIR = $(REPODIR)/.ci-build
 SOURCES = $(wildcard $(srcdir)/**/*.swift)
 TEMPLATES = $(templatesdir)
+UTILS = $(utilsdir)
 
 .DEFAULT_GOAL = all
 
@@ -29,6 +31,7 @@ install: variants
 	@install "$(BUILDDIR)/release/variants" "$(bindir)"
 	@mkdir -p "$(libdir)/variants"
 	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
+	@cp -R "$(UTILS)" "$(libdir)/variants/"
 
 .PHONY: ci
 ci:
@@ -36,6 +39,7 @@ ci:
 	@install "$(CIBUILDDIR)/release/variants" "$(bindir)"
 	@mkdir -p "$(libdir)/variants"
 	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
+	@cp -R "$(UTILS)" "$(libdir)/variants/"
 
 .PHONY: pre-ci
 pre-ci: variants
@@ -54,8 +58,12 @@ distclean:
 clean: distclean
 	@rm -rf $(BUILDDIR)
 
+.PHONY: prepare_for_test
+prepare_for_test:
+	@rm -rf variants.yml
+
 .PHONY: test
-test:
+test: prepare_for_test
 	@swift test
 	@xcodebuild test -scheme VariantsCore 
 
@@ -70,4 +78,5 @@ lint:
 
 .PHONY: validation
 validation: lint coverage
+	@rm -rf variants.yml
 	@echo "Ready to go."

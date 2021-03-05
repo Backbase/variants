@@ -20,16 +20,24 @@ public struct iOSVariant: Codable {
     internal let store_destination: String?
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
+        let bundleId = target.bundleId+configIdSuffix
+        
         var customDictionary: [String: String] = [
             "V_APP_NAME": target.name+configName,
-            "V_BUNDLE_ID": target.bundleId+configIdSuffix,
+            "V_BUNDLE_ID": bundleId,
             "V_VERSION_NAME": version_name,
             "V_VERSION_NUMBER": String(version_number),
             "V_APP_ICON": app_icon ?? target.app_icon
         ]
        
+        if
+            signing?.matchURL != nil,
+            let exportMethod = signing?.exportMethod {
+            customDictionary["V_MATCH_PROFILE"] = exportMethod.prefix+" "+bundleId
+        }
+        
         custom?
-            .filter { $0.destination == .project && !$0.processForEnvironment().isEnvVar }
+            .filter { $0.destination == .project && !$0.isEnvironmentVariable }
             .forEach({ config in
                 customDictionary[config.name] = config.value
             })
@@ -76,4 +84,18 @@ extension iOSVariant {
         case appStore = "appstore"
         case testFlight = "testflight"
     }
+}
+
+/*
+ * Used by `iOSConfiguration` decode variant from YAML spec
+ * as dictionary `[String: UnnamediOSVariant]` and expose array `[iOSVariant]`.
+ */
+struct UnnamediOSVariant: Codable {
+    let app_icon: String?
+    let id_suffix: String?
+    let version_name: String
+    let version_number: Int
+    let signing: iOSSigning?
+    let custom: [CustomProperty]?
+    internal let store_destination: String?
 }

@@ -25,10 +25,16 @@ struct StaticPath {
         static let variantsScriptFileName = "variants.gradle"
     }
     
+    struct Xcode {
+        static let variantsGybFileName = "Variants.swift.gyb"
+        static let variantsFileName = "Variants.swift"
+    }
+    
     struct Template {
         static let variantsScriptFileName = "variants-template.gradle"
         static let fastlaneParametersFileName = "variants_params_template.rb"
         static let matchParametersFileName = "ios/match_params_template.rb"
         static let matchFileName = "ios/matchfile_template.rb"
+        static let variantsSwiftGybFileName = "Variants.swift.template.gyb"
     }
 }

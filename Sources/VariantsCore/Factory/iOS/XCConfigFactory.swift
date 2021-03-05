@@ -8,6 +8,7 @@
 import Foundation
 import ArgumentParser
 import PathKit
+import Stencil
 
 public typealias DoesFileExist = (exists: Bool, path: Path?)
 
@@ -101,7 +102,7 @@ class XCConfigFactory: XCFactory {
          * If template files should be added to Xcode Project
          */
         if addToXcodeProj ?? false {
-            addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target)
+            addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target, variant: variant)
         }
         
         /*
@@ -111,6 +112,13 @@ class XCConfigFactory: XCFactory {
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
         
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
+        
+        /*
+         * Add custom properties whose values should be read from environment variables
+         * to `Variants.Secret` as encrypted secrets.
+         */
+        let secretsFactory = SecretsFactory(logger: logger)
+        secretsFactory.updateSecrets(with: xcodeConfigPath, variant: variant)
     }
     
     // MARK: - Private methods
@@ -118,7 +126,8 @@ class XCConfigFactory: XCFactory {
     private func addToXcode(_ xcConfigFile: Path,
                             toProject projectPath: Path,
                             sourceRoot: Path,
-                            target: NamedTarget) {
+                            target: NamedTarget,
+                            variant: iOSVariant) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
 
         do {
@@ -131,14 +140,27 @@ class XCConfigFactory: XCFactory {
             let xcodeFactory = XcodeProjFactory()
             xcodeFactory.add([xcConfigFile, variantsFile], toProject: projectPath, sourceRoot: sourceRoot, target: target)
             
+            var mainTargetSettings = [
+                "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
+                "PRODUCT_NAME": "$(V_APP_NAME)",
+                "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
+            ]
+            
+            if
+                variant.signing?.matchURL != nil,
+                variant.signing?.exportMethod != nil {
+                mainTargetSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
+            }
+            
+            xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
+            
             xcodeFactory.modify(
                 [
-                    "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
-                    "PRODUCT_NAME": "$(V_APP_NAME)",
-                    "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
+                    "TEST_HOST": "$(BUILT_PRODUCTS_DIR)/$(V_APP_NAME).app/$(V_APP_NAME)"
                 ],
                 in: projectPath,
-                target: target.value)
+                target: target.value,
+                asTestSettings: true)
             
         } catch {
             logger.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")

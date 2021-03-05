@@ -7,7 +7,7 @@ android:
   app_name: FrankBank
   app_identifier: com.backbase.frank
   variants:
-    - name: default
+    default:
       version_name: 0.0.1
       version_code: 1
       task_build: bundleProdRelease
@@ -17,7 +17,7 @@ android:
         - name: SAMPLE_PROJECT
           value: Sample Project Default Config
           destination: project
-    - name: test
+    test:
       id_suffix: dev
       task_build: assembleDevelop
       task_unittest: testDevDebugUnitTest
@@ -71,19 +71,20 @@ ios:
       FrankBank:
         name: FrankBank
         bundle_id: com.backbase.frank.ios
+        test_target: FrankBankTests
         app_icon: AppIcon
         source:
           path: Sources
           info: Sources/Info.plist
           config: Sources
     variants:
-      - name: default
+      default:
         version_name: 0.0.1
         version_number: 1
         custom:
             - key: SAMPLE_CONFIG
               value: Production Value
-      - name: BETA
+      BETA:
         id_suffix: beta
         app_icon: AppIcon.beta
         version_name: 0.0.1

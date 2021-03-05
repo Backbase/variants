@@ -8,9 +8,9 @@ android:
     app_name: {{ APP_NAME }}
     app_identifier: {{ APP_IDENTIFIER }}
     variants:
-      # Default variant is mandatory, do not remove
-      # Usually regarded as `production` variant.
-        - name: default
+        # Default variant is mandatory, do not remove
+        # Usually regarded as `production` variant.
+        default:
           version_name: 0.0.1
           version_code: 1
           task_build: bundleProdRelease
@@ -29,9 +29,16 @@ android:
           #
           custom:
             - name: SAMPLE_PROPERTY
-              value: "{{ envVars.SAMPLE_ENVIRONMENT_VARIABLE }}"
+              value: SAMPLE_VALUE
               destination: fastlane
-        - name: BETA
+              
+            - name: SAMPLE_PROPERTY_FROM_ENVIRONMENT
+              value: SAMPLE_ENVIRONMENT_VARIABLE
+              env: true
+              destination: fastlane
+              
+        # Sample variant "BETA"
+        BETA:
           id_suffix: beta
           version_name: 0.0.1
           version_code: 1
@@ -42,7 +49,8 @@ android:
           store_destination: AppCenter
           custom:
             - name: SAMPLE_PROPERTY
-              value: "{{ envVars.SAMPLE_ENVIRONMENT_VARIABLE }}"
+              value: SAMPLE_ENVIRONMENT_VARIABLE
+              env: true
               destination: fastlane
   
     # ----------------------------------------------------------------------
@@ -56,9 +64,9 @@ android:
 
     #signing:
     #    key_alias: android
-    #    key_password: "{{ envVars.APP_SIGN_KEY_PASSWORD }}"
+    #    key_password: APP_SIGN_KEY_PASSWORD
     #    store_file: /usr/local/android/production.keystore
-    #    store_password: "{{ envVars.APP_SIGN_STORE_PASSWORD }}"
+    #    store_password: APP_SIGN_STORE_PASSWORD
   
     # ----------------------------------------------------------------------
     # custom: - Not required.
@@ -71,8 +79,10 @@ android:
 
     #custom:
     #    - name: mvnUser
-    #      value: "{{ envVars.MAVEN_USERNAME }}"
+    #      value: MAVEN_USERNAME
+    #      env: true
     #      destination: project
     #    - name: mvnPass
-    #      value: "{{ envVars.MAVEN_PASSWORD }}"
+    #      value: MAVEN_PASSWORD
+    #      env: true
     #      destination: project
