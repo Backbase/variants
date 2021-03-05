@@ -47,7 +47,7 @@ public struct AndroidConfiguration: Codable {
         self.appName = try container.decode(String.self, forKey: .appName)
         self.appIdentifier = try container.decode(String.self, forKey: .appIdentifier)
         self.variants = definiteVariants
-        self.signing = try container.decode(AndroidSigning.self, forKey: .signing)
+        self.signing = try? container.decode(AndroidSigning.self, forKey: .signing)
         self.custom = try? container.decode([CustomProperty].self, forKey: .custom)
     }
     

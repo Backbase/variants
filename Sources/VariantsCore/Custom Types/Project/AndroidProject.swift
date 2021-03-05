@@ -103,7 +103,7 @@ class AndroidProject: Project {
             do {
                 let projectSourceFolder = configuration.path
                 let path = try TemplateDirectory().path
-                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", projectSourceFolder)
+                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", ".")
                     .run()
 
                 let baseSetupCompletedMessage =
@@ -129,7 +129,7 @@ class AndroidProject: Project {
 
                     """
                 
-                if Path("\(projectSourceFolder)/fastlane/").isDirectory {
+                if StaticPath.Fastlane.baseFolder.isDirectory {
                     guard let defaultVariant = configuration.variants
                             .first(where: { $0.name.lowercased() == "default" }) else {
                         throw ValidationError("Variant 'default' not found.")
@@ -145,9 +145,9 @@ class AndroidProject: Project {
                         Your setup is complete, congratulations! 🎉
                         However, you still need to provide some parameters in order for fastlane to run correctly.
 
-                        ⚠️  Check the files in '\(projectSourceFolder)/fastlane/parameters/', change the parameters
+                        ⚠️  Check the files in 'fastlane/parameters/', change the parameters
                             accordingly, provide environment variables when applicable.
-                        ⚠️  Note that the values in the file '\(projectSourceFolder)/fastlane/parameters/variants_params.rb'
+                        ⚠️  Note that the values in the file 'fastlane/parameters/variants_params.rb'
                             where generated automatically for configuration properties with 'fastlane' destination.
 
                         """
@@ -165,6 +165,9 @@ class AndroidProject: Project {
                 }
 
             } catch let error as ValidationError {
+                Logger.shared.logFatal(item: error.description)
+                
+            } catch let error as RuntimeError {
                 Logger.shared.logFatal(item: error.description)
                 
             } catch {

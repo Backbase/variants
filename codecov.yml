@@ -1,9 +1,12 @@
 coverage:
   status:
     project:
+      threshold: 5%
       core:
         paths:
           - Sources/VariantsCore
       tests:
         paths:
           - Tests/VariantsCoreTests
+
+    patch: no
