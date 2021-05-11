@@ -12,7 +12,6 @@ public struct AndroidConfiguration: Codable {
     let appName: String
     let appIdentifier: String
     let variants: [AndroidVariant]
-    let signing: AndroidSigning?
     let custom: [CustomProperty]?
 
     enum CodingKeys: String, CodingKey {
@@ -20,7 +19,6 @@ public struct AndroidConfiguration: Codable {
         case appName = "app_name"
         case appIdentifier = "app_identifier"
         case variants = "variants"
-        case signing = "signing"
         case custom = "custom"
     }
     
@@ -47,7 +45,6 @@ public struct AndroidConfiguration: Codable {
         self.appName = try container.decode(String.self, forKey: .appName)
         self.appIdentifier = try container.decode(String.self, forKey: .appIdentifier)
         self.variants = definiteVariants
-        self.signing = try? container.decode(AndroidSigning.self, forKey: .signing)
         self.custom = try? container.decode([CustomProperty].self, forKey: .custom)
     }
     
@@ -56,14 +53,12 @@ public struct AndroidConfiguration: Codable {
         appName: String,
         appIdentifier: String,
         variants: [AndroidVariant],
-        signing: AndroidSigning?,
         custom: [CustomProperty]?
     ) {
         self.path = path
         self.appName = appName
         self.appIdentifier = appIdentifier
         self.variants = variants
-        self.signing = signing
         self.custom = custom
     }
 }

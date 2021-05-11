@@ -7,16 +7,6 @@ rootProject.ext.appIdentifier = "{{ configuration.appIdentifier }}{{ variantIdSu
 rootProject.ext.appName = "{{ configuration.appName }}{{ variantName }}"
 {% endif %}
 
-{% if configuration.signing %}
-
-// ==== Signing values ====
-
-rootProject.ext.signingKeyAlias = "{{ configuration.signing.keyAlias }}"
-rootProject.ext.signingKeyPassword = "{{ configuration.signing.keyPassword }}"
-rootProject.ext.signingStoreFile = "{{ configuration.signing.storeFile }}"
-rootProject.ext.signingStorePassword = "{{ configuration.signing.storePassword }}"
-{% endif %}
-
 {% if variant_properties or variant_env_vars %}
 
 // ==== Variant custom values ====
