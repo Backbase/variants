@@ -59,11 +59,11 @@ if let additions = danger.github?.pullRequest.additions,
         """)
 }
 
-// Changelog entries are required for changes to library files.
-// TODO: Enabled prior to 1.0.0 release
-//if hasSourceChanges && !isDeclaredTrivial && !git.modifiedFiles.contains("CHANGELOG.md") {
-//    warn("Any changes to library code should be reflected in the CHANGELOG. Please consider adding a note there about your change.")
-//}
+//  Changelog entries are required for changes to library files.
+//  TODO: Enabled prior to 1.0.0 release
+//  if hasSourceChanges && !isDeclaredTrivial && !git.modifiedFiles.contains("CHANGELOG.md") {
+//      warn("Any changes to library code should be reflected in the CHANGELOG. Please consider adding a note there about your change.")
+//  }
 
 // Warn when library files has been updated but not tests.
 if hasSourceChanges && !git.modifiedFiles.contains(where: { $0.isInTests }) {
