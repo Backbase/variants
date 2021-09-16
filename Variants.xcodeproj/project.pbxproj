@@ -32,6 +32,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		397811EF26F397A900643F91 /* Data+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811EE26F397A900643F91 /* Data+WriteTests.swift */; };
 		8E1B9CD7254AC1E700DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
 		8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */; };
 		8E1B9CDE254AC1E700DD0204 /* VariantsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -153,6 +154,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		397811EE26F397A900643F91 /* Data+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+WriteTests.swift"; sourceTree = "<group>"; };
 		8E1B9C0E254AB51300DD0204 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VariantsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariantsCore.h; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */,
 				8E1B9CDD254AC1E700DD0204 /* Info.plist */,
 				E39502A8256DB16B00484DCE /* String+WriteTests.swift */,
+				397811EE26F397A900643F91 /* Data+WriteTests.swift */,
 				E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */,
 			);
 			name = VariantsCoreTests;
@@ -748,6 +751,7 @@
 				BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */,
 				E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */,
 				8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */,
+				397811EF26F397A900643F91 /* Data+WriteTests.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
 				8E6ABBB625C03F2C006A62FE /* SecretsFactoryTests.swift in Sources */,
 				8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */,
@@ -991,7 +995,9 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B89DQ33LX4;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1057,8 +1063,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = B89DQ33LX4;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
