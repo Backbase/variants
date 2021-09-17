@@ -35,21 +35,22 @@ public enum LogLevel: String {
 public protocol VerboseLogger {
     var verbose: Bool { get }
     var showTimestamp: Bool { get }
-    func log(_ prefix: Any, item: Any, indentationLevel: Int, color: ShellColor, logLevel: LogLevel)
-}
-
-extension Date {
-    func logTimestamp() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter.string(from: self)
-    }
+    func log(_ prefix: Any, item: Any, indentationLevel: Int, color: ShellColor, logLevel: LogLevel, date: Date)
 }
 
 extension VerboseLogger {
-    public func log(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none) {
+    public func log(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none, date: Date = Date()) {
+        
+        let logString = createLog(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel:  logLevel, date: date)
+        
+        var outputStream = StandardErrorOutputStream()
+        
+        Swift.print(logString, to: &outputStream)
+    }
+    
+    func createLog(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none, date: Date = Date()) -> String {
         if logLevel == .verbose {
-            guard verbose else { return }
+            guard verbose else { return ""}
         }
         let indentation = String(repeating: "   ", count: indentationLevel)
         var command = ""
@@ -58,7 +59,7 @@ extension VerboseLogger {
         if showTimestamp {
             arguments.append(contentsOf: [
                 "\(logLevel.rawValue)",
-                "[\(Date().logTimestamp())]: ▸ "
+                "[\(date.logTimestamp())]: ▸ "
             ])
         }
         
@@ -69,31 +70,6 @@ extension VerboseLogger {
         ])
         
         arguments.forEach { command.append($0) }
-        var outputStream = StandardErrorOutputStream()
-        Swift.print(command, to: &outputStream)
-    }
-    
-    public func logBack(_ prefix: Any = "", item: Any, indentationLevel: Int = 0) -> String {
-        let indentation = String(repeating: "   ", count: indentationLevel)
-        var command = ""
-        let arguments =  [
-            "[\(Date().logTimestamp())]: ▸ ",
-            "\(indentation)",
-            "\(prefix)",
-            "\(item)"
-        ]
-        arguments.forEach { command.append($0) }
         return command
-    }
-}
-
-private struct StandardErrorOutputStream: TextOutputStream {
-    let stderr = FileHandle.standardError
-
-    func write(_ string: String) {
-        guard let data = string.data(using: .utf8) else {
-            return
-        }
-        stderr.write(data)
     }
 }

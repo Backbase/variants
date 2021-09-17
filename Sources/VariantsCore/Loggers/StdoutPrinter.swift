@@ -15,14 +15,3 @@ public class StdoutPrinter {
         Swift.print(item, to: &stdoutTextOutputStream)
     }
 }
-
-private struct StandardOutputStream: TextOutputStream {
-    let stdoud = FileHandle.standardOutput
-
-    func write(_ string: String) {
-        guard let data = string.data(using: .utf8) else {
-            return
-        }
-        stdoud.write(data)
-    }
-}
