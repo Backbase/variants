@@ -33,6 +33,7 @@
 
 /* Begin PBXBuildFile section */
 		3907EE7026FDF9CE00311EE6 /* XcodeProjFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */; };
+		3940C5A127074B1A00FEA51D /* LogData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3940C5A027074B1A00FEA51D /* LogData.swift */; };
 		397811EF26F397A900643F91 /* Data+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811EE26F397A900643F91 /* Data+WriteTests.swift */; };
 		397811F426F4B19300643F91 /* Date+Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811F226F4B14A00643F91 /* Date+Log.swift */; };
 		397811F626F4BCF800643F91 /* MockLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811F526F4BCF800643F91 /* MockLogger.swift */; };
@@ -161,6 +162,7 @@
 
 /* Begin PBXFileReference section */
 		3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjFactoryTests.swift; sourceTree = "<group>"; };
+		3940C5A027074B1A00FEA51D /* LogData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogData.swift; sourceTree = "<group>"; };
 		397811EE26F397A900643F91 /* Data+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+WriteTests.swift"; sourceTree = "<group>"; };
 		397811F026F4A7C000643F91 /* VerboseLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerboseLoggerTests.swift; sourceTree = "<group>"; };
 		397811F226F4B14A00643F91 /* Date+Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Log.swift"; sourceTree = "<group>"; };
@@ -446,6 +448,7 @@
 				OBJ_46 /* Logger.swift */,
 				OBJ_47 /* StdoutPrinter.swift */,
 				OBJ_48 /* VerboseLogger.swift */,
+				3940C5A027074B1A00FEA51D /* LogData.swift */,
 				397811F726F4CABD00643F91 /* StandardOutputStream.swift */,
 			);
 			path = Loggers;
@@ -744,6 +747,7 @@
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
 				8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */,
 				8E1B9DF2254AC27900DD0204 /* RuntimeError.swift in Sources */,
+				3940C5A127074B1A00FEA51D /* LogData.swift in Sources */,
 				8E1BA0C3254BFF6400DD0204 /* Switch.swift in Sources */,
 				8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */,
 				8E1B9EFC254AC2A900DD0204 /* iOSConfiguration.swift in Sources */,

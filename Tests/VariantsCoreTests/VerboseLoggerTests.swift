@@ -14,14 +14,14 @@ class VerboseLoggerTests: XCTestCase {
     func testCreatingVerboseWithTimeStampLog() {
         let sut = MockVerboseLogger(verbose: true, showTimestamp: true)
        
-        let prefix = "prefix"
+        let prefix = ""
         let item = "test"
         let indentationLevel = 1
         let color = ShellColor.blue
         let logLevel = LogLevel.verbose
         let date = Date()
         
-        let results = sut.createLog(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel: logLevel, date: date)
+        let results = sut.createLog(LogData(item: item, indentationLevel: indentationLevel, color: color, logLevel: logLevel, date: date))
 
         let indentation = String(repeating: "   ", count: indentationLevel)
         let expected = logLevel.rawValue
@@ -36,14 +36,13 @@ class VerboseLoggerTests: XCTestCase {
     func testCreatingVerboseLogWithNoneVerboseSUT() {
         let sut = MockVerboseLogger(verbose: false, showTimestamp: true)
         
-        let prefix = "prefix"
         let item = "test"
         let indentationLevel = 1
         let color = ShellColor.blue
         let logLevel = LogLevel.verbose
         let date = Date()
         
-        let results = sut.createLog(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel: logLevel, date: date)
+        let results = sut.createLog(LogData(item: item, indentationLevel: indentationLevel, color: color, logLevel: logLevel, date: date))
         XCTAssertEqual(results, "")
     }
 }
