@@ -8,23 +8,11 @@
 import Foundation
 
 struct StandardOutputStream: TextOutputStream {
-    let stdoud = FileHandle.standardOutput
-
+    let fileHandler: FileHandle
     func write(_ string: String) {
         guard let data = string.data(using: .utf8) else {
             return
         }
-        stdoud.write(data)
-    }
-}
-
-struct StandardErrorOutputStream: TextOutputStream {
-    let stderr = FileHandle.standardError
-
-    func write(_ string: String) {
-        guard let data = string.data(using: .utf8) else {
-            return
-        }
-        stderr.write(data)
+        fileHandler.write(data)
     }
 }

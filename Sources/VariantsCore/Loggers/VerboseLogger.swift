@@ -43,7 +43,7 @@ extension VerboseLogger {
         
         let logString = createLog(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel:  logLevel, date: date)
         
-        var outputStream = StandardErrorOutputStream()
+        var outputStream = StandardOutputStream(fileHandler: .standardError)
         
         Swift.print(logString, to: &outputStream)
     }

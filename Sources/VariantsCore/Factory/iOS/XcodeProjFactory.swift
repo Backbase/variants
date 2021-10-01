@@ -10,7 +10,7 @@ import XcodeProj
 import PathKit
 
 struct XcodeProjFactory {
-    let logger: Logger
+    private let logger: Logger
     
     init(logLegel: Bool = false) {
         logger = Logger(verbose: logLegel)
@@ -108,8 +108,6 @@ struct XcodeProjFactory {
     ///   - sourceRoot: Path to source root group the files will be added to
     ///   - target: Named target `(key: String, value: Target) ` these files will be added to
     func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: NamedTarget) {
-        let variantsGroupPath = Path("\(projectPath)/Variants")
-        
         do {
             let project = try XcodeProj(path: projectPath)
             guard let pbxTarget = project.pbxproj.targets(named: target.key).first
@@ -118,30 +116,10 @@ struct XcodeProjFactory {
                 return
             }
         
-            let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
-            try rootGroup?.addGroup(named: variantsGroupPath.lastComponent)
-            let variantsGroup = rootGroup?.group(named: variantsGroupPath.lastComponent)
+            let variantsGroup = try varientsGroup(for: projectPath, sourceRoot: sourceRoot, target: target)
             
             try files.forEach { file in
-                let fileRef = try variantsGroup?.addFile(at: file,
-                                                         sourceTree: .group,
-                                                         sourceRoot: sourceRoot,
-                                                         validatePresence: true)
-                
-                let fileElement = PBXFileElement(sourceTree: .group,
-                                                 path: file.description,
-                                                 name: file.lastComponent)
-                let buildFile = PBXBuildFile(file: fileElement)
-                let sourceBuildPhase = try pbxTarget.sourcesBuildPhase()
-                sourceBuildPhase?.files?.append(buildFile)
-                
-                /*
-                 * If .xcconfig, set baseConfigurationReference to it
-                 */
-                if file.lastComponent.contains(".xcconfig"), let fileReference = fileRef {
-                    changeBaseConfig(fileReference, in: project, path: projectPath,
-                                     target: target, autoSave: true)
-                }
+                try write(to: file, projectPath: projectPath, variantsGroup: variantsGroup, pbxTarget: pbxTarget, sourceRoot: sourceRoot, target: target)
             }
             try project.write(path: projectPath)
         } catch {
@@ -211,6 +189,43 @@ struct XcodeProjFactory {
             
         } catch {
             logger.logFatal("❌ ", item: "Unable to edit Xcode project '\(projectPath)'")
+        }
+    }
+}
+
+private extension XcodeProjFactory {
+    
+    private func varientsGroup(for projectPath: Path, sourceRoot: Path, target: NamedTarget) throws -> PBXGroup?{
+        let variantsGroupPath = Path("\(projectPath)/Variants")
+        let project = try XcodeProj(path: projectPath)
+    
+        let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
+        try rootGroup?.addGroup(named: variantsGroupPath.lastComponent)
+        let variantsGroup = rootGroup?.group(named: variantsGroupPath.lastComponent)
+        return variantsGroup
+    }
+    
+    private func write(to file: Path, projectPath: Path, variantsGroup: PBXGroup?, pbxTarget: PBXTarget, sourceRoot: Path, target: NamedTarget) throws {
+        let project = try XcodeProj(path: projectPath)
+
+        let fileRef = try variantsGroup?.addFile(at: file,
+                                                 sourceTree: .group,
+                                                 sourceRoot: sourceRoot,
+                                                 validatePresence: true)
+        
+        let fileElement = PBXFileElement(sourceTree: .group,
+                                         path: file.description,
+                                         name: file.lastComponent)
+        let buildFile = PBXBuildFile(file: fileElement)
+        let sourceBuildPhase = try pbxTarget.sourcesBuildPhase()
+        sourceBuildPhase?.files?.append(buildFile)
+        
+        /*
+         * If .xcconfig, set baseConfigurationReference to it
+         */
+        if file.lastComponent.contains(".xcconfig"), let fileReference = fileRef {
+            changeBaseConfig(fileReference, in: project, path: projectPath,
+                             target: target, autoSave: true)
         }
     }
 }

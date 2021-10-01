@@ -32,14 +32,15 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		3907EE7026FDF9CE00311EE6 /* XcodeProjFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */; };
 		397811EF26F397A900643F91 /* Data+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811EE26F397A900643F91 /* Data+WriteTests.swift */; };
 		397811F426F4B19300643F91 /* Date+Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811F226F4B14A00643F91 /* Date+Log.swift */; };
 		397811F626F4BCF800643F91 /* MockLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811F526F4BCF800643F91 /* MockLogger.swift */; };
 		397811F926F4CAC600643F91 /* StandardOutputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811F726F4CABD00643F91 /* StandardOutputStream.swift */; };
 		397811FB26F4CD3300643F91 /* VerboseLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811F026F4A7C000643F91 /* VerboseLoggerTests.swift */; };
 		39C245AF26F8B198008CF1E0 /* Path+SafeJoinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C245AE26F8B198008CF1E0 /* Path+SafeJoinTests.swift */; };
+		39D6D6002701E0740064BD41 /* StandardOutputStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D6D5FF2701E0740064BD41 /* StandardOutputStreamTests.swift */; };
 		8E1B9CD7254AC1E700DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
-		8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */; };
 		8E1B9CDE254AC1E700DD0204 /* VariantsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Platform.swift */; };
 		8E1B9DC7254AC27500DD0204 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* Project.swift */; };
@@ -159,18 +160,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjFactoryTests.swift; sourceTree = "<group>"; };
 		397811EE26F397A900643F91 /* Data+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+WriteTests.swift"; sourceTree = "<group>"; };
 		397811F026F4A7C000643F91 /* VerboseLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerboseLoggerTests.swift; sourceTree = "<group>"; };
 		397811F226F4B14A00643F91 /* Date+Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Log.swift"; sourceTree = "<group>"; };
 		397811F526F4BCF800643F91 /* MockLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogger.swift; sourceTree = "<group>"; };
 		397811F726F4CABD00643F91 /* StandardOutputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutputStream.swift; sourceTree = "<group>"; };
 		39C245AE26F8B198008CF1E0 /* Path+SafeJoinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+SafeJoinTests.swift"; sourceTree = "<group>"; };
+		39D6D5FF2701E0740064BD41 /* StandardOutputStreamTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutputStreamTests.swift; sourceTree = "<group>"; };
 		8E1B9C0E254AB51300DD0204 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VariantsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariantsCore.h; sourceTree = "<group>"; };
 		8E1B9CD1254AC1E700DD0204 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8E1B9CD6254AC1E700DD0204 /* VariantsCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VariantsCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantsCoreTests.swift; sourceTree = "<group>"; };
 		8E1B9CDD254AC1E700DD0204 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8E1BA0BF254BFF6400DD0204 /* Initializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Initializer.swift; sourceTree = "<group>"; };
 		8E1BA0C0254BFF6400DD0204 /* Switch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
@@ -311,13 +313,14 @@
 				8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */,
 				8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */,
 				8E1B9C0E254AB51300DD0204 /* Resources */,
-				8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */,
 				8E1B9CDD254AC1E700DD0204 /* Info.plist */,
 				E39502A8256DB16B00484DCE /* String+WriteTests.swift */,
 				397811EE26F397A900643F91 /* Data+WriteTests.swift */,
 				E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */,
+				3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */,
 				397811F026F4A7C000643F91 /* VerboseLoggerTests.swift */,
 				39C245AE26F8B198008CF1E0 /* Path+SafeJoinTests.swift */,
+				39D6D5FF2701E0740064BD41 /* StandardOutputStreamTests.swift */,
 			);
 			name = VariantsCoreTests;
 			path = Tests/VariantsCoreTests;
@@ -768,8 +771,8 @@
 				BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */,
 				E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */,
 				397811FB26F4CD3300643F91 /* VerboseLoggerTests.swift in Sources */,
-				8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */,
 				397811EF26F397A900643F91 /* Data+WriteTests.swift in Sources */,
+				39D6D6002701E0740064BD41 /* StandardOutputStreamTests.swift in Sources */,
 				39C245AF26F8B198008CF1E0 /* Path+SafeJoinTests.swift in Sources */,
 				397811F626F4BCF800643F91 /* MockLogger.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
@@ -777,6 +780,7 @@
 				8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */,
 				BEAA71ED255A012900E9D4D9 /* AndroidProjectTests.swift in Sources */,
 				8EDC550C25592F5800A9CDFF /* iOSProjectTests.swift in Sources */,
+				3907EE7026FDF9CE00311EE6 /* XcodeProjFactoryTests.swift in Sources */,
 				8E8A4909255420FD0056F79F /* PlatformDetectorTests.swift in Sources */,
 				BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */,
 				8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */,

@@ -9,7 +9,7 @@ import Foundation
 
 public class StdoutPrinter {
     static let shared = StdoutPrinter()
-    private var stdoutTextOutputStream = StandardOutputStream()
+    private var stdoutTextOutputStream = StandardOutputStream(fileHandler: .standardOutput)
     
     func print(item: String) {
         Swift.print(item, to: &stdoutTextOutputStream)

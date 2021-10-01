@@ -30,6 +30,8 @@ class Path_SafeJoinTests: XCTestCase {
         }
         
         XCTAssertTrue(thrownError is SuspiciousFileOperation)
+        let errorMessage = "Path `/public/tmp/varients` is located outside of base path `varients/fastlane`"
+        XCTAssertEqual(thrownError!.localizedDescription, errorMessage)
     }
 
 }
