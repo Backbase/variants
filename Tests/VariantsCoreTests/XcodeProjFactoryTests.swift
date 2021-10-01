@@ -10,15 +10,12 @@ import PathKit
 
 @testable import VariantsCore
 
-
 class XcodeProjFactoryTests: XCTestCase {
-    
     
     func testProjectPath() {
         let sut = XcodeProjFactory()
         XCTAssertEqual(sut.projectPath(), "Test.xcodeproj/")
     }
-
     
     func testApplicationData() {
         let sut = XcodeProjFactory()

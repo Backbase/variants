@@ -13,7 +13,6 @@ import PathKit
 fileprivate var writeToFile = Path("writeTest.txt")
 fileprivate var readFromFile = Path("variants_params_template.rb")
 
-
 class DataWriteTests: XCTestCase {
 
     override func tearDownWithError() throws {

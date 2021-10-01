@@ -22,7 +22,6 @@ class VerboseLoggerTests: XCTestCase {
         let date = Date()
         
         let results = sut.createLog(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel: logLevel, date: date)
-            
 
         let indentation = String(repeating: "   ", count: indentationLevel)
         let expected = logLevel.rawValue

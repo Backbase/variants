@@ -41,7 +41,7 @@ public protocol VerboseLogger {
 extension VerboseLogger {
     public func log(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none, date: Date = Date()) {
         
-        let logString = createLog(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel:  logLevel, date: date)
+        let logString = createLog(prefix, item: item, indentationLevel: indentationLevel, color: color, logLevel: logLevel, date: date)
         
         var outputStream = StandardOutputStream(fileHandler: .standardError)
         

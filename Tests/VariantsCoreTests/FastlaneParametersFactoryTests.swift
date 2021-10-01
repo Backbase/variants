@@ -56,7 +56,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
     func testCreatParametersFile() throws {
         let factory = FastlaneParametersFactory()
         
-        try factory.createParametersFile(in:StaticPath.Fastlane.matchParametersFile, renderTemplate: StaticPath.Template.matchParametersFileName, with: parameters)
+        try factory.createParametersFile(in: StaticPath.Fastlane.matchParametersFile, renderTemplate: StaticPath.Template.matchParametersFileName, with: parameters)
         
         let path = StaticPath.Fastlane.matchParametersFile
         XCTAssertTrue(path.exists)
@@ -64,7 +64,6 @@ class FastlaneParametersFactoryTests: XCTestCase {
         
         XCTAssertEqual(result, parametersCorrectOutput)
     }
-    
     
     func testRender_correctData() {
         guard

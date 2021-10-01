@@ -10,9 +10,7 @@ import PathKit
 
 @testable import VariantsCore
 
-
 class Path_SafeJoinTests: XCTestCase {
-
     
     func testSafelyJoinPaths() throws {
         let path = Path("varients")
