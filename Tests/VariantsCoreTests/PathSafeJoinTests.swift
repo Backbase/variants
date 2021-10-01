@@ -1,5 +1,5 @@
 //
-//  Path+SafeJoinTests.swift
+//  PathSafeJoinTests.swift
 //  VariantsCoreTests
 //
 //  Created by Abdoelrhman Eaita on 20/09/2021.
@@ -10,7 +10,7 @@ import PathKit
 
 @testable import VariantsCore
 
-class Path_SafeJoinTests: XCTestCase {
+class PathSafeJoinTests: XCTestCase {
     
     func testSafelyJoinPaths() throws {
         let path = Path("varients")

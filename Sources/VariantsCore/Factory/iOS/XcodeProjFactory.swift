@@ -110,16 +110,11 @@ struct XcodeProjFactory {
     func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: NamedTarget) {
         do {
             let project = try XcodeProj(path: projectPath)
-            guard let pbxTarget = project.pbxproj.targets(named: target.key).first
-            else {
-                logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
-                return
-            }
         
             let variantsGroup = try varientsGroup(for: projectPath, sourceRoot: sourceRoot, target: target)
             
             try files.forEach { file in
-                try write(to: file, projectPath: projectPath, variantsGroup: variantsGroup, pbxTarget: pbxTarget, sourceRoot: sourceRoot, target: target)
+                try write(to: file, projectPath: projectPath, variantsGroup: variantsGroup, sourceRoot: sourceRoot, target: target)
             }
             try project.write(path: projectPath)
         } catch {
@@ -205,8 +200,13 @@ private extension XcodeProjFactory {
         return variantsGroup
     }
     
-    private func write(to file: Path, projectPath: Path, variantsGroup: PBXGroup?, pbxTarget: PBXTarget, sourceRoot: Path, target: NamedTarget) throws {
+    private func write(to file: Path, projectPath: Path, variantsGroup: PBXGroup?, sourceRoot: Path, target: NamedTarget) throws {
         let project = try XcodeProj(path: projectPath)
+        guard let pbxTarget = project.pbxproj.targets(named: target.key).first
+        else {
+            logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
+            return
+        }
 
         let fileRef = try variantsGroup?.addFile(at: file,
                                                  sourceTree: .group,

@@ -10,11 +10,10 @@ import PathKit
 
 @testable import VariantsCore
 
-fileprivate var writeToFile = Path("writeTest.txt")
-fileprivate var readFromFile = Path("variants_params_template.rb")
-
 class DataWriteTests: XCTestCase {
-
+    private var writeToFile = Path("writeTest.txt")
+    private var readFromFile = Path("variants_params_template.rb")
+    
     override func tearDownWithError() throws {
         try "".write(to: writeToFile.url, atomically: true, encoding: .utf8)
     }
