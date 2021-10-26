@@ -31,7 +31,7 @@ private_lane :appstore_deploy do |options|
 
     deliver(
       submit_for_review: true,
-      automatic_release: true,
+      automatic_release: false,
       force: true, # Skip HTMl report verification
       skip_metadata: true,
       skip_screenshots: true,
