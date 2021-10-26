@@ -40,8 +40,9 @@ runs:
         cd ${{ env.project_path }}
         
         echo "Platform value is ===> ${{ inputs.platform }}"
-        if [ ${{ inputs.platform }} != '' ]
+        if [ ! -z "$inputs.platform" -a "$inputs.platform" != " " ]
         then
+            echo "Platform is not null or space"
             echo "Verbose value is ===> ${{ inputs.verbose }}"
             if ${{ inputs.verbose }}
             then
