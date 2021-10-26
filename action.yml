@@ -39,8 +39,10 @@ runs:
         make ci
         cd ${{ env.project_path }}
         
-        if [[ ${{ inputs.platform }} != '' ]]
+        echo "Platform value is ===> ${{ inputs.platform }}"
+        if [ ${{ inputs.platform }} != '' ]
         then
+            echo "Verbose value is ===> ${{ inputs.verbose }}"
             if ${{ inputs.verbose }}
             then
                 variants switch \
@@ -53,6 +55,7 @@ runs:
                 --variant ${{ inputs.variant }}
             fi
         else
+            echo "Verbose value in else case ===> ${{ inputs.verbose }}"
             if ${{ inputs.verbose }}
             then
                 variants switch \
