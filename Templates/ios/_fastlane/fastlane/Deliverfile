@@ -25,7 +25,6 @@ apple_id ''
 # https://github.com/KrauseFx/deliver#upload-screenshots-to-itunes-connect
 screenshots_path ""
 
-
 app_icon ""
 
 title({
