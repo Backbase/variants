@@ -39,8 +39,10 @@ runs:
         make ci
         cd ${{ env.project_path }}
         
-        if [[ ${{ inputs.platform }} != '' ]]; then
-            if ${{ inputs.verbose }}; then
+        if [[ ${{ inputs.platform }} != '' ]]
+        then
+            if ${{ inputs.verbose }}
+            then
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
@@ -54,7 +56,8 @@ runs:
             fi
         
         else
-            if ${{ inputs.verbose }}; then
+            if ${{ inputs.verbose }}
+            then
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
