@@ -1,0 +1,41 @@
+require File.expand_path('parameters/appstore_params.rb', __dir__)
+require File.expand_path('parameters/project_params.rb', __dir__)
+
+USERNAME = APPSTORE_PARAMS[:APPSTORE_USERNAME]
+APPLE_ID = APPSTORE_PARAMS[:APPSTORE_APPLE_ID]
+XCCONFIG_PATH = PROJECT_PARAMS[:XCCONFIG_PATH]
+
+# --- Appstore
+
+#
+# ATTENTION:
+#
+# Deploying directly to AppStore
+# using `pilot`, `deliver` or their aliases require
+# authentication to AppStoreConnect.
+#
+# In order to have this handled automatically in
+# your CI machine, you'll need an Application Specific Password
+#
+# Find more about it and how to generate yours in:
+# https://docs.fastlane.tools/best-practices/continuous-integration/#application-specific-passwords
+#
+
+desc 'deploy app to AppStore'
+private_lane :appstore_deploy do |options|
+    # Retrieve app identifier from config
+    app_identifier = get_xcconfig_value(
+    path: XCCONFIG_PATH,
+    name: 'V_BUNDLE_ID'
+    )
+
+    deliver(
+    build_number: '',
+    submit_for_review: true,
+    automatic_release: true,
+    force: true, # Skip HTMl report verification
+    skip_metadata: true,
+    skip_screenshots: true,
+    skip_binary_upload: true
+    )
+end

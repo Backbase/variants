@@ -49,6 +49,8 @@ lane :deploy do |options|
         appcenter_deploy
     elsif destination == 'testflight'
         testflight_deploy
+    elsif destination == 'appstore'
+        appstore_deploy
     end
     
     

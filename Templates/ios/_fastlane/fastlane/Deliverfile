@@ -1,0 +1,63 @@
+require File.expand_path('parameters/match_params.rb', __dir__)
+
+CODE_SIGNING_IDENTITY   = MATCH_PARAMS[:TEAMNAME]
+TEAM_ID                 = MATCH_PARAMS[:TEAMID]
+EXPORT_METHOD           = MATCH_PARAMS[:EXPORTMETHOD]
+
+# This is the example Deliverfile
+#
+# You can remove those parts you don't need
+#
+# A list of available language codes can be found here:
+#
+# Everything next to a # is a comment and will be ignored
+
+# hide_transporter_output # remove the '#' in the beginning of the line, to hide the output while uploading
+
+########################################
+# App Metadata
+########################################
+
+apple_id ''
+
+# This folder has to include one folder for each language
+# More information about automatic screenshot upload:
+# https://github.com/KrauseFx/deliver#upload-screenshots-to-itunes-connect
+screenshots_path "./screenshots"
+
+
+app_icon "./AppIcon.png"
+
+title({
+  "en-US" => "Your App Name"
+})
+
+# changelog({
+#   "en-US" => "iPhone 6 (Plus) Support"
+# })
+
+description({
+  'en-US' => "one line too?"
+})
+
+copyright ""
+
+automatic_release true
+
+app_review_information({
+  first_name: "",
+  last_name: "",
+  phone_number: "",
+  email_address: "email id",
+  demo_user: "demo user",
+  demo_password: "demo pass",
+  notes: "such notes
+very new line"
+})
+
+primary_category "Finance"
+secondary_category ""
+
+ratings_config_path "./ratings.json"
+
+price_tier 5
