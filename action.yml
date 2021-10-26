@@ -55,7 +55,7 @@ runs:
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
                 --platform ${{ inputs.platform }}
-                fi
+            fi
         else
             if ${{ inputs.verbose }}
             then
