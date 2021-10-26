@@ -13,7 +13,7 @@ inputs:
   platform:
     description: '"ios" or "android".'
     required: false
-    default: null
+    default: ''
   variant:
     description: 'Variant you would like to switch to.'
     required: true
