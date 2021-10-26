@@ -16,7 +16,6 @@ inputs:
   platform:
     description: '"ios" or "android".'
     required: false
-    default: ''
   variant:
     description: Variant you would like to switch to.
     required: true
@@ -45,18 +44,16 @@ runs:
         then
             if ${{ inputs.verbose }}
             then
-                if ${{ inputs.verbose }}
-                then
-                    variants switch \
-                    --spec ${{ inputs.spec }} \
-                    --variant ${{ inputs.variant }} \
-                    --platform ${{ inputs.platform }} \
-                    --verbose
-                else
-                    variants switch \
-                    --spec ${{ inputs.spec }} \
-                    --variant ${{ inputs.variant }} \
-                    --platform ${{ inputs.platform }}
+                variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }} \
+                --verbose
+            else
+                variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }}
                 fi
         else
             if ${{ inputs.verbose }}
