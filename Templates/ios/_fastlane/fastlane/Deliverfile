@@ -8,8 +8,6 @@ EXPORT_METHOD           = MATCH_PARAMS[:EXPORTMETHOD]
 #
 # You can remove those parts you don't need
 #
-# A list of available language codes can be found here:
-#
 # Everything next to a # is a comment and will be ignored
 
 # hide_transporter_output # remove the '#' in the beginning of the line, to hide the output while uploading
@@ -31,6 +29,7 @@ title({
   "en-US" => ""
 })
 
+# This log has to include the changes made for the release. It has been commented out for the purpose of developer interest to choose either from repository or from fastlane.
 # changelog({
 #   "en-US" => "iPhone 6 (Plus) Support"
 # })
