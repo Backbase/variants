@@ -46,13 +46,11 @@ runs:
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
-                --platform ${{ inputs.platform }} \
                 --verbose
             else
                 variants switch \
                 --spec ${{ inputs.spec }} \
-                --variant ${{ inputs.variant }} \
-                --platform ${{ inputs.platform }}
+                --variant ${{ inputs.variant }}
             fi
         else
             if ${{ inputs.verbose }}
@@ -60,10 +58,12 @@ runs:
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }} \
                 --verbose
             else
                 variants switch \
                 --spec ${{ inputs.spec }} \
-                --variant ${{ inputs.variant }}
+                --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }}
             fi
         fi
