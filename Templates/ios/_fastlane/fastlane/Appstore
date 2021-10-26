@@ -30,12 +30,11 @@ private_lane :appstore_deploy do |options|
     )
 
     deliver(
-    build_number: '',
-    submit_for_review: true,
-    automatic_release: true,
-    force: true, # Skip HTMl report verification
-    skip_metadata: true,
-    skip_screenshots: true,
-    skip_binary_upload: true
+      submit_for_review: true,
+      automatic_release: true,
+      force: true, # Skip HTMl report verification
+      skip_metadata: true,
+      skip_screenshots: true,
+      skip_binary_upload: false
     )
 end

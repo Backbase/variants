@@ -23,13 +23,13 @@ apple_id ''
 # This folder has to include one folder for each language
 # More information about automatic screenshot upload:
 # https://github.com/KrauseFx/deliver#upload-screenshots-to-itunes-connect
-screenshots_path "./screenshots"
+screenshots_path ""
 
 
-app_icon "./AppIcon.png"
+app_icon ""
 
 title({
-  "en-US" => "Your App Name"
+  "en-US" => ""
 })
 
 # changelog({
@@ -37,27 +37,22 @@ title({
 # })
 
 description({
-  'en-US' => "one line too?"
+  'en-US' => ""
 })
 
 copyright ""
-
-automatic_release true
 
 app_review_information({
   first_name: "",
   last_name: "",
   phone_number: "",
-  email_address: "email id",
-  demo_user: "demo user",
-  demo_password: "demo pass",
-  notes: "such notes
-very new line"
+  email_address: "",
+  demo_user: "",
+  demo_password: "",
+  notes: ""
 })
 
-primary_category "Finance"
+primary_category ""
 secondary_category ""
 
-ratings_config_path "./ratings.json"
-
-price_tier 5
+ratings_config_path ""
