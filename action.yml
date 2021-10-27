@@ -40,9 +40,9 @@ runs:
         cd ${{ env.project_path }}
         
         echo "Platform value is ===> ${{ inputs.platform }} ** "$inputs.platform""
-        if [[ "$inputs.platform" != "test" ]]
+        if ${{ inputs.platform }} != "test"
         then
-            echo "Verbose value is ===> ${{ inputs.platform }}"
+            echo "Verbose value is ===> ${{ inputs.verbose }}"
             if ${{ inputs.verbose }}
             then
                 variants switch \
@@ -55,7 +55,7 @@ runs:
                 --variant ${{ inputs.variant }}
             fi
         else
-            echo "Verbose value in else case ===> ${{ inputs.platform }}"
+            echo "Verbose value in else case ===> ${{ inputs.verbose }}"
             if ${{ inputs.verbose }}
             then
                 variants switch \
