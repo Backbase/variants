@@ -40,7 +40,7 @@ runs:
         cd ${{ env.project_path }}
         
         echo "PLATFORM: ${{ inputs.platform }}"
-        if ${{ inputs.platform }} == "default"
+        if ${{ inputs.platform }} == default
         then
             echo "Verbose set to false and no PLATFORM IS PROVIDED IN WORKFLOW: ${{ inputs.verbose }}"
             if ${{ inputs.verbose }}
