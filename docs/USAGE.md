@@ -18,7 +18,7 @@ Commands:
 * [1. Initialize](#initialize)
     * [Variants Spec](#variants-spec)
     * [Custom configuration](#custom-configuration)
-    * [Signing configuration](#signing-configuration)
+    * [Signing configuration (iOS only)](#signing-configuration)
 * [2. Setup](#setup-multiple-build-variants-with-full-fastlane-integration)
 * [3. Switch](#switch-variants)
 

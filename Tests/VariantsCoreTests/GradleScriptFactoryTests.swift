@@ -62,7 +62,6 @@ class GradleScriptFactoryTests: XCTestCase {
                 store_destination: nil
             )
         ],
-        signing: nil,
         custom: [
             CustomProperty(
                 name: "API_TOKEN",
