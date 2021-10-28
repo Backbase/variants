@@ -39,7 +39,7 @@ runs:
         make ci
         cd ${{ env.project_path }}
         
-        if ${{ inputs.platform }} != "default"
+        if ${{ inputs.platform }} == "default"
         then
             if ${{ inputs.verbose }}
             then
