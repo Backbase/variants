@@ -10,7 +10,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/kylef/PathKit",
-            from: "1.0.0"
+            from: "1.0.1"
         ),
         .package(
             url: "https://github.com/jpsim/Yams.git",
@@ -19,7 +19,7 @@ let package = Package(
         .package(
             name: "XcodeProj",
             url: "https://github.com/tuist/xcodeproj.git",
-            from: "7.11.1"
+            from: "8.3.1"
         ),
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",

@@ -52,22 +52,6 @@ android:
               value: SAMPLE_ENVIRONMENT_VARIABLE
               env: true
               destination: fastlane
-  
-    # ----------------------------------------------------------------------
-    # signing: - Not required.
-    #
-    # When uncommented, the information below will be available in the file
-    # `variants.gradle`, found in `{{ android.path }}/gradleScripts/` folder
-    #
-    # Uncomment section below if necessary.
-    # ----------------------------------------------------------------------
-
-    #signing:
-    #    key_alias: android
-    #    key_password: APP_SIGN_KEY_PASSWORD
-    #    store_file: /usr/local/android/production.keystore
-    #    store_password: APP_SIGN_STORE_PASSWORD
-  
     # ----------------------------------------------------------------------
     # custom: - Not required.
     #
