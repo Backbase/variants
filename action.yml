@@ -51,12 +51,13 @@ runs:
                 --variant ${{ inputs.variant }} \
                 --verbose
             else
-                echo "JUMPED VERBOSE FALSE CASE: ${{ inputs.verbose }}"
+                echo "JUMPED in VERBOSE FALSE CASE: ${{ inputs.verbose }}"
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }}
             fi
         else
+            echo "Verbose set to false and PLATFORM IS PROVIDED IN WORKFLOW: ${{ inputs.verbose }}"
             if ${{ inputs.verbose }}
             then
                 variants switch \
@@ -65,6 +66,7 @@ runs:
                 --platform ${{ inputs.platform }} \
                 --verbose
             else
+                echo "JUMPED in VERBOSE FALSE CASE: ${{ inputs.verbose }}"
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
