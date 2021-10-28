@@ -39,25 +39,20 @@ runs:
         make ci
         cd ${{ env.project_path }}
         
-        echo "PLATFORM: ${{ inputs.platform }}"
         if [[ ${{ inputs.platform }} == default ]];
         then
-            echo "Verbose set to ${{ inputs.verbose }} and no PLATFORM IS PROVIDED IN WORKFLOW"
             if ${{ inputs.verbose }}
             then
-                echo "JUMPED VERBOSE TRUE CASE: ${{ inputs.verbose }}"
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
                 --verbose
             else
-                echo "JUMPED in VERBOSE FALSE CASE: ${{ inputs.verbose }}"
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }}
             fi
         else
-            echo "Verbose set to ${{ inputs.verbose }} and PLATFORM IS PROVIDED IN WORKFLOW:"
             if ${{ inputs.verbose }}
             then
                 variants switch \
@@ -66,7 +61,6 @@ runs:
                 --platform ${{ inputs.platform }} \
                 --verbose
             else
-                echo "JUMPED in VERBOSE FALSE CASE: ${{ inputs.verbose }}"
                 variants switch \
                 --spec ${{ inputs.spec }} \
                 --variant ${{ inputs.variant }} \
