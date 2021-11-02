@@ -13,8 +13,22 @@ import class Foundation.Bundle
 final class InitCommandTests: XCTestCase {
     func testUsage_help() throws {
         let arguments = ["init", "--help"]
-        
-        let expectedOutput = "OVERVIEW: Generate spec file - variants.yml\n\nUSAGE: variants init [--platform <platform>] [--timestamps] [--verbose]\n\nOPTIONS:\n  -p, --platform <platform>\n                          \'ios\' or \'android\' \n  -t, --timestamps        Show timestamps. \n  -v, --verbose           Log tech details for nerds \n  --version               Show the version.\n  -h, --help              Show help information.\n\n"
+
+        let expectedOutput = """
+            OVERVIEW: Generate spec file - variants.yml
+
+            USAGE: variants init [--platform <platform>] [--timestamps] [--verbose]
+
+            OPTIONS:
+              -p, --platform <platform>
+                                      'ios' or 'android'
+              -t, --timestamps        Show timestamps.
+              -v, --verbose           Log tech details for nerds
+              --version               Show the version.
+              -h, --help              Show help information.
+            
+            
+            """
 
         let output = try CLIExecutor.shared.run(with: arguments)
         XCTAssertEqual(output, expectedOutput)

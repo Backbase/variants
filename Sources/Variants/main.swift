@@ -12,7 +12,7 @@ struct Variants: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "variants",
         abstract: "A command-line tool to setup deployment variants and working CI/CD setup",
-        version: "0.9.3",
+        version: "0.9.4",
         subcommands: [
             Initializer.self,
             Setup.self,
