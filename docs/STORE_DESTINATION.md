@@ -99,7 +99,7 @@ android:
 Now, all we have to do is to switch to the correct variant and instruct *fastlane* to deploy as usual:
 
 ```sh
-variants switch --platform platformName(iOS or Android) --variant <value>
+variants switch --platform <platformName(iOS or Android)> --variant <value>
 
 fastlane deploy
 ```
