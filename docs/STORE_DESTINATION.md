@@ -47,9 +47,7 @@ Note that by not specifying or specifying an unsupported store will fallback to 
 >
 >
 
-AppStore is dependent on [Issue #81](https://github.com/Backbase/variants/issues/81)
-
-#### Example
+#### Example for iOS
 
 Assume we have an iOS project, which production variant (default) should deploy to *Apple's AppStore*. A beta variant should be deployed to *Apple's TestFlight*. And an internal enterprise variant of this application (using an enterprise developer account) should be deployed to *AppCenter*. This could be achieved with the following:
 
@@ -76,10 +74,32 @@ ios:
         ...
 ```
 
+#### Example for Android
+
+Assume we have an Android project, which production variant (default) should deploy to *Google's Playstore*.  And an internal enterprise variant of this application (using an enterprise developer account) should be deployed to *AppCenter*. This could be achieved with the following:
+
+```yaml
+android:
+    path: ...
+    app_name:
+      ...
+    variants:
+      default:
+        version_name: 0.0.1
+        version_code: 1
+        store_destination: PlayStore
+        ...
+      enterprise_release:
+        version_name: 0.0.1
+        version_code: 1
+        store_destination: AppCenter
+        ...
+```
+
 Now, all we have to do is to switch to the correct variant and instruct *fastlane* to deploy as usual:
 
 ```sh
-variants switch --platform ios --variant <value>
+variants switch --platform platformName(iOS or Android) --variant <value>
 
 fastlane deploy
 ```
