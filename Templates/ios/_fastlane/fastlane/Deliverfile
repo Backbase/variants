@@ -1,0 +1,54 @@
+require File.expand_path('parameters/match_params.rb', __dir__)
+
+CODE_SIGNING_IDENTITY   = MATCH_PARAMS[:TEAMNAME]
+TEAM_ID                 = MATCH_PARAMS[:TEAMID]
+EXPORT_METHOD           = MATCH_PARAMS[:EXPORTMETHOD]
+
+# This is the example Deliverfile
+#
+# You can remove those parts you don't need
+#
+# Everything next to a # is a comment and will be ignored
+
+########################################
+# App Metadata
+########################################
+
+apple_id ''
+
+# This folder has to include one folder for each language
+# More information about automatic screenshot upload:
+# https://github.com/KrauseFx/deliver#upload-screenshots-to-itunes-connect
+screenshots_path ""
+
+app_icon ""
+
+title({
+  "en-US" => ""
+})
+
+# This log has to include the changes made for the release. It has been commented out for the purpose of developer interest to choose either from repository or from fastlane.
+# changelog({
+#   "en-US" => "iPhone 6 (Plus) Support"
+# })
+
+description({
+  'en-US' => ""
+})
+
+copyright ""
+
+app_review_information({
+  first_name: "",
+  last_name: "",
+  phone_number: "",
+  email_address: "",
+  demo_user: "",
+  demo_password: "",
+  notes: ""
+})
+
+primary_category ""
+secondary_category ""
+
+ratings_config_path ""

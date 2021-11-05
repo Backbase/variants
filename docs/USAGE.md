@@ -101,7 +101,75 @@ ios:
               value: $(inherited) -DBETA
               destination: project
 ```
+```yaml
+android:
+        path: {{ PROJECT_PATH }}
+        app_name: {{ APP_NAME }}
+        app_identifier: {{ APP_IDENTIFIER }}
+    variants:
+        # Default variant is mandatory, do not remove
+        # Usually regarded as `production` variant.
+    default:
+      version_name: 0.0.1
+      version_code: 1
+      task_build: bundleProdRelease
+      task_unittest: testProdReleaseUnitTest
+      task_uitest: connectedProdReleaseAndroidTest
+      # 'store_destination' can be: AppCenter or PlayStore
+      store_destination: PlayStore
+      #
+      # custom: - Not required.
+      # You can have as many custom fields as possible.
+      # Only strings allowed.
+      #
+      # The value of will be written to 1 of 2 possible destinations:
+      # - project => variants.gradle
+      # - fastlane => fastlane/parameters/variants_params.rb
+      #
+    custom:
+        - name: SAMPLE_PROPERTY
+          value: SAMPLE_VALUE
+          destination: fastlane
+          
+        - name: SAMPLE_PROPERTY_FROM_ENVIRONMENT
+          value: SAMPLE_ENVIRONMENT_VARIABLE
+          env: true
+          destination: fastlane
+          
+    # Sample variant "BETA"
+    BETA:
+      id_suffix: beta
+      version_name: 0.0.1
+      version_code: 1
+      task_build: assembleDevDebug
+      task_unittest: testDevDebugUnitTest
+      task_uitest: connectedDevDebugAndroidTest
+      # 'store_destination' can be: AppCenter or PlayStore
+      store_destination: AppCenter
+    custom:
+        - name: SAMPLE_PROPERTY
+          value: SAMPLE_ENVIRONMENT_VARIABLE
+          env: true
+          destination: fastlane
+          # ----------------------------------------------------------------------
+          # custom: - Not required.
+          #
+          # Same as variant's `custom`, but this will be processed regardless of
+          # the chosen variant.
+          #
+          # Uncomment section below if necessary.
+          # ----------------------------------------------------------------------
 
+    #custom:
+    #    - name: mvnUser
+    #      value: MAVEN_USERNAME
+    #      env: true
+    #      destination: project
+    #    - name: mvnPass
+    #      value: MAVEN_PASSWORD
+    #      env: true
+    #      destination: project
+```
 #### Custom configuration
 
 Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane and vice-versa.
