@@ -3,12 +3,11 @@ name: branch
 on:
   pull_request:
     types: [ opened, synchronize ]
-    branches: [ develop ]
-env:
-  DEVELOPER_DIR: /Applications/Xcode_12.app/Contents/Developer
-
+    branches:
+      - main
+      - develop
 jobs:
-  build:
+  tests:
     runs-on: macos-latest
 
     steps:
