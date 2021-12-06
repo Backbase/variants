@@ -18,9 +18,9 @@ We use a simplified git-flow branching model, on which there are the following t
 
 - **main**: This branch only contains code that has been released. It represents the public stable release. Release tags are added for versioning control in this branch. Only `develop` or `hotfix` can be merged to this branch.
 
-- **develop**: This is an integration branch. His purpose is to have a staging place where changes can be tested thoroughly before being released publicly (merged into the `main` branch). All branches should base from `develop` except for `hotfix`.
+- **develop**: This is an integration branch. Its purpose is to have a staging place where changes can be tested thoroughly before being released publicly (merged into the `main` branch). All branches should base from `develop` except for `hotfix`.
 
-- **hotfix**: Critical solutions or additions that requires to be released as soon as possible. This type of branch should alwasy base on latest `main` and can be merged directly without passing through `develop`. In some cases it's advised to also merge the `hotfix` to `develop` for parity sake. Due to it's critical nature, `hotfix` branchs needs to **get approval from at least one of the repo admins**.
+- **hotfix**: Critical solutions or additions that requires to be released as soon as possible. This type of branch should alwasy base on latest `main` and can be merged directly without passing through `develop`. In some cases it's advised to also merge the `hotfix` to `develop` for parity sake. Due to its critical nature, `hotfix` branchs needs to **get approval from at least one of the repo admins**.
 
 - **feature**: Any new functionality or improvement to be added to the codebase should be created as a `feature` branch. It will always base from `develop` and merges to `develop` as well.
 
@@ -42,7 +42,7 @@ Before merging, check the generated commit message and look for any necessary up
 
 ## Creating a Pull Request
 
-When opening a PR, try to make it's title as meaningfull as possible. Try to include the issue number when applicable as well.
+When opening a PR, try to make its title as meaningful as possible. Try to include the issue number when applicable as well.
 
 The PR description will come with a template that needs to be filled accordingly. When a section from the description template is not applicable please leave it with *"Not applicable"* in its content.
 
