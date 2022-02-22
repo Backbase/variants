@@ -1,6 +1,17 @@
 SHELL = /bin/bash
 
-prefix ?= .local
+ifeq ($(OS),Windows_NT)
+	detected_OS := Windows
+else
+	detected_OS := $(shell uname)
+endif
+
+ifeq ($(detected_OS),Linux) # Linux only
+	prefix ?= .local
+else
+	prefix ?= /usr/local
+endif
+
 bindir ?= $(prefix)/bin
 libdir ?= $(prefix)/lib
 srcdir = Sources
@@ -15,12 +26,6 @@ TEMPLATES = $(templatesdir)
 UTILS = $(utilsdir)
 
 .DEFAULT_GOAL = all
-
-ifeq ($(OS),Windows_NT)
-	detected_OS := Windows
-else
-	detected_OS := $(shell uname)
-endif
 
 .PHONY: all
 all: variants
