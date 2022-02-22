@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-prefix ?= /usr/local
+prefix ?= .local
 bindir ?= $(prefix)/bin
 libdir ?= $(prefix)/lib
 srcdir = Sources
@@ -15,6 +15,12 @@ TEMPLATES = $(templatesdir)
 UTILS = $(utilsdir)
 
 .DEFAULT_GOAL = all
+
+ifeq ($(OS),Windows_NT)
+	detected_OS := Windows
+else
+	detected_OS := $(shell uname)
+endif
 
 .PHONY: all
 all: variants
@@ -65,7 +71,9 @@ prepare_for_test:
 .PHONY: test
 test: prepare_for_test
 	@swift test
-	@xcodebuild test -scheme VariantsCore 
+ifeq ($(detected_OS),Darwin) # Mac OSX only
+	@xcodebuild test -scheme VariantsCore
+endif
 
 .PHONY: coverage
 coverage: test
