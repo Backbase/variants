@@ -7,7 +7,7 @@ else
 endif
 
 ifeq ($(detected_OS),Linux) # Linux only
-	prefix ?= .local
+	prefix ?= ~/.local
 else
 	prefix ?= /usr/local
 endif
