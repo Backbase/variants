@@ -38,19 +38,19 @@ variants: $(SOURCES)
 
 .PHONY: install
 install: variants
-	@install -d "$(bindir)" "$(libdir)"
-	@install "$(BUILDDIR)/release/variants" "$(bindir)"
-	@mkdir -p "$(libdir)/variants"
-	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
-	@cp -R "$(UTILS)" "$(libdir)/variants/"
+	@install -d $(bindir) $(libdir)
+	@install "$(BUILDDIR)/release/variants" $(bindir)
+	@mkdir -p $(libdir)/variants
+	@cp -R "$(TEMPLATES)" $(libdir)/variants/
+	@cp -R "$(UTILS)" $(libdir)/variants/
 
 .PHONY: ci
 ci:
-	@install -d "$(bindir)" "$(libdir)"
-	@install "$(CIBUILDDIR)/release/variants" "$(bindir)"
-	@mkdir -p "$(libdir)/variants"
-	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
-	@cp -R "$(UTILS)" "$(libdir)/variants/"
+	@install -d $(bindir) $(libdir)
+	@install "$(CIBUILDDIR)/release/variants" $(bindir)
+	@mkdir -p $(libdir)/variants
+	@cp -R "$(TEMPLATES)" $(libdir)/variants/
+	@cp -R "$(UTILS)" $(libdir)/variants/
 
 .PHONY: pre-ci
 pre-ci: variants
@@ -58,8 +58,8 @@ pre-ci: variants
 
 .PHONY: uninstall
 uninstall:
-	@rm -rf "$(bindir)/variants"
-	@rm -rf "$(libdir)/variants"
+	@rm -rf $(bindir)/variants
+	@rm -rf $(libdir)/variants
 
 .PHONY: clean
 distclean:
