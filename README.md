@@ -55,6 +55,8 @@ brew install backbase/m/variants
 
 ### Make
 
+> For **Linux**, make sure you have [Swift installed](https://www.swift.org/getting-started/#installing-swift) by running `swift --version`
+
 ```sh
 git clone https://github.com/backbase/variants.git
 cd variants
