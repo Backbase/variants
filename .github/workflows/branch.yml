@@ -23,7 +23,7 @@ jobs:
         swift-version: ${{ matrix.swift }}
 
     - name: Test CLI Package
-      run: swift test
+      run: swift test --enable-test-discovery
 
     - name: Make install
       run: make install
