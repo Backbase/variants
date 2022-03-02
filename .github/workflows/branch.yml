@@ -22,9 +22,9 @@ jobs:
       with:
         swift-version: ${{ matrix.swift }}
     - uses: ruby/setup-ruby@v1
-      if: matrix.os != 'macos-latest' # xcode available on macos only
+      if: matrix.os != 'macos-latest'
       with:
-        ruby-version: 2.6 # Not needed with a .ruby-version file
+        ruby-version: 2.7 # Not needed with a .ruby-version file
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
     - name: Test CLI Package
