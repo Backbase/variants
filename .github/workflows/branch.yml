@@ -8,7 +8,7 @@ on:
       - develop
 jobs:
   tests:
-    name: Test with ${{ matrix.swift }} on ${{ matrix.os }}
+    name: Test with Swift ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -40,10 +40,11 @@ jobs:
       run: bundle install
       
     - name: Code coverage report
-      if: matrix.os == 'macos-latest' # xcode available on macos only
+      if: matrix.os == 'macos-latest' # on macos only
       run: bundle exec slather coverage
 
     - uses: codecov/codecov-action@v1
+      if: matrix.os == 'macos-latest' # on macos only
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./test-reports/cobertura.xml
