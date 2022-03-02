@@ -19,6 +19,7 @@ jobs:
     - uses: fwal/setup-swift@v1
       with:
         swift-version: ${{ matrix.swift }}
+    - uses: ruby/setup-ruby@v1
 
     - name: Test CLI Package
       run: swift test -v

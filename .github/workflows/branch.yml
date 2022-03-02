@@ -11,16 +11,17 @@ jobs:
     name: Test with ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      max-parallel: 1
       matrix:
         os: [macos-latest, ubuntu-latest]
         swift: ["5.5"]
 
     steps:
     - uses: actions/checkout@v2
-
     - uses: fwal/setup-swift@v1
       with:
         swift-version: ${{ matrix.swift }}
+    - uses: ruby/setup-ruby@v1
 
     - name: Test CLI Package
       run: swift test --enable-test-discovery
