@@ -4,7 +4,7 @@ on:
   push:
     branches: [ develop ]
 env:
-  DEVELOPER_DIR: /Applications/Xcode_12.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
 
 jobs:
   build:
@@ -30,14 +30,14 @@ jobs:
 
     - name: Make install
       run: make install
-      
+
     - name: Test VariantsCore
       if: matrix.os == 'macos-latest' # xcode available on macos only
       run: xcodebuild test -scheme VariantsCore
 
     - name: Bundle install
       run: bundle install
-      
+
     - name: Code coverage report
       if: matrix.os == 'macos-latest' # on macos only
       run: bundle exec slather coverage
