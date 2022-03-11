@@ -1,6 +1,17 @@
 SHELL = /bin/bash
 
-prefix ?= /usr/local
+ifeq ($(OS),Windows_NT)
+	detected_OS := Windows
+else
+	detected_OS := $(shell uname)
+endif
+
+ifeq ($(detected_OS),Linux) # Linux only
+	prefix ?= ~/.local
+else
+	prefix ?= /usr/local
+endif
+
 bindir ?= $(prefix)/bin
 libdir ?= $(prefix)/lib
 srcdir = Sources
@@ -27,19 +38,19 @@ variants: $(SOURCES)
 
 .PHONY: install
 install: variants
-	@install -d "$(bindir)" "$(libdir)"
-	@install "$(BUILDDIR)/release/variants" "$(bindir)"
-	@mkdir -p "$(libdir)/variants"
-	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
-	@cp -R "$(UTILS)" "$(libdir)/variants/"
+	@install -d $(bindir) $(libdir)
+	@install "$(BUILDDIR)/release/variants" $(bindir)
+	@mkdir -p $(libdir)/variants
+	@cp -R "$(TEMPLATES)" $(libdir)/variants/
+	@cp -R "$(UTILS)" $(libdir)/variants/
 
 .PHONY: ci
 ci:
-	@install -d "$(bindir)" "$(libdir)"
-	@install "$(CIBUILDDIR)/release/variants" "$(bindir)"
-	@mkdir -p "$(libdir)/variants"
-	@cp -R "$(TEMPLATES)" "$(libdir)/variants/"
-	@cp -R "$(UTILS)" "$(libdir)/variants/"
+	@install -d $(bindir) $(libdir)
+	@install "$(CIBUILDDIR)/release/variants" $(bindir)
+	@mkdir -p $(libdir)/variants
+	@cp -R "$(TEMPLATES)" $(libdir)/variants/
+	@cp -R "$(UTILS)" $(libdir)/variants/
 
 .PHONY: pre-ci
 pre-ci: variants
@@ -47,8 +58,8 @@ pre-ci: variants
 
 .PHONY: uninstall
 uninstall:
-	@rm -rf "$(bindir)/variants"
-	@rm -rf "$(libdir)/variants"
+	@rm -rf $(bindir)/variants
+	@rm -rf $(libdir)/variants
 
 .PHONY: clean
 distclean:
@@ -65,7 +76,9 @@ prepare_for_test:
 .PHONY: test
 test: prepare_for_test
 	@swift test
-	@xcodebuild test -scheme VariantsCore 
+ifeq ($(detected_OS),Darwin) # Mac OSX only
+	@xcodebuild test -scheme VariantsCore
+endif
 
 .PHONY: coverage
 coverage: test

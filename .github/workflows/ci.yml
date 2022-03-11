@@ -8,10 +8,22 @@ env:
 
 jobs:
   build:
-    runs-on: macos-latest
-
+    name: Build with Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        swift: ["5.5"]
     steps:
     - uses: actions/checkout@v2
+    - uses: fwal/setup-swift@v1
+      with:
+        swift-version: ${{ matrix.swift }}
+    - uses: ruby/setup-ruby@v1
+      if: matrix.os != 'macos-latest'
+      with:
+        ruby-version: 2.7 # Not needed with a .ruby-version file
+        # bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
     - name: Test CLI Package
       run: swift test -v
@@ -20,15 +32,18 @@ jobs:
       run: make install
 
     - name: Test VariantsCore
+      if: matrix.os == 'macos-latest' # xcode available on macos only
       run: xcodebuild test -scheme VariantsCore
 
     - name: Bundle install
       run: bundle install
 
     - name: Code coverage report
+      if: matrix.os == 'macos-latest' # on macos only
       run: bundle exec slather coverage
 
     - uses: codecov/codecov-action@v1
+      if: matrix.os == 'macos-latest' # on macos only
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./test-reports/cobertura.xml

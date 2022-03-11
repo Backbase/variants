@@ -51,7 +51,7 @@ class CLIExecutor {
             return nil
         }
 
-        let fooBinary = productsDirectory.appendingPathComponent("Variants")
+        let fooBinary = productsDirectory.appendingPathComponent("variants")
 
         let process = Process()
         process.executableURL = fooBinary

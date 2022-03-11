@@ -62,7 +62,13 @@ class SecretsFactoryTests: XCTestCase {
         XCTAssertEqual(try String(contentsOfFile: variantsFile), variantsSwiftContent)
     }
     
+    func testUtilsDirectory_pathExists() {
+        XCTAssertEqual(try UtilsDirectory().path.exists, true)
+        XCTAssertEqual(try TemplateDirectory().path.exists, true)
+    }
+    
     static var allTests = [
-        ("testRender_correctData", testRender_noSecrets)
+        ("testRender_correctData", testRender_noSecrets),
+        ("testUtilsDirectory_pathExists", testUtilsDirectory_pathExists)
     ]
 }
