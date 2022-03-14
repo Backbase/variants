@@ -20,6 +20,8 @@ import('Sonar')
 import('SwiftLint')
 import('Tests')
 import('TestFlight')
+import('Appstore')
+import('Deliverfile')
 
 # --- Before all, prepare
 

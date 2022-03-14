@@ -103,7 +103,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
         do {
             let fastlaneParametersPath = try Path("fastlane").safeJoin(path: Path("parameters/variants_params.rb"))
             if !fastlaneParametersPath.exists {
-                XCTAssertNoThrow(try fastlaneParametersPath.mkpath())
+                XCTAssertNoThrow(try fastlaneParametersPath.parent().mkpath())
             }
             
             let factory = FastlaneParametersFactory(templatePath: basePath)
