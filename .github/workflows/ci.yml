@@ -17,6 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: fwal/setup-swift@v1
+      if: matrix.os != 'macos-latest'
       with:
         swift-version: ${{ matrix.swift }}
     - uses: ruby/setup-ruby@v1
