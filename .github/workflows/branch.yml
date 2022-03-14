@@ -3,9 +3,10 @@ name: branch
 on:
   pull_request:
     types: [ opened, synchronize ]
-    branches:
-      - main
-      - develop
+    branches: [ develop, main ]
+env:
+  DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
+
 jobs:
   tests:
     name: Test with Swift ${{ matrix.swift }} on ${{ matrix.os }}
