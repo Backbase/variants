@@ -6,6 +6,7 @@
 //
 
 import PathKit
+import Foundation
 
 extension Path {
   func safeJoin(path: Path) throws -> Path {
