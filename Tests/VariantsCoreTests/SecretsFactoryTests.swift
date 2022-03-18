@@ -26,9 +26,8 @@ class SecretsFactoryTests: XCTestCase {
             }
             return infoDictionary
         }()
-        
-        
     }
+    
     """
     
     let defaultVariant = iOSVariant(
