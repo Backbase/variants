@@ -46,7 +46,6 @@ PLATFORMS
 
 DEPENDENCIES
   nokogiri (>= 1.13.2)
-  racc (= 1.5.2)
   slather
 
 BUNDLED WITH

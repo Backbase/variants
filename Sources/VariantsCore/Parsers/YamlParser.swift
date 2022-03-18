@@ -34,7 +34,7 @@ class YamlParser {
         
         let nsString = encoded as NSString
         nsString.enumerateLines { (stringLine, _) in
-            Logger.shared.log(item: stringLine, indentationLevel: 1, color: .purple, logLevel: .verbose)
+            Logger.shared.log(LogData("", item: stringLine, indentationLevel: 1, color: .purple, logLevel: .verbose))
         }
         
         return decoded
