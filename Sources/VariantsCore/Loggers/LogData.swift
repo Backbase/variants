@@ -1,7 +1,7 @@
 //
-//  LoggingData.swift
-//  VariantsCore
+//  Variants
 //
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Abdoelrhman Eaita on 01/10/2021.
 //
 

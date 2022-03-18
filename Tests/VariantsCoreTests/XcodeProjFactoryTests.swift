@@ -1,7 +1,7 @@
 //
-//  XcodeProjFactoryTests.swift
-//  VariantsCoreTests
+//  Variants
 //
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Abdoelrhman Eaita on 24/09/2021.
 //
 

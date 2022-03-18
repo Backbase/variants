@@ -1,7 +1,7 @@
 //
-//  Data+WriteTests.swift
-//  VariantsCoreTests
+//  Variants
 //
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Abdoelrhman Eaita on 16/09/2021.
 //
 

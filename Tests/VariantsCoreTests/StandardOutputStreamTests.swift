@@ -1,7 +1,7 @@
 //
-//  StandardOutputStreamTests.swift
-//  VariantsCoreTests
+//  Variants
 //
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Abdoelrhman Eaita on 27/09/2021.
 //
 
