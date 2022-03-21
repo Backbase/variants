@@ -18,10 +18,10 @@ class DataWriteTests: XCTestCase {
         try "".write(to: writeToFile.url, atomically: true, encoding: .utf8)
     }
     
-    func testAppendFileToFile() throws {
+//    func testAppendFileToFile() throws {
 //        let readFile = try TemplateDirectory().path.safeJoin(path: readFromFile)
-        let data = try Data(contentsOf: readFromFile.url)
-        try data.append(fileURL: writeToFile.url)
-        XCTAssertEqual(try Data(contentsOf: writeToFile.url), try Data(contentsOf: readFromFile.url))
-    }
+//        let data = try Data(contentsOf: readFile.url)
+//        try data.append(fileURL: writeToFile.url)
+//        XCTAssertEqual(try Data(contentsOf: writeToFile.url), try Data(contentsOf: readFromFile.url))
+//    }
 }
