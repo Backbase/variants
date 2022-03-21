@@ -19,8 +19,8 @@ class DataWriteTests: XCTestCase {
     }
     
     func testAppendFileToFile() throws {
-        let readFile = try TemplateDirectory().path.safeJoin(path: readFromFile)
-        let data = try Data(contentsOf: readFile.url)
+//        let readFile = try TemplateDirectory().path.safeJoin(path: readFromFile)
+        let data = try Data(contentsOf: readFromFile.url)
         try data.append(fileURL: writeToFile.url)
         XCTAssertEqual(try Data(contentsOf: writeToFile.url), try Data(contentsOf: readFromFile.url))
     }
