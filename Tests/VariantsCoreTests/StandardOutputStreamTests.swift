@@ -12,10 +12,8 @@ import XCTest
 class StandardOutputStreamTests: XCTestCase {
 
     func testWritingToFileHandler() throws {
-        let output = StandardOutputStream(fileHandler: .standardOutput)
-        
+        let output = StandardOutputStream(fileHandler: .standardOutput)        
         output.write("test writing to output file")
-        
     }
     
     func testWritingBadStringToOutput() throws {
@@ -24,4 +22,8 @@ class StandardOutputStreamTests: XCTestCase {
         output.write(test)
     }
 
+    func testStdoutPrinter() throws {
+        let printer = StdoutPrinter()
+        printer.print(item: "")
+    }
 }
