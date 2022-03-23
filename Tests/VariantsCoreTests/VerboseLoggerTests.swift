@@ -45,4 +45,11 @@ class VerboseLoggerTests: XCTestCase {
         let results = sut.createLog(LogData(item: item, indentationLevel: indentationLevel, color: color, logLevel: logLevel, date: date))
         XCTAssertEqual(results, "")
     }
+    
+    func testLogData() {
+        let log = LogData(item: "")
+        XCTAssertNotNil(log.prefix)
+        XCTAssertEqual(log.indentationLevel, 0)
+        XCTAssertEqual(log.logLevel, LogLevel.none)
+    }
 }

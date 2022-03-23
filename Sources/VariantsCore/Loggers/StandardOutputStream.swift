@@ -10,9 +10,8 @@ import Foundation
 struct StandardOutputStream: TextOutputStream {
     let fileHandler: FileHandle
     func write(_ string: String) {
-        guard let data = string.data(using: .utf8) else {
-            return
+        if let data = string.data(using: .utf8) {
+            fileHandler.write(data)
         }
-        fileHandler.write(data)
     }
 }
