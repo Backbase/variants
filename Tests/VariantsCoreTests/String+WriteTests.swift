@@ -12,7 +12,7 @@ import PathKit
 class StringWriteTests: XCTestCase {
     static let filePath = Path("writeTest.txt")
     
-    override func tearDownWithError() throws {
+    override func setUpWithError() throws {
         try "".write(to: StringWriteTests.filePath.url, atomically: true, encoding: .utf8)
     }
 
