@@ -11,6 +11,13 @@ import PathKit
 @testable import VariantsCore
 
 class XcodeProjFactoryTests: XCTestCase {
+    let xcodeProjectPath = Path("./Test.xcodeproj")
+    
+    override func setUp() async throws {
+        if !xcodeProjectPath.exists {
+            try xcodeProjectPath.mkpath()
+        }
+    }
     
     func testProjectPath() {
         let sut = XcodeProjFactory()
