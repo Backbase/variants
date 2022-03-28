@@ -30,8 +30,4 @@ struct TemplateDirectory {
 
         self.path = path
     }
-
-    init(path: Path) {
-        self.path = path
-    }
 }
