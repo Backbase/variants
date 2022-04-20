@@ -19,10 +19,10 @@ GEM
     mini_portile2 (2.8.0)
     minitest (5.15.0)
     nanaimo (0.3.0)
-    nokogiri (1.13.3)
+    nokogiri (1.13.4)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    racc (1.5.2)
+    racc (1.6.0)
     rexml (3.2.5)
     slather (2.7.2)
       CFPropertyList (>= 2.2, < 4)
@@ -46,7 +46,6 @@ PLATFORMS
 
 DEPENDENCIES
   nokogiri (>= 1.13.2)
-  racc (= 1.5.2)
   slather
 
 BUNDLED WITH
