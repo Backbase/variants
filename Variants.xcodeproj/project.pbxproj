@@ -103,6 +103,9 @@
 		BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */; };
 		E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502A8256DB16B00484DCE /* String+WriteTests.swift */; };
 		E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */; };
+		E3B48E9728118B01002FF8CE /* String+EnvVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B48E9628118B01002FF8CE /* String+EnvVar.swift */; };
+		E3B48E9928118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */; };
+		E3B48E9C2812AFE4002FF8CE /* String+EnvVarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B48E9A2812AFE1002FF8CE /* String+EnvVarTests.swift */; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -201,6 +204,9 @@
 		BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFastlaneFactory.swift; sourceTree = "<group>"; };
 		E39502A8256DB16B00484DCE /* String+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WriteTests.swift"; sourceTree = "<group>"; };
 		E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFactoryTests.swift; sourceTree = "<group>"; };
+		E3B48E9628118B01002FF8CE /* String+EnvVar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+EnvVar.swift"; sourceTree = "<group>"; };
+		E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+EnvVar.swift"; sourceTree = "<group>"; };
+		E3B48E9A2812AFE1002FF8CE /* String+EnvVarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+EnvVarTests.swift"; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
 		OBJ_18 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -317,6 +323,7 @@
 				8E1B9C0E254AB51300DD0204 /* Resources */,
 				8E1B9CDD254AC1E700DD0204 /* Info.plist */,
 				E39502A8256DB16B00484DCE /* String+WriteTests.swift */,
+				E3B48E9A2812AFE1002FF8CE /* String+EnvVarTests.swift */,
 				397811EE26F397A900643F91 /* Data+WriteTests.swift */,
 				E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */,
 				3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */,
@@ -386,6 +393,8 @@
 				OBJ_27 /* String+Write.swift */,
 				8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */,
 				397811F226F4B14A00643F91 /* Date+Log.swift */,
+				E3B48E9628118B01002FF8CE /* String+EnvVar.swift */,
+				E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -740,6 +749,7 @@
 				8E6ABBA425C03639006A62FE /* SecretsFactory.swift in Sources */,
 				8E1BA0C4254BFF6400DD0204 /* Setup.swift in Sources */,
 				8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */,
+				E3B48E9728118B01002FF8CE /* String+EnvVar.swift in Sources */,
 				8E1B9EFE254AC2A900DD0204 /* AndroidVariant.swift in Sources */,
 				8E6ABB9D25C031AB006A62FE /* UtilsDirectory.swift in Sources */,
 				8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */,
@@ -761,6 +771,7 @@
 				8E1B9DC9254AC27500DD0204 /* AndroidProject.swift in Sources */,
 				8E1B9E39254AC28F00DD0204 /* SpecHelper.swift in Sources */,
 				397811F926F4CAC600643F91 /* StandardOutputStream.swift in Sources */,
+				E3B48E9928118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -780,6 +791,7 @@
 				39C245AF26F8B198008CF1E0 /* PathSafeJoinTests.swift in Sources */,
 				397811F626F4BCF800643F91 /* MockLogger.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
+				E3B48E9C2812AFE4002FF8CE /* String+EnvVarTests.swift in Sources */,
 				8E6ABBB625C03F2C006A62FE /* SecretsFactoryTests.swift in Sources */,
 				8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */,
 				BEAA71ED255A012900E9D4D9 /* AndroidProjectTests.swift in Sources */,
@@ -896,7 +908,6 @@
 				INFOPLIST_FILE = Sources/VariantsCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -969,7 +980,6 @@
 				INFOPLIST_FILE = Sources/VariantsCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1165,7 +1175,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1276,7 +1285,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

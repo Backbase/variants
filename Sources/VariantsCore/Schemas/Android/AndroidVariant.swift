@@ -18,18 +18,6 @@ public struct AndroidVariant: Codable {
     let custom: [CustomProperty]?
     internal let store_destination: String?
     
-    enum CodingKeys: String, CodingKey {
-        case name = "name"
-        case versionName = "version_name"
-        case versionCode = "version_code"
-        case idSuffix = "id_suffix"
-        case taskBuild = "task_build"
-        case taskUnitTest = "task_unittest"
-        case taskUitest = "task_uitest"
-        case custom = "custom"
-        case store_destination
-    }
-    
     var configName: String {
         switch name {
         case "default":
@@ -92,6 +80,18 @@ struct UnnamedAndroidVariant: Codable {
         case taskUnitTest = "task_unittest"
         case taskUitest = "task_uitest"
         case custom = "custom"
-        case store_destination
+        case store_destination = "store_destination"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        versionCode = try values.decode(String.self, forKey: .versionCode, extractEnvVar: true)
+        versionName = try values.decode(String.self, forKey: .versionName, extractEnvVar: true)
+        idSuffix = try values.decodeIfPresent(String.self, forKey: .idSuffix)
+        taskBuild = try values.decode(String.self, forKey: .taskBuild, extractEnvVar: true)
+        taskUnitTest = try values.decode(String.self, forKey: .taskUnitTest, extractEnvVar: true)
+        taskUitest = try values.decode(String.self, forKey: .taskUitest, extractEnvVar: true)
+        custom = try values.decodeIfPresent([CustomProperty].self, forKey: .custom)
+        store_destination = try values.decode(String?.self, forKey: .store_destination)
     }
 }
