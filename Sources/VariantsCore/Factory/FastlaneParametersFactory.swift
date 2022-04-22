@@ -15,7 +15,9 @@ protocol ParametersFactory {
     func render(context: [String: Any], renderTemplate: String) throws -> Data?
     func write(_ data: Data, using parametersFile: Path) throws
 }
-
+enum FastlaneParametersFactoryError: Error {
+    case templateNotFound
+}
 class FastlaneParametersFactory: ParametersFactory {
     init(templatePath: Path? = try? TemplateDirectory().path) {
         self.templatePath = templatePath
@@ -25,7 +27,7 @@ class FastlaneParametersFactory: ParametersFactory {
         guard
             let context = context(for: parameters),
             let data = try render(context: context, renderTemplate: renderTemplate)
-        else { return }
+        else { throw FastlaneParametersFactoryError.templateNotFound}
         try write(data, using: file)
     }
     

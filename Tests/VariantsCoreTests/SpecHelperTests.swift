@@ -12,7 +12,28 @@ import PathKit
 class SpecHelperTests: XCTestCase {
     let correctTemplatePath = Path("variants-template.yml")
     let incorrectTemplatePath = Path("unknown-variants-template.yml")
+    let xcodeProjectPath = Path("./Test.xcodeproj")
+    let gradleProjectPath = Path("./build.gradle")
     
+    override func setUp() async throws {
+        if !xcodeProjectPath.exists {
+            try xcodeProjectPath.mkpath()
+        }
+        if !xcodeProjectPath.exists {
+            try xcodeProjectPath.mkpath()
+        }
+    }
+    
+    override func tearDown() async throws {
+        if xcodeProjectPath.exists {
+            try xcodeProjectPath.delete()
+        }
+        
+        if gradleProjectPath.exists {
+            try gradleProjectPath.delete()
+        }
+    }
+
     func testGenerateSpec_basePathShouldNotBeNil() {
         XCTAssertNotNil(basePath())
     }
