@@ -9,7 +9,7 @@ import Foundation
 
 // swiftlint:disable type_name
 
-public struct iOSVariant: Codable {
+public struct iOSVariant: Variant {
     let name: String
     let app_icon: String?
     let id_suffix: String?
@@ -18,6 +18,8 @@ public struct iOSVariant: Codable {
     let signing: iOSSigning?
     let custom: [CustomProperty]?
     internal let store_destination: String?
+    
+    public var title: String { return name }
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
         let bundleId = target.bundleId+configIdSuffix

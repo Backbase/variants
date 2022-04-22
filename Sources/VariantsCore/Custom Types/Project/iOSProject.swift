@@ -49,6 +49,14 @@ class iOSProject: Project {
             throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
     }
+    
+    override func list(spec: String) throws -> [Variant] {
+        guard let variants = try loadConfiguration(spec)?.variants else {
+            throw RuntimeError("Unable to load specs '\(spec)' for platform 'ios'")
+        }
+        
+        return variants
+    }
 
     // MARK: - Private
 
@@ -63,7 +71,7 @@ class iOSProject: Project {
         }
         
         do {
-            return try yamlParser.extractConfiguration(from: path, platform: .ios).ios
+            return try yamlParser.extractConfiguration(from: path, platform: .ios, logger: specHelper.logger).ios
         } catch {
             Logger.shared.logError(item: (error as NSError).debugDescription)
             throw RuntimeError("Unable to load your YAML spec")
@@ -71,7 +79,7 @@ class iOSProject: Project {
     }
 
     private func switchTo(_ variant: iOSVariant, spec: String, configuration: iOSConfiguration) throws {
-        Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
+        specHelper.logger.logInfo(item: "Found: \(variant.configIdSuffix)")
 
         try configuration.targets
             .map { (key: $0.key, value: $0.value)}

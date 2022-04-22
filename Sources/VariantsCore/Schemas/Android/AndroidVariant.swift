@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AndroidVariant: Codable {
+public struct AndroidVariant: Variant {
     let name: String
     let versionName: String
     let versionCode: String
@@ -17,6 +17,8 @@ public struct AndroidVariant: Codable {
     let taskUitest: String
     let custom: [CustomProperty]?
     internal let store_destination: String?
+    
+    public var title: String { return name }
     
     enum CodingKeys: String, CodingKey {
         case name = "name"

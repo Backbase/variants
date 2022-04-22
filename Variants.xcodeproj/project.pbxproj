@@ -32,6 +32,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		7C3D106B27F5E1C300A7FE47 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D106A27F5E1C300A7FE47 /* List.swift */; };
+		7C3D106D27F5F64400A7FE47 /* Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D106C27F5F64400A7FE47 /* Variant.swift */; };
 		8E1B9CD7254AC1E700DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
 		8E1B9CDC254AC1E700DD0204 /* VariantsCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1B9CDB254AC1E700DD0204 /* VariantsCoreTests.swift */; };
 		8E1B9CDE254AC1E700DD0204 /* VariantsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -153,6 +155,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7C3D106A27F5E1C300A7FE47 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
+		7C3D106C27F5F64400A7FE47 /* Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variant.swift; sourceTree = "<group>"; };
 		8E1B9C0E254AB51300DD0204 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VariantsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariantsCore.h; sourceTree = "<group>"; };
@@ -314,6 +318,7 @@
 				8E1BA0BF254BFF6400DD0204 /* Initializer.swift */,
 				8E1BA0C0254BFF6400DD0204 /* Switch.swift */,
 				8E1BA0C1254BFF6400DD0204 /* Setup.swift */,
+				7C3D106A27F5E1C300A7FE47 /* List.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -460,6 +465,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_52 /* Configuration.swift */,
+				7C3D106C27F5F64400A7FE47 /* Variant.swift */,
 				OBJ_53 /* Android */,
 				OBJ_57 /* iOS */,
 			);
@@ -717,6 +723,7 @@
 				8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */,
 				8E1B9EFE254AC2A900DD0204 /* AndroidVariant.swift in Sources */,
 				8E6ABB9D25C031AB006A62FE /* UtilsDirectory.swift in Sources */,
+				7C3D106D27F5F64400A7FE47 /* Variant.swift in Sources */,
 				8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */,
 				8E1B9EA5254AC29A00DD0204 /* VerboseLogger.swift in Sources */,
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
@@ -734,6 +741,7 @@
 				8E1B9E35254AC28F00DD0204 /* ProjectFactory.swift in Sources */,
 				8E1B9DC9254AC27500DD0204 /* AndroidProject.swift in Sources */,
 				8E1B9E39254AC28F00DD0204 /* SpecHelper.swift in Sources */,
+				7C3D106B27F5E1C300A7FE47 /* List.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
