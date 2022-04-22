@@ -99,16 +99,6 @@ struct UnnamediOSVariant: Codable {
     let custom: [CustomProperty]?
     internal let store_destination: String?
     
-    enum CodingKeys: String, CodingKey {
-        case app_icon = "app_icon"
-        case id_suffix = "id_suffix"
-        case version_name = "version_name"
-        case version_number = "version_number"
-        case signing = "signing"
-        case custom = "custom"
-        case store_destination = "store_destination"
-    }
-    
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         app_icon = try values.decode(String.self, forKey: .app_icon, extractEnvVar: true)
