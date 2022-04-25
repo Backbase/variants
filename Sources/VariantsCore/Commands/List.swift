@@ -8,7 +8,6 @@
 import Foundation
 import ArgumentParser
 import PathKit
-import SwiftUI
 
 public struct List: ParsableCommand {
     public init() {}
@@ -47,9 +46,9 @@ public struct List: ParsableCommand {
 fileprivate extension Variant {
     func print(logger: Logger, project: Project) {
         if project.isCurrent(variant: self) {
-            logger.log(item: "* \(title)", indentationLevel: 0, color: .green, logLevel: .verbose)
+            logger.log(LogData("", item: "* \(title)", indentationLevel: 0, color: .green, logLevel: .verbose))
         } else {
-            logger.log(item: "  \(title)", indentationLevel: 0, color: .neutral, logLevel: .verbose)
+            logger.log(LogData("", item: "  \(title)", indentationLevel: 0, color: .neutral, logLevel: .verbose))
         }
     }
 }
