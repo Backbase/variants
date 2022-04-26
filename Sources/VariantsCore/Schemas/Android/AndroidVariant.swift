@@ -87,11 +87,11 @@ struct UnnamedAndroidVariant: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         versionCode = try values.decode(String.self, forKey: .versionCode, extractEnvVar: true)
         versionName = try values.decode(String.self, forKey: .versionName, extractEnvVar: true)
-        idSuffix = try values.decodeIfPresent(String.self, forKey: .idSuffix)
+        idSuffix = try values.decodeIfPresent(String.self, forKey: .idSuffix, extractEnvVar: true)
         taskBuild = try values.decode(String.self, forKey: .taskBuild, extractEnvVar: true)
         taskUnitTest = try values.decode(String.self, forKey: .taskUnitTest, extractEnvVar: true)
         taskUitest = try values.decode(String.self, forKey: .taskUitest, extractEnvVar: true)
         custom = try values.decodeIfPresent([CustomProperty].self, forKey: .custom)
-        store_destination = try values.decode(String?.self, forKey: .store_destination)
+        store_destination = try values.decodeIfPresent(String.self, forKey: .store_destination, extractEnvVar: true)
     }
 }

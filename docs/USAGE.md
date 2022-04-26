@@ -81,7 +81,7 @@ ios:
       # Default variant is mandatory, do not remove
       default:
         version_name: 0.0.1
-        version_number: 1
+        version_number: {{ envVars.VERSION_CODE }}
         store_destination: AppStore
         custom:
             - name: apiBaseUrl
@@ -111,7 +111,7 @@ android:
         # Usually regarded as `production` variant.
     default:
       version_name: 0.0.1
-      version_code: 1
+      version_code: {{ envVars.VERSION_CODE }}
       task_build: bundleProdRelease
       task_unittest: testProdReleaseUnitTest
       task_uitest: connectedProdReleaseAndroidTest
@@ -170,6 +170,10 @@ android:
     #      env: true
     #      destination: project
 ```
+#### Enviromental variables injection
+
+It's possible to inject enviromental variables' values into all Android and iOS Variant's properties (like `version_name`, `version_name`, etc) using `{{ envVars.ENV_VAR_NAME }}` syntax.
+
 #### Custom configuration
 
 Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane and vice-versa.

@@ -15,6 +15,17 @@ extension KeyedDecodingContainer {
         }
     }
     
+    public func decodeIfPresent(_ type: String.Type, forKey key: KeyedDecodingContainer<K>.Key, extractEnvVar: Bool) throws -> String? {
+        guard let decodedValue = try self.decodeIfPresent(String.self, forKey: key) else {
+            return nil
+        }
+        if extractEnvVar {
+            return decodedValue.extractEnvVarIfAny()
+        } else {
+            return decodedValue
+        }
+    }
+    
     public func decode(_ type: Int.Type, forKey key: KeyedDecodingContainer<K>.Key, extractEnvVar: Bool) throws -> Int {
         let decodedValue = try self.decode(Int.self, forKey: key)
         if extractEnvVar {

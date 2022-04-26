@@ -101,12 +101,12 @@ struct UnnamediOSVariant: Codable {
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        app_icon = try values.decode(String.self, forKey: .app_icon, extractEnvVar: true)
-        id_suffix = try values.decode(String.self, forKey: .id_suffix, extractEnvVar: true)
+        app_icon = try values.decodeIfPresent(String.self, forKey: .app_icon, extractEnvVar: true)
+        id_suffix = try values.decodeIfPresent(String.self, forKey: .id_suffix, extractEnvVar: true)
         version_name = try values.decode(String.self, forKey: .version_name, extractEnvVar: true)
         version_number = try values.decode(Int.self, forKey: .version_number, extractEnvVar: true)
-        signing = try values.decode(iOSSigning.self, forKey: .signing)
-        custom = try values.decode([CustomProperty]?.self, forKey: .custom)
-        store_destination = try values.decode(String.self, forKey: .store_destination, extractEnvVar: true)
+        signing = try values.decodeIfPresent(iOSSigning.self, forKey: .signing)
+        custom = try values.decodeIfPresent([CustomProperty].self, forKey: .custom)
+        store_destination = try values.decodeIfPresent(String.self, forKey: .store_destination, extractEnvVar: true)
     }
 }
