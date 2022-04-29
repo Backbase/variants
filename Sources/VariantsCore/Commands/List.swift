@@ -39,16 +39,16 @@ public struct List: ParsableCommand {
         let variants = try project.list(spec: spec)
 
         let output = Logger(verbose: true)
-        variants.forEach { $0.print(logger: output, project: project) }
+        variants.forEach { output.log($0.print(project: project)) }
     }
 }
 
-fileprivate extension Variant {
-    func print(logger: Logger, project: Project) {
+extension Variant {
+    func print(project: Project) -> LogData {
         if project.isCurrent(variant: self) {
-            logger.log(LogData("", item: "* \(title)", indentationLevel: 0, color: .green, logLevel: .verbose))
+            return LogData("", item: "* \(title)", indentationLevel: 0, color: .green, logLevel: .verbose)
         } else {
-            logger.log(LogData("", item: "  \(title)", indentationLevel: 0, color: .neutral, logLevel: .verbose))
+            return LogData("", item: "  \(title)", indentationLevel: 0, color: .neutral, logLevel: .verbose)
         }
     }
 }

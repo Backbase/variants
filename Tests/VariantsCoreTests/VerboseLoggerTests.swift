@@ -46,6 +46,22 @@ class VerboseLoggerTests: XCTestCase {
         XCTAssertEqual(results, "")
     }
     
+    func testVariantLog() {
+        let variant = MockVariant()
+        let project = MockProject.ios
+        var output = ""
+        
+        project.alwaysCurrent = false
+        XCTAssertFalse(project.isCurrent(variant: variant))
+        output = "  \(variant.title)"
+        XCTAssertEqual(variant.print(project: project).item as! String, output)
+
+        project.alwaysCurrent = true
+        XCTAssertTrue(project.isCurrent(variant: variant))
+        output = "* \(variant.title)"
+        XCTAssertEqual(variant.print(project: project).item as! String, output)
+    }
+    
     func testLogData() {
         let log = LogData(item: "")
         XCTAssertNotNil(log.prefix)

@@ -86,6 +86,37 @@ class AndroidProjectTests: XCTestCase {
         }
     }
     
+    func testProject_list() {
+        let gradleFactoryMock = MockGradleScriptFactory()
+        let fastlaneFactoryMock = MockFastlaneFactory()
+
+        let project = AndroidProject(
+            specHelper: specHelperMock,
+            gradleFactory: gradleFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
+            yamlParser: YamlParser()
+        )
+        
+        let inexistentSpecPath = "inexistent_variants_config.yml"
+        XCTAssertThrowsError(try project.setup(spec: inexistentSpecPath, skipFastlane: true, verbose: true),
+                             "Spec doesn't exist") { (error) in
+            XCTAssertNotNil(error as? RuntimeError)
+            if let runtimeError = error as? RuntimeError {
+                XCTAssertEqual(runtimeError.description, """
+                    ❌ Unable to load your YAML spec
+                    """)
+            }
+        }
+
+        guard let specPath = specPath(resourcePath: "Resources/valid_variants", withType: "yml") else {
+            return XCTFail("Couldn't find valid_variants.yml file.")
+        }
+        
+        let variants = try? project.list(spec: specPath.string)
+        XCTAssertNotNil(variants)
+        XCTAssertEqual(variants?.count, 2)
+    }
+    
     func testProject_switch() {
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
@@ -151,6 +182,7 @@ class AndroidProjectTests: XCTestCase {
     static var allTests = [
         ("testProject_initialize", testProject_initialize),
         ("testProject_setup", testProject_setup),
+        ("testProject_list", testProject_list),
         ("testProject_switch", testProject_switch)
     ]
 }
