@@ -54,12 +54,12 @@ class VerboseLoggerTests: XCTestCase {
         project.alwaysCurrent = false
         XCTAssertFalse(project.isCurrent(variant: variant))
         output = "  \(variant.title)"
-        XCTAssertEqual(variant.print(project: project).item as! String, output)
+        XCTAssertEqual(variant.print(project: project).item as? String, output)
 
         project.alwaysCurrent = true
         XCTAssertTrue(project.isCurrent(variant: variant))
         output = "* \(variant.title)"
-        XCTAssertEqual(variant.print(project: project).item as! String, output)
+        XCTAssertEqual(variant.print(project: project).item as? String, output)
     }
     
     func testLogData() {

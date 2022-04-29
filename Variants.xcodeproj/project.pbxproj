@@ -45,6 +45,7 @@
 		7C3D106D27F5F64400A7FE47 /* Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D106C27F5F64400A7FE47 /* Variant.swift */; };
 		7C460E7F281C1DDE00BBF15D /* MockVariant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C460E7E281C1DDE00BBF15D /* MockVariant.swift */; };
 		7C460E81281C1E8100BBF15D /* MockProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C460E80281C1E8100BBF15D /* MockProject.swift */; };
+		7C460E83281C30B900BBF15D /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C460E82281C30B900BBF15D /* CommandTests.swift */; };
 		8E1B9CD7254AC1E700DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
 		8E1B9CDE254AC1E700DD0204 /* VariantsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Platform.swift */; };
@@ -178,6 +179,7 @@
 		7C3D106C27F5F64400A7FE47 /* Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variant.swift; sourceTree = "<group>"; };
 		7C460E7E281C1DDE00BBF15D /* MockVariant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVariant.swift; sourceTree = "<group>"; };
 		7C460E80281C1E8100BBF15D /* MockProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProject.swift; sourceTree = "<group>"; };
+		7C460E82281C30B900BBF15D /* CommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandTests.swift; sourceTree = "<group>"; };
 		8E1B9C0E254AB51300DD0204 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VariantsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariantsCore.h; sourceTree = "<group>"; };
@@ -313,6 +315,7 @@
 			children = (
 				BEAA71FE255E5B8C00E9D4D9 /* Mocks */,
 				OBJ_64 /* InitializerTests.swift */,
+				7C460E82281C30B900BBF15D /* CommandTests.swift */,
 				OBJ_67 /* YamlParserTests.swift */,
 				8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */,
 				8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */,
@@ -805,6 +808,7 @@
 				7C460E7F281C1DDE00BBF15D /* MockVariant.swift in Sources */,
 				8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */,
 				8E8A491025543F920056F79F /* SpecHelperTests.swift in Sources */,
+				7C460E83281C30B900BBF15D /* CommandTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
