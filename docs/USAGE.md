@@ -172,7 +172,7 @@ android:
 ```
 #### Enviromental variables injection
 
-It's possible to inject enviromental variables' values into all Android and iOS Variant's properties (like `version_name`, `version_name`, etc) using `{{ envVars.ENV_VAR_NAME }}` syntax.
+It's possible to inject enviromental variables' values into all Android and iOS Variant's properties (like `version_name`, `store_destination`, etc) using `{{ envVars.ENV_VAR_NAME }}` syntax.
 
 #### Custom configuration
 
