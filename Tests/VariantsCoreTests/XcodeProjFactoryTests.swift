@@ -24,6 +24,27 @@ class XcodeProjFactoryTests: XCTestCase {
         XCTAssertEqual(sut.projectPath(), "Test.xcodeproj/")
     }
     
+    func testWriteJson() {
+        let proj = XCConfigFactory(logLevel: true)
+        let file = Path("./output.json")
+        let (success, path) = proj.writeJSON("{}", toFile: file)
+        XCTAssertTrue(success)
+        XCTAssertNotNil(path)
+    }
+    
+    func testCreateConfiguration() {
+        let proj = XCConfigFactory(logLevel: true)
+        let target = iOSTarget(name: "", app_icon: "", bundleId: "", testTarget: "", source: .init(path: "", info: "", config: ""))
+        let variant = iOSVariant(name: target.name, app_icon: nil, id_suffix: nil, version_name: "", version_number: 0, signing: nil, custom: nil, store_destination: nil)
+        XCTAssertNoThrow(try proj.createConfig(
+            with: ("", target),
+            variant: variant,
+            xcodeProj: xcodeProjectPath.description,
+            configPath: Path(""),
+            addToXcodeProj: false
+        ))
+    }
+    
     func testApplicationData() {
         let sut = XcodeProjFactory()
         XCTAssertEqual(sut.applicationData(), [VariantsCore.iOSProjectKey.project: "Test"])

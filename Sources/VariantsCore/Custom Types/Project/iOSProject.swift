@@ -87,13 +87,17 @@ class iOSProject: Project {
                 
                 // Create 'variants.xcconfig' with parameters whose
                 // destination are set as '.project'
-                configFactory.createConfig(
-                    with: namedTarget,
-                    variant: variant,
-                    xcodeProj: configuration.xcodeproj,
-                    configPath: Path(spec).absolute().parent(),
-                    addToXcodeProj: false
-                )
+                do {
+                    try configFactory.createConfig(
+                        with: namedTarget,
+                        variant: variant,
+                        xcodeProj: configuration.xcodeproj,
+                        configPath: Path(spec).absolute().parent(),
+                        addToXcodeProj: false
+                    )
+                } catch {
+                    Logger.shared.logFatal(item: error.localizedDescription)
+                }
                 
                 var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
                 customProperties.append(variant.destinationProperty)
@@ -119,11 +123,15 @@ class iOSProject: Project {
                 // Create 'variants.xcconfig' with parameters whose
                 // destination are set as '.project'
                 let configPath = Path(spec).absolute().parent()
-                configFactory.createConfig(with: target,
-                                           variant: defaultVariant,
-                                           xcodeProj: configuration.xcodeproj,
-                                           configPath: configPath,
-                                           addToXcodeProj: true)
+                do {
+                    try configFactory.createConfig(with: target,
+                                                   variant: defaultVariant,
+                                                   xcodeProj: configuration.xcodeproj,
+                                                   configPath: configPath,
+                                                   addToXcodeProj: true)
+                } catch {
+                    Logger.shared.logFatal(item: error.localizedDescription)
+                }
             }
     }
 
