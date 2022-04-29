@@ -101,7 +101,7 @@
 		BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */; };
 		BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */; };
 		BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */; };
-		E333DBE7281C172B000E8D03 /* AndroidVariant+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = E333DBE6281C172B000E8D03 /* AndroidVariant+Test.swift */; };
+		E333DBE9281C36B0000E8D03 /* KeyedDecodingContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */; };
 		E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502A8256DB16B00484DCE /* String+WriteTests.swift */; };
 		E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */; };
 		E3B48E9928118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */; };
@@ -201,7 +201,7 @@
 		BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGradleScriptFactory.swift; sourceTree = "<group>"; };
 		BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockXCcodeConfigFactory.swift; sourceTree = "<group>"; };
 		BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFastlaneFactory.swift; sourceTree = "<group>"; };
-		E333DBE6281C172B000E8D03 /* AndroidVariant+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AndroidVariant+Test.swift"; sourceTree = "<group>"; };
+		E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedDecodingContainerTests.swift; sourceTree = "<group>"; };
 		E39502A8256DB16B00484DCE /* String+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WriteTests.swift"; sourceTree = "<group>"; };
 		E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFactoryTests.swift; sourceTree = "<group>"; };
 		E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+EnvVar.swift"; sourceTree = "<group>"; };
@@ -327,7 +327,7 @@
 				397811F026F4A7C000643F91 /* VerboseLoggerTests.swift */,
 				39C245AE26F8B198008CF1E0 /* PathSafeJoinTests.swift */,
 				39D6D5FF2701E0740064BD41 /* StandardOutputStreamTests.swift */,
-				E333DBE6281C172B000E8D03 /* AndroidVariant+Test.swift */,
+				E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */,
 			);
 			name = VariantsCoreTests;
 			path = Tests/VariantsCoreTests;
@@ -776,7 +776,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */,
-				E333DBE7281C172B000E8D03 /* AndroidVariant+Test.swift in Sources */,
+				E333DBE9281C36B0000E8D03 /* KeyedDecodingContainerTests.swift in Sources */,
 				8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */,
 				8E1B9F3C254AC31A00DD0204 /* InitializerTests.swift in Sources */,
 				BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */,
