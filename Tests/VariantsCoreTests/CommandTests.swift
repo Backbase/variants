@@ -2,7 +2,7 @@
 //  Variants
 //
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
-//  Created by Oleg Baidalka on 29.04.2022.
+//  Created by Oleg Baidalka
 //
 
 import XCTest
