@@ -17,6 +17,8 @@ public struct AndroidVariant: Variant {
     let taskUitest: String
     let custom: [CustomProperty]?
     internal let store_destination: String?
+
+    public var title: String { return name }
     
     var configName: String {
         switch name {
