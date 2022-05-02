@@ -105,6 +105,7 @@
 		E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502A8256DB16B00484DCE /* String+WriteTests.swift */; };
 		E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */; };
 		E3B48E9928118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */; };
+		E3BE3E742820336700A31096 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BE3E732820336700A31096 /* Errors.swift */; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -205,6 +206,7 @@
 		E39502A8256DB16B00484DCE /* String+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WriteTests.swift"; sourceTree = "<group>"; };
 		E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFactoryTests.swift; sourceTree = "<group>"; };
 		E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+EnvVar.swift"; sourceTree = "<group>"; };
+		E3BE3E732820336700A31096 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
 		OBJ_18 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 				8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */,
 				397811F226F4B14A00643F91 /* Date+Log.swift */,
 				E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */,
+				E3BE3E732820336700A31096 /* Errors.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -753,6 +756,7 @@
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
 				8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */,
 				8E1B9DF2254AC27900DD0204 /* RuntimeError.swift in Sources */,
+				E3BE3E742820336700A31096 /* Errors.swift in Sources */,
 				3940C5A127074B1A00FEA51D /* LogData.swift in Sources */,
 				8E1BA0C3254BFF6400DD0204 /* Switch.swift in Sources */,
 				8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */,

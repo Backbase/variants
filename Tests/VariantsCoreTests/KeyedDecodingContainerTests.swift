@@ -6,8 +6,9 @@
 
 import Foundation
 import XCTest
-
 import Yams
+
+@testable import VariantsCore
 
 private struct Variant: Codable {
     let name: String
@@ -42,17 +43,41 @@ final class KeyedDecodingContainerTests: XCTestCase {
         variant = try decoder.decode(Variant.self, from: """
                                            name: ${{ envVars.V_NAME }}
                                            version: ${{ envVars.V_VERSION }}
-                                           store: ${{ envVars.V_NOME }}
+                                           store: PlayStore
                                            """)
         XCTAssertEqual(variant.version, 13)
-        XCTAssertEqual(variant.store, "${{ envVars.V_NOME }}")
         
+        // test env var set to a string that should have a number
         setenv("V_VERSION", "abc", 1)
-        variant = try decoder.decode(Variant.self, from: """
+        XCTAssertThrowsError(try decoder.decode(Variant.self, from: """
                                            name: ${{ envVars.V_NAME }}
                                            version: ${{ envVars.V_VERSION }}
                                            store: ${{ envVars.V_NOME }}
-                                           """)
-        XCTAssertEqual(variant.version, 0)
+                                           """))
+        
+        let abortTest = "Unit test fail for variable set but not found in the environment"
+        
+        // test var that declared but not found in the environment
+        XCTAssertThrowsError(try decoder.decode(Variant.self, from: """
+                                           name: ${{ envVars.V_NAME_TYPO }}
+                                           version: 1
+                                           store: PlayStore
+                                           """))  { error in
+            guard case DecodingError.dataCorrupted(let dataCorruptedValue) = error else {
+                return XCTFail(abortTest)
+            }
+            
+            guard let envVarError = dataCorruptedValue.underlyingError as? EnvVarNotSetError else {
+                return XCTFail(abortTest)
+            }
+            
+            guard case EnvVarNotSetError.runtimeError(let value) = envVarError else {
+                return XCTFail(abortTest)
+            }
+            
+            XCTAssertEqual(value, "Couldn't find any value set to the environmental variable V_NAME_TYPO")
+            
+        }
+        
     }
 }
