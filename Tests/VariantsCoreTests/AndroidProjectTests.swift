@@ -86,6 +86,25 @@ class AndroidProjectTests: XCTestCase {
         }
     }
     
+    func testProject_list() {
+        let gradleFactoryMock = MockGradleScriptFactory()
+        let fastlaneFactoryMock = MockFastlaneFactory()
+        let project = AndroidProject(
+            specHelper: specHelperMock,
+            gradleFactory: gradleFactoryMock,
+            parametersFactory: fastlaneFactoryMock,
+            yamlParser: YamlParser()
+        )
+
+        guard let specPath = specPath(resourcePath: "Resources/valid_variants", withType: "yml") else {
+            return XCTFail("Couldn't find valid_variants.yml file.")
+        }
+        
+        let variants = try? project.list(spec: specPath.string)
+        XCTAssertNotNil(variants)
+        XCTAssertEqual(variants?.count, 2)
+    }
+    
     func testProject_switch() {
         let gradleFactoryMock = MockGradleScriptFactory()
         let fastlaneFactoryMock = MockFastlaneFactory()
@@ -151,6 +170,7 @@ class AndroidProjectTests: XCTestCase {
     static var allTests = [
         ("testProject_initialize", testProject_initialize),
         ("testProject_setup", testProject_setup),
+        ("testProject_list", testProject_list),
         ("testProject_switch", testProject_switch)
     ]
 }

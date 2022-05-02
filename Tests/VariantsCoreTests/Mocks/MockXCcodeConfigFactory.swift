@@ -37,7 +37,7 @@ class MockXCcodeConfigFactory: XCFactory {
                       variant: iOSVariant,
                       xcodeProj: String?,
                       configPath: Path,
-                      addToXcodeProj: Bool?) {
+                      addToXcodeProj: Bool?) throws {
         createConfigCache.append((target: target,
                                   variant: variant,
                                   xcodeProj: xcodeProj,

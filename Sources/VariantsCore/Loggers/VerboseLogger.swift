@@ -40,12 +40,11 @@ public protocol VerboseLogger {
 
 extension VerboseLogger {
     public func log(_ data: LogData) {
-        
-        let logString = createLog(data)
-        
-        var outputStream = StandardOutputStream(fileHandler: .standardError)
-        
-        Swift.print(logString, to: &outputStream)
+        if data.logLevel != .verbose || verbose {
+            let logString = createLog(data)
+            var outputStream = StandardOutputStream(fileHandler: .standardError)
+            Swift.print(logString, to: &outputStream)
+        }
     }
     
     func createLog(_ data: LogData) -> String {
