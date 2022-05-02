@@ -16,7 +16,8 @@ struct Variants: ParsableCommand {
         subcommands: [
             Initializer.self,
             Setup.self,
-            Switch.self
+            Switch.self,
+            List.self
         ]
     )
 }

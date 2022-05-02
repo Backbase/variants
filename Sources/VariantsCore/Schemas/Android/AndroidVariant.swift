@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AndroidVariant: Codable {
+public struct AndroidVariant: Variant {
     let name: String
     let versionName: String
     let versionCode: String

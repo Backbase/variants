@@ -27,6 +27,7 @@ final class VariantsTests: XCTestCase {
               init                    Generate spec file - variants.yml
               setup                   Setup deployment variants (alongside Fastlane)
               switch                  Switch variants
+              list                    List all variants
 
               See \'variants help <subcommand>\' for detailed help.
 

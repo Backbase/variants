@@ -53,6 +53,14 @@ class AndroidProject: Project {
         }
     }
 
+    override func list(spec: String) throws -> [Variant] {
+        guard let variants = try loadConfiguration(spec)?.variants else {
+            throw RuntimeError("Unable to load specs '\(spec)' for platform 'android'")
+        }
+        
+        return variants
+    }
+
     // MARK: - Private
 
     private func loadConfiguration(_ path: String?) throws -> AndroidConfiguration? {
@@ -66,7 +74,7 @@ class AndroidProject: Project {
         }
 
         do {
-            return try yamlParser.extractConfiguration(from: path, platform: .android).android
+            return try yamlParser.extractConfiguration(from: path, platform: .android, logger: specHelper.logger).android
         } catch {
             Logger.shared.logError(item: (error as NSError).debugDescription)
             throw RuntimeError("Unable to load your YAML spec")

@@ -41,6 +41,11 @@
 		397811FB26F4CD3300643F91 /* VerboseLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811F026F4A7C000643F91 /* VerboseLoggerTests.swift */; };
 		39C245AF26F8B198008CF1E0 /* PathSafeJoinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C245AE26F8B198008CF1E0 /* PathSafeJoinTests.swift */; };
 		39D6D6002701E0740064BD41 /* StandardOutputStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D6D5FF2701E0740064BD41 /* StandardOutputStreamTests.swift */; };
+		7C3D106B27F5E1C300A7FE47 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D106A27F5E1C300A7FE47 /* List.swift */; };
+		7C3D106D27F5F64400A7FE47 /* Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D106C27F5F64400A7FE47 /* Variant.swift */; };
+		7C460E7F281C1DDE00BBF15D /* MockVariant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C460E7E281C1DDE00BBF15D /* MockVariant.swift */; };
+		7C460E81281C1E8100BBF15D /* MockProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C460E80281C1E8100BBF15D /* MockProject.swift */; };
+		7C460E83281C30B900BBF15D /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C460E82281C30B900BBF15D /* CommandTests.swift */; };
 		8E1B9CD7254AC1E700DD0204 /* VariantsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */; };
 		8E1B9CDE254AC1E700DD0204 /* VariantsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Platform.swift */; };
@@ -173,6 +178,11 @@
 		397811F726F4CABD00643F91 /* StandardOutputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutputStream.swift; sourceTree = "<group>"; };
 		39C245AE26F8B198008CF1E0 /* PathSafeJoinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathSafeJoinTests.swift; sourceTree = "<group>"; };
 		39D6D5FF2701E0740064BD41 /* StandardOutputStreamTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutputStreamTests.swift; sourceTree = "<group>"; };
+		7C3D106A27F5E1C300A7FE47 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
+		7C3D106C27F5F64400A7FE47 /* Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variant.swift; sourceTree = "<group>"; };
+		7C460E7E281C1DDE00BBF15D /* MockVariant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVariant.swift; sourceTree = "<group>"; };
+		7C460E80281C1E8100BBF15D /* MockProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProject.swift; sourceTree = "<group>"; };
+		7C460E82281C30B900BBF15D /* CommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandTests.swift; sourceTree = "<group>"; };
 		8E1B9C0E254AB51300DD0204 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		8E1B9CCE254AC1E700DD0204 /* VariantsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VariantsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E1B9CD0254AC1E700DD0204 /* VariantsCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariantsCore.h; sourceTree = "<group>"; };
@@ -311,6 +321,7 @@
 			children = (
 				BEAA71FE255E5B8C00E9D4D9 /* Mocks */,
 				OBJ_64 /* InitializerTests.swift */,
+				7C460E82281C30B900BBF15D /* CommandTests.swift */,
 				OBJ_67 /* YamlParserTests.swift */,
 				8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */,
 				8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */,
@@ -341,6 +352,7 @@
 				8E1BA0BF254BFF6400DD0204 /* Initializer.swift */,
 				8E1BA0C0254BFF6400DD0204 /* Switch.swift */,
 				8E1BA0C1254BFF6400DD0204 /* Setup.swift */,
+				7C3D106A27F5E1C300A7FE47 /* List.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -359,6 +371,8 @@
 				BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */,
 				BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */,
 				397811F526F4BCF800643F91 /* MockLogger.swift */,
+				7C460E7E281C1DDE00BBF15D /* MockVariant.swift */,
+				7C460E80281C1E8100BBF15D /* MockProject.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -493,6 +507,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_52 /* Configuration.swift */,
+				7C3D106C27F5F64400A7FE47 /* Variant.swift */,
 				OBJ_53 /* Android */,
 				OBJ_57 /* iOS */,
 			);
@@ -751,6 +766,7 @@
 				8E1B9E0A254AC27E00DD0204 /* Data+Write.swift in Sources */,
 				8E1B9EFE254AC2A900DD0204 /* AndroidVariant.swift in Sources */,
 				8E6ABB9D25C031AB006A62FE /* UtilsDirectory.swift in Sources */,
+				7C3D106D27F5F64400A7FE47 /* Variant.swift in Sources */,
 				8E8A483C25514D3A0056F79F /* FastlaneParametersFactory.swift in Sources */,
 				8E1B9EA5254AC29A00DD0204 /* VerboseLogger.swift in Sources */,
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
@@ -770,6 +786,7 @@
 				8E1B9E35254AC28F00DD0204 /* ProjectFactory.swift in Sources */,
 				8E1B9DC9254AC27500DD0204 /* AndroidProject.swift in Sources */,
 				8E1B9E39254AC28F00DD0204 /* SpecHelper.swift in Sources */,
+				7C3D106B27F5E1C300A7FE47 /* List.swift in Sources */,
 				397811F926F4CAC600643F91 /* StandardOutputStream.swift in Sources */,
 				E3B48E9928118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift in Sources */,
 			);
@@ -782,6 +799,7 @@
 				E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */,
 				E333DBE9281C36B0000E8D03 /* KeyedDecodingContainerTests.swift in Sources */,
 				8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */,
+				7C460E81281C1E8100BBF15D /* MockProject.swift in Sources */,
 				8E1B9F3C254AC31A00DD0204 /* InitializerTests.swift in Sources */,
 				BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */,
 				BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */,
@@ -799,8 +817,10 @@
 				3907EE7026FDF9CE00311EE6 /* XcodeProjFactoryTests.swift in Sources */,
 				8E8A4909255420FD0056F79F /* PlatformDetectorTests.swift in Sources */,
 				BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */,
+				7C460E7F281C1DDE00BBF15D /* MockVariant.swift in Sources */,
 				8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */,
 				8E8A491025543F920056F79F /* SpecHelperTests.swift in Sources */,
+				7C460E83281C30B900BBF15D /* CommandTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

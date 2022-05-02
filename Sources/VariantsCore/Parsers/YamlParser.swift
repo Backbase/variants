@@ -17,11 +17,11 @@ class YamlParser {
         self.encoder = encoder
     }
     
-    public func extractConfiguration(from configurationPath: String, platform: Platform?) throws -> Configuration {
+    public func extractConfiguration(from configurationPath: String, platform: Platform?, logger: Logger? = nil) throws -> Configuration {
         let encodedYAML = try String(contentsOfFile: configurationPath, encoding: .utf8)
         let decoded: Configuration = try decoder.decode(Configuration.self, from: encodedYAML)
         
-        Logger.shared.logInfo("Loading configuration", item: "")
+        logger?.logDebug(item: "Loading configuration \(configurationPath)")
         var encoded = try encoder.encode(decoded)
         
         switch platform {
@@ -34,7 +34,7 @@ class YamlParser {
         
         let nsString = encoded as NSString
         nsString.enumerateLines { (stringLine, _) in
-            Logger.shared.log(LogData("", item: stringLine, indentationLevel: 1, color: .purple, logLevel: .verbose))
+            logger?.log(LogData("", item: stringLine, indentationLevel: 1, color: .purple, logLevel: .verbose))
         }
         
         return decoded
