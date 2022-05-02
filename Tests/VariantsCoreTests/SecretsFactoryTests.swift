@@ -30,20 +30,17 @@ class SecretsFactoryTests: XCTestCase {
     
     """
     
-    let defaultVariant = iOSVariant(
+    let defaultVariant = try! iOSVariant(
         name: "default",
-        app_icon: nil,
-        id_suffix: "",
-        version_name: "2.3.4",
-        version_number: 99,
-        signing: nil,
-        custom: [
-            CustomProperty(name: "PROPERTY_A",
-                           value: "VALUE_A",
-                           destination: .project)
-        ],
-        store_destination: "TestFlight"
-    )
+        versionName: "2.3.4",
+        versionNumber: 99,
+        appIcon: nil,
+        storeDestination: .testFlight,
+        custom: [CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project)],
+        idSuffix: nil,
+        bundleID: nil,
+        variantSigning: nil,
+        globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
     
     func testRender_noSecrets() {
         guard let configFile = Bundle(for: type(of: self))
