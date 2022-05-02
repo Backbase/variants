@@ -9,9 +9,4 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Install SwiftLint
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: 1 
-        run: brew install swiftlint
-      - name: Run SwiftLint
         run: swiftlint lint --strict --reporter github-actions-logging
