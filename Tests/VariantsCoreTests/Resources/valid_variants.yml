@@ -66,7 +66,7 @@ ios:
         version_number: 1
         signing:
             team_name: "BACKBASE EUROPE B.V."
-            team_id: "ABC4CG124D"
+            team_id: "AB123456CD"
             match_url: "git@github.com:sample/match.git"
             export_method: appstore
         custom:
@@ -98,7 +98,7 @@ ios:
               
     signing:
         team_name: "iPhone Distribution: BACKBASE EUROPE B.V."
-        team_id: "LMC4CG556D"
+        team_id: "AB123456CD"
         export_method: "enterprise"
         
     custom:

@@ -53,7 +53,7 @@ class YamlParserTests: XCTestCase {
     func testExtractConfiguration_invalid_iOS_missingSigningConfiguration() {
         let expectedUnderlyingError = RuntimeError(
             """
-            At least one variant doesn't contain a 'signing' configuration.
+            Variant "BETA" doesn't contain a 'signing' configuration. \
             Create a global 'signing' configuration or make sure all variants have this property.
             """
         )
@@ -131,7 +131,7 @@ class YamlParserTests: XCTestCase {
             let defaultMatchConfiguration = firstVariant?.signing
             XCTAssertNotNil(defaultMatchConfiguration)
             XCTAssertEqual(defaultMatchConfiguration?.teamName, "BACKBASE EUROPE B.V.")
-            XCTAssertEqual(defaultMatchConfiguration?.teamID, "ABC4CG124D")
+            XCTAssertEqual(defaultMatchConfiguration?.teamID, "AB123456CD")
             XCTAssertEqual(defaultMatchConfiguration?.matchURL, "git@github.com:sample/match.git")
             XCTAssertEqual(defaultMatchConfiguration?.exportMethod, .appstore)
             
@@ -140,7 +140,7 @@ class YamlParserTests: XCTestCase {
                 .signing
             XCTAssertNotNil(betaMatchConfiguration)
             XCTAssertEqual(betaMatchConfiguration?.teamName, "iPhone Distribution: BACKBASE EUROPE B.V.")
-            XCTAssertEqual(betaMatchConfiguration?.teamID, "LMC4CG556D")
+            XCTAssertEqual(betaMatchConfiguration?.teamID, "AB123456CD")
             XCTAssertNil(betaMatchConfiguration?.matchURL)
             XCTAssertEqual(betaMatchConfiguration?.exportMethod, .enterprise)
             
@@ -149,7 +149,7 @@ class YamlParserTests: XCTestCase {
                 .signing
             XCTAssertNotNil(stagingMatchConfiguration)
             XCTAssertEqual(stagingMatchConfiguration?.teamName, "iPhone Distribution: BACKBASE EUROPE B.V.")
-            XCTAssertEqual(stagingMatchConfiguration?.teamID, "LMC4CG556D")
+            XCTAssertEqual(stagingMatchConfiguration?.teamID, "AB123456CD")
             XCTAssertEqual(stagingMatchConfiguration?.matchURL, "git@github.com:sample/enterprise-match.git")
             XCTAssertEqual(stagingMatchConfiguration?.exportMethod, .enterprise)
             
