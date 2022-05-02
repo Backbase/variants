@@ -27,7 +27,6 @@ class Project {
     func setup(spec: String, skipFastlane: Bool, verbose: Bool) throws {}
     func `switch`(to variant: String, spec: String, verbose: Bool) throws {}
     func list(spec: String) throws -> [Variant] { [] }
-    func isCurrent(variant: Variant) -> Bool { false }
 
     // MARK: - Helper functions
 

@@ -30,13 +30,7 @@ class MockProject: Project {
         )
         return MockProject(specHelper: specHelper)
     }
-    
-    var alwaysCurrent: Bool = false
-
-    override func isCurrent(variant: Variant) -> Bool {
-        return alwaysCurrent
-    }
-    
+        
     override func initialize(verbose: Bool) throws {
         // nothing
     }

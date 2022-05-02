@@ -45,10 +45,6 @@ public struct List: ParsableCommand {
 
 extension Variant {
     func print(project: Project) -> LogData {
-        if project.isCurrent(variant: self) {
-            return LogData("", item: "* \(title)", indentationLevel: 0, color: .green, logLevel: .verbose)
-        } else {
-            return LogData("", item: "  \(title)", indentationLevel: 0, color: .neutral, logLevel: .verbose)
-        }
+        return LogData("", item: title, indentationLevel: 0, color: .neutral, logLevel: .verbose)
     }
 }
