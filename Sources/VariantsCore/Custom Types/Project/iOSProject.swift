@@ -79,7 +79,7 @@ class iOSProject: Project {
     }
 
     private func switchTo(_ variant: iOSVariant, spec: String, configuration: iOSConfiguration) throws {
-        specHelper.logger.logInfo(item: "Found: \(variant.configIdSuffix)")
+        specHelper.logger.logInfo(item: "Found: \(variant.title)")
 
         try configuration.targets
             .map { (key: $0.key, value: $0.value)}
