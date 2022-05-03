@@ -82,7 +82,7 @@ public struct iOSVariant: Variant {
     private static func parseDestination(name: String, destination: String?) throws -> Destination? {
         guard let destinationString = destination else { return nil }
         
-        guard let destination = Destination(rawValue: destinationString) else {
+        guard let destination = Destination(rawValue: destinationString.lowercased()) else {
             throw RuntimeError(
                 """
                 Variant "\(name)" provided an invalid destination. Please choose between \
@@ -164,7 +164,9 @@ struct UnnamediOSVariant: Codable {
         case custom
         case storeDestination = "store_destination"
     }
-    
+}
+
+extension UnnamediOSVariant {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         versionName = try values.decodeOrReadFromEnv(String.self, forKey: .versionName)

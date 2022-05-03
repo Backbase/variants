@@ -16,7 +16,7 @@ class iOSVariantTests: XCTestCase {
     func testiOSVariantInitWithUnnamediOSVariant() {
         let customProperties = [CustomProperty(name: "Name", value: "Value", destination: .project)]
         let unnamedVariant = UnnamediOSVariant(versionName: "1.0", versionNumber: 0, appIcon: "app_icon", idSuffix: "beta", bundleID: nil,
-                                               signing: validSigning, custom: customProperties, storeDestination: .testFlight)
+                                               signing: validSigning, custom: customProperties, storeDestination: "testflight")
         
         func makeiOSVariant() throws -> iOSVariant {
             try iOSVariant(from: unnamedVariant, name: "beta", globalSigning: nil)
@@ -29,7 +29,7 @@ class iOSVariantTests: XCTestCase {
         XCTAssertEqual(variant.versionName, unnamedVariant.versionName)
         XCTAssertEqual(variant.versionNumber, unnamedVariant.versionNumber)
         XCTAssertEqual(variant.appIcon, unnamedVariant.appIcon)
-        XCTAssertEqual(variant.storeDestination, unnamedVariant.storeDestination)
+        XCTAssertEqual(variant.storeDestination, iOSVariant.Destination(rawValue: unnamedVariant.storeDestination!.lowercased())!)
         XCTAssertEqual(variant.custom, unnamedVariant.custom)
         XCTAssertEqual(variant.makeBundleID(for: target), "com.Company.ValidName.beta")
     }
@@ -50,28 +50,28 @@ class iOSVariantTests: XCTestCase {
     // MARK: - Computed properties
     func testGetTitle() {
         let name = "Variant Name"
-        let variant = try! iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let variant = try! iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                       idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         XCTAssertEqual(variant.title, name)
     }
     
     func testGetConfigName() {
         // Default variant
-        let defaultVariant = try! iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let defaultVariant = try! iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                              idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         XCTAssertEqual(defaultVariant.configName, "")
         
         // Any variant
         let name = "Variant Name"
-        let anyVariant = try! iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let anyVariant = try! iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                          idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         XCTAssertEqual(anyVariant.configName, " \(name)")
     }
     
     func testGetDestinationProperty() {
         let targetDestination = iOSVariant.Destination.appCenter
-        let variant = try! iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: targetDestination, custom: nil,
-                                      idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
+        let variant = try! iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: targetDestination.rawValue,
+                                      custom: nil, idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         
         let expectedResult = CustomProperty(name: "STORE_DESTINATION", value: targetDestination.rawValue, destination: .fastlane)
         let result = variant.destinationProperty
@@ -89,7 +89,7 @@ class iOSVariantTests: XCTestCase {
             versionName: "1.0.0",
             versionNumber: 0,
             appIcon: nil,
-            storeDestination: .appStore,
+            storeDestination: "appStore",
             custom: nil,
             idSuffix: "beta",
             bundleID: nil,
@@ -102,7 +102,7 @@ class iOSVariantTests: XCTestCase {
             versionName: "1.0.0",
             versionNumber: 0,
             appIcon: nil,
-            storeDestination: .appStore,
+            storeDestination: "appStore",
             custom: nil,
             idSuffix: nil,
             bundleID: "com.company.customBundle",
@@ -119,7 +119,7 @@ class iOSVariantTests: XCTestCase {
         )
         
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                            idSuffix: "beta", bundleID: "com.company.customBundle", variantSigning: nil, globalSigning: validSigning)
         }
         
@@ -137,7 +137,7 @@ class iOSVariantTests: XCTestCase {
         )
         
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                            idSuffix: nil, bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         }
         
@@ -148,17 +148,17 @@ class iOSVariantTests: XCTestCase {
     
     func testMakeBundleIDForVariant() {
         // ID Suffix provided
-        let idSuffixVariant = try! iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let idSuffixVariant = try! iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                               idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         XCTAssertEqual(idSuffixVariant.makeBundleID(for: target), "com.Company.ValidName.beta")
                 
         // Bundle ID provided
-        let bundleIDVariant = try! iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let bundleIDVariant = try! iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                               idSuffix: nil, bundleID: "com.Overwritten.BundleID", variantSigning: nil, globalSigning: validSigning)
         XCTAssertEqual(bundleIDVariant.makeBundleID(for: target), "com.Overwritten.BundleID")
         
         // Default variant
-        let defaultVariant = try! iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let defaultVariant = try! iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                              idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         XCTAssertEqual(defaultVariant.makeBundleID(for: target), "com.Company.ValidName")
     }
@@ -172,7 +172,7 @@ class iOSVariantTests: XCTestCase {
             versionName: "1.0.0",
             versionNumber: 0,
             appIcon: nil,
-            storeDestination: .appStore,
+            storeDestination: "appStore",
             custom: nil,
             idSuffix: "beta",
             bundleID: nil,
@@ -185,7 +185,7 @@ class iOSVariantTests: XCTestCase {
             versionName: "1.0.0",
             versionNumber: 0,
             appIcon: nil,
-            storeDestination: .appStore,
+            storeDestination: "appStore",
             custom: nil,
             idSuffix: "beta",
             bundleID: nil,
@@ -198,7 +198,7 @@ class iOSVariantTests: XCTestCase {
             versionName: "1.0.0",
             versionNumber: 0,
             appIcon: nil,
-            storeDestination: .appStore,
+            storeDestination: "appStore",
             custom: nil,
             idSuffix: "beta",
             bundleID: nil,
@@ -215,7 +215,7 @@ class iOSVariantTests: XCTestCase {
         )
         
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                            idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: nil)
         }
         
@@ -232,7 +232,7 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NUMBER": "0",
             "V_APP_ICON": "AppIcon"]
         let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil)
-        let variant = try! iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let variant = try! iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                       idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: signing)
 
         XCTAssertEqual(variant.getDefaultValues(for: target), expectedValues)
@@ -246,7 +246,7 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NUMBER": "0",
             "V_APP_ICON": "AppIcon",
             "V_MATCH_PROFILE": "match AppStore com.Company.ValidName.beta"]
-        let variant = try! iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore, custom: nil,
+        let variant = try! iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                       idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
 
         XCTAssertEqual(variant.getDefaultValues(for: target), expectedValues)
@@ -266,7 +266,7 @@ class iOSVariantTests: XCTestCase {
             CustomProperty(name: "Custom name", value: "Custom value", env: false, destination: .project),
             CustomProperty(name: "Custom name 2", value: "Custom value 2", env: true, destination: .project),
             CustomProperty(name: "Custom name 3", value: "Custom value 3", env: false, destination: .fastlane)]
-        let variant = try! iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: .appStore,
+        let variant = try! iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore",
                                       custom: customProperties, idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
 
         XCTAssertEqual(variant.getDefaultValues(for: target), expectedValues)
@@ -276,24 +276,26 @@ class iOSVariantTests: XCTestCase {
     
     // MARK: - iOSVariants.Destination tests
     func testParsingiOSVariantDestintation() {
-        let decoder = JSONDecoder()
+        func makeVariant(destination: String?) throws -> iOSVariant {
+            try iOSVariant(name: "Variant Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: destination,
+                           custom: nil, idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
+        }
         
         // Should not throw if valid destination is provided
-        XCTAssertNoThrow(try decoder.decode(iOSVariant.Destination.self, from: "\"appcenter\"".data(using: .utf8)!))
-        XCTAssertNoThrow(try decoder.decode(iOSVariant.Destination.self, from: "\"appstore\"".data(using: .utf8)!))
-        XCTAssertNoThrow(try decoder.decode(iOSVariant.Destination.self, from: "\"testflight\"".data(using: .utf8)!))
+        XCTAssertNoThrow(try makeVariant(destination: "appcenter"))
+        XCTAssertNoThrow(try makeVariant(destination: "appstore"))
+        XCTAssertNoThrow(try makeVariant(destination: "testflight"))
         
         // Should be case insensitive
-        XCTAssertNoThrow(try decoder.decode(iOSVariant.Destination.self, from: "\"aPpCeNtEr\"".data(using: .utf8)!))
+        XCTAssertNoThrow(try makeVariant(destination: "aPpCeNtEr"))
         
         // Should read correct value from input
-        XCTAssertEqual(try! decoder.decode(iOSVariant.Destination.self, from: "\"appcenter\"".data(using: .utf8)!), iOSVariant.Destination.appCenter)
-        XCTAssertEqual(try! decoder.decode(iOSVariant.Destination.self, from: "\"appstore\"".data(using: .utf8)!), iOSVariant.Destination.appStore)
-        XCTAssertEqual(try! decoder.decode(iOSVariant.Destination.self, from: "\"testflight\"".data(using: .utf8)!), iOSVariant.Destination.testFlight)
+        XCTAssertEqual((try! makeVariant(destination: "appcenter")).storeDestination, iOSVariant.Destination.appCenter)
+        XCTAssertEqual((try! makeVariant(destination: "appstore")).storeDestination, iOSVariant.Destination.appStore)
+        XCTAssertEqual((try! makeVariant(destination: "testflight")).storeDestination, iOSVariant.Destination.testFlight)
         
         // Should throw an error with invalid option provided
-        let invalidData = "\"notAValidOption\"".data(using: .utf8)!
-        XCTAssertThrowsError(try decoder.decode(iOSVariant.Destination.self, from: invalidData))
+        XCTAssertThrowsError(try makeVariant(destination: "notAValidOption"))
     }
                 
     static var allTests = [

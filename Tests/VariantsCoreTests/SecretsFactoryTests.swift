@@ -35,7 +35,7 @@ class SecretsFactoryTests: XCTestCase {
         versionName: "2.3.4",
         versionNumber: 99,
         appIcon: nil,
-        storeDestination: .testFlight,
+        storeDestination: "testFlight",
         custom: [CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project)],
         idSuffix: nil,
         bundleID: nil,
