@@ -5,6 +5,8 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable force_try
+
 import XCTest
 import PathKit
 import ArgumentParser
@@ -69,3 +71,5 @@ class SecretsFactoryTests: XCTestCase {
         ("testUtilsDirectory_pathExists", testUtilsDirectory_pathExists)
     ]
 }
+
+// swiftlint:enable force_try

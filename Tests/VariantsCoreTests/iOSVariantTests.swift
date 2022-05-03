@@ -5,6 +5,12 @@
 //  Created by Gabriel Rodrigues Minucci
 //
 
+// swiftlint:disable type_body_length
+// swiftlint:disable file_length
+// swiftlint:disable line_length
+// swiftlint:disable type_name
+// swiftlint:disable force_try
+
 import XCTest
 @testable import VariantsCore
 

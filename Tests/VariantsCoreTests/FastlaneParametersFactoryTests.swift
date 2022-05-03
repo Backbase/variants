@@ -10,6 +10,7 @@ import PathKit
 @testable import VariantsCore
 
 // swiftlint:disable function_body_length
+// swiftlint:disable force_try
 
 private let parameters = [
     CustomProperty(name: "sample", value: "sample-value", destination: .project),

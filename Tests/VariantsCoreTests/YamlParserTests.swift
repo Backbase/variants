@@ -5,11 +5,11 @@
 //  Created by Arthur Alves
 //
 
-import XCTest
-@testable import VariantsCore
-
 // swiftlint:disable function_body_length
 // swiftlint:disable file_length
+
+import XCTest
+@testable import VariantsCore
 
 class YamlParserTests: XCTestCase {
     

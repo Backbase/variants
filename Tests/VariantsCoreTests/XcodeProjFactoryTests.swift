@@ -5,6 +5,8 @@
 //  Created by Abdoelrhman Eaita on 24/09/2021.
 //
 
+// swiftlint:disable force_try
+
 import XCTest
 import PathKit
 
@@ -53,3 +55,5 @@ class XcodeProjFactoryTests: XCTestCase {
         XCTAssertEqual(sut.applicationData(), [VariantsCore.iOSProjectKey.project: "Test"])
     }
 }
+
+// swiftlint:enable force_try
