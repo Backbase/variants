@@ -106,8 +106,11 @@
 		BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */; };
 		BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */; };
 		BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */; };
+		E333DBE9281C36B0000E8D03 /* KeyedDecodingContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */; };
 		E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502A8256DB16B00484DCE /* String+WriteTests.swift */; };
 		E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */; };
+		E3B48E9928118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */; };
+		E3BE3E742820336700A31096 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BE3E732820336700A31096 /* Errors.swift */; };
 		OBJ_420 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* main.swift */; };
 		OBJ_456 /* VariantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* VariantsTests.swift */; };
 		OBJ_457 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* XCTestManifests.swift */; };
@@ -209,8 +212,11 @@
 		BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGradleScriptFactory.swift; sourceTree = "<group>"; };
 		BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockXCcodeConfigFactory.swift; sourceTree = "<group>"; };
 		BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFastlaneFactory.swift; sourceTree = "<group>"; };
+		E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedDecodingContainerTests.swift; sourceTree = "<group>"; };
 		E39502A8256DB16B00484DCE /* String+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WriteTests.swift"; sourceTree = "<group>"; };
 		E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFactoryTests.swift; sourceTree = "<group>"; };
+		E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+EnvVar.swift"; sourceTree = "<group>"; };
+		E3BE3E732820336700A31096 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		OBJ_17 /* AndroidProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProject.swift; sourceTree = "<group>"; };
 		OBJ_18 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -334,6 +340,7 @@
 				397811F026F4A7C000643F91 /* VerboseLoggerTests.swift */,
 				39C245AE26F8B198008CF1E0 /* PathSafeJoinTests.swift */,
 				39D6D5FF2701E0740064BD41 /* StandardOutputStreamTests.swift */,
+				E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */,
 			);
 			name = VariantsCoreTests;
 			path = Tests/VariantsCoreTests;
@@ -400,6 +407,8 @@
 				OBJ_27 /* String+Write.swift */,
 				8E8A4865255172CF0056F79F /* Path+SafeJoin.swift */,
 				397811F226F4B14A00643F91 /* Date+Log.swift */,
+				E3B48E9828118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift */,
+				E3BE3E732820336700A31096 /* Errors.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -763,6 +772,7 @@
 				8E1B9EA6254AC29A00DD0204 /* StdoutPrinter.swift in Sources */,
 				8E1B9E0C254AC27E00DD0204 /* String+Error.swift in Sources */,
 				8E1B9DF2254AC27900DD0204 /* RuntimeError.swift in Sources */,
+				E3BE3E742820336700A31096 /* Errors.swift in Sources */,
 				3940C5A127074B1A00FEA51D /* LogData.swift in Sources */,
 				8E1BA0C3254BFF6400DD0204 /* Switch.swift in Sources */,
 				8E1B9D9D254AC26F00DD0204 /* Platform.swift in Sources */,
@@ -778,6 +788,7 @@
 				8E1B9E39254AC28F00DD0204 /* SpecHelper.swift in Sources */,
 				7C3D106B27F5E1C300A7FE47 /* List.swift in Sources */,
 				397811F926F4CAC600643F91 /* StandardOutputStream.swift in Sources */,
+				E3B48E9928118DF0002FF8CE /* KeyedDecodingContainer+EnvVar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -786,6 +797,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */,
+				E333DBE9281C36B0000E8D03 /* KeyedDecodingContainerTests.swift in Sources */,
 				8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */,
 				7C460E81281C1E8100BBF15D /* MockProject.swift in Sources */,
 				8E1B9F3C254AC31A00DD0204 /* InitializerTests.swift in Sources */,
@@ -916,7 +928,6 @@
 				INFOPLIST_FILE = Sources/VariantsCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -989,7 +1000,6 @@
 				INFOPLIST_FILE = Sources/VariantsCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
