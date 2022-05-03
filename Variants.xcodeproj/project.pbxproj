@@ -32,6 +32,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2D99DF062820856A004A36E1 /* iOSVariantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D99DF052820856A004A36E1 /* iOSVariantTests.swift */; };
 		3907EE7026FDF9CE00311EE6 /* XcodeProjFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */; };
 		3940C5A127074B1A00FEA51D /* LogData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3940C5A027074B1A00FEA51D /* LogData.swift */; };
 		397811EF26F397A900643F91 /* Data+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397811EE26F397A900643F91 /* Data+WriteTests.swift */; };
@@ -169,6 +170,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D99DF052820856A004A36E1 /* iOSVariantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSVariantTests.swift; sourceTree = "<group>"; };
 		3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjFactoryTests.swift; sourceTree = "<group>"; };
 		3940C5A027074B1A00FEA51D /* LogData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogData.swift; sourceTree = "<group>"; };
 		397811EE26F397A900643F91 /* Data+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+WriteTests.swift"; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 				8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */,
 				BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */,
 				8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */,
+				2D99DF052820856A004A36E1 /* iOSVariantTests.swift */,
 				8E6ABBAF25C03F05006A62FE /* SecretsFactoryTests.swift */,
 				8E1B9C0E254AB51300DD0204 /* Resources */,
 				8E1B9CDD254AC1E700DD0204 /* Info.plist */,
@@ -805,6 +808,7 @@
 				BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */,
 				E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */,
 				397811FB26F4CD3300643F91 /* VerboseLoggerTests.swift in Sources */,
+				2D99DF062820856A004A36E1 /* iOSVariantTests.swift in Sources */,
 				397811EF26F397A900643F91 /* Data+WriteTests.swift in Sources */,
 				39D6D6002701E0740064BD41 /* StandardOutputStreamTests.swift in Sources */,
 				39C245AF26F8B198008CF1E0 /* PathSafeJoinTests.swift in Sources */,

@@ -17,8 +17,7 @@ public struct iOSVariant: Variant {
     let storeDestination: Destination
     let signing: iOSSigning?
     let custom: [CustomProperty]?
-    private let idSuffix: String?
-    private let bundleID: String?
+    private let bundleNamingOption: BundleNamingOption
      
     public var title: String { name }
     
@@ -36,48 +35,28 @@ public struct iOSVariant: Variant {
     }
     
     init(
-        name: String, versionName: String, versionNumber: Int, appIcon: String?, storeDestination: Destination?,
+        name: String, versionName: String, versionNumber: Int, appIcon: String?, storeDestination: String?,
         custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?)
     throws {
-        if let variantSigning = variantSigning, let globalSigning = globalSigning {
-            self.signing = try variantSigning ~ globalSigning
-        } else if let variantSigning = variantSigning {
-            self.signing = try variantSigning ~ nil
-        } else if let globalSigning = globalSigning {
-            self.signing = try globalSigning ~ nil
-        } else {
-            throw RuntimeError(
-                """
-                Variant "\(name)" doesn't contain a 'signing' configuration. \
-                Create a global 'signing' configuration or make sure all variants have this property.
-                """)
-        }
-        
-        let hasIDSuffixAndBundleID = idSuffix != nil && bundleID != nil
-        let hasNoIDSuffixOrBundleID = idSuffix == nil && bundleID == nil
-        guard (!hasIDSuffixAndBundleID && !hasNoIDSuffixOrBundleID) || name == "default" else {
-            throw RuntimeError(
-                """
-                Variant "\(name)" have "id_suffix" and "bundle_id" configured at the same time or no \
-                configuration were provided to any of them. Please provide only one of them per variant.
-                """)
-        }
-        
         self.name = name
         self.versionName = versionName
         self.versionNumber = versionNumber
         self.appIcon = appIcon
-        self.storeDestination = try Self.parseDestination(name: name, destination: unnamediOSVariant.storeDestination) ?? .appStore
+        self.storeDestination = try Self.parseDestination(name: name, destination: storeDestination) ?? .appStore
+        self.signing = try Self.parseSigning(name: name, variantSigning: variantSigning, globalSigning: globalSigning)
         self.custom = custom
-        self.idSuffix = idSuffix
-        self.bundleID = bundleID
+        self.bundleNamingOption = try Self.parseBundleConfiguration(name: name, idSuffix: idSuffix, bundleID: bundleID)
     }
     
     func makeBundleID(for target: iOSTarget) -> String {
-        guard bundleID == nil else { return bundleID! }
-        guard name != "default" else { return target.bundleId }
-        
-        return target.bundleId + (idSuffix ?? "")
+        switch bundleNamingOption {
+        case .idSuffix(let idSuffix):
+            return target.bundleId + "." + idSuffix
+        case .bundleID(let bundleID):
+            return bundleID
+        case .fromTarget:
+            return target.bundleId
+        }
     }
     
     func getDefaultValues(for target: iOSTarget) -> [String: String] {
@@ -113,13 +92,51 @@ public struct iOSVariant: Variant {
         
         return destination
     }
+
+    private static func parseSigning(name: String, variantSigning: iOSSigning?, globalSigning: iOSSigning?) throws -> iOSSigning? {
+        if let variantSigning = variantSigning, let globalSigning = globalSigning {
+            return try variantSigning ~ globalSigning
+        } else if let variantSigning = variantSigning {
+            return try variantSigning ~ nil
+        } else if let globalSigning = globalSigning {
+            return try globalSigning ~ nil
+        } else {
+            throw RuntimeError(
+                """
+                Variant "\(name)" doesn't contain a 'signing' configuration. \
+                Create a global 'signing' configuration or make sure all variants have this property.
+                """)
+        }
+    }
+    
+    private static func parseBundleConfiguration(name: String, idSuffix: String?, bundleID: String?) throws -> BundleNamingOption {
+        guard name != "default" else { return .fromTarget }
+        
+        if let idSuffix = idSuffix, bundleID == nil {
+            return .idSuffix(idSuffix)
+        } else if idSuffix == nil, let bundleID = bundleID {
+            return .bundleID(bundleID)
+        } else {
+            throw RuntimeError(
+                """
+                Variant "\(name)" have "id_suffix" and "bundle_id" configured at the same time or no \
+                configuration were provided to any of them. Please provide only one of them per variant.
+                """)
+        }
+    }
 }
 
 extension iOSVariant {
-    enum Destination: String, Codable, CaseIterable {
+    enum Destination: String, Codable, CaseIterable, Equatable {
         case appCenter = "appcenter"
         case appStore = "appstore"
         case testFlight = "testflight"
+    }
+    
+    enum BundleNamingOption: Codable {
+        case idSuffix(String)
+        case bundleID(String)
+        case fromTarget
     }
 }
 
@@ -154,7 +171,7 @@ struct UnnamediOSVariant: Codable {
         versionNumber = try values.decodeOrReadFromEnv(Int.self, forKey: .versionNumber)
         appIcon = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .appIcon)
         idSuffix = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .idSuffix)
-        bundleId = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .bundleId)
+        bundleID = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .bundleID)
         signing = try values.decodeIfPresent(iOSSigning.self, forKey: .signing)
         custom = try values.decodeIfPresent([CustomProperty].self, forKey: .custom)
         storeDestination = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .storeDestination)
