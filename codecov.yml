@@ -1,11 +1,14 @@
 coverage:
+  ignore:
+    - Sources/VariantsCore/Commands/
   status:
     project:
-      threshold: 5%
       core:
+        threshold: 5%
         paths:
           - Sources/VariantsCore
       tests:
+        threshold: 5%
         paths:
           - Tests/VariantsCoreTests
 
