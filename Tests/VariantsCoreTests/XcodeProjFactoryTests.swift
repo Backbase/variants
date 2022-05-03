@@ -5,8 +5,6 @@
 //  Created by Abdoelrhman Eaita on 24/09/2021.
 //
 
-// swiftlint:disable force_try
-
 import XCTest
 import PathKit
 
@@ -38,9 +36,12 @@ class XcodeProjFactoryTests: XCTestCase {
         let proj = XCConfigFactory(logLevel: true)
         let target = iOSTarget(name: "", app_icon: "", bundleId: "", testTarget: "",
                                source: .init(path: "", info: "", config: ""))
-        let variant = try! iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil,
-                                      storeDestination: nil, custom: nil, idSuffix: "", bundleID: nil, variantSigning: nil,
-                                      globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+        guard let variant = try? iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil,
+                                            storeDestination: nil, custom: nil, idSuffix: "", bundleID: nil, variantSigning: nil,
+                                            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+        else {
+            return XCTFail("Failed to initialize iOSVariant with provided parameters")
+        }
         XCTAssertNoThrow(try proj.createConfig(
             with: ("", target),
             variant: variant,
@@ -55,5 +56,3 @@ class XcodeProjFactoryTests: XCTestCase {
         XCTAssertEqual(sut.applicationData(), [VariantsCore.iOSProjectKey.project: "Test"])
     }
 }
-
-// swiftlint:enable force_try

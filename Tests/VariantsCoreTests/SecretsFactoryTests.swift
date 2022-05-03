@@ -5,8 +5,6 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable force_try
-
 import XCTest
 import PathKit
 import ArgumentParser
@@ -32,7 +30,7 @@ class SecretsFactoryTests: XCTestCase {
     
     """
     
-    let defaultVariant = try! iOSVariant(
+    private let defaultVariant = try? iOSVariant(
         name: "default",
         versionName: "2.3.4",
         versionNumber: 99,
@@ -53,6 +51,7 @@ class SecretsFactoryTests: XCTestCase {
 
         // commented, as comparing file content not working properly (need to find better way to test)
         let secretsFactory = SecretsFactory()
+        guard let defaultVariant = defaultVariant else { return XCTFail("Failed to initialize iOSVariant with provided parameters") }
         secretsFactory.updateSecrets(with: configPath, variant: defaultVariant)
 
         let variantsFilePath = Bundle(for: type(of: self)).path(forResource: "Resources/ios/Variants", ofType: "swift")
@@ -71,5 +70,3 @@ class SecretsFactoryTests: XCTestCase {
         ("testUtilsDirectory_pathExists", testUtilsDirectory_pathExists)
     ]
 }
-
-// swiftlint:enable force_try

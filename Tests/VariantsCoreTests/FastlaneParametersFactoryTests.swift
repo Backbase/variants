@@ -10,7 +10,6 @@ import PathKit
 @testable import VariantsCore
 
 // swiftlint:disable function_body_length
-// swiftlint:disable force_try
 
 private let parameters = [
     CustomProperty(name: "sample", value: "sample-value", destination: .project),
@@ -131,7 +130,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
             }.freeze
             """
         
-        let variant = try! iOSVariant(
+        guard let variant = try? iOSVariant(
             name: "sample-variant",
             versionName: "2.3.4",
             versionNumber: 99,
@@ -142,6 +141,9 @@ class FastlaneParametersFactoryTests: XCTestCase {
             bundleID: nil,
             variantSigning: nil,
             globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+        else {
+            return XCTFail("Failed to initialize iOSVariant with provided parameters")
+        }
         
         guard
             let templateFilePath = Bundle(for: type(of: self))
