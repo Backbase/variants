@@ -174,6 +174,18 @@ android:
 
 It's possible to inject enviromental variables' values into all Android and iOS Variant's properties (like `version_name`, `store_destination`, etc) using `{{ envVars.ENV_VAR_NAME }}` syntax.
 
+#### Configuring BundleID
+
+The BundleID can be generated either by a suffix or fully customized per variant. 
+
+If a `id_suffix` is provided in the variant config the BundleID will be generated based on the target BundleID and the suffix provided. 
+For example: Target BundleID is `com.sample.App` and variant `id_sufix` is `Beta`, the generated BundleID will be `com.sample.App.Beta`
+
+If a `bundle_id` is provided in the variant config, the BundleID will be overwritten by it in the specific variant.
+For example: Target BundleID is `com.sample.App` and variant `bundle_id` is `com.anotherSample.App`, the generated BundleID will be `com.anotherSample.App`
+
+*Note: `id_suffix` and `bundle_id` are not compatible and must not be provided at the same time. Only one of the configurations can be provided per each variant.*
+
 #### Custom configuration
 
 Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane and vice-versa.

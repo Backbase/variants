@@ -130,16 +130,20 @@ class FastlaneParametersFactoryTests: XCTestCase {
             }.freeze
             """
         
-        let variant = iOSVariant(
+        guard let variant = try? iOSVariant(
             name: "sample-variant",
-            app_icon: nil,
-            id_suffix: "sample",
-            version_name: "2.3.4",
-            version_number: 99,
-            signing: nil,
+            versionName: "2.3.4",
+            versionNumber: 99,
+            appIcon: nil,
+            storeDestination: "testFlight",
             custom: nil,
-            store_destination: "TestFlight"
-        )
+            idSuffix: "sample",
+            bundleID: nil,
+            variantSigning: nil,
+            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+        else {
+            return XCTFail("Failed to initialize iOSVariant with provided parameters")
+        }
         
         guard
             let templateFilePath = Bundle(for: type(of: self))

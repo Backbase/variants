@@ -45,7 +45,7 @@ class FastlaneParametersFactory: ParametersFactory {
         // Populate 'fastlane/Matchfile' from template
         var context = [
             "export_method": (variant.signing?.exportMethod ?? .appstore).rawValue,
-            "bundle_id": target.bundleId+variant.configIdSuffix
+            "bundle_id": variant.makeBundleID(for: target)
         ]
         
         if let matchURL = variant.signing?.matchURL {

@@ -30,20 +30,17 @@ class SecretsFactoryTests: XCTestCase {
     
     """
     
-    let defaultVariant = iOSVariant(
+    private let defaultVariant = try? iOSVariant(
         name: "default",
-        app_icon: nil,
-        id_suffix: "",
-        version_name: "2.3.4",
-        version_number: 99,
-        signing: nil,
-        custom: [
-            CustomProperty(name: "PROPERTY_A",
-                           value: "VALUE_A",
-                           destination: .project)
-        ],
-        store_destination: "TestFlight"
-    )
+        versionName: "2.3.4",
+        versionNumber: 99,
+        appIcon: nil,
+        storeDestination: "testFlight",
+        custom: [CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project)],
+        idSuffix: nil,
+        bundleID: nil,
+        variantSigning: nil,
+        globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
     
     func testRender_noSecrets() {
         guard let configFile = Bundle(for: type(of: self))
@@ -54,6 +51,7 @@ class SecretsFactoryTests: XCTestCase {
 
         // commented, as comparing file content not working properly (need to find better way to test)
         let secretsFactory = SecretsFactory()
+        guard let defaultVariant = defaultVariant else { return XCTFail("Failed to initialize iOSVariant with provided parameters") }
         secretsFactory.updateSecrets(with: configPath, variant: defaultVariant)
 
         let variantsFilePath = Bundle(for: type(of: self)).path(forResource: "Resources/ios/Variants", ofType: "swift")
