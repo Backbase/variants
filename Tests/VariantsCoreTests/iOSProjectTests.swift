@@ -78,6 +78,25 @@ class iOSProjectTests: XCTestCase {
         XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 1)
     }
     
+    func testProject_list() {
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let parametersFactoryMock = MockFastlaneFactory()
+        let project = iOSProject(
+            specHelper: specHelperMock,
+            configFactory: xcFactoryMock,
+            parametersFactory: parametersFactoryMock,
+            yamlParser: YamlParser()
+        )
+        
+        guard let specPath = specPath(resourcePath: "Resources/valid_variants", withType: "yml") else {
+            return XCTFail("Couldn't find valid_variants.yml file.")
+        }
+        
+        let variants = try? project.list(spec: specPath.string)
+        XCTAssertNotNil(variants)
+        XCTAssertEqual(variants?.count, 3)
+    }
+    
     func testProject_switch() {
         let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
@@ -143,6 +162,7 @@ class iOSProjectTests: XCTestCase {
     static var allTests = [
         ("testProject_initialize", testProject_initialize),
         ("testProject_setup", testProject_setup),
+        ("testProject_list", testProject_list),
         ("testProject_switch", testProject_switch)
     ]
 }

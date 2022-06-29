@@ -53,7 +53,7 @@ ios:
               destination: fastlane
       #
       # Sample variant, "beta".
-      # Only `name` and `id_suffix` are mandatory fields
+      # Only `version_name` and `version_number` are mandatory fields
       #
       BETA:
         id_suffix: beta

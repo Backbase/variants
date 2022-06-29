@@ -9,7 +9,7 @@ import Foundation
 import PathKit
 
 struct UtilsDirectory {
-    var path: Path
+    let path: Path
 
     // MARK: - Init methods
 
@@ -28,10 +28,6 @@ struct UtilsDirectory {
             throw RuntimeError("Utils folder not found in \(dirs)")
         }
 
-        self.path = path
-    }
-
-    init(path: Path) {
         self.path = path
     }
 }

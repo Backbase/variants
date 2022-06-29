@@ -49,6 +49,14 @@ class iOSProject: Project {
             throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
     }
+    
+    override func list(spec: String) throws -> [Variant] {
+        guard let variants = try loadConfiguration(spec)?.variants else {
+            throw RuntimeError("Unable to load specs '\(spec)' for platform 'ios'")
+        }
+        
+        return variants
+    }
 
     // MARK: - Private
 
@@ -63,7 +71,7 @@ class iOSProject: Project {
         }
         
         do {
-            return try yamlParser.extractConfiguration(from: path, platform: .ios).ios
+            return try yamlParser.extractConfiguration(from: path, platform: .ios, logger: specHelper.logger).ios
         } catch {
             Logger.shared.logError(item: (error as NSError).debugDescription)
             throw RuntimeError("Unable to load your YAML spec")
@@ -71,7 +79,7 @@ class iOSProject: Project {
     }
 
     private func switchTo(_ variant: iOSVariant, spec: String, configuration: iOSConfiguration) throws {
-        Logger.shared.logInfo(item: "Found: \(variant.configIdSuffix)")
+        specHelper.logger.logInfo(item: "Found: \(variant.title)")
 
         try configuration.targets
             .map { (key: $0.key, value: $0.value)}
@@ -79,13 +87,17 @@ class iOSProject: Project {
                 
                 // Create 'variants.xcconfig' with parameters whose
                 // destination are set as '.project'
-                configFactory.createConfig(
-                    with: namedTarget,
-                    variant: variant,
-                    xcodeProj: configuration.xcodeproj,
-                    configPath: Path(spec).absolute().parent(),
-                    addToXcodeProj: false
-                )
+                do {
+                    try configFactory.createConfig(
+                        with: namedTarget,
+                        variant: variant,
+                        xcodeProj: configuration.xcodeproj,
+                        configPath: Path(spec).absolute().parent(),
+                        addToXcodeProj: false
+                    )
+                } catch {
+                    Logger.shared.logFatal(item: error.localizedDescription)
+                }
                 
                 var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
                 customProperties.append(variant.destinationProperty)
@@ -111,11 +123,15 @@ class iOSProject: Project {
                 // Create 'variants.xcconfig' with parameters whose
                 // destination are set as '.project'
                 let configPath = Path(spec).absolute().parent()
-                configFactory.createConfig(with: target,
-                                           variant: defaultVariant,
-                                           xcodeProj: configuration.xcodeproj,
-                                           configPath: configPath,
-                                           addToXcodeProj: true)
+                do {
+                    try configFactory.createConfig(with: target,
+                                                   variant: defaultVariant,
+                                                   xcodeProj: configuration.xcodeproj,
+                                                   configPath: configPath,
+                                                   addToXcodeProj: true)
+                } catch {
+                    Logger.shared.logFatal(item: error.localizedDescription)
+                }
             }
     }
 

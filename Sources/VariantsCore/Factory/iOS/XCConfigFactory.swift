@@ -19,7 +19,7 @@ protocol XCFactory {
                       variant: iOSVariant,
                       xcodeProj: String?,
                       configPath: Path,
-                      addToXcodeProj: Bool?)
+                      addToXcodeProj: Bool?) throws
 }
 
 class XCConfigFactory: XCFactory {
@@ -68,13 +68,12 @@ class XCConfigFactory: XCFactory {
                       variant: iOSVariant,
                       xcodeProj: String?,
                       configPath: Path,
-                      addToXcodeProj: Bool? = true) {
+                      addToXcodeProj: Bool? = true) throws {
         
         let logger = Logger.shared
         guard let xcodeProj = xcodeProj
         else {
-            logger.logFatal("❌ ", item: "Attempting to create \(xcconfigFileName) - Path to Xcode Project not found")
-            return
+            throw RuntimeError("Attempting to create \(xcconfigFileName) - Path to Xcode Project not found")
         }
         let xcodeProjPath = Path(xcodeProj)
         
@@ -83,8 +82,7 @@ class XCConfigFactory: XCFactory {
         logger.logInfo("Checking if \(xcconfigFileName) exists", item: "")
         let xcodeConfigFolder = Path("\(configPath)/\(configString)")
         guard xcodeConfigFolder.isDirectory else {
-            logger.logFatal("❌ ", item: "'\(xcodeConfigFolder.absolute().description)' doesn't exist or isn't a folder")
-            return
+            throw RuntimeError("'\(xcodeConfigFolder.absolute().description)' doesn't exist or isn't a folder")
         }
 
         let xcodeConfigPath = Path("\(xcodeConfigFolder.absolute().description)/Variants/\(xcconfigFileName)")

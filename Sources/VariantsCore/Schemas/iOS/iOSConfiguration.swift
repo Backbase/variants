@@ -9,57 +9,33 @@ import Foundation
 
 // swiftlint:disable type_name
 
+internal extension CodingUserInfoKey {
+    static let bundleID = CodingUserInfoKey(rawValue: "bundle_id")!
+}
+
 public struct iOSConfiguration: Codable {
     let xcodeproj: String
     let targets: [String: iOSTarget]
     let variants: [iOSVariant]
-    private let signing: iOSSigning?
     let custom: [CustomProperty]?
-    
+    private let signing: iOSSigning?
+        
     var pbxproj: String {
         return xcodeproj+"/project.pbxproj"
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let variants = try container.decode([String: UnnamediOSVariant].self, forKey: .variants)
-        let globalSigning = try? container.decode(iOSSigning.self, forKey: .signing)
-        
-        guard globalSigning != nil || variants.map(\.value).filter({ $0.signing == nil }).isEmpty else {
-            throw RuntimeError(
-                """
-                At least one variant doesn't contain a 'signing' configuration.
-                Create a global 'signing' configuration or make sure all variants have this property.
-                """)
-        }
-        
-        var definiteVariants: [iOSVariant] = []
-        
-        try variants.forEach({ (name, variant) in
-            var signing = globalSigning
-            
-            if let variantSigning = variant.signing {
-                signing = try variantSigning ~ globalSigning
-            } else if let nonOptionalSigning = signing {
-                signing = try nonOptionalSigning ~ nil
-            }
-            
-            definiteVariants.append(
-                iOSVariant(name: name,
-                           app_icon: variant.app_icon,
-                           id_suffix: variant.id_suffix,
-                           version_name: variant.version_name,
-                           version_number: variant.version_number,
-                           signing: signing,
-                           custom: variant.custom,
-                           store_destination: variant.store_destination)
-            )
-        })
         
         self.xcodeproj = try container.decode(String.self, forKey: .xcodeproj)
         self.targets = try container.decode([String: iOSTarget].self, forKey: .targets)
-        self.variants = definiteVariants
-        self.signing = nil
         self.custom = try? container.decode([CustomProperty].self, forKey: .custom)
+        
+        let globalSigning = try container.decodeIfPresent(iOSSigning.self, forKey: .signing)
+        let variantsDict = try container.decode([String: UnnamediOSVariant].self, forKey: .variants)
+        
+        self.signing = globalSigning
+        self.variants = try variantsDict
+            .map { try iOSVariant(from: $1, name: $0, globalSigning: globalSigning) }
     }
 }
