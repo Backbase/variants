@@ -12,10 +12,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-12]
     steps:
     - uses: actions/checkout@v2
-    - uses: backbase/variants@fix/action
+    - uses: backbase/variants@action-1.1.0
       with:
         spec: variants.yml
         platform: ios
