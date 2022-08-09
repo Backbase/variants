@@ -1,0 +1,23 @@
+name: Test Variants Action
+
+on:
+  push:
+    branches: [ test-action ]
+env:
+  DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
+
+jobs:
+  switch:
+    name: Attempt to switch variants on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: backbase/variants@fix/action
+      with:
+        spec: variants.yml
+        platform: ios
+        variant: beta
+        verbose: true
