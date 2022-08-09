@@ -35,7 +35,7 @@ runs:
       shell: bash
       run: |
         echo "Repository: ${{ github.repository }}"
-        cd ${{ github.action_path }}
+	brew install https://github.com/Backbase/variants/releases/download/1.1.0/variants-1.1.0.monterey.bottle.tar.gz
         make ci
         cd ${{ env.project_path }}
         

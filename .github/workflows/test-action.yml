@@ -15,7 +15,7 @@ jobs:
         os: [macos-12]
     steps:
     - uses: actions/checkout@v2
-    - uses: backbase/variants@action-1.1.0
+    - uses: backbase/variants@action-bottled-1.1.0
       with:
         spec: variants.yml
         platform: ios
