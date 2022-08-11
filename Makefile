@@ -35,9 +35,9 @@ variants: $(SOURCES)
 	@swift build \
 		-c release \
 		--arch arm64 \
-		--arch x86_64 \
 		--disable-sandbox \
-		--build-path "$(BUILDDIR)"
+		--build-path "$(BUILDDIR)" \
+		--verbose
 
 .PHONY: install
 install: variants
