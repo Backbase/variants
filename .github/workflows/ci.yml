@@ -12,16 +12,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest]
         swift: ["5.5"]
     steps:
     - uses: actions/checkout@v2
     - uses: fwal/setup-swift@v1
-      if: matrix.os != 'macos-latest'
       with:
         swift-version: ${{ matrix.swift }}
     - uses: ruby/setup-ruby@v1
-      if: matrix.os != 'macos-latest'
       with:
         ruby-version: 2.7 # Not needed with a .ruby-version file
         # bundler-cache: true # runs 'bundle install' and caches installed gems automatically
@@ -30,21 +28,19 @@ jobs:
       run: swift test -v
 
     - name: Make install
+
       run: make install
 
     - name: Test VariantsCore
-      if: matrix.os == 'macos-latest' # xcode available on macos only
       run: xcodebuild test -scheme VariantsCore
 
     - name: Bundle install
       run: bundle install
 
     - name: Code coverage report
-      if: matrix.os == 'macos-latest' # on macos only
       run: bundle exec slather coverage
 
     - uses: codecov/codecov-action@v1
-      if: matrix.os == 'macos-latest' # on macos only
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./test-reports/cobertura.xml
