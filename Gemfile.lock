@@ -22,7 +22,7 @@ GEM
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    racc (1.6.0)
+    racc (1.5.2)
     rexml (3.2.5)
     slather (2.7.2)
       CFPropertyList (>= 2.2, < 4)
