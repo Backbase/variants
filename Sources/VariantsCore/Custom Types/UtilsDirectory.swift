@@ -19,11 +19,22 @@ struct UtilsDirectory {
             "./utils"
         ]
     ) throws {
-        let firstDirectory = directories
-            .map(Path.init(stringLiteral:))
-            .first(where: \.exists)
-
-        guard let path = firstDirectory else {
+        var utilsDirectories = directories.map(Path.init(stringLiteral:))
+        
+        if let variantsInstallationPath = try? Bash(
+            "which",
+            arguments: "variants"
+        ).capture() {
+            utilsDirectories.append(
+                Path(variantsInstallationPath.replacingOccurrences(
+                    of: "/bin/variants",
+                    with: "/lib/variants/utils"
+                ))
+            )
+        }
+        
+        let firstFoundDirectory = utilsDirectories.first(where: \.exists)
+        guard let path = firstFoundDirectory else {
             let dirs = directories.joined(separator: " or ")
             throw RuntimeError("Utils folder not found in \(dirs)")
         }
