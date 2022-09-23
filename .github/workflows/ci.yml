@@ -20,10 +20,6 @@ jobs:
       with:
         swift-version: ${{ matrix.swift }}
 
-    - uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
     - name: Test CLI Package
       run: swift test -v
 
@@ -33,6 +29,18 @@ jobs:
 
     - name: Test VariantsCore
       run: xcodebuild test -scheme VariantsCore
+
+    - name: Bundle install
+      run: |
+        bundle update
+        bundle install --full-index
+
+    - name: If bundle install fails
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: logs
+        path: 'vendor/bundle/ruby/2.7.0/extensions/x86_64-darwin-19/2.7.0/racc-1.6.0/mkmf.log'
 
     - name: Code coverage report
       run: bundle exec slather coverage
