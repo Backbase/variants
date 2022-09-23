@@ -34,9 +34,6 @@ jobs:
     - name: Test VariantsCore
       run: xcodebuild test -scheme VariantsCore
 
-    - name: Bundle install
-      run: bundle install
-
     - name: Code coverage report
       run: bundle exec slather coverage
 
