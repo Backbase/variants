@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12]
+        os: [macos-latest]
         swift: ["5.5"]
     steps:
     - uses: actions/checkout@v2
