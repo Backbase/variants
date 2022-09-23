@@ -21,20 +21,9 @@ jobs:
         swift-version: ${{ matrix.swift }}
 
     - name: Bundle install
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: "2.7.6"
-        bundler-cache: true
-    - run: |
-        bundle update
-        bundle install --full-index
-
-    - name: If bundle install fails
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: logs
-        path: '/Users/runner/work/variants/variants/vendor/bundle/ruby/2.7.0/extensions/x86_64-darwin-19/2.7.0/racc-1.6.0/mkmf.log'
+      run: |
+        bundle update nokogiri
+        bundle install
 
     - name: Test CLI Package
       run: swift test -v
