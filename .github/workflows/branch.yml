@@ -3,7 +3,7 @@ name: branch
 on:
   pull_request:
     types: [ opened, synchronize ]
-    branches: [ develop, main ]
+    branches: [ develop ]
 env:
   DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
 
@@ -21,9 +21,10 @@ jobs:
     - uses: fwal/setup-swift@v1
       with:
         swift-version: ${{ matrix.swift }}
+
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7 # Not needed with a .ruby-version file
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
     - name: Test CLI Package
       run: swift test --enable-test-discovery
