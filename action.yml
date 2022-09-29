@@ -36,7 +36,7 @@ runs:
       run: |
         echo "Repository: ${{ github.repository }}"
         cd ${{ github.action_path }}
-        make ci
+        brew install variants
         cd ${{ env.project_path }}
         
         if [[ ${{ inputs.platform }} == default ]];
