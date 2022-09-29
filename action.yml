@@ -35,35 +35,35 @@ runs:
       run: |
         echo "project_path=$(pwd)" >> $GITHUB_ENV
           
-    - name: Install variants
-      shell: bash
-      run: |
-        if [[ "${{ inputs.version }}" == "latest" ]];
-        then
-          echo "Installing variants"
-          brew install backbase/m/variants
-          echo "INSTALLATION_STATUS=$?" >> $GITHUB_ENV
-        else
-          if ! [[ "${{ inputs.version }}" =~ [[:digit:]]\.[[:digit:]]\.[[:digit:]] ]];
-          then
-            echo "INSTALLATION_STATUS=❌ 'version' should match the pattern 'x.y.z'" >> $GITHUB_ENV
-          else
-            version_in_formula=`brew info backbase/m/variants | sed -n 's/.*\(stable [[:digit:]]\.[[:digit:]]\.[[:digit:]]\).*/\1/p' | cut -d ' ' -f2`
-            inputVersion=`echo "${{ inputs.version }}" | sed 's/\.//g'`
-            versionInFormula=`echo "$version_in_formula" | sed 's/\.//g'`
-            echo "input version: $inputVersion"
-            echo "version in formula: $versionInFormula"
-            if [[ $inputVersion -ge $versionInFormula ]];
-            then
-              echo "Installing variants $version_in_formula"
-              brew install backbase/m/variants
-            else
-              echo "Installing variants ${{ inputs.version }}"
-              brew install "backbase/m/variants@${{ inputs.version }}"
-            fi
-            echo "INSTALLATION_STATUS=$?" >> $GITHUB_ENV
-          fi
-        fi
+    # - name: Install variants
+    #   shell: bash
+    #   run: |
+    #     if [[ "${{ inputs.version }}" == "latest" ]];
+    #     then
+    #       echo "Installing variants"
+    #       brew install backbase/m/variants
+    #       echo "INSTALLATION_STATUS=$?" >> $GITHUB_ENV
+    #     else
+    #       if ! [[ "${{ inputs.version }}" =~ [[:digit:]]\.[[:digit:]]\.[[:digit:]] ]];
+    #       then
+    #         echo "INSTALLATION_STATUS=❌ 'version' should match the pattern 'x.y.z'" >> $GITHUB_ENV
+    #       else
+    #         version_in_formula=`brew info backbase/m/variants | sed -n 's/.*\(stable [[:digit:]]\.[[:digit:]]\.[[:digit:]]\).*/\1/p' | cut -d ' ' -f2`
+    #         inputVersion=`echo "${{ inputs.version }}" | sed 's/\.//g'`
+    #         versionInFormula=`echo "$version_in_formula" | sed 's/\.//g'`
+    #         echo "input version: $inputVersion"
+    #         echo "version in formula: $versionInFormula"
+    #         if [[ $inputVersion -ge $versionInFormula ]];
+    #         then
+    #           echo "Installing variants $version_in_formula"
+    #           brew install backbase/m/variants
+    #         else
+    #           echo "Installing variants ${{ inputs.version }}"
+    #           brew install "backbase/m/variants@${{ inputs.version }}"
+    #         fi
+    #         echo "INSTALLATION_STATUS=$?" >> $GITHUB_ENV
+    #       fi
+    #     fi
 
     # - name: Handle input failure
     #   shell: bash
