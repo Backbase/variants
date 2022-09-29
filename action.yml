@@ -65,52 +65,52 @@ runs:
           fi
         fi
 
-    - name: Handle input failure
-      shell: bash
-      if: ${{ env.INSTALLATION_STATUS != '0' && env.INSTALLATION_STATUS != '1' }}
-      run: |
-        echo "${{ env.INSTALLATION_STATUS }}" 1>&2;
-        exit 1
+    # - name: Handle input failure
+    #   shell: bash
+    #   if: ${{ env.INSTALLATION_STATUS != '0' && env.INSTALLATION_STATUS != '1' }}
+    #   run: |
+    #     echo "${{ env.INSTALLATION_STATUS }}" 1>&2;
+    #     exit 1
 
-    - name: Handle installation failure
-      shell: bash
-      if: ${{ env.INSTALLATION_STATUS == '1' }}
-      run: |
-        echo "Failed to install variants. Please ensure the version specified exists." 1>&2;
-        exit 1
+    # - name: Handle installation failure
+    #   shell: bash
+    #   if: ${{ env.INSTALLATION_STATUS == '1' }}
+    #   run: |
+    #     echo "Failed to install variants. Please ensure the version specified exists." 1>&2;
+    #     exit 1
 
-    - name: Variants Switch
-      shell: bash
-      if: ${{ env.INSTALLATION_STATUS == '0' }}
-      run: |
-        echo "Repository: ${{ github.repository }}"
-        cd ${{ env.project_path }}
+    # - name: Variants Switch
+    #   shell: bash
+    #   if: ${{ env.INSTALLATION_STATUS == '0' }}
+    #   run: |
+    #     echo "Repository: ${{ github.repository }}"
+    #     cd ${{ env.project_path }}
         
-        if [[ ${{ inputs.platform }} == default ]];
-        then
-            if ${{ inputs.verbose }}
-            then
-                variants switch \
-                --spec ${{ inputs.spec }} \
-                --variant ${{ inputs.variant }} \
-                --verbose
-            else
-                variants switch \
-                --spec ${{ inputs.spec }} \
-                --variant ${{ inputs.variant }}
-            fi
-        else
-            if ${{ inputs.verbose }}
-            then
-                variants switch \
-                --spec ${{ inputs.spec }} \
-                --variant ${{ inputs.variant }} \
-                --platform ${{ inputs.platform }} \
-                --verbose
-            else
-                variants switch \
-                --spec ${{ inputs.spec }} \
-                --variant ${{ inputs.variant }} \
-                --platform ${{ inputs.platform }}
-            fi
-        fi
+    #     if [[ ${{ inputs.platform }} == default ]];
+    #     then
+    #         if ${{ inputs.verbose }}
+    #         then
+    #             variants switch \
+    #             --spec ${{ inputs.spec }} \
+    #             --variant ${{ inputs.variant }} \
+    #             --verbose
+    #         else
+    #             variants switch \
+    #             --spec ${{ inputs.spec }} \
+    #             --variant ${{ inputs.variant }}
+    #         fi
+    #     else
+    #         if ${{ inputs.verbose }}
+    #         then
+    #             variants switch \
+    #             --spec ${{ inputs.spec }} \
+    #             --variant ${{ inputs.variant }} \
+    #             --platform ${{ inputs.platform }} \
+    #             --verbose
+    #         else
+    #             variants switch \
+    #             --spec ${{ inputs.spec }} \
+    #             --variant ${{ inputs.variant }} \
+    #             --platform ${{ inputs.platform }}
+    #         fi
+    #     fi
