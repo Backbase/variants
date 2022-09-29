@@ -42,12 +42,13 @@ runs:
         then
           echo "Installing variants"
           brew install backbase/m/variants
-          echo "INSTALLATION_STATUS=$?" >> $GITHUB_ENV
+          [[ "$?" == "1" ]] && echo "❌ Failed to install variants. Please ensure the version specified exists." 1>&2 && exit 1
         else
           if ! [[ "${{ inputs.version }}" =~ [[:digit:]]\.[[:digit:]]\.[[:digit:]] ]];
           then
-            echo "INSTALLATION_STATUS=❌ 'version' should match the pattern 'x.y.z'" >> $GITHUB_ENV
+            echo "❌ 'version' should match the pattern 'x.y.z'" 1>&2 && exit 1
           else
+            brew tap backbase/m
             version_in_formula=`brew info backbase/m/variants | sed -n 's/.*\(stable [[:digit:]]\.[[:digit:]]\.[[:digit:]]\).*/\1/p' | cut -d ' ' -f2`
             if [[ "${{ inputs.version }}" > "$version_in_formula" ]] || [[ "${{ inputs.version }}" == "$version_in_formula" ]];
             then
@@ -57,23 +58,9 @@ runs:
               echo "Installing variants ${{ inputs.version }}"
               brew install "backbase/m/variants@${{ inputs.version }}"
             fi
-            echo "INSTALLATION_STATUS=$?" >> $GITHUB_ENV
+            [[ "$?" == "1" ]] && echo "❌ Failed to install variants. Please ensure the version specified exists." 1>&2 && exit 1
           fi
         fi
-
-    # - name: Handle input failure
-    #   shell: bash
-    #   if: ${{ env.INSTALLATION_STATUS != '0' && env.INSTALLATION_STATUS != '1' }}
-    #   run: |
-    #     echo "${{ env.INSTALLATION_STATUS }}" 1>&2;
-    #     exit 1
-
-    # - name: Handle installation failure
-    #   shell: bash
-    #   if: ${{ env.INSTALLATION_STATUS == '1' }}
-    #   run: |
-    #     echo "Failed to install variants. Please ensure the version specified exists." 1>&2;
-    #     exit 1
 
     # - name: Variants Switch
     #   shell: bash
