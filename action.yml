@@ -57,7 +57,6 @@ runs:
             fi
           fi
         fi
-        # [[ $(which variants) == "variants not found" ]] && echo "❌ Failed to install variants. Please ensure the version specified exists." 1>&2 && exit 1
 
     - name: Variants Switch
       shell: bash
