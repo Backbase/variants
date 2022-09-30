@@ -23,7 +23,11 @@ jobs:
         swift-version: ${{ matrix.swift }}
 
     - name: Bundle install
-      run: bundle install
+      run: |
+        brew install rbenv
+        rbenv install 2.7.6
+        rbenv local 2.7.6
+        bundle install
 
     - name: Make install
       run: make install
@@ -37,10 +41,3 @@ jobs:
         file: ./test-reports/cobertura.xml
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
-
-    - name: Archive racc-1.6.0/gem_make.out
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: bottles
-        path: '/usr/local/lib/ruby/gems/3.0.0/extensions/x86_64-darwin-21/3.0.0/racc-1.6.0/gem_make.out'
