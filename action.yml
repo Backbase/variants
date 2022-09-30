@@ -40,9 +40,7 @@ runs:
       run: |
         if [[ "${{ inputs.version }}" == "latest" ]];
         then
-          echo "Installing variants"
           brew install backbase/m/variants
-          [[ "$?" == "1" ]] && echo "❌ Failed to install variants. Please ensure the version specified exists." 1>&2 && exit 1
         else
           if ! [[ "${{ inputs.version }}" =~ [[:digit:]]\.[[:digit:]]\.[[:digit:]] ]];
           then
@@ -55,45 +53,43 @@ runs:
               echo "Installing variants $version_in_formula from main formula"
               brew install backbase/m/variants
             else
-              echo "Installing variants ${{ inputs.version }}"
               brew install "backbase/m/variants@${{ inputs.version }}"
             fi
-            [[ "$?" == "1" ]] && echo "❌ Failed to install variants. Please ensure the version specified exists." 1>&2 && exit 1
           fi
         fi
+        # [[ $(which variants) == "variants not found" ]] && echo "❌ Failed to install variants. Please ensure the version specified exists." 1>&2 && exit 1
 
-    # - name: Variants Switch
-    #   shell: bash
-    #   if: ${{ env.INSTALLATION_STATUS == '0' }}
-    #   run: |
-    #     echo "Repository: ${{ github.repository }}"
-    #     cd ${{ env.project_path }}
+    - name: Variants Switch
+      shell: bash
+      run: |
+        echo "Repository: ${{ github.repository }}"
+        cd ${{ env.project_path }}
         
-    #     if [[ ${{ inputs.platform }} == default ]];
-    #     then
-    #         if ${{ inputs.verbose }}
-    #         then
-    #             variants switch \
-    #             --spec ${{ inputs.spec }} \
-    #             --variant ${{ inputs.variant }} \
-    #             --verbose
-    #         else
-    #             variants switch \
-    #             --spec ${{ inputs.spec }} \
-    #             --variant ${{ inputs.variant }}
-    #         fi
-    #     else
-    #         if ${{ inputs.verbose }}
-    #         then
-    #             variants switch \
-    #             --spec ${{ inputs.spec }} \
-    #             --variant ${{ inputs.variant }} \
-    #             --platform ${{ inputs.platform }} \
-    #             --verbose
-    #         else
-    #             variants switch \
-    #             --spec ${{ inputs.spec }} \
-    #             --variant ${{ inputs.variant }} \
-    #             --platform ${{ inputs.platform }}
-    #         fi
-    #     fi
+        if [[ ${{ inputs.platform }} == default ]];
+        then
+            if ${{ inputs.verbose }}
+            then
+                variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --verbose
+            else
+                variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }}
+            fi
+        else
+            if ${{ inputs.verbose }}
+            then
+                variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }} \
+                --verbose
+            else
+                variants switch \
+                --spec ${{ inputs.spec }} \
+                --variant ${{ inputs.variant }} \
+                --platform ${{ inputs.platform }}
+            fi
+        fi
