@@ -6,6 +6,10 @@ branding:
   color: "blue"
   
 inputs:
+  version:
+    description: "Variant's version."
+    required: true
+    default: 'latest'
   spec:
     description: 'Specify the path to a Variants YAML configuration spec. Default is "variants.yml".'
     required: false
@@ -18,10 +22,6 @@ inputs:
     description: 'Variant you would like to switch to.'
     required: true
     default: 'default'
-  version:
-    description: "Variant's version."
-    required: true
-    default: 'latest'
   verbose:
     description: 'Log tech details for nerds.'
     required: true
