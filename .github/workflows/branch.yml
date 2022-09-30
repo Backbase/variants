@@ -22,10 +22,6 @@ jobs:
       with:
         swift-version: ${{ matrix.swift }}
 
-    - name: Bundle install
-      run: |
-        bundle install
-
     - name: Make install
       run: make install
       
