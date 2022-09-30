@@ -24,9 +24,6 @@ jobs:
 
     - name: Bundle install
       run: |
-        brew install rbenv
-        rbenv install 2.7.6
-        rbenv local 2.7.6
         bundle install
 
     - name: Make install
