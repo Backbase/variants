@@ -22,22 +22,14 @@ jobs:
       with:
         swift-version: ${{ matrix.swift }}
 
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7.6
-        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
-    - name: Test CLI Package
-      run: swift test --enable-test-discovery
+    - name: Bundle install
+      run: bundle install
 
     - name: Make install
       run: make install
       
-    - name: Test VariantsCore
-      run: xcodebuild test -scheme VariantsCore
-
-    - name: Code coverage report
-      run: bundle exec slather coverage
+    - name: Full validation (lint, tests, coverage)
+      run: make validation
 
     - uses: codecov/codecov-action@v1
       with:
