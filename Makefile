@@ -21,7 +21,6 @@ utilsdir = utils
 REPODIR = $(shell pwd)
 BUILDDIR = $(REPODIR)/.build
 PRODUCTDIR = $(BUILDDIR)/apple/Products/Release
-CIBUILDDIR = $(REPODIR)/.ci-build
 SOURCES = $(wildcard $(srcdir)/**/*.swift)
 TEMPLATES = $(templatesdir)
 UTILS = $(utilsdir)
@@ -46,18 +45,6 @@ install: variants
 	@mkdir -p $(libdir)/variants
 	@cp -R "$(TEMPLATES)" $(libdir)/variants/
 	@cp -R "$(UTILS)" $(libdir)/variants/
-
-.PHONY: ci
-ci:
-	@install -d $(bindir) $(libdir)
-	@install "$(CIBUILDDIR)/release/variants" $(bindir)
-	@mkdir -p $(libdir)/variants
-	@cp -R "$(TEMPLATES)" $(libdir)/variants/
-	@cp -R "$(UTILS)" $(libdir)/variants/
-
-.PHONY: pre-ci
-pre-ci: variants
-	@cp "$(PRODUCTDIR)/variants" "$(CIBUILDDIR)/release/variants"
 
 .PHONY: uninstall
 uninstall:
