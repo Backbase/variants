@@ -6,6 +6,10 @@ branding:
   color: "blue"
   
 inputs:
+  version:
+    description: "Variant's version."
+    required: true
+    default: 'latest'
   spec:
     description: 'Specify the path to a Variants YAML configuration spec. Default is "variants.yml".'
     required: false
@@ -31,12 +35,33 @@ runs:
       run: |
         echo "project_path=$(pwd)" >> $GITHUB_ENV
           
+    - name: Install variants
+      shell: bash
+      run: |
+        if [[ "${{ inputs.version }}" == "latest" ]];
+        then
+          brew install backbase/m/variants
+        else
+          if ! [[ "${{ inputs.version }}" =~ [[:digit:]]\.[[:digit:]]\.[[:digit:]] ]];
+          then
+            echo "❌ 'version' should match the pattern 'x.y.z'" 1>&2 && exit 1
+          else
+            brew tap backbase/m
+            version_in_formula=`brew info backbase/m/variants | sed -n 's/.*\(stable [[:digit:]]\.[[:digit:]]\.[[:digit:]]\).*/\1/p' | cut -d ' ' -f2`
+            if [[ "${{ inputs.version }}" > "$version_in_formula" ]] || [[ "${{ inputs.version }}" == "$version_in_formula" ]];
+            then
+              echo "Installing variants $version_in_formula from main formula"
+              brew install backbase/m/variants
+            else
+              brew install "backbase/m/variants@${{ inputs.version }}"
+            fi
+          fi
+        fi
+
     - name: Variants Switch
       shell: bash
       run: |
         echo "Repository: ${{ github.repository }}"
-        cd ${{ github.action_path }}
-        make ci
         cd ${{ env.project_path }}
         
         if [[ ${{ inputs.platform }} == default ]];
