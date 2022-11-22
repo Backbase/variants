@@ -58,6 +58,24 @@ class SpecHelperTests: XCTestCase {
         }
     }
     
+    func testGenerateSpec_notExistingPath() {
+        let basePath = Path("idontexist")
+        let specHelper = iOSSpecHelper(
+            logger: Logger.shared,
+            templatePath: incorrectTemplatePath,
+            userInputSource: interactiveShell,
+            userInput: { "yes" }
+        )
+        
+        XCTAssertThrowsError(
+            try specHelper.generate(from: basePath),
+            "Attempt to use a not existing path"
+        ) { error in
+            XCTAssertTrue(error is RuntimeError)
+            XCTAssertEqual((error as! RuntimeError).description, "❌ Couldn't find template path")
+        }
+    }
+    
     func testGenerateSpec_correctPath() {
         if let basePath = basePath() {
             let variantsPath = Path("./variants.yml")
@@ -85,6 +103,7 @@ class SpecHelperTests: XCTestCase {
     static var allTests = [
         ("testGenerateSpec_basePathShouldNotBeNil", testGenerateSpec_basePathShouldNotBeNil),
         ("testGenerateSpec_incorrectPath", testGenerateSpec_incorrectPath),
-        ("testGenerateSpec_correctPath", testGenerateSpec_correctPath)
+        ("testGenerateSpec_correctPath", testGenerateSpec_correctPath),
+        ("testGenerateSpec_notExistingPath", testGenerateSpec_notExistingPath)
     ]
 }
