@@ -1,8 +1,8 @@
 //
-//  UserInputTests.swift
-//  VariantsCoreTests
+//  Variants
 //
-//  Created by Roman Huti on 17.11.2022.
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
+//  Created by Roman Huti
 //
 
 import XCTest
