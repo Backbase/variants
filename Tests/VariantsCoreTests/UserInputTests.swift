@@ -33,7 +33,7 @@ final class UserInputTests: XCTestCase {
                 input,
                 with: "'variants.yml' spec already exists! Should we override it?",
                 suggestion: "[Y]es / [N]o",
-                validation: { value -> Bool in
+                validation: { _ -> Bool in
                     executionCounter += 1
                     return executionCounter > 2
                 }

@@ -168,7 +168,7 @@ class iOSProjectTests: XCTestCase {
         
         XCTAssertThrowsError(try project.setup(spec: specPath.string, skipFastlane: true, verbose: true), "") { error in
             XCTAssertTrue(error is RuntimeError)
-            XCTAssertEqual((error as! RuntimeError).description, """
+            XCTAssertEqual((error as? RuntimeError)?.description, """
             ❌ Unable to load spec '\(specPath.string)'
             """)
         }

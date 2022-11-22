@@ -72,7 +72,7 @@ class SpecHelperTests: XCTestCase {
             "Attempt to use a not existing path"
         ) { error in
             XCTAssertTrue(error is RuntimeError)
-            XCTAssertEqual((error as! RuntimeError).description, "❌ Couldn't find template path")
+            XCTAssertEqual((error as? RuntimeError)?.description, "❌ Couldn't find template path")
         }
     }
     
