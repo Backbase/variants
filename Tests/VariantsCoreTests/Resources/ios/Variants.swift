@@ -12,5 +12,4 @@ public struct Variants {
         }
         return infoDictionary
     }()
-    // new comment
 }
