@@ -9,8 +9,6 @@ import XCTest
 import PathKit
 @testable import VariantsCore
 
-// swiftlint:disable function_body_length
-
 private let parameters = [
     CustomProperty(name: "sample", value: "sample-value", destination: .project),
     CustomProperty(name: "sample-2", value: "sample-2-value", destination: .fastlane),
@@ -111,7 +109,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
         XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: path))
         XCTAssertEqual(try path.read(), correctOutput)
     }
-    
+    // swiftlint:disable function_body_length
     func testFileWrite_appendingStore() {
         let expectedOutput =
             """
@@ -172,7 +170,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
             XCTFail("'Try' should not throw - "+error.localizedDescription)
         }
     }
-    
+    // swiftlint:enable function_body_length
     private func context(for parameters: [CustomProperty]) -> [String: Any] {
         let fastlaneParameters = parameters.literal()
         let fastlaneEnvVars = parameters.envVars()
@@ -185,7 +183,6 @@ class FastlaneParametersFactoryTests: XCTestCase {
         return context
     }
 }
-// swiftlint:enable function_body_length
 
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
     func envVars() -> [CustomProperty] {
