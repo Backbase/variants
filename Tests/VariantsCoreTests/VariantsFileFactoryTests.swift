@@ -10,7 +10,7 @@ import PathKit
 import ArgumentParser
 @testable import VariantsCore
 
-class SecretsFactoryTests: XCTestCase {
+class VariantsFileFactoryTests: XCTestCase {
     let variantsSwiftContent = """
     //
     //  Variants
@@ -50,9 +50,9 @@ class SecretsFactoryTests: XCTestCase {
         XCTAssertTrue(configPath.exists)
 
         // commented, as comparing file content not working properly (need to find better way to test)
-        let secretsFactory = SecretsFactory()
+        let variantsFileFactory = VariantsFileFactory()
         guard let defaultVariant = defaultVariant else { return XCTFail("Failed to initialize iOSVariant with provided parameters") }
-        secretsFactory.updateSecrets(with: configPath, variant: defaultVariant)
+        variantsFileFactory.updateVariantsFile(with: configPath, variant: defaultVariant)
 
         let variantsFilePath = Bundle(for: type(of: self)).path(forResource: "Resources/ios/Variants", ofType: "swift")
         XCTAssertNotNil(variantsFilePath)

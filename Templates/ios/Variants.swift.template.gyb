@@ -25,9 +25,22 @@ public struct Variants {
         }
         return infoDictionary
     }()
+    {% if variables %}
+    // MARK: - EnvironmentVariableKey
+    /// Environment variables coming from variants.yml as enum values
     
+    public enum EnvironmentVariableKey: String { {% for envVar in variables %}
+        case {{ envVar.name }} = "{{ envVar.name }}" {% endfor %}
+    }
+    
+    static func configurationValue(for key:EnvironmentVariableKey) -> Any? {
+        return Self.configuration[key.rawValue]
+    }
+    {% endif %}
+
     {% if secrets %}
-    // Encrypted secrets coming from variants.yml as environment variables
+    // MARK: - Secrets
+    /// Encrypted secrets coming from variants.yml as environment variables
     
     public struct Secrets {
     
