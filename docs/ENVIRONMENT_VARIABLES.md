@@ -75,7 +75,7 @@ public struct Variants {
     /// Custom configuration values coming from variants.yml as enum cases
     
     public enum ConfigurationValueKey: String { 
-        case A_PROPERTY = "A_PROPERTY" 
+        case A_PROPERTY 
     }
     
     static func configurationValue(for key: ConfigurationValueKey) -> Any? {
@@ -88,7 +88,7 @@ public struct Variants {
 
 It can be used in your codebase as:
 ```swift
-Variants.configurationValue(key: .A_PROPERTY)
+Variants.configurationValue(for: .A_PROPERTY)
 /// or
 Variants.configuration["A_PROPERTY"]
 ```

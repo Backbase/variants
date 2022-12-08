@@ -14,8 +14,8 @@ class VariantsFileFactory {
         self.logger = logger
     }
     
-    /// Updates `Variants.swift` with `Variants.Secrets` and `Variants.ConfigurationValueKey` containing
-    /// encrypted static variables
+    /// Updates `Variants.swift` with `Variants.Secrets` containing encrypted static variables
+    /// and `Variants.ConfigurationValueKey` as keys for custom configuration values
     /// - Parameters:
     ///   - configFilePath: Path to XCConfig file
     ///   - variant: Chosen variant, as seen in `variants.yml`

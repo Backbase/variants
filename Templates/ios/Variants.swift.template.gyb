@@ -25,15 +25,15 @@ public struct Variants {
         }
         return infoDictionary
     }()
-    {% if variables %}
-    // MARK: - EnvironmentVariableKey
-    /// Environment variables coming from variants.yml as enum values
+    {% if configurationValues %}
+    // MARK: - ConfigurationValueKey
+    /// Custom configuration values coming from variants.yml as enum cases
     
-    public enum EnvironmentVariableKey: String { {% for envVar in variables %}
-        case {{ envVar.name }} = "{{ envVar.name }}" {% endfor %}
+    public enum ConfigurationValueKey: String { {% for confValue in configurationValues %}
+        case {{ confValue.name }} {% endfor %}
     }
     
-    static func configurationValue(for key:EnvironmentVariableKey) -> Any? {
+    static func configurationValue(for key: ConfigurationValueKey) -> Any? {
         return Self.configuration[key.rawValue]
     }
     {% endif %}
