@@ -9,8 +9,6 @@ import XCTest
 import PathKit
 @testable import VariantsCore
 
-// swiftlint:disable function_body_length
-
 private let parameters = [
     CustomProperty(name: "sample", value: "sample-value", destination: .project),
     CustomProperty(name: "sample-2", value: "sample-2-value", destination: .fastlane),
@@ -185,7 +183,6 @@ class FastlaneParametersFactoryTests: XCTestCase {
         return context
     }
 }
-// swiftlint:enable function_body_length
 
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
     func envVars() -> [CustomProperty] {
