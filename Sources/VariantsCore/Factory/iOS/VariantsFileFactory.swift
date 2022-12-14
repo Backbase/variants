@@ -82,7 +82,11 @@ class VariantsFileFactory {
                 ).capture(stream: .stderr)
                 if let stdErr = gybStdErr, !stdErr.isEmpty {
                     if stdErr.contains("env: python3: No such file or directory") {
-                        logger.logFatal(item: "We're unable to find a 'python3' executable. Install 'python3' or ensure it's your executable path and try running this Variants command again.")
+                        logger.logFatal(item:
+                        """
+                            We're unable to find a 'python3' executable.
+                            Install 'python3' or ensure it's your executable path and try running this Variants command again.
+                        """)
                     } else {
                         logger.logFatal(item: stdErr as Any)
                     }
