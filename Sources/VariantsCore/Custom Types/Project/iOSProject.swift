@@ -60,11 +60,7 @@ class iOSProject: Project {
 
     // MARK: - Private
 
-    private func loadConfiguration(_ path: String?) throws -> iOSConfiguration? {
-        guard let path = path else {
-            throw ValidationError("Error: Use '-s' to specify the configuration file")
-        }
-
+    private func loadConfiguration(_ path: String) throws -> iOSConfiguration? {
         let configurationPath = Path(path)
         guard !configurationPath.isDirectory else {
             throw ValidationError("Error: \(configurationPath) is a directory path")
