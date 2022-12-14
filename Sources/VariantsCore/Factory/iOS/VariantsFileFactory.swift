@@ -9,46 +9,44 @@ import Foundation
 import PathKit
 import Stencil
 
-class SecretsFactory {
+class VariantsFileFactory {
     init(logger: Logger = Logger(verbose: false)) {
         self.logger = logger
     }
     
-    /// Updates `Variants.swift` with `Variants.Secrets` containing
-    /// encrypted static variables
+    /// Updates `Variants.swift` with `Variants.Secrets` containing encrypted static variables
+    /// and `Variants.ConfigurationValueKey` as keys for custom configuration values
     /// - Parameters:
     ///   - configFilePath: Path to XCConfig file
     ///   - variant: Chosen variant, as seen in `variants.yml`
-    func updateSecrets(with configFilePath: Path, variant: iOSVariant) {
+    func updateVariantsFile(with configFilePath: Path, variant: iOSVariant) {
         do {
             let path = try TemplateDirectory().path
             guard let variantsGybTemplatePath = try? path.safeJoin(path: Path("ios/"))
             else { return }
+            let secrets = variant.custom?.secrets() ?? []
+            let configurationValues = variant.custom?.configurationValues() ?? []
+            let context = [
+                "secrets": secrets,
+                "configurationValues": configurationValues
+            ] as [String: Any]
             
-            if let secrets = variant.custom?.envVars() {
-                let context = [
-                    "secrets": secrets
-                ] as [String: Any]
-                
-                let environment = Environment(loader: FileSystemLoader(paths: [variantsGybTemplatePath.absolute()]))
-                let rendered = try environment.renderTemplate(name: StaticPath.Template.variantsSwiftGybFileName,
-                                                              context: context)
-                
-                // Replace multiple empty lines by one only
-                let lines = rendered.split(whereSeparator: \.isNewline)
-                let content = lines.joined(separator: "\n")
-                
-                try write(Data(content.utf8), using: configFilePath.parent().absolute())
-                
-                let variantsGybFile = try configFilePath.parent().absolute()
-                    .safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
-                try variantsGybFile.delete()
-            }
+            let environment = Environment(loader: FileSystemLoader(paths: [variantsGybTemplatePath.absolute()]))
+            let rendered = try environment.renderTemplate(name: StaticPath.Template.variantsSwiftGybFileName,
+                                                          context: context)
+            // Replace multiple empty lines by one only
+            let lines = rendered.split(whereSeparator: \.isNewline)
+            let content = lines.joined(separator: "\n")
+            
+            try write(Data(content.utf8), using: configFilePath.parent().absolute())
+            let variantsGybFile = try configFilePath.parent().absolute()
+                .safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
+            try variantsGybFile.delete()
         } catch {
             let variantsFile = try? configFilePath.parent().absolute()
                 .safeJoin(path: Path(StaticPath.Xcode.variantsFileName))
             logger.logWarning(item: """
-                Something went wrong while generating 'Variants.Secrets' in '\(variantsFile ?? "Variants.swift")'
+                Something went wrong while generating '\(variantsFile ?? "Variants.swift")'
                 """)
             dump(error)
         }
@@ -96,7 +94,7 @@ class SecretsFactory {
 }
 
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
-    func envVars() -> [CustomProperty] {
+    func secrets() -> [CustomProperty] {
         return self
             .filter({ $0.destination == .project && $0.isEnvironmentVariable })
             .map { (property) -> CustomProperty in
@@ -106,4 +104,8 @@ fileprivate extension Sequence where Iterator.Element == CustomProperty {
             }
     }
     
+    func configurationValues() -> [CustomProperty] {
+        return self
+            .filter({ $0.destination == .project && !$0.isEnvironmentVariable })
+    }
 }

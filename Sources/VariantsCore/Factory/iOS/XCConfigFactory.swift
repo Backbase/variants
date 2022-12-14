@@ -115,8 +115,8 @@ class XCConfigFactory: XCFactory {
          * Add custom properties whose values should be read from environment variables
          * to `Variants.Secret` as encrypted secrets.
          */
-        let secretsFactory = SecretsFactory(logger: logger)
-        secretsFactory.updateSecrets(with: xcodeConfigPath, variant: variant)
+        let variantsFileFactory = VariantsFileFactory(logger: logger)
+        variantsFileFactory.updateVariantsFile(with: xcodeConfigPath, variant: variant)
     }
     
     // MARK: - Private methods
