@@ -72,14 +72,21 @@ class VariantsFileFactory {
                 let fileContent = try? variantsGybFile.read(),
                 fileContent == data {
                 
-                try Bash(gybExecutablePath.absolute().description,
+                let gybStdErr = try Bash(gybExecutablePath.absolute().description,
                          arguments:
                             "--line-directive",
                             "",
                             "-o",
                             "Variants.swift",
                             variantsGybFile.absolute().description
-                ).run()
+                ).capture(stream: .stderr)
+                if let stdErr = gybStdErr, !stdErr.isEmpty {
+                    if stdErr.contains("env: python3: No such file or directory") {
+                        logger.logFatal(item: "We're unable to find a 'python3' executable. Install 'python3' or ensure it's your executable path and try running this Variants command again.")
+                    } else {
+                        logger.logFatal(item: stdErr as Any)
+                    }
+                }
                 
                 logger.logInfo("⚙️  ", item: """
                     '\(variantsGybFile.parent().abbreviate().string)/Variants.swift' has been generated with success
