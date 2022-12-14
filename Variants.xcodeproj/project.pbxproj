@@ -107,6 +107,8 @@
 		BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */; };
 		BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */; };
 		BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */; };
+		C52A0A5429263483007CE315 /* UserInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52A0A5329263483007CE315 /* UserInputTests.swift */; };
+		C52A0A5629266B1C007CE315 /* iOSSigningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52A0A5529266B1B007CE315 /* iOSSigningTests.swift */; };
 		E333DBE9281C36B0000E8D03 /* KeyedDecodingContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */; };
 		E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502A8256DB16B00484DCE /* String+WriteTests.swift */; };
 		E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */; };
@@ -214,6 +216,8 @@
 		BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGradleScriptFactory.swift; sourceTree = "<group>"; };
 		BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockXCcodeConfigFactory.swift; sourceTree = "<group>"; };
 		BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFastlaneFactory.swift; sourceTree = "<group>"; };
+		C52A0A5329263483007CE315 /* UserInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputTests.swift; sourceTree = "<group>"; };
+		C52A0A5529266B1B007CE315 /* iOSSigningTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSSigningTests.swift; sourceTree = "<group>"; };
 		E333DBE8281C36B0000E8D03 /* KeyedDecodingContainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedDecodingContainerTests.swift; sourceTree = "<group>"; };
 		E39502A8256DB16B00484DCE /* String+WriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WriteTests.swift"; sourceTree = "<group>"; };
 		E39502C0256DBFA200484DCE /* ProjectFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFactoryTests.swift; sourceTree = "<group>"; };
@@ -327,7 +331,9 @@
 				OBJ_67 /* YamlParserTests.swift */,
 				8E8A4849255165CB0056F79F /* FastlaneParametersFactoryTests.swift */,
 				8E8A48BE255305C50056F79F /* GradleScriptFactoryTests.swift */,
+				C52A0A5529266B1B007CE315 /* iOSSigningTests.swift */,
 				8E8A4908255420FC0056F79F /* PlatformDetectorTests.swift */,
+				C52A0A5329263483007CE315 /* UserInputTests.swift */,
 				8E8A490F25543F910056F79F /* SpecHelperTests.swift */,
 				8EDC54E125554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift */,
 				BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */,
@@ -800,6 +806,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E39502C1256DBFA200484DCE /* ProjectFactoryTests.swift in Sources */,
+				C52A0A5629266B1C007CE315 /* iOSSigningTests.swift in Sources */,
 				E333DBE9281C36B0000E8D03 /* KeyedDecodingContainerTests.swift in Sources */,
 				8E8A485A255165F60056F79F /* FastlaneParametersFactoryTests.swift in Sources */,
 				7C460E81281C1E8100BBF15D /* MockProject.swift in Sources */,
@@ -813,6 +820,7 @@
 				39D6D6002701E0740064BD41 /* StandardOutputStreamTests.swift in Sources */,
 				39C245AF26F8B198008CF1E0 /* PathSafeJoinTests.swift in Sources */,
 				397811F626F4BCF800643F91 /* MockLogger.swift in Sources */,
+				C52A0A5429263483007CE315 /* UserInputTests.swift in Sources */,
 				8E1B9F3B254AC31A00DD0204 /* YamlParserTests.swift in Sources */,
 				8E6ABBB625C03F2C006A62FE /* SecretsFactoryTests.swift in Sources */,
 				8EDC54E225554B8C00A9CDFF /* CustomProperty+EnvironmentVarTests.swift in Sources */,

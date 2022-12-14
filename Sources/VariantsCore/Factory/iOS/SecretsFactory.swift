@@ -106,8 +106,4 @@ fileprivate extension Sequence where Iterator.Element == CustomProperty {
             }
     }
     
-    func literal() -> [CustomProperty] {
-        return self
-            .filter({ $0.destination == .project && !$0.isEnvironmentVariable })
-    }
 }
