@@ -26,8 +26,19 @@ class VariantsFileFactoryTests: XCTestCase {
             }
             return infoDictionary
         }()
+        
+        // MARK: - ConfigurationValueKey
+        /// Custom configuration values coming from variants.yml as enum cases
+        public enum ConfigurationValueKey: String {
+        
+            case PROPERTY_A
+            case PROPERTY_B
+        }
+        static func configurationValue(for key: ConfigurationValueKey) -> Any? {
+            return Self.configuration[key.rawValue]
+        }
+        
     }
-    
     """
     
     private let defaultVariant = try? iOSVariant(
@@ -37,8 +48,10 @@ class VariantsFileFactoryTests: XCTestCase {
         appIcon: nil,
         appName: nil,
         storeDestination: "testFlight",
-        custom: [CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
-                 CustomProperty(name: "PROPERTY_B", value: "VALUE_B", env: true, destination: .project)],
+        custom: [
+            CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
+            CustomProperty(name: "PROPERTY_B", value: "VALUE_B", destination: .project)
+        ],
         idSuffix: nil,
         bundleID: nil,
         variantSigning: nil,
@@ -60,6 +73,8 @@ class VariantsFileFactoryTests: XCTestCase {
 
         let variantsFilePath = Bundle(for: type(of: self)).path(forResource: "Resources/ios/Variants", ofType: "swift")
         XCTAssertNotNil(variantsFilePath)
+        guard let variantsFile = variantsFilePath else { return }
+        XCTAssertEqual(try String(contentsOfFile: variantsFile), variantsSwiftContent)
     }
     
     func testUtilsDirectory_pathExists() {
