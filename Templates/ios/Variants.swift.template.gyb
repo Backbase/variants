@@ -28,29 +28,28 @@ public struct Variants {
     {% if configurationValues %}
     // MARK: - ConfigurationValueKey
     /// Custom configuration values coming from variants.yml as enum cases
-    
-    public enum ConfigurationValueKey: String { {% for confValue in configurationValues %}
-        case {{ confValue.name }} {% endfor %}
+
+    public enum ConfigurationValueKey: String {
+    {% for confValue in configurationValues %}
+        case {{ confValue.name }}{% endfor %}
     }
-    
+
     static func configurationValue(for key: ConfigurationValueKey) -> Any? {
         return Self.configuration[key.rawValue]
-    }
-    {% endif %}
-
+    }{% endif %}
     {% if secrets %}
     // MARK: - Secrets
     /// Encrypted secrets coming from variants.yml as environment variables
-    
+
     public struct Secrets {
-    
+
         private static let salt: [UInt8] = [
         %{ salt = [ord(byte) for byte in os.urandom(64)] }%
         % for chunk in chunks(salt, 8):
             ${"".join(["0x%02x, " % byte for byte in chunk])}
         % end
         ]
-    
+
     {% for secret in secrets %}
         static var {{ secret.name }}: String {
             let encoded: [UInt8] = [
@@ -62,7 +61,7 @@ public struct Variants {
             return decode(encoded, cipher: salt)
         }
     {% endfor %}
-    
+
         private static func decode(_ encoded: [UInt8], cipher: [UInt8]) -> String {
             String(decoding: encoded.enumerated().map { (offset, element) in
                 element ^ cipher[offset % cipher.count]
