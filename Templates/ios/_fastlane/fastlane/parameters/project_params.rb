@@ -6,7 +6,8 @@ PROJECT_PARAMS = {
     
     COHERENT_SPEC: '../coherent-swift.yml',
     VARIANTS_SPEC: '../variants.yml',
-    SWIFTLINT_PATH: 'swiftlint.yml',
+    SWIFTLINT_CONFIG: 'swiftlint.yml',
+    SWIFTLINT_PATH: 'Sources',
     DERIVED_DATA_PATH: '.derivedData',
     REPORTS_FOLDER: './reports',
     TEST_DEVICES: ['iPhone 11']

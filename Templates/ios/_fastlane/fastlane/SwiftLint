@@ -1,6 +1,7 @@
 require File.expand_path('parameters/project_params.rb', __dir__)
 
 SWIFTLINT_PATH = PROJECT_PARAMS[:SWIFTLINT_PATH]
+SWIFTLINT_CONFIG = PROJECT_PARAMS[:SWIFTLINT_CONFIG]
 REPORTS_FOLDER = PROJECT_PARAMS[:REPORTS_FOLDER]
 
 # --- SwiftLint
@@ -11,9 +12,9 @@ lane :run_swiftlint do |options|
         executable = sh "which swiftlint|tr -d '\n'"
         puts "Found 'swiftlint' at: "+executable
         defaults = {
-            config_file: SWIFTLINT_PATH,
+            config_file: SWIFTLINT_CONFIG,
             executable: executable,
-            path: "../#{APP_SCHEME}/**/*",
+            path: SWIFTLINT_PATH,
             output_file: "#{REPORTS_FOLDER}/swiftlint.result"
         }.freeze
 
