@@ -18,7 +18,8 @@ struct ProjectFactory {
                     templatePath: Path("/ios/variants-template.yml"),
                     userInputSource: interactiveShell,
                     userInput: { readLine() }
-                )
+                ),
+                configFactory: XCConfigFactory(logger: logger)
             )
         case .android:
             return AndroidProject(

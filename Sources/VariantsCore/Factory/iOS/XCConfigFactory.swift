@@ -23,8 +23,8 @@ protocol XCFactory {
 }
 
 class XCConfigFactory: XCFactory {
-    init(logLevel: Bool = false) {
-        logger = Logger(verbose: logLevel)
+    init(logger: Logger = Logger(verbose: false)) {
+        self.logger = logger
     }
     
     func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?) {
@@ -95,7 +95,7 @@ class XCConfigFactory: XCFactory {
         logger.logInfo("Created file: ", item: "'\(xcconfigFileName)' at \(xcodeConfigPath.parent().abbreviate().description)")
         
         populateConfig(with: target.value, configFile: xcodeConfigPath, variant: variant)
-        
+
         /*
          * If template files should be added to Xcode Project
          */
@@ -127,7 +127,7 @@ class XCConfigFactory: XCFactory {
                             target: NamedTarget,
                             variant: iOSVariant) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
-
+        
         do {
             let path = try TemplateDirectory().path
             try Bash("cp", arguments:
@@ -187,6 +187,7 @@ class XCConfigFactory: XCFactory {
                 Bash("plutil", arguments: "-replace", "CFBundleVersion", "-string", "$(V_VERSION_NUMBER)", configFilePath),
                 Bash("plutil", arguments: "-replace", "CFBundleShortVersionString", "-string", "$(V_VERSION_NAME)", configFilePath),
                 Bash("plutil", arguments: "-replace", "CFBundleName", "-string", "$(V_APP_NAME)", configFilePath),
+                Bash("plutil", arguments: "-replace", "CFBundleDisplayName", "-string", "$(V_APP_NAME)", configFilePath),
                 Bash("plutil", arguments: "-replace", "CFBundleExecutable", "-string", "$(V_APP_NAME)", configFilePath),
                 Bash("plutil", arguments: "-replace", "CFBundleIdentifier", "-string", "$(V_BUNDLE_ID)", configFilePath)
             ]
