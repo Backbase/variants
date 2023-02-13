@@ -195,7 +195,12 @@ struct XcodeProjFactory {
 
 private extension XcodeProjFactory {
     
-    private func createVarientsGroup(for project: XcodeProj, path: Path, sourceRoot: Path, target: NamedTarget) throws -> PBXGroup?{
+    private func createVarientsGroup(
+        for project: XcodeProj,
+        path: Path,
+        sourceRoot: Path,
+        target: NamedTarget
+    ) throws -> PBXGroup?{
         let variantsGroupPath = Path("\(path)/Variants")
         let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
         try rootGroup?.addGroup(named: variantsGroupPath.lastComponent)
@@ -203,21 +208,33 @@ private extension XcodeProjFactory {
         return variantsGroup
     }
     
-    private func add(file: Path, to project: XcodeProj, path: Path, variantsGroup: PBXGroup?, sourceRoot: Path, target: NamedTarget) throws {
+    // swiftlint:disable function_parameter_count
+    private func add(
+        file: Path,
+        to project: XcodeProj,
+        path: Path,
+        variantsGroup: PBXGroup?,
+        sourceRoot: Path,
+        target: NamedTarget
+    ) throws {
         guard let pbxTarget = project.pbxproj.targets(named: target.key).first
         else {
             logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
             return
         }
         
-        let fileRef = try variantsGroup?.addFile(at: file,
-                                                 sourceTree: .group,
-                                                 sourceRoot: sourceRoot,
-                                                 validatePresence: true)
+        let fileRef = try variantsGroup?.addFile(
+            at: file,
+            sourceTree: .group,
+            sourceRoot: sourceRoot,
+            validatePresence: true
+        )
         
-        let fileElement = PBXFileElement(sourceTree: .group,
-                                         path: file.description,
-                                         name: file.lastComponent)
+        let fileElement = PBXFileElement(
+            sourceTree: .group,
+            path: file.description,
+            name: file.lastComponent
+        )
         let buildFile = PBXBuildFile(file: fileElement)
         let sourceBuildPhase = try pbxTarget.sourcesBuildPhase()
         sourceBuildPhase?.files?.append(buildFile)

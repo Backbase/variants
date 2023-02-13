@@ -4,6 +4,8 @@
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Arthur Alves
 //
+// swiftlint:disable all
+
 import Foundation
 public struct Variants {
     static let configuration: [String: Any] = {
