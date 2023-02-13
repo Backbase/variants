@@ -1,0 +1,37 @@
+
+# --- Slack
+
+desc 'send deployment message to a Slack channel'
+lane :send_slack_message do |options|
+    
+    if options[:channel]
+        && options[:hook_url]
+        && options[:interactive_url]
+        && options[:message]
+    
+        channel         = options[:channel]
+        hook_url        = options[:hook_url]
+        interactive_url = options[:interactive_url]
+        message         = options[:message]
+        success         = options[:success] || false
+
+        slack(
+            slack_url: hook_url,
+            message: message,
+            channel: channel,
+            success: success,
+            payload: {
+              "Build Date" => Time.new.to_s,
+            },
+            default_payloads: [:git_branch, :lane, :test_result, :last_git_commit],
+            attachment_properties: {
+              fields: [{
+                title: "Link",
+                value: interactive_url,
+                short: false
+              }]
+            }
+        )
+    end
+end
+

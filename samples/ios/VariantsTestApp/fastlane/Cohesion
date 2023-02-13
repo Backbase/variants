@@ -1,0 +1,11 @@
+
+COHERENT_SPEC = PROJECT_PARAMS[:COHERENT_SPEC]
+
+desc 'Measure and report cohesion'
+lane :run_cohesion do
+  begin
+    sh "`which coherent-swift` report -s #{COHERENT_SPEC}"
+  rescue
+    puts "Skipping step - Couldn't find 'coherent-swift' or something went wrong"
+  end
+end

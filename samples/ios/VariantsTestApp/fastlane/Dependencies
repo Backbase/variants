@@ -1,0 +1,35 @@
+homebrewDependencies = {
+    # Uncomment the following line if you want to measure the `cohesion` of your codebase (enabled in `fastlane/Deploy`, lane `all_but_deploy`)
+    #"coherent-swift" => "arthurpalves/formulae/coherent-swift",
+    
+    # Uncomment the following 2 lines if you want to generate overlays for your app icons (enabled in `fastlane/Deploy`, lane `deploy`)
+    #"badgy" => "arthurpalves/formulae/badgy",
+    #"convert" => "imagemagick",
+    
+    "swiftlint" => "swiftlint",
+    "swiftformat" => "swiftformat"
+}
+
+desc 'prepare dependencies'
+lane :prepare_dependencies do
+    homebrewDependencies.each do |key, value|
+        install_dependency(dependency: {key => value})
+    end
+end
+
+private_lane :install_dependency do |options|
+    if options[:dependency] && options[:dependency].is_a?(Hash)
+        dependency = options[:dependency]
+        dependency.each do |key, value|
+            begin
+              executable = sh "which #{key}"
+              puts "Found '#{key}' at: "+executable
+            rescue
+              puts "Couldn't find '#{key}', installing it."
+              sh "brew install #{value}"
+            end
+        end
+    else
+        puts "'install_dependency' failed - :dependency not found or not a Hash"
+    end
+end
