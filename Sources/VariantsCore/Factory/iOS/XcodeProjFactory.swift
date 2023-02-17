@@ -200,7 +200,7 @@ private extension XcodeProjFactory {
         path: Path,
         sourceRoot: Path,
         target: NamedTarget
-    ) throws -> PBXGroup?{
+    ) throws -> PBXGroup? {
         let variantsGroupPath = Path("\(path)/Variants")
         let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
         try rootGroup?.addGroup(named: variantsGroupPath.lastComponent)
@@ -242,7 +242,7 @@ private extension XcodeProjFactory {
         /*
          * If .xcconfig, set baseConfigurationReference to it
          */
-        if file.lastComponent.contains(".xcconfig"), let fileReference = fileRef {
+        if file.extension == "xcconfig", let fileReference = fileRef {
             changeBaseConfig(fileReference, in: project, path: path,
                              target: target, autoSave: true)
         }

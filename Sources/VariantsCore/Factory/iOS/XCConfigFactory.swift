@@ -127,7 +127,7 @@ class XCConfigFactory: XCFactory {
                             target: NamedTarget,
                             variant: iOSVariant) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
-        
+
         do {
             let path = try TemplateDirectory().path
             try Bash("cp", arguments:
