@@ -1,0 +1,28 @@
+require File.expand_path('parameters/appcenter_params.rb', __dir__)
+
+#
+# Ideally, each variant of your application, found in your 'variants.yml' spec would
+# specify it's unique APPCENTER_APP_NAME as a custom parameter with destination
+# 'fastlane'.
+#
+# Otherwise, you can always change the value below to read from an environment variable,
+# hardcoded value, or anything really.
+#
+
+APPCENTER_APP_NAME = VARIANTS_PARAMS[:APPCENTER_APP_NAME]
+
+# --- AppCenter
+
+desc 'deploy app to AppCenter'
+private_lane :appcenter_deploy do |options|
+    destinations = options[:destinations] || APPCENTER_PARAMS[:APPCENTER_DESTINATION_GROUP] || "Collaborators"
+    notify = options[:notify] || true
+
+    appcenter_upload(
+        api_token: APPCENTER_PARAMS[:APPCENTER_API_TOKEN],
+        owner_name: APPCENTER_PARAMS[:APPCENTER_OWNER_NAME],
+        app_name: APPCENTER_APP_NAME,
+        notify_testers: notify,
+        destinations: destinations
+    )
+end

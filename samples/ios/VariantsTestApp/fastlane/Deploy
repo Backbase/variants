@@ -1,0 +1,91 @@
+require File.expand_path('parameters/match_params.rb', __dir__)
+
+CODE_SIGNING_IDENTITY   = MATCH_PARAMS[:TEAMNAME]
+TEAM_ID                 = MATCH_PARAMS[:TEAMID]
+EXPORT_METHOD           = MATCH_PARAMS[:EXPORTMETHOD]
+
+# --- Well, it doesn't deploy
+
+#
+# Perfect for a PR branch.
+#
+# Example:
+#   fastlane run_all_but_deploy
+
+desc 'runs everything but deploy'
+lane :run_all_but_deploy do
+    run_all_tests
+    run_coverage
+    run_swiftlint
+    # run_cohesion
+    # run_lizard
+    # run_sonar
+end
+
+# --- Deploy
+
+desc 'run deploy'
+lane :deploy do |options|
+    destination = options[:store_destination] || VARIANTS_PARAMS[:STORE_DESTINATION] || 'appcenter'
+    destination = destination.downcase
+    
+    run_all_but_deploy
+    
+    # If Match is enabled, uncomment line below
+    # run_match_signing
+
+    # Change icon on the fly by adding a badge overlay to it
+    # AppIcon is defined in 'parameters/project_params.rb'
+    # or specify icon path via parameter 'app_icon'
+    #
+    # if options[:variant]
+    #    badge_name = options[:variant]
+    #    badgy(name: badge_name)
+    # end
+    
+    archive
+    
+    if destination == 'appcenter'
+        appcenter_deploy
+    elsif destination == 'testflight'
+        testflight_deploy
+    elsif destination == 'appstore'
+        appstore_deploy
+    end
+    
+    
+    # Send a Slack message
+    #
+    # The following parameters are necessary:
+    # - 'channel' (string)
+    # - 'hook_url' (string)
+    # - 'interactive_url' (string) - URL you'll click to lead you to AppCenter/AppStore or CI pipeline
+    # - 'message' (string) - What to inform?
+    # - 'success' (boolean) - OPTIONAL value, false by default.
+    #
+    # send_slack_message
+end
+
+# --- Build and archive
+
+desc "build and archive"
+private_lane :archive do |options|
+    configuration = options[:configuration] || "Release"
+
+    defaults = {
+        workspace: WORKSPACE,
+        configuration: configuration,
+        scheme: APP_SCHEME,
+        silent: false,
+        clean: true,
+        export_team_id: TEAM_ID,
+        codesigning_identity: CODE_SIGNING_IDENTITY,
+        export_options: {
+          method: EXPORT_METHOD
+        },
+        xcargs: '-allowProvisioningUpdates',
+        skip_profile_detection: true
+    }.freeze
+    
+    build_ios_app(defaults.merge(options))
+end

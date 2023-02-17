@@ -110,11 +110,16 @@ struct XcodeProjFactory {
     func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: NamedTarget) {
         do {
             let project = try XcodeProj(path: projectPath)
-        
-            let variantsGroup = try varientsGroup(for: projectPath, sourceRoot: sourceRoot, target: target)
-            
-            try files.forEach { file in
-                try write(to: file, projectPath: projectPath, variantsGroup: variantsGroup, sourceRoot: sourceRoot, target: target)
+            let variantsGroup = try createVarientsGroup(for: project, path: projectPath, sourceRoot: sourceRoot, target: target)
+            for file in files {
+                try add(
+                    file: file,
+                    to: project,
+                    path: projectPath,
+                    variantsGroup: variantsGroup,
+                    sourceRoot: sourceRoot,
+                    target: target
+                )
             }
             try project.write(path: projectPath)
         } catch {
@@ -190,32 +195,46 @@ struct XcodeProjFactory {
 
 private extension XcodeProjFactory {
     
-    private func varientsGroup(for projectPath: Path, sourceRoot: Path, target: NamedTarget) throws -> PBXGroup?{
-        let variantsGroupPath = Path("\(projectPath)/Variants")
-        let project = try XcodeProj(path: projectPath)
-    
+    private func createVarientsGroup(
+        for project: XcodeProj,
+        path: Path,
+        sourceRoot: Path,
+        target: NamedTarget
+    ) throws -> PBXGroup? {
+        let variantsGroupPath = Path("\(path)/Variants")
         let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
         try rootGroup?.addGroup(named: variantsGroupPath.lastComponent)
         let variantsGroup = rootGroup?.group(named: variantsGroupPath.lastComponent)
         return variantsGroup
     }
     
-    private func write(to file: Path, projectPath: Path, variantsGroup: PBXGroup?, sourceRoot: Path, target: NamedTarget) throws {
-        let project = try XcodeProj(path: projectPath)
+    // swiftlint:disable function_parameter_count
+    private func add(
+        file: Path,
+        to project: XcodeProj,
+        path: Path,
+        variantsGroup: PBXGroup?,
+        sourceRoot: Path,
+        target: NamedTarget
+    ) throws {
         guard let pbxTarget = project.pbxproj.targets(named: target.key).first
         else {
             logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
             return
         }
-
-        let fileRef = try variantsGroup?.addFile(at: file,
-                                                 sourceTree: .group,
-                                                 sourceRoot: sourceRoot,
-                                                 validatePresence: true)
         
-        let fileElement = PBXFileElement(sourceTree: .group,
-                                         path: file.description,
-                                         name: file.lastComponent)
+        let fileRef = try variantsGroup?.addFile(
+            at: file,
+            sourceTree: .group,
+            sourceRoot: sourceRoot,
+            validatePresence: true
+        )
+        
+        let fileElement = PBXFileElement(
+            sourceTree: .group,
+            path: file.description,
+            name: file.lastComponent
+        )
         let buildFile = PBXBuildFile(file: fileElement)
         let sourceBuildPhase = try pbxTarget.sourcesBuildPhase()
         sourceBuildPhase?.files?.append(buildFile)
@@ -223,8 +242,8 @@ private extension XcodeProjFactory {
         /*
          * If .xcconfig, set baseConfigurationReference to it
          */
-        if file.lastComponent.contains(".xcconfig"), let fileReference = fileRef {
-            changeBaseConfig(fileReference, in: project, path: projectPath,
+        if file.extension == "xcconfig", let fileReference = fileRef {
+            changeBaseConfig(fileReference, in: project, path: path,
                              target: target, autoSave: true)
         }
     }
