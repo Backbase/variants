@@ -251,48 +251,57 @@ class iOSVariantTests: XCTestCase {
     }
     
     func testGetDefaultValuesForTargetWithoutSigning() {
-        let expectedValues = [
-            "V_APP_NAME": "Target Name Beta",
-            "V_BUNDLE_ID": "com.Company.ValidName.beta",
-            "V_VERSION_NAME": "1.0.0",
-            "V_VERSION_NUMBER": "0",
-            "V_APP_ICON": "AppIcon"]
+        let expectedValues: [(key: String, value: String)] = [
+            (key: "V_APP_ICON", value: "AppIcon"),
+            (key: "V_APP_NAME", value: "Target Name Beta"),
+            (key: "V_BUNDLE_ID", value: "com.Company.ValidName.beta"),
+            (key: "V_VERSION_NAME", value: "1.0.0"),
+            (key: "V_VERSION_NUMBER", value: "0")
+        ]
         let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil)
         guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                             idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: signing)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
-
-        XCTAssertEqual(variant.getDefaultValues(for: target), expectedValues)
+        let defaultValues = variant.getDefaultValues(for: target)
+        XCTAssertEqual(defaultValues.count, expectedValues.count)
+        defaultValues.enumerated().forEach({
+            XCTAssertEqual($1.key, expectedValues[$0].key)
+        })
     }
     
     func testGetDefaultValuesForTargetWithSigning() {
         let expectedValues = [
-            "V_APP_NAME": "Target Name Beta",
-            "V_BUNDLE_ID": "com.Company.ValidName.beta",
-            "V_VERSION_NAME": "1.0.0",
-            "V_VERSION_NUMBER": "0",
-            "V_APP_ICON": "AppIcon",
-            "V_MATCH_PROFILE": "match AppStore com.Company.ValidName.beta"]
+            (key: "V_APP_ICON", value: "AppIcon"),
+            (key: "V_APP_NAME", value: "Target Name Beta"),
+            (key: "V_BUNDLE_ID", value: "com.Company.ValidName.beta"),
+            (key: "V_MATCH_PROFILE", value: "match AppStore com.Company.ValidName.beta"),
+            (key: "V_VERSION_NAME", value: "1.0.0"),
+            (key: "V_VERSION_NUMBER", value: "0")
+        ]
         guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, storeDestination: "appStore", custom: nil,
                                             idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
 
-        XCTAssertEqual(variant.getDefaultValues(for: target), expectedValues)
+        let defaultValues = variant.getDefaultValues(for: target)
+        XCTAssertEqual(defaultValues.count, expectedValues.count)
+        defaultValues.enumerated().forEach({
+            XCTAssertEqual($1.key, expectedValues[$0].key)
+        })
     }
     
     func testGetDefaultValuesWithTargetAndCustomProperties() {
         let expectedValues = [
-            "V_APP_NAME": "Target Name Beta",
-            "V_BUNDLE_ID": "com.Company.ValidName.beta",
-            "V_VERSION_NAME": "1.0.0",
-            "V_VERSION_NUMBER": "0",
-            "V_APP_ICON": "AppIcon",
-            "V_MATCH_PROFILE": "match AppStore com.Company.ValidName.beta",
-            "Custom name": "Custom value"
+            (key: "Custom name", value: "Custom value"),
+            (key: "V_APP_ICON", value: "AppIcon"),
+            (key: "V_APP_NAME", value: "Target Name Beta"),
+            (key: "V_BUNDLE_ID", value: "com.Company.ValidName.beta"),
+            (key: "V_MATCH_PROFILE", value: "match AppStore com.Company.ValidName.beta"),
+            (key: "V_VERSION_NAME", value: "1.0.0"),
+            (key: "V_VERSION_NUMBER", value: "0")
         ]
         let customProperties = [
             CustomProperty(name: "Custom name", value: "Custom value", env: false, destination: .project),
@@ -304,9 +313,13 @@ class iOSVariantTests: XCTestCase {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
 
-        XCTAssertEqual(variant.getDefaultValues(for: target), expectedValues)
-        XCTAssertTrue(variant.getDefaultValues(for: target)["Custom name 2"] == nil, "Should not contains this property as it's an environment variable")
-        XCTAssertTrue(variant.getDefaultValues(for: target)["Custom name 3"] == nil, "Should not contains this property as it's not a project destination property")
+        let defaultValues = variant.getDefaultValues(for: target)
+        XCTAssertEqual(defaultValues.count, expectedValues.count)
+        defaultValues.enumerated().forEach({
+            XCTAssertEqual($1.key, expectedValues[$0].key)
+        })
+        XCTAssertFalse(defaultValues.contains(where: {$0.key == "Custom name 2"}), "Should not contains this property as it's an environment variable")
+        XCTAssertFalse(defaultValues.contains(where: {$0.key == "Custom name 3"}), "Should not contains this property as it's not a project destination property")
     }
     
     // MARK: - iOSVariants.Destination tests

@@ -59,7 +59,7 @@ public struct iOSVariant: Variant {
         }
     }
     
-    func getDefaultValues(for target: iOSTarget) -> [String: String] {
+    func getDefaultValues(for target: iOSTarget) -> [(key: String, value: String)] {
         var customDictionary: [String: String] = [
             "V_APP_NAME": target.name + configName,
             "V_BUNDLE_ID": makeBundleID(for: target),
@@ -76,7 +76,7 @@ public struct iOSVariant: Variant {
             .filter { $0.destination == .project && !$0.isEnvironmentVariable }
             .forEach { customDictionary[$0.name] = $0.value }
         
-        return customDictionary
+        return customDictionary.sorted(by: {$0.key < $1.key})
     }
     
     private static func parseDestination(name: String, destination: String?) throws -> Destination? {
