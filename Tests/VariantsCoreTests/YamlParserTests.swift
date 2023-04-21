@@ -6,7 +6,6 @@
 //
 
 // swiftlint:disable file_length
-// swiftlint:disable type_body_length
 
 import XCTest
 @testable import VariantsCore

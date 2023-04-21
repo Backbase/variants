@@ -365,3 +365,7 @@ class iOSVariantTests: XCTestCase {
         ("testParsingiOSVariantDestintation", testParsingiOSVariantDestintation)
     ]
 }
+
+// swiftlint:enable type_body_length
+// swiftlint:enable line_length
+// swiftlint:enable type_name

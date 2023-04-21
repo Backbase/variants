@@ -106,3 +106,5 @@ final class iOSSigningTests: XCTestCase {
     }
 
 }
+
+// swiftlint:enable type_name
