@@ -65,3 +65,5 @@ final class InitCommandTests: XCTestCase {
         ("testInit_unknownArgument", testInit_unknownArgument)
     ]
 }
+
+// swiftlint:enable line_length

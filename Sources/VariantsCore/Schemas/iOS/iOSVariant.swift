@@ -195,3 +195,5 @@ extension iOSVariant {
             globalSigning: globalSigning)
     }
 }
+
+// swiftlint:enable type_name

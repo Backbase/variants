@@ -229,3 +229,5 @@ class iOSProject: Project {
     private let configFactory: XCFactory
     private let parametersFactory: ParametersFactory
 }
+
+// swiftlint:enable type_name

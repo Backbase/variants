@@ -39,3 +39,5 @@ public struct iOSConfiguration: Codable {
             .map { try iOSVariant(from: $1, name: $0, globalSigning: globalSigning) }
     }
 }
+
+// swiftlint:enable type_name
