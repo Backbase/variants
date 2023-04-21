@@ -247,4 +247,5 @@ private extension XcodeProjFactory {
                              target: target, autoSave: true)
         }
     }
+    // swiftlint:enable function_parameter_count
 }
