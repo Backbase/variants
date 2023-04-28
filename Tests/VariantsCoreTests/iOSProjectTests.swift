@@ -221,3 +221,5 @@ class iOSProjectTests: XCTestCase {
         ("testProject_setup_missingiOSConfiguration", testProject_setup_missingiOSConfiguration)
     ]
 }
+
+// swiftlint:enable type_name

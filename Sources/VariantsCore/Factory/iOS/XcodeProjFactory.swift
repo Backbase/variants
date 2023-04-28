@@ -5,6 +5,8 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import XcodeProj
 import PathKit
@@ -247,4 +249,6 @@ private extension XcodeProjFactory {
                              target: target, autoSave: true)
         }
     }
+    // swiftlint:enable function_parameter_count
 }
+// swiftlint:enable file_length
