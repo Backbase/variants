@@ -167,6 +167,7 @@ class XCConfigFactory: XCFactory {
     
     private func populateConfig(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         logger.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
+        importPodsIfNeeded(configFile: configFile)
         variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
             logger.logDebug("Item: ", item: stringContent, indentationLevel: 1, color: .purple)
@@ -175,6 +176,23 @@ class XCConfigFactory: XCFactory {
             if !success {
                 logger.logWarning(item: "Failed to add item to .xcconfig", indentationLevel: 2)
             }
+        }
+    }
+    
+    private func importPodsIfNeeded(configFile: Path) {
+        guard StaticPath.Pod.podFileFile.exists else { return }
+        
+        // this regex finds a folder that starts with Pods and doesn't end with Tests, so we can take the
+        let podConfigFileRegex: String = "./Pods/Target Support Files/Pods.*[^Tests]/.*\\.release\\.xcconfig"
+        guard let podsConfigFile: String = try? Bash("find", arguments: ".", "-regex", podConfigFileRegex).capture() else {
+            logger.logError("❌ ", item: "Failed to import Pods config in .xcconfig, Pod config file not found")
+            return
+        }
+        
+        let includeStatement = "#include \"\(podsConfigFile)\""
+        let (success, _) = write(includeStatement, toFile: configFile, force: false)
+        if !success {
+            logger.logError("❌ ", item: "Failed to add item to .xcconfig")
         }
     }
     
