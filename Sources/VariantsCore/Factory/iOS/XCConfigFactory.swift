@@ -182,7 +182,7 @@ class XCConfigFactory: XCFactory {
     private func importPodsIfNeeded(target: NamedTarget, configFile: Path) {
         guard StaticPath.Pod.podFileFile.exists else { return }
         
-        // this regex finds a folder that starts with Pods and ends with the target key, so we can take the
+        // this regex finds a folder that starts with Pods and ends with the target key, with a ".release.xcconfig" extension.
         let podConfigFileRegex: String = "./Pods/Target Support Files/Pods.*-\(target.key)/.*\\.release\\.xcconfig"
         guard let podsConfigFile: String = try? Bash("find | head -n 1", arguments: ".", "-regex", podConfigFileRegex).capture(),
               !podsConfigFile.isEmpty else {
