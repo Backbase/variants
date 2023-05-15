@@ -110,7 +110,6 @@ class FastlaneParametersFactoryTests: XCTestCase {
         XCTAssertEqual(try path.read(), correctOutput)
     }
 
-    // swiftlint:disable function_body_length
     func testFileWrite_appendingStore() {
         let expectedOutput =
             """
@@ -173,7 +172,6 @@ class FastlaneParametersFactoryTests: XCTestCase {
             XCTFail("'Try' should not throw - "+error.localizedDescription)
         }
     }
-    // swiftlint:enable function_body_length
 
     private func context(for parameters: [CustomProperty]) -> [String: Any] {
         let fastlaneParameters = parameters.literal()
