@@ -285,7 +285,8 @@ class iOSVariantTests: XCTestCase {
             (key: "V_VERSION_NUMBER", value: "0")
         ]
         let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil)
-        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: "App Marketing Name",  storeDestination: "appStore", custom: nil,
+        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil,
+                                            appName: "App Marketing Name", storeDestination: "appStore", custom: nil,
                                             idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: signing)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
