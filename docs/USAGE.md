@@ -87,6 +87,8 @@ ios:
             - name: apiBaseUrl
               value: https://sample.com/
               destination: project
+        postSwitchScript: |-
+            echo default Variant Done Switching
       BETA:
         id_suffix: beta
         app_icon: AppIcon.beta
@@ -100,6 +102,8 @@ ios:
             - key:  OTHER_SWIFT_FLAGS
               value: $(inherited) -DBETA
               destination: project
+    postSwitchScript: |-
+            echo global Done Switching
 ```
 ```yaml
 android:
