@@ -110,6 +110,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
         XCTAssertEqual(try path.read(), correctOutput)
     }
 
+    // swiftlint:disable function_body_length
     func testFileWrite_appendingStore() {
         let expectedOutput =
             """
@@ -133,7 +134,9 @@ class FastlaneParametersFactoryTests: XCTestCase {
             idSuffix: "sample",
             bundleID: nil,
             variantSigning: nil,
-            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+            variantPostSwitchScript: "echo hello",
+            globalPostSwitchScript: "echo test")
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -170,6 +173,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
             XCTFail("'Try' should not throw - "+error.localizedDescription)
         }
     }
+    // swiftlint:enable function_body_length
 
     private func context(for parameters: [CustomProperty]) -> [String: Any] {
         let fastlaneParameters = parameters.literal()

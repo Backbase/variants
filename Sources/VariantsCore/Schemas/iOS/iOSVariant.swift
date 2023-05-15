@@ -17,6 +17,8 @@ public struct iOSVariant: Variant {
     let storeDestination: Destination
     let signing: iOSSigning?
     let custom: [CustomProperty]?
+    let postSwitchScript: String?
+    
     private let bundleNamingOption: BundleNamingOption
      
     public var title: String { name }
@@ -36,7 +38,8 @@ public struct iOSVariant: Variant {
     
     init(
         name: String, versionName: String, versionNumber: Int, appIcon: String?, storeDestination: String?,
-        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?)
+        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?,
+        variantPostSwitchScript: String?, globalPostSwitchScript: String?)
     throws {
         self.name = name
         self.versionName = versionName
@@ -46,6 +49,9 @@ public struct iOSVariant: Variant {
         self.signing = try Self.parseSigning(name: name, variantSigning: variantSigning, globalSigning: globalSigning)
         self.custom = custom
         self.bundleNamingOption = try Self.parseBundleConfiguration(name: name, idSuffix: idSuffix, bundleID: bundleID)
+        self.postSwitchScript = Self.parsePostSwitchScript(name: name,
+                                                           variantScript: variantPostSwitchScript,
+                                                           globalScript: globalPostSwitchScript)
     }
     
     func makeBundleID(for target: iOSTarget) -> String {
@@ -109,6 +115,18 @@ public struct iOSVariant: Variant {
         }
     }
     
+    private static func parsePostSwitchScript(name: String, variantScript: String?, globalScript: String?) -> String? {
+        if let variantScript = variantScript, let globalScript = globalScript {
+            return "\(variantScript)\n\(globalScript)"
+        } else if let variantScript = variantScript {
+            return variantScript
+        } else if let globalScript = globalScript {
+            return globalScript
+        } else {
+            return nil
+        }
+    }
+    
     private static func parseBundleConfiguration(name: String, idSuffix: String?, bundleID: String?) throws -> BundleNamingOption {
         guard name != "default" else { return .fromTarget }
         
@@ -153,6 +171,7 @@ struct UnnamediOSVariant: Codable {
     let signing: iOSSigning?
     let custom: [CustomProperty]?
     let storeDestination: String?
+    let postSwitchScript: String?
     
     enum CodingKeys: String, CodingKey {
         case versionName = "version_name"
@@ -163,6 +182,7 @@ struct UnnamediOSVariant: Codable {
         case signing
         case custom
         case storeDestination = "store_destination"
+        case postSwitchScript
     }
 }
 
@@ -177,11 +197,12 @@ extension UnnamediOSVariant {
         signing = try values.decodeIfPresent(iOSSigning.self, forKey: .signing)
         custom = try values.decodeIfPresent([CustomProperty].self, forKey: .custom)
         storeDestination = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .storeDestination)
+        postSwitchScript = try values.decodeIfPresent(String.self, forKey: .postSwitchScript)
     }
 }
 
 extension iOSVariant {
-    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalSigning: iOSSigning?) throws {
+    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalSigning: iOSSigning?, globalPostSwitchScript: String?) throws {
         try self.init(
             name: name,
             versionName: unnamediOSVariant.versionName,
@@ -192,7 +213,9 @@ extension iOSVariant {
             idSuffix: unnamediOSVariant.idSuffix,
             bundleID: unnamediOSVariant.bundleID,
             variantSigning: unnamediOSVariant.signing,
-            globalSigning: globalSigning)
+            globalSigning: globalSigning,
+            variantPostSwitchScript: unnamediOSVariant.postSwitchScript,
+            globalPostSwitchScript: globalPostSwitchScript)
     }
 }
 

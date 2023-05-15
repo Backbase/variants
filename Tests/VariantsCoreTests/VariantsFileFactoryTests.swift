@@ -41,7 +41,9 @@ class VariantsFileFactoryTests: XCTestCase {
         idSuffix: nil,
         bundleID: nil,
         variantSigning: nil,
-        globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+        globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+        variantPostSwitchScript: "echo hello",
+        globalPostSwitchScript: "echo test")
     
     func testRender_noSecrets() {
         guard let configFile = Bundle(for: type(of: self))

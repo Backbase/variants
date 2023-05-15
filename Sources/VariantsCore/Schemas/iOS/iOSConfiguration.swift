@@ -18,6 +18,8 @@ public struct iOSConfiguration: Codable {
     let targets: [String: iOSTarget]
     let variants: [iOSVariant]
     let custom: [CustomProperty]?
+    
+    private let postSwitchScript: String?
     private let signing: iOSSigning?
         
     var pbxproj: String {
@@ -31,12 +33,14 @@ public struct iOSConfiguration: Codable {
         self.targets = try container.decode([String: iOSTarget].self, forKey: .targets)
         self.custom = try? container.decode([CustomProperty].self, forKey: .custom)
         
+        let globalPostSwitchScript = try container.decodeIfPresent(String.self, forKey: .postSwitchScript)
         let globalSigning = try container.decodeIfPresent(iOSSigning.self, forKey: .signing)
         let variantsDict = try container.decode([String: UnnamediOSVariant].self, forKey: .variants)
         
+        self.postSwitchScript = globalPostSwitchScript
         self.signing = globalSigning
         self.variants = try variantsDict
-            .map { try iOSVariant(from: $1, name: $0, globalSigning: globalSigning) }
+            .map { try iOSVariant(from: $1, name: $0, globalSigning: globalSigning, globalPostSwitchScript: globalPostSwitchScript) }
     }
 }
 
