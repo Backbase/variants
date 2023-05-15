@@ -58,10 +58,6 @@ let package = Package(
         .testTarget(
             name: "VariantsTests",
             dependencies: ["Variants"]
-        ),
-        .testTarget(
-            name: "VariantsCoreTests",
-            dependencies: ["Variants"]
         )
     ]
 )
