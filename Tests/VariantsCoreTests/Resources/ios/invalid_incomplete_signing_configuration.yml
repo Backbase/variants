@@ -58,6 +58,6 @@ ios:
           destination: project
 
     signing:
-      match_url: "git@github.com:backbase-rnd/cs-mobile-ios-match.git"
+      match_url: "git@github.com:sample/sample-match-repo.git"
       team_name: "Backbase B.V."
-      team_id: "R22WT7DX79"
+      team_id: "ABC247DXU9"
