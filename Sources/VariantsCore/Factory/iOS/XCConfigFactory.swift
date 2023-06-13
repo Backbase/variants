@@ -176,23 +176,23 @@ class XCConfigFactory: XCFactory {
         inTarget target: NamedTarget,
         projectPath: Path
     ) {
-        let xcodeFactory = XcodeProjFactory()
-        var mainTargetSettings = [String: String]()
-        if
+        guard
             variant.signing?.matchURL != nil,
             let exportMethod = variant.signing?.exportMethod,
             let teamName = variant.signing?.teamName,
-            let teamID = variant.signing?.teamID {
+            let teamID = variant.signing?.teamID
+        else { return }
 
-            var certType = "Development"
-            if exportMethod == .appstore || exportMethod == .enterprise {
-                certType = "Distribution"
-            }
-
-            mainTargetSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
-            mainTargetSettings["CODE_SIGN_STYLE"] = "Manual"
-            mainTargetSettings["CODE_SIGN_IDENTITY"] = "Apple \(certType): \(teamName) (\(teamID))"
+        let xcodeFactory = XcodeProjFactory()
+        var certType = "Development"
+        if exportMethod == .appstore || exportMethod == .enterprise {
+            certType = "Distribution"
         }
+        let mainTargetSettings = [
+            "PROVISIONING_PROFILE_SPECIFIER": "$(V_MATCH_PROFILE)",
+            "CODE_SIGN_STYLE": "Manual",
+            "CODE_SIGN_IDENTITY": "Apple \(certType): \(teamName) (\(teamID))"
+        ]
         xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
     }
     
