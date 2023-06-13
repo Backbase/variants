@@ -56,3 +56,8 @@ ios:
         - name: SAMPLE_GLOBAL
           value: GLOBAL Value iOS
           destination: project
+
+    signing:
+      match_url: "git@github.com:backbase-rnd/cs-mobile-ios-match.git"
+      team_name: "Backbase B.V."
+      team_id: "R22WT7DX79"

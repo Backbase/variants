@@ -49,11 +49,12 @@ class YamlParserTests: XCTestCase {
         }
     }
     
-    func testExtractConfiguration_invalid_iOS_missingSigningConfiguration() {
+    func testExtractConfiguration_invalid_iOS_incompleteSigningConfiguration() {
         let expectedUnderlyingError = RuntimeError(
             """
-            Variant "BETA" doesn't contain a 'signing' configuration. \
-            Create a global 'signing' configuration or make sure all variants have this property.
+            Missing: 'signing.export_method'
+            At least one variant doesn't contain 'signing.export_method' in its configuration.
+            Create a global 'signing' configuration with 'export_method' or make sure all variants have this property.
             """
         )
         
@@ -280,8 +281,8 @@ class YamlParserTests: XCTestCase {
          testExtractConfiguration_invalidSpec),
         ("testExtractConfiguration_invalid_iOS_missingExportMethod",
          testExtractConfiguration_invalid_iOS_missingExportMethod),
-        ("testExtractConfiguration_invalid_iOS_missingSigningConfiguration",
-         testExtractConfiguration_invalid_iOS_missingSigningConfiguration),
+        ("testExtractConfiguration_invalid_iOS_incompleteSigningConfiguration",
+         testExtractConfiguration_invalid_iOS_incompleteSigningConfiguration),
         ("testExtractConfiguration_valid_iOS",
          testExtractConfiguration_valid_iOS),
         ("testExtractConfiguration_valid_android",
