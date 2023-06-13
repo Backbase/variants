@@ -101,11 +101,12 @@ public struct iOSVariant: Variant {
         } else if let globalSigning = globalSigning {
             return try globalSigning ~ nil
         } else {
-            throw RuntimeError(
+            Logger.shared.logWarning(item:
                 """
                 Variant "\(name)" doesn't contain a 'signing' configuration. \
                 Create a global 'signing' configuration or make sure all variants have this property.
                 """)
+            return nil
         }
     }
     
