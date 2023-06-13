@@ -102,7 +102,12 @@ class XCConfigFactory: XCFactory {
         if addToXcodeProj ?? false {
             addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target, variant: variant)
         }
-        
+
+        /*
+         * Adjust signing configuration in project.pbxproj
+         */
+        updateSigningConfig(for: variant, inTarget: target, projectPath: xcodeProjPath)
+
         /*
          * INFO.plist
          */
@@ -138,18 +143,11 @@ class XCConfigFactory: XCFactory {
             let xcodeFactory = XcodeProjFactory()
             xcodeFactory.add([xcConfigFile, variantsFile], toProject: projectPath, sourceRoot: sourceRoot, target: target)
             
-            var mainTargetSettings = [
+            let mainTargetSettings = [
                 "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
                 "PRODUCT_NAME": "$(V_APP_NAME)",
                 "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
             ]
-            
-            if
-                variant.signing?.matchURL != nil,
-                variant.signing?.exportMethod != nil {
-                mainTargetSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
-            }
-            
             xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
             
             xcodeFactory.modify(
@@ -164,7 +162,7 @@ class XCConfigFactory: XCFactory {
             logger.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
         }
     }
-    
+
     private func populateConfig(with target: NamedTarget, configFile: Path, variant: iOSVariant) {
         logger.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
         importPodsIfNeeded(target: target, configFile: configFile)
@@ -177,6 +175,31 @@ class XCConfigFactory: XCFactory {
                 logger.logWarning(item: "Failed to add item to .xcconfig", indentationLevel: 2)
             }
         }
+    }
+
+    private func updateSigningConfig(
+        for variant: iOSVariant,
+        inTarget target: NamedTarget,
+        projectPath: Path
+    ) {
+        let xcodeFactory = XcodeProjFactory()
+        var mainTargetSettings = [String: String]()
+        if
+            variant.signing?.matchURL != nil,
+            let exportMethod = variant.signing?.exportMethod,
+            let teamName = variant.signing?.teamName,
+            let teamID = variant.signing?.teamID {
+
+            var certType = "Development"
+            if exportMethod == .appstore || exportMethod == .enterprise {
+                certType = "Distribution"
+            }
+
+            mainTargetSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
+            mainTargetSettings["CODE_SIGN_STYLE"] = "Manual"
+            mainTargetSettings["CODE_SIGN_IDENTITY"] = "Apple \(certType): \(teamName) (\(teamID))"
+        }
+        xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
     }
     
     private func importPodsIfNeeded(target: NamedTarget, configFile: Path) {
