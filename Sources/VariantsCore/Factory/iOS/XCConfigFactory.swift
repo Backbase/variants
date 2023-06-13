@@ -58,7 +58,6 @@ class XCConfigFactory: XCFactory {
             try encodedJSONString.write(toFile: file.absolute().description, atomically: true, encoding: .utf8)
             
             return (true, file)
-            
         } catch {
             return (false, nil)
         }
@@ -76,7 +75,6 @@ class XCConfigFactory: XCFactory {
             throw RuntimeError("Attempting to create \(xcconfigFileName) - Path to Xcode Project not found")
         }
         let xcodeProjPath = Path(xcodeProj)
-        
         let configString = target.value.source.config
         
         logger.logInfo("Checking if \(xcconfigFileName) exists", item: "")
@@ -93,7 +91,6 @@ class XCConfigFactory: XCFactory {
         
         _ = write("", toFile: xcodeConfigPath, force: true)
         logger.logInfo("Created file: ", item: "'\(xcconfigFileName)' at \(xcodeConfigPath.parent().abbreviate().description)")
-        
         populateConfig(with: target, configFile: xcodeConfigPath, variant: variant)
 
         /*
@@ -113,7 +110,6 @@ class XCConfigFactory: XCFactory {
          */
         let infoPath = target.value.source.info
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
-        
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
         
         /*
@@ -132,7 +128,6 @@ class XCConfigFactory: XCFactory {
                             target: NamedTarget,
                             variant: iOSVariant) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
-
         do {
             let path = try TemplateDirectory().path
             try Bash("cp", arguments:
@@ -157,7 +152,6 @@ class XCConfigFactory: XCFactory {
                 in: projectPath,
                 target: target.value,
                 asTestSettings: true)
-            
         } catch {
             logger.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
         }
@@ -204,7 +198,6 @@ class XCConfigFactory: XCFactory {
     
     private func importPodsIfNeeded(target: NamedTarget, configFile: Path) {
         guard StaticPath.Pod.podFileFile.exists else { return }
-        
         // this regex finds a folder that starts with Pods and ends with the target key, with a ".release.xcconfig" extension.
         let podConfigFileRegex: String = "./Pods/Target Support Files/Pods.*-\(target.key)/.*\\.release\\.xcconfig"
         guard let podsConfigFile: String = try? Bash("find | head -n 1", arguments: ".", "-regex", podConfigFileRegex).capture(),
@@ -212,7 +205,6 @@ class XCConfigFactory: XCFactory {
             logger.logError("❌ ", item: "Failed to import Pods config in .xcconfig, Pod config file not found")
             return
         }
-        
         let includeStatement = "#include \"\(podsConfigFile)\""
         let (success, _) = write(includeStatement, toFile: configFile, force: false)
         if !success {
@@ -221,7 +213,6 @@ class XCConfigFactory: XCFactory {
     }
     
     private func updateInfoPlist(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
-        
         let configFilePath = configFile.absolute().description
         do {
             // TODO: Add plutil as separate command?
