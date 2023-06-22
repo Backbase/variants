@@ -35,6 +35,7 @@ class VariantsFileFactoryTests: XCTestCase {
         versionName: "2.3.4",
         versionNumber: 99,
         appIcon: nil,
+        appName: nil,
         storeDestination: "testFlight",
         custom: [CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
                  CustomProperty(name: "PROPERTY_B", value: "VALUE_B", env: true, destination: .project)],

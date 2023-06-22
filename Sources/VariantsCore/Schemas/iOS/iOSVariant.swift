@@ -14,6 +14,7 @@ public struct iOSVariant: Variant {
     let versionName: String
     let versionNumber: Int
     let appIcon: String?
+    let appName: String?
     let storeDestination: Destination
     let signing: iOSSigning?
     let custom: [CustomProperty]?
@@ -35,13 +36,14 @@ public struct iOSVariant: Variant {
     }
     
     init(
-        name: String, versionName: String, versionNumber: Int, appIcon: String?, storeDestination: String?,
+        name: String, versionName: String, versionNumber: Int, appIcon: String?, appName: String?, storeDestination: String?,
         custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?)
     throws {
         self.name = name
         self.versionName = versionName
         self.versionNumber = versionNumber
         self.appIcon = appIcon
+        self.appName = appName
         self.storeDestination = try Self.parseDestination(name: name, destination: storeDestination) ?? .appStore
         self.signing = try Self.parseSigning(name: name, variantSigning: variantSigning, globalSigning: globalSigning)
         self.custom = custom
@@ -61,7 +63,7 @@ public struct iOSVariant: Variant {
     
     func getDefaultValues(for target: iOSTarget) -> [(key: String, value: String)] {
         var customDictionary: [String: String] = [
-            "V_APP_NAME": target.name + configName,
+            "V_APP_NAME": appName ?? target.name + configName,
             "V_BUNDLE_ID": makeBundleID(for: target),
             "V_VERSION_NAME": versionName,
             "V_VERSION_NUMBER": String(versionNumber),
@@ -149,6 +151,7 @@ struct UnnamediOSVariant: Codable {
     let versionName: String
     let versionNumber: Int
     let appIcon: String?
+    let appName: String?
     let idSuffix: String?
     let bundleID: String?
     let signing: iOSSigning?
@@ -159,6 +162,7 @@ struct UnnamediOSVariant: Codable {
         case versionName = "version_name"
         case versionNumber = "version_number"
         case appIcon = "app_icon"
+        case appName = "app_name"
         case idSuffix = "id_suffix"
         case bundleID = "bundle_id"
         case signing
@@ -173,6 +177,7 @@ extension UnnamediOSVariant {
         versionName = try values.decodeOrReadFromEnv(String.self, forKey: .versionName)
         versionNumber = try values.decodeOrReadFromEnv(Int.self, forKey: .versionNumber)
         appIcon = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .appIcon)
+        appName = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .appName)
         idSuffix = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .idSuffix)
         bundleID = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .bundleID)
         signing = try values.decodeIfPresent(iOSSigning.self, forKey: .signing)
@@ -188,6 +193,7 @@ extension iOSVariant {
             versionName: unnamediOSVariant.versionName,
             versionNumber: unnamediOSVariant.versionNumber,
             appIcon: unnamediOSVariant.appIcon,
+            appName: unnamediOSVariant.appName,
             storeDestination: unnamediOSVariant.storeDestination,
             custom: unnamediOSVariant.custom,
             idSuffix: unnamediOSVariant.idSuffix,

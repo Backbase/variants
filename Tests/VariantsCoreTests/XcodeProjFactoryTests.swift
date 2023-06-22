@@ -36,7 +36,7 @@ class XcodeProjFactoryTests: XCTestCase {
         let proj = XCConfigFactory(logger: Logger(verbose: true))
         let target = iOSTarget(name: "", app_icon: "", bundleId: "", testTarget: "",
                                source: .init(path: "", info: "", config: ""))
-        guard let variant = try? iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil,
+        guard let variant = try? iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil, appName: nil,
                                             storeDestination: nil, custom: nil, idSuffix: "", bundleID: nil, variantSigning: nil,
                                             globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
         else {
