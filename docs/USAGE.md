@@ -196,6 +196,12 @@ Configuration through custom properties can bring a lot of value to your variant
 
 See our [Custom Property documentation](CUSTOM_PROPERTY.md) for a better understanding and examples.
 
+#### Post Switch Script (iOS)
+
+Post Switch Script allows you to specify a script or command to run after switching variants. It can be provided globally and for each variant individually.
+
+For more information check [Using Post Switch Script](ios/POST_SWITCH_SCRIPT.md).
+
 #### Signing configuration
 
 Code signing for iOS apps can also be handled through `variants.yml` as long as Fastlane Match is used.
