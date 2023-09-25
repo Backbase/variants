@@ -8,6 +8,7 @@
 import Foundation
 
 // swiftlint:disable type_name
+// swiftlint:disable line_length
 
 public struct iOSVariant: Variant {
     let name: String
@@ -225,3 +226,4 @@ extension iOSVariant {
 }
 
 // swiftlint:enable type_name
+// swiftlint:enable line_length
