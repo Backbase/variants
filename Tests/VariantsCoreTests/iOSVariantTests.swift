@@ -108,7 +108,7 @@ class iOSVariantTests: XCTestCase {
         XCTAssertNoThrow(try makeiOSVariant())
         
         let variant = try? makeiOSVariant()
-        XCTAssertEqual(variant?.postSwitchScript, "echo hello")
+        XCTAssertEqual(variant?.postSwitchScript, "echo variant")
     }
     
     func testInitiOSVariantsWithGlobalPostSwitchScript() {
