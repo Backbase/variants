@@ -39,7 +39,7 @@ public struct iOSVariant: Variant {
     init(
         name: String, versionName: String, versionNumber: Int, appIcon: String?, storeDestination: String?,
         custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?,
-        variantPostSwitchScript: String?, globalPostSwitchScript: String?)
+        globalPostSwitchScript: String?, variantPostSwitchScript: String?)
     throws {
         self.name = name
         self.versionName = versionName
@@ -50,8 +50,8 @@ public struct iOSVariant: Variant {
         self.custom = custom
         self.bundleNamingOption = try Self.parseBundleConfiguration(name: name, idSuffix: idSuffix, bundleID: bundleID)
         self.postSwitchScript = Self.parsePostSwitchScript(name: name,
-                                                           variantScript: variantPostSwitchScript,
-                                                           globalScript: globalPostSwitchScript)
+                                                           globalScript: globalPostSwitchScript,
+                                                           variantScript: variantPostSwitchScript)
     }
     
     func makeBundleID(for target: iOSTarget) -> String {
@@ -115,13 +115,13 @@ public struct iOSVariant: Variant {
         }
     }
     
-    private static func parsePostSwitchScript(name: String, variantScript: String?, globalScript: String?) -> String? {
-        if let variantScript = variantScript, let globalScript = globalScript {
-            return "\(variantScript)\n\(globalScript)"
-        } else if let variantScript = variantScript {
-            return variantScript
+    private static func parsePostSwitchScript(name: String, globalScript: String?, variantScript: String?) -> String? {
+        if let globalScript = globalScript, let variantScript = variantScript {
+            return "\(globalScript) && \(variantScript)"
         } else if let globalScript = globalScript {
             return globalScript
+        } else if let variantScript = variantScript {
+            return variantScript
         } else {
             return nil
         }
@@ -214,8 +214,8 @@ extension iOSVariant {
             bundleID: unnamediOSVariant.bundleID,
             variantSigning: unnamediOSVariant.signing,
             globalSigning: globalSigning,
-            variantPostSwitchScript: unnamediOSVariant.postSwitchScript,
-            globalPostSwitchScript: globalPostSwitchScript)
+            globalPostSwitchScript: globalPostSwitchScript,
+            variantPostSwitchScript: unnamediOSVariant.postSwitchScript)
     }
 }
 
