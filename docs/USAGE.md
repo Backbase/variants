@@ -83,6 +83,8 @@ ios:
         version_name: 0.0.1
         version_number: {{ envVars.VERSION_CODE }}
         store_destination: AppStore
+        # This is an optional field to override the default app name per variant
+        app_name: App Marketing Name 
         custom:
             - name: apiBaseUrl
               value: https://sample.com/

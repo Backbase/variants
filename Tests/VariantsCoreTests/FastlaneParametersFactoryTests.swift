@@ -128,6 +128,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
             versionName: "2.3.4",
             versionNumber: 99,
             appIcon: nil,
+            appName: nil,
             storeDestination: "testFlight",
             custom: nil,
             idSuffix: "sample",
