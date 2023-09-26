@@ -8,7 +8,6 @@
 import Foundation
 
 // swiftlint:disable type_name
-// swiftlint:disable line_length
 
 public struct iOSVariant: Variant {
     let name: String
@@ -40,7 +39,8 @@ public struct iOSVariant: Variant {
     
     init(
         name: String, versionName: String, versionNumber: Int, appIcon: String?, appName: String?, storeDestination: String?,
-        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?, globalPostSwitchScript: String?, variantPostSwitchScript: String?)
+        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?,
+        globalPostSwitchScript: String?, variantPostSwitchScript: String?)
     throws {
         self.name = name
         self.versionName = versionName
@@ -51,8 +51,7 @@ public struct iOSVariant: Variant {
         self.signing = try Self.parseSigning(name: name, variantSigning: variantSigning, globalSigning: globalSigning)
         self.custom = custom
         self.bundleNamingOption = try Self.parseBundleConfiguration(name: name, idSuffix: idSuffix, bundleID: bundleID)
-        self.postSwitchScript = Self.parsePostSwitchScript(name: name,
-                                                           globalScript: globalPostSwitchScript,
+        self.postSwitchScript = Self.parsePostSwitchScript(globalScript: globalPostSwitchScript,
                                                            variantScript: variantPostSwitchScript)
     }
     
@@ -117,7 +116,7 @@ public struct iOSVariant: Variant {
         }
     }
     
-    private static func parsePostSwitchScript(name: String, globalScript: String?, variantScript: String?) -> String? {
+    private static func parsePostSwitchScript(globalScript: String?, variantScript: String?) -> String? {
         if let globalScript = globalScript, let variantScript = variantScript {
             return "\(globalScript) && \(variantScript)"
         } else if let globalScript = globalScript {
@@ -226,4 +225,3 @@ extension iOSVariant {
 }
 
 // swiftlint:enable type_name
-// swiftlint:enable line_length
