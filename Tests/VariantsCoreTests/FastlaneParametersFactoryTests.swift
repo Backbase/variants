@@ -9,6 +9,8 @@ import XCTest
 import PathKit
 @testable import VariantsCore
 
+// swiftlint:disable function_body_length
+
 private let parameters = [
     CustomProperty(name: "sample", value: "sample-value", destination: .project),
     CustomProperty(name: "sample-2", value: "sample-2-value", destination: .fastlane),
@@ -134,7 +136,9 @@ class FastlaneParametersFactoryTests: XCTestCase {
             idSuffix: "sample",
             bundleID: nil,
             variantSigning: nil,
-            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+            globalPostSwitchScript: "echo global",
+            variantPostSwitchScript: "echo variant")
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -201,3 +205,5 @@ fileprivate extension Sequence where Iterator.Element == CustomProperty {
             .filter({ $0.destination == .fastlane && !$0.isEnvironmentVariable })
     }
 }
+
+// swiftlint:enable function_body_length

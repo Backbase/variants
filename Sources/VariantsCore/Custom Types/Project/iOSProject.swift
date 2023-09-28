@@ -48,6 +48,10 @@ class iOSProject: Project {
         } catch {
             throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
+        
+        if let postSwitchScript = desiredVariant.postSwitchScript {
+            try self.runPostSwitchScript(postSwitchScript)
+        }
     }
     
     override func list(spec: String) throws -> [Variant] {
@@ -104,6 +108,11 @@ class iOSProject: Project {
                 
                 try parametersFactory.createMatchFile(using: variant, target: namedTarget.value)
             }
+    }
+    
+    private func runPostSwitchScript(_ script: String) throws {
+        guard let outputString = try Bash("bash", arguments: "-c", script).capture() else { return }
+        Logger.shared.logInfo(item: outputString)
     }
 
     private func createVariants(with configuration: iOSConfiguration, spec: String) throws {
