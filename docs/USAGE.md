@@ -89,6 +89,8 @@ ios:
             - name: apiBaseUrl
               value: https://sample.com/
               destination: project
+        postSwitchScript: |-
+            echo default Variant Done Switching
       BETA:
         id_suffix: beta
         app_icon: AppIcon.beta
@@ -102,6 +104,8 @@ ios:
             - key:  OTHER_SWIFT_FLAGS
               value: $(inherited) -DBETA
               destination: project
+    postSwitchScript: |-
+            echo global Done Switching
 ```
 ```yaml
 android:
@@ -193,6 +197,12 @@ For example: Target BundleID is `com.sample.App` and variant `bundle_id` is `com
 Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane and vice-versa.
 
 See our [Custom Property documentation](CUSTOM_PROPERTY.md) for a better understanding and examples.
+
+#### Post Switch Script (iOS)
+
+Post Switch Script allows you to specify a script or command to run after switching variants. It can be provided globally and for each variant individually.
+
+For more information check [Using Post Switch Script](ios/POST_SWITCH_SCRIPT.md).
 
 #### Signing configuration
 

@@ -38,7 +38,8 @@ class XcodeProjFactoryTests: XCTestCase {
                                source: .init(path: "", info: "", config: ""))
         guard let variant = try? iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil, appName: nil,
                                             storeDestination: nil, custom: nil, idSuffix: "", bundleID: nil, variantSigning: nil,
-                                            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+                                            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+                                            globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
