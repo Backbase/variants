@@ -177,7 +177,6 @@ class XCConfigFactory: XCFactory {
         projectPath: Path
     ) {
         guard
-            variant.signing?.matchURL != nil,
             let exportMethod = variant.signing?.exportMethod,
             let teamName = variant.signing?.teamName,
             let teamID = variant.signing?.teamID
