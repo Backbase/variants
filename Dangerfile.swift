@@ -31,13 +31,20 @@ var bigPRThreshold = 500
 
 let swiftFilesWithoutCopyright = changedFiles.filter {
     $0.fileType == .swift
-        && !danger.utils.readFile($0).contains(
-            """
-            //
-            //  Variants
-            //
-            //  Copyright (c) Backbase B.V. - https://www.backbase.com
-            """)
+        && (
+            !danger.utils.readFile($0).contains(
+                """
+                //
+                //  Variants
+                """
+            )
+
+            || !danger.utils.readFile($0).contains(
+                """
+                //  Copyright (c) Backbase B.V. - https://www.backbase.com
+                """
+            )
+        )
 }
 
 if swiftFilesWithoutCopyright.count > 0 {

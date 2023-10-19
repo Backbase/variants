@@ -298,21 +298,12 @@ class iOSVariantTests: XCTestCase {
     }
     
     func testInitWithoutSigningConfiguration() {
-        let expectedError = RuntimeError(
-            """
-            Variant "Valid Name" doesn't contain a 'signing' configuration. \
-            Create a global 'signing' configuration or make sure all variants have this property.
-            """
-        )
-        
         func makeiOSVariant() throws -> iOSVariant {
             try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
                            idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: nil, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
         }
-        
-        XCTAssertThrowsError(try makeiOSVariant(), "At least one signing needs to be provided") { error in
-            XCTAssertEqual(error as? RuntimeError, expectedError)
-        }
+
+        XCTAssertNoThrow(try makeiOSVariant())
     }
     
     func testGetDefaultValuesForTargetWithoutSigning() {

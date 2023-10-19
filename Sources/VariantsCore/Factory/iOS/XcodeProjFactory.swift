@@ -125,8 +125,7 @@ struct XcodeProjFactory {
             }
             try project.write(path: projectPath)
         } catch {
-            dump(error)
-            logger.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)'")
+            logger.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)', error: '\(error.localizedDescription)'")
         }
     }
     
