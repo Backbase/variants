@@ -179,7 +179,9 @@ class XCConfigFactory: XCFactory {
         guard
             let exportMethod = variant.signing?.exportMethod,
             let teamName = variant.signing?.teamName,
-            let teamID = variant.signing?.teamID
+            let teamID = variant.signing?.teamID,
+            !teamID.isEmpty,
+            !teamName.isEmpty
         else { return }
 
         let xcodeFactory = XcodeProjFactory()
