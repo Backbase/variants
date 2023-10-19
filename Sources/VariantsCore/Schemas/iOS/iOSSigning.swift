@@ -92,3 +92,5 @@ extension iOSSigning {
         return signing
     }
 }
+
+// swiftlint:enable type_name

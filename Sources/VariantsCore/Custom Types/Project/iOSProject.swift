@@ -48,6 +48,10 @@ class iOSProject: Project {
         } catch {
             throw RuntimeError("Unable to switch variants - Check your YAML spec")
         }
+        
+        if let postSwitchScript = desiredVariant.postSwitchScript {
+            try self.runPostSwitchScript(postSwitchScript)
+        }
     }
     
     override func list(spec: String) throws -> [Variant] {
@@ -60,11 +64,7 @@ class iOSProject: Project {
 
     // MARK: - Private
 
-    private func loadConfiguration(_ path: String?) throws -> iOSConfiguration? {
-        guard let path = path else {
-            throw ValidationError("Error: Use '-s' to specify the configuration file")
-        }
-
+    private func loadConfiguration(_ path: String) throws -> iOSConfiguration? {
         let configurationPath = Path(path)
         guard !configurationPath.isDirectory else {
             throw ValidationError("Error: \(configurationPath) is a directory path")
@@ -108,6 +108,11 @@ class iOSProject: Project {
                 
                 try parametersFactory.createMatchFile(using: variant, target: namedTarget.value)
             }
+    }
+    
+    private func runPostSwitchScript(_ script: String) throws {
+        guard let outputString = try Bash("bash", arguments: "-c", script).capture() else { return }
+        Logger.shared.logInfo(item: outputString)
     }
 
     private func createVariants(with configuration: iOSConfiguration, spec: String) throws {
@@ -233,3 +238,5 @@ class iOSProject: Project {
     private let configFactory: XCFactory
     private let parametersFactory: ParametersFactory
 }
+
+// swiftlint:enable type_name

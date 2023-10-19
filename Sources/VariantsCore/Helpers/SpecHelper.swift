@@ -155,3 +155,5 @@ class iOSSpecHelper: SpecHelper {
 // MARK: - Android
 
 class AndroidSpecHelper: SpecHelper {}
+
+// swiftlint:enable type_name

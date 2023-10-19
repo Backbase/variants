@@ -25,7 +25,7 @@ class XcodeProjFactoryTests: XCTestCase {
     }
     
     func testWriteJson() {
-        let proj = XCConfigFactory(logLevel: true)
+        let proj = XCConfigFactory(logger: Logger(verbose: true))
         let file = Path("./output.json")
         let (success, path) = proj.writeJSON("{}", toFile: file)
         XCTAssertTrue(success)
@@ -33,12 +33,13 @@ class XcodeProjFactoryTests: XCTestCase {
     }
     
     func testCreateConfiguration() {
-        let proj = XCConfigFactory(logLevel: true)
+        let proj = XCConfigFactory(logger: Logger(verbose: true))
         let target = iOSTarget(name: "", app_icon: "", bundleId: "", testTarget: "",
                                source: .init(path: "", info: "", config: ""))
-        guard let variant = try? iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil,
+        guard let variant = try? iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil, appName: nil,
                                             storeDestination: nil, custom: nil, idSuffix: "", bundleID: nil, variantSigning: nil,
-                                            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+                                            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+                                            globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }

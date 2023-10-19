@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>$(V_APP_NAME)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(V_APP_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(V_BUNDLE_ID)</string>
+	<key>CFBundleName</key>
+	<string>$(V_APP_NAME)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(V_VERSION_NAME)</string>
+	<key>CFBundleVersion</key>
+	<string>$(V_VERSION_NUMBER)</string>
+	<key>OTHER_SWIFT_FLAGS</key>
+	<string>$(OTHER_SWIFT_FLAGS)</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>

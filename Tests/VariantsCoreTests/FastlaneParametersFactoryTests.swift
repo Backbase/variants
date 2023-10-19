@@ -111,7 +111,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
         XCTAssertNoThrow(try factory.write(Data(correctOutput.utf8), using: path))
         XCTAssertEqual(try path.read(), correctOutput)
     }
-    
+
     func testFileWrite_appendingStore() {
         let expectedOutput =
             """
@@ -130,12 +130,15 @@ class FastlaneParametersFactoryTests: XCTestCase {
             versionName: "2.3.4",
             versionNumber: 99,
             appIcon: nil,
+            appName: nil,
             storeDestination: "testFlight",
             custom: nil,
             idSuffix: "sample",
             bundleID: nil,
             variantSigning: nil,
-            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""))
+            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+            globalPostSwitchScript: "echo global",
+            variantPostSwitchScript: "echo variant")
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -172,7 +175,7 @@ class FastlaneParametersFactoryTests: XCTestCase {
             XCTFail("'Try' should not throw - "+error.localizedDescription)
         }
     }
-    
+
     private func context(for parameters: [CustomProperty]) -> [String: Any] {
         let fastlaneParameters = parameters.literal()
         let fastlaneEnvVars = parameters.envVars()
@@ -185,7 +188,6 @@ class FastlaneParametersFactoryTests: XCTestCase {
         return context
     }
 }
-// swiftlint:enable function_body_length
 
 fileprivate extension Sequence where Iterator.Element == CustomProperty {
     func envVars() -> [CustomProperty] {
@@ -203,3 +205,5 @@ fileprivate extension Sequence where Iterator.Element == CustomProperty {
             .filter({ $0.destination == .fastlane && !$0.isEnvironmentVariable })
     }
 }
+
+// swiftlint:enable function_body_length

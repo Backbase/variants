@@ -1,0 +1,16 @@
+# --- Cocoapod dependencies
+
+desc 'Update cocoapods and repo-art automatically if pod install fails'
+lane :pods_update do
+  cocoapods(use_bundle_exec: true, error_callback: lambda { |_result|
+    # If you use Cocoapods-art
+    # pod_repo_art_update
+    cocoapods(use_bundle_exec: true, repo_update: true)
+  })
+end
+
+desc 'Update all repo-art repositories'
+lane :pod_repo_art_update do
+  repos = sh 'pod repo-art | egrep \'^[a-zA-Z]\''
+  repos.split("\n").each { |repo| sh "pod repo-art update #{repo}" }
+end

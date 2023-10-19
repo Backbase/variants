@@ -14,9 +14,12 @@ public struct iOSVariant: Variant {
     let versionName: String
     let versionNumber: Int
     let appIcon: String?
+    let appName: String?
     let storeDestination: Destination
     let signing: iOSSigning?
     let custom: [CustomProperty]?
+    let postSwitchScript: String?
+    
     private let bundleNamingOption: BundleNamingOption
      
     public var title: String { name }
@@ -35,17 +38,21 @@ public struct iOSVariant: Variant {
     }
     
     init(
-        name: String, versionName: String, versionNumber: Int, appIcon: String?, storeDestination: String?,
-        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?)
+        name: String, versionName: String, versionNumber: Int, appIcon: String?, appName: String?, storeDestination: String?,
+        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?,
+        globalPostSwitchScript: String?, variantPostSwitchScript: String?)
     throws {
         self.name = name
         self.versionName = versionName
         self.versionNumber = versionNumber
         self.appIcon = appIcon
+        self.appName = appName
         self.storeDestination = try Self.parseDestination(name: name, destination: storeDestination) ?? .appStore
         self.signing = try Self.parseSigning(name: name, variantSigning: variantSigning, globalSigning: globalSigning)
         self.custom = custom
         self.bundleNamingOption = try Self.parseBundleConfiguration(name: name, idSuffix: idSuffix, bundleID: bundleID)
+        self.postSwitchScript = Self.parsePostSwitchScript(globalScript: globalPostSwitchScript,
+                                                           variantScript: variantPostSwitchScript)
     }
     
     func makeBundleID(for target: iOSTarget) -> String {
@@ -59,9 +66,9 @@ public struct iOSVariant: Variant {
         }
     }
     
-    func getDefaultValues(for target: iOSTarget) -> [String: String] {
+    func getDefaultValues(for target: iOSTarget) -> [(key: String, value: String)] {
         var customDictionary: [String: String] = [
-            "V_APP_NAME": target.name + configName,
+            "V_APP_NAME": appName ?? target.name + configName,
             "V_BUNDLE_ID": makeBundleID(for: target),
             "V_VERSION_NAME": versionName,
             "V_VERSION_NUMBER": String(versionNumber),
@@ -76,7 +83,7 @@ public struct iOSVariant: Variant {
             .filter { $0.destination == .project && !$0.isEnvironmentVariable }
             .forEach { customDictionary[$0.name] = $0.value }
         
-        return customDictionary
+        return customDictionary.sorted(by: {$0.key < $1.key})
     }
     
     private static func parseDestination(name: String, destination: String?) throws -> Destination? {
@@ -101,11 +108,24 @@ public struct iOSVariant: Variant {
         } else if let globalSigning = globalSigning {
             return try globalSigning ~ nil
         } else {
-            throw RuntimeError(
+            Logger.shared.logWarning(item:
                 """
                 Variant "\(name)" doesn't contain a 'signing' configuration. \
                 Create a global 'signing' configuration or make sure all variants have this property.
                 """)
+            return nil
+        }
+    }
+    
+    private static func parsePostSwitchScript(globalScript: String?, variantScript: String?) -> String? {
+        if let globalScript = globalScript, let variantScript = variantScript {
+            return "\(globalScript) && \(variantScript)"
+        } else if let globalScript = globalScript {
+            return globalScript
+        } else if let variantScript = variantScript {
+            return variantScript
+        } else {
+            return nil
         }
     }
     
@@ -148,21 +168,25 @@ struct UnnamediOSVariant: Codable {
     let versionName: String
     let versionNumber: Int
     let appIcon: String?
+    let appName: String?
     let idSuffix: String?
     let bundleID: String?
     let signing: iOSSigning?
     let custom: [CustomProperty]?
     let storeDestination: String?
+    let postSwitchScript: String?
     
     enum CodingKeys: String, CodingKey {
         case versionName = "version_name"
         case versionNumber = "version_number"
         case appIcon = "app_icon"
+        case appName = "app_name"
         case idSuffix = "id_suffix"
         case bundleID = "bundle_id"
         case signing
         case custom
         case storeDestination = "store_destination"
+        case postSwitchScript
     }
 }
 
@@ -172,26 +196,33 @@ extension UnnamediOSVariant {
         versionName = try values.decodeOrReadFromEnv(String.self, forKey: .versionName)
         versionNumber = try values.decodeOrReadFromEnv(Int.self, forKey: .versionNumber)
         appIcon = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .appIcon)
+        appName = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .appName)
         idSuffix = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .idSuffix)
         bundleID = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .bundleID)
         signing = try values.decodeIfPresent(iOSSigning.self, forKey: .signing)
         custom = try values.decodeIfPresent([CustomProperty].self, forKey: .custom)
         storeDestination = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .storeDestination)
+        postSwitchScript = try values.decodeIfPresent(String.self, forKey: .postSwitchScript)
     }
 }
 
 extension iOSVariant {
-    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalSigning: iOSSigning?) throws {
+    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalSigning: iOSSigning?, globalPostSwitchScript: String?) throws {
         try self.init(
             name: name,
             versionName: unnamediOSVariant.versionName,
             versionNumber: unnamediOSVariant.versionNumber,
             appIcon: unnamediOSVariant.appIcon,
+            appName: unnamediOSVariant.appName,
             storeDestination: unnamediOSVariant.storeDestination,
             custom: unnamediOSVariant.custom,
             idSuffix: unnamediOSVariant.idSuffix,
             bundleID: unnamediOSVariant.bundleID,
             variantSigning: unnamediOSVariant.signing,
-            globalSigning: globalSigning)
+            globalSigning: globalSigning,
+            globalPostSwitchScript: globalPostSwitchScript,
+            variantPostSwitchScript: unnamediOSVariant.postSwitchScript)
     }
 }
+
+// swiftlint:enable type_name

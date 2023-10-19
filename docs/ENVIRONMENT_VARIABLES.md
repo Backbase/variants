@@ -58,15 +58,38 @@ rootProject.ext.C_PROPERTY = System.getenv('FOO')
 
 - When platform is iOS, these properties behave in a slightly different way.
 
-Properties whose destination is `project`, for iOS, that are **not** reading from environment variables, will be available in `variants.xcconfig`.
+Properties whose destination is `project`, for iOS, that are **not** reading from environment variables, will be available in `variants.xcconfig`. But their names are exposed to the codebase directly in `Variants/Variants.swift`, as keys within a `ConfigurationValueKey` enum
 
-```
-A_PROPERTY = FOO
-B_PROPERTY = FOO
-```
-
-These are used in your Swift code as:
 ```swift
+// This entire file is automatically generated.
+
+public struct Variants {
+    static let configuration: [String: Any] = {
+        guard let infoDictionary = Bundle.main.infoDictionary else {
+            fatalError("Info.plist file not found")
+        }
+        return infoDictionary
+    }()
+
+    // MARK: - ConfigurationValueKey
+    /// Custom configuration values coming from variants.yml as enum cases
+    
+    public enum ConfigurationValueKey: String { 
+        case A_PROPERTY 
+    }
+    
+    static func configurationValue(for key: ConfigurationValueKey) -> Any? {
+        return Self.configuration[key.rawValue]
+    }
+        
+        ...
+    }
+```
+
+It can be used in your codebase as:
+```swift
+Variants.configurationValue(for: .A_PROPERTY)
+/// or
 Variants.configuration["A_PROPERTY"]
 ```
 

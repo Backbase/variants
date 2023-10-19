@@ -32,3 +32,5 @@ public struct iOSSource: Codable {
     let info: String
     let config: String
 }
+
+// swiftlint:enable type_name

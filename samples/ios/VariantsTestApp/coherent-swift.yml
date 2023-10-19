@@ -1,0 +1,4 @@
+source: {{ SOURCE }}
+minimum_threshold: 60
+reports_folder: ./coherent-reports/
+ignore_output_result: false

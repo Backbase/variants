@@ -150,6 +150,59 @@ class iOSProjectTests: XCTestCase {
         XCTAssertEqual(xcFactoryMock.createConfigCache.count, 2)
         XCTAssertEqual(xcFactoryMock.createConfigCache.last?.variant.name, "STG")
     }
+    
+    func testProject_setup_missingiOSConfiguration() {
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let parametersFactoryMock = MockFastlaneFactory()
+        
+        let project = iOSProject(
+            specHelper: specHelperMock,
+            configFactory: xcFactoryMock,
+            parametersFactory: parametersFactoryMock,
+            yamlParser: YamlParser()
+        )
+
+        guard let specPath = specPath(resourcePath: "Resources/ios/invalid_missing_ios", withType: "yml") else {
+            return XCTFail("Couldn't find invalid_missing_ios.yml file.")
+        }
+        
+        XCTAssertThrowsError(try project.setup(spec: specPath.string, skipFastlane: true, verbose: true), "") { error in
+            XCTAssertTrue(error is RuntimeError)
+            XCTAssertEqual((error as? RuntimeError)?.description, """
+            ❌ Unable to load spec '\(specPath.string)'
+            """)
+        }
+    }
+    
+    func testProject_setup_fail() {
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let parametersFactoryMock = MockFastlaneFactory()
+        
+        let project = iOSProject(
+            specHelper: specHelperMock,
+            configFactory: xcFactoryMock,
+            parametersFactory: parametersFactoryMock,
+            yamlParser: YamlParser()
+        )
+        
+        guard let path = Bundle(for: type(of: self)).resourcePath else {
+            XCTFail("Resource path directory should be not nil")
+            return
+        }
+        
+        do {
+            try project.setup(spec: Path(path).string, skipFastlane: false, verbose: true)
+            XCTFail("Should not succeed, exception throw is expected")
+        } catch let error as ValidationError {
+            XCTAssertEqual(error.description, "Error: \(path) is a directory path")
+
+            XCTAssertEqual(xcFactoryMock.createConfigCache.count, 0)
+            XCTAssertEqual(parametersFactoryMock.createParametersCache.count, 0)
+            XCTAssertEqual(parametersFactoryMock.createMatchFileCache.count, 0)
+        } catch {
+            XCTFail("Caught unknown error \(error)")
+        }
+    }
  
     private func specPath(resourcePath: String, withType fileType: String) -> Path? {
         guard let path = Bundle(for: type(of: self))
@@ -163,6 +216,10 @@ class iOSProjectTests: XCTestCase {
         ("testProject_initialize", testProject_initialize),
         ("testProject_setup", testProject_setup),
         ("testProject_list", testProject_list),
-        ("testProject_switch", testProject_switch)
+        ("testProject_switch", testProject_switch),
+        ("testProject_setup_fail", testProject_setup_fail),
+        ("testProject_setup_missingiOSConfiguration", testProject_setup_missingiOSConfiguration)
     ]
 }
+
+// swiftlint:enable type_name
