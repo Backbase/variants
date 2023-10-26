@@ -30,10 +30,6 @@ struct StaticPath {
         static let variantsFileName = "Variants.swift"
     }
     
-    struct Pod {
-        static let podFileFile = Path("Podfile")
-    }
-    
     struct Template {
         static let variantsScriptFileName = "variants-template.gradle"
         static let fastlaneParametersFileName = "variants_params_template.rb"
