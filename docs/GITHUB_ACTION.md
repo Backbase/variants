@@ -11,7 +11,7 @@ If Github Actions is your CI and you use the [Github-hosted macOS runner](https:
 ```yaml
 - uses: backbase/variants@main
   with:
-    version: 1.2.0
+    version: 1.2.1
     spec: variants.yml
     platform: ios
     variant: beta
