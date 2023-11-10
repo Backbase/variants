@@ -30,7 +30,6 @@ class VariantsFileFactory {
                 "secrets": secrets,
                 "configurationValues": configurationValues
             ] as [String: Any]
-            
             let environment = Environment(loader: FileSystemLoader(paths: [variantsGybTemplatePath.absolute()]))
             let rendered = try environment.renderTemplate(name: StaticPath.Template.variantsSwiftGybFileName,
                                                           context: context)
@@ -72,21 +71,45 @@ class VariantsFileFactory {
                 let fileContent = try? variantsGybFile.read(),
                 fileContent == data {
                 
-                try Bash(gybExecutablePath.absolute().description,
+                let gybStdErr = try Bash(gybExecutablePath.absolute().description,
                          arguments:
                             "--line-directive",
                             "",
                             "-o",
                             "Variants.swift",
                             variantsGybFile.absolute().description
-                ).run()
+                ).capture(stream: .stderr)
+                let variantsFilePath = "\(variantsGybFile.parent().abbreviate().string)/Variants.swift"
+                handleGybErrors(message: gybStdErr, variantsFilePath: variantsFilePath)
                 
-                logger.logInfo("⚙️  ", item: """
-                    '\(variantsGybFile.parent().abbreviate().string)/Variants.swift' has been generated with success
-                    """, color: .green)
+                logger.logInfo("⚙️  ", item: "'\(variantsFilePath)' has been generated with success", color: .green)
             }
         } else {
             throw TemplateDoesNotExist(templateNames: [folder.string])
+        }
+    }
+    
+    private func handleGybErrors(message: String?, variantsFilePath: String) {
+        if let stdErr = message, !stdErr.isEmpty {
+            if stdErr.contains("env: python2.7: No such file or directory") {
+                logger.logFatal(item:
+                """
+                We're unable to find a 'python2.7' executable.
+                Install 'python2.7' or ensure it's in your executables path and try running this Variants command again.
+                Tip:
+                    * Install pyenv (brew install pyenv)
+                    * Install python2.7 (pyenv install python2.7)
+                    * Add "$(pyenv root)/shims" to your PATH
+                """)
+            } else if stdErr.contains("for chunk in chunks(encode(os.environ.get(") {
+                logger.logFatal(item:
+                """
+                We're unable to create 'Variants.Secrets' in '\(variantsFilePath)'.
+                Ensure that custom config values whose `env: true` are actually environment variables.
+                """)
+            } else {
+                logger.logFatal(item: stdErr as Any)
+            }
         }
     }
     
