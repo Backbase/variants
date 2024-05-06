@@ -194,14 +194,14 @@ class XCConfigFactory: XCFactory {
         /*
          * 'team_name' follows an invalid/unexpected format.
          * i.e.:
-         *  - 'iPad Distribution: BACKBASE EUROPE B.V.'
-         *  - 'Something Unexpected: BACKBASE EUROPE B.V.'
+         *  - 'iPad Distribution: SAMPLE ORGANIZATION'
+         *  - 'Something Unexpected: SAMPLE ORGANIZATION'
          */
         case .invalidFormat(let name):
             logger.logFatal(item: "'team_name' doesn't match a correct signing identity format: '\(name)'")
 
         /*
-         * If only the team name was defined, i.e.: 'BACKBASE EUROPE B.V.'
+         * If only the team name was defined, i.e.: 'SAMPLE ORGANIZATION'
          * Automatically detect the certificate type, one of:
          *  - Apple Development
          *  - Apple Distribution
@@ -218,13 +218,13 @@ class XCConfigFactory: XCFactory {
                 logger.logWarning("Signing Identity Detected: ", item: identity)
                 signingIdentity = identity
             } else {
-                logger.logError("Unable to detect Signing Identity.\nCertificate NOT Found in your keychain!! ", item: "Please specify the entire signing identity in 'team_name'. i.e.: 'Apple Distribution: BACKBASE EUROPE B.V.'")
+                logger.logError("Unable to detect Signing Identity.\nCertificate NOT Found in your keychain!! ", item: "Please specify the entire signing identity in 'team_name'. i.e.: 'Apple Distribution: SAMPLE ORGANIZATION'")
                 signingIdentity = "Apple \(certType): \(teamName) (\(teamID))"
             }
 
         /*
          * Set signing identity to the entire value specified by the user
-         * i.e.: 'Apple Distribution: Backbase Europe B.V.'
+         * i.e.: 'Apple Distribution: SAMPLE ORGANIZATION'
          */
         case .signingIdentity(type: let type, teamName: let name):
             signingIdentity = "\(type.rawValue): \(name) (\(teamID))"
