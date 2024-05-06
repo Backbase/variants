@@ -184,18 +184,79 @@ class XCConfigFactory: XCFactory {
         else { return }
 
         let xcodeFactory = XcodeProjFactory()
-        var certType = "Development"
-        if exportMethod == .appstore || exportMethod == .enterprise {
-            certType = "Distribution"
+
+        var signingIdentity = ""
+        let id = RawIdentity.decode(teamName)
+        switch id {
+        case .emptyName:
+            logger.logFatal(item: "'team_name' is empty, please specify the signing identity.")
+
+        /*
+         * 'team_name' follows an invalid/unexpected format.
+         * i.e.:
+         *  - 'iPad Distribution: BACKBASE EUROPE B.V.'
+         *  - 'Something Unexpected: BACKBASE EUROPE B.V.'
+         */
+        case .invalidFormat(let name):
+            logger.logFatal(item: "'team_name' doesn't match a correct signing identity format: '\(name)'")
+
+        /*
+         * If only the team name was defined, i.e.: 'BACKBASE EUROPE B.V.'
+         * Automatically detect the certificate type, one of:
+         *  - Apple Development
+         *  - Apple Distribution
+         *  - iPhone Development
+         *  - iPhone Distribution
+         */
+        case .teamName(let name):
+            var certType = "Development"
+            if exportMethod == .appstore || exportMethod == .enterprise {
+                certType = "Distribution"
+            }
+
+            if let identity = detectSigningIdentity(teamName: name, certType: certType) {
+                logger.logWarning("Signing Identity Detected: ", item: identity)
+                signingIdentity = identity
+            } else {
+                logger.logError("Unable to detect Signing Identity.\nCertificate NOT Found in your keychain!! ", item: "Please specify the entire signing identity in 'team_name'. i.e.: 'Apple Distribution: BACKBASE EUROPE B.V.'")
+                signingIdentity = "Apple \(certType): \(teamName) (\(teamID))"
+            }
+
+        /*
+         * Set signing identity to the entire value specified by the user
+         * i.e.: 'Apple Distribution: Backbase Europe B.V.'
+         */
+        case .signingIdentity(type: let type, teamName: let name):
+            signingIdentity = "\(type.rawValue): \(name) (\(teamID))"
+            logger.logInfo(item: "'team_name' matches a valid Signing Identity: '\(signingIdentity)'")
         }
+
         let mainTargetSettings = [
             "PROVISIONING_PROFILE_SPECIFIER": "$(V_MATCH_PROFILE)",
             "CODE_SIGN_STYLE": "Manual",
-            "CODE_SIGN_IDENTITY": "Apple \(certType): \(teamName) (\(teamID))"
+            "CODE_SIGN_IDENTITY": signingIdentity
         ]
         xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
     }
-    
+
+    private func detectSigningIdentity(teamName: String, certType: String) -> String? {
+        logger.logInfo(item: "Searching Signing Identity for: '\(teamName)'")
+        let identity = try? Bash("security", arguments: "find-identity", "-v", "-p", "codesigning"
+        ).pipe(
+            Bash("awk", arguments: "/\(teamName)/ && /\(certType)/")
+        ).pipe(
+            Bash("cut", arguments: "-d", "\"", "-f2")
+        ).capture()
+
+        if
+            let signingIdentity = identity,
+            signingIdentity.contains(":")
+        {
+            return signingIdentity
+        }
+        return nil
+    }
+
     private func updateInfoPlist(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         let configFilePath = configFile.absolute().description
         do {
