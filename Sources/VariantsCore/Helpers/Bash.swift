@@ -60,9 +60,12 @@ struct Bash {
         /*
          * `standardInput` needs to be written to a file in order to be used by a Process.
          */
-        if let stdin = standardInput {
+        if
+            let stdin = standardInput,
+            let stdinData = stdin.data(using: .utf8)
+        {
             let path = try Path.processUniqueTemporary().safeJoin(path: Path(stringLiteral: "stdin"))
-            try path.write(stdin.data(using: .utf8)!)
+            try path.write(stdinData)
             process.standardInput = FileHandle(forReadingAtPath: path.absolute().string)
         }
 
