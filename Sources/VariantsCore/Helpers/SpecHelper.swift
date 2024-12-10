@@ -5,10 +5,10 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable type_name
+
 import Foundation
 import PathKit
-
-// swiftlint:disable type_name
 
 enum iOSProjectKey: String, CaseIterable {
     case project = "PROJECT"

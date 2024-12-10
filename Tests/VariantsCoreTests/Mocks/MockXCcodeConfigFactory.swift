@@ -5,10 +5,11 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable colon
+
 import Foundation
 import PathKit
 @testable import VariantsCore
-// swiftlint:disable colon
 
 class MockXCcodeConfigFactory: XCFactory {
     var writeContentCache: [(content: String, file: Path, force: Bool)] = []

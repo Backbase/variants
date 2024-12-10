@@ -43,6 +43,12 @@ This file is responsible for:
 
 ## Installation
 
+### Dependencies
+
+In order to generate the code from templates, Variants requires Python 2.7. We recommend configuring the python version using a version management tool such as Pyenv.
+
+For details on how to install and use it check the [Pyenv repo](https://github.com/pyenv/pyenv).
+
 ### On Github Actions CI
 
 See [Switching Variants on CI](docs/GITHUB_ACTION.md) for a better understanding and examples.

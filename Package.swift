@@ -36,7 +36,9 @@ let package = Package(
             name: "danger-swift",
             url: "https://github.com/danger/swift.git",
             from: "3.5.0"
-        )
+        ),
+        .package(
+            url: "https://github.com/SimplyDanny/SwiftLintPlugins")
     ],
     targets: [
         .target(
@@ -46,7 +48,8 @@ let package = Package(
                 "Yams",
                 "XcodeProj",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                "Stencil"
+                "Stencil",
+                "SwiftLintPlugins"
             ]
         ),
         .target(
@@ -57,7 +60,9 @@ let package = Package(
         ),
         .testTarget(
             name: "VariantsTests",
-            dependencies: ["Variants"]
+            dependencies: [
+                "Variants"
+            ]
         )
     ]
 )

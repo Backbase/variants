@@ -5,10 +5,10 @@
 //  Created by Roman Huti
 //
 
+// swiftlint:disable type_name
+
 import XCTest
 @testable import VariantsCore
-
-// swiftlint:disable type_name
 
 final class iOSSigningTests: XCTestCase {
     
