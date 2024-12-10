@@ -1,25 +1,17 @@
-# We are disabling Danger temporarily until we get a fix to the error
-# 
-# ERROR: Failed to parse JSON: valueNotFound(Swift.Dictionary<Swift.String, Any>, Swift.DecodingError.Context(codingPath: [CodingKeys(stringValue: "danger", intValue: nil), CodingKeys(stringValue: "github", intValue: nil), CodingKeys(stringValue: "reviews", intValue: nil), _JSONKey(stringValue: "Index 0", intValue: 0), CodingKeys(stringValue: "user", intValue: nil)], debugDescription: "Cannot get keyed decoding container -- found null value instead", underlyingError: nil))
-# ERROR: Dangerfile eval failed at Dangerfile.swift
-# 
-# In short, if a user that is deleted left a comment in a PR, the author becomes null
-# which breaks the JSON parsing
+name: "Danger Swift"
 
-# name: "Danger Swift"
+on:
+  pull_request:
+    types: [ opened, synchronize, edited ]
 
-# on:
-#   pull_request:
-#     types: [ opened, synchronize, edited ]
-
-# jobs:
-#   danger-scan:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Danger
-#         uses: danger/swift@3.20.2
-#         with:
-#             args: --failOnErrors --no-publish-check
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  danger-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Danger
+        uses: danger/swift@3.20.2
+        with:
+            args: --failOnErrors --no-publish-check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
