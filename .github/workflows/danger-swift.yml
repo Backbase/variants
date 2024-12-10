@@ -5,7 +5,7 @@ on:
     types: [ opened, synchronize, edited ]
 
 jobs:
-  build:
+  danger-scan:
     runs-on: ubuntu-latest
     name: "Run Danger"
     steps:
