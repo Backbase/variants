@@ -5,9 +5,9 @@
 //  Created by Arthur Alves
 //
 
-import Foundation
-
 // swiftlint:disable type_name
+
+import Foundation
 
 public struct iOSVariant: Variant {
     let name: String

@@ -5,11 +5,11 @@
 //  Created by Balazs Toth
 //
 
+// swiftlint:disable type_name
+
 import Foundation
 import ArgumentParser
 import PathKit
-
-// swiftlint:disable type_name
 
 class iOSProject: Project {
     init(
@@ -140,7 +140,7 @@ class iOSProject: Project {
             }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length
     private func setupFastlane(with configuration: iOSConfiguration, skip: Bool) {
         if skip {
             Logger.shared.logInfo("Skipped Fastlane setup", item: "")
@@ -225,7 +225,6 @@ class iOSProject: Project {
             }
         }
     }
-    // swiftlint:enable function_body_length
     
     private func storeFastlaneParams(_ properties: [CustomProperty]) throws {
         let fastlaneProperties = properties.filter { $0.destination == .fastlane }

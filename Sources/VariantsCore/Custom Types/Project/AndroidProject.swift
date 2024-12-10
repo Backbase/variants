@@ -101,7 +101,7 @@ class AndroidProject: Project {
         try gradleFactory.createScript(with: configuration, variant: defaultVariant)
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length
     private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
         if skip {
             Logger.shared.logInfo("Skipped Fastlane setup", item: "")
@@ -183,7 +183,6 @@ class AndroidProject: Project {
             }
         }
     }
-    // swiftlint:enable function_body_length
     
     private func storeFastlaneParams(for variant: AndroidVariant, configuration: AndroidConfiguration) throws {
         var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])

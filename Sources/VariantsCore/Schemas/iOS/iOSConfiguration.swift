@@ -5,9 +5,9 @@
 //  Created by Arthur Alves
 //
 
-import Foundation
-
 // swiftlint:disable type_name
+
+import Foundation
 
 internal extension CodingUserInfoKey {
     static let bundleID = CodingUserInfoKey(rawValue: "bundle_id")!

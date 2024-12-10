@@ -74,7 +74,8 @@ class YamlParserTests: XCTestCase {
             }
         }
     }
-    // swiftlint:disable function_body_length
+
+    // swiftlint:disable:next function_body_length
     func testExtractConfiguration_valid_iOS() {
         let parser = YamlParser()
         do {
@@ -167,7 +168,7 @@ class YamlParserTests: XCTestCase {
             XCTAssertTrue(((error as? DecodingError) == nil))
         }
     }
-    // swiftlint:enable function_body_length
+
     func testExtractConfiguration_valid_android() {
         let parser = YamlParser()
         do {
