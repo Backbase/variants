@@ -29,7 +29,6 @@ public extension KeyedDecodingContainer {
 
 fileprivate extension String {
     var asEnvVariable: String? {
-        // swiftlint:disable:next implicit_getter
         get throws {
             let regexPattern = #"^\$\{\{ envVars.(?<name>.*) \}\}"#
             
