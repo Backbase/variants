@@ -85,6 +85,8 @@ validation: lint coverage
 	@echo "Ready to go."
 
 .PHONY: ci-validation
-ci-validation: coverage
+ci-validation:
+	@make DESTDIR=.
+	@coverage
 	@rm -rf variants.yml
 	@echo "Ready to go."
