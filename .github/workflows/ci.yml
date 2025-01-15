@@ -25,11 +25,8 @@ jobs:
       with:
         swift-version: ${{ matrix.swift }}
 
-    - name: Make install
-      run: make install
-      
-    - name: Tests
-      run: make test
+    - name: Make validation
+      run: make validation
 
     #
     # CODECOV temporarily disabled due to issues running 'bundle install'
