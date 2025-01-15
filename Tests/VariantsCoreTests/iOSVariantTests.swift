@@ -6,6 +6,7 @@
 //
 
 // swiftlint:disable type_body_length
+// swiftlint:disable function_body_length
 // swiftlint:disable file_length
 // swiftlint:disable line_length
 // swiftlint:disable type_name
@@ -469,5 +470,6 @@ class iOSVariantTests: XCTestCase {
 }
 
 // swiftlint:enable type_body_length
+// swiftlint:enable function_body_length
 // swiftlint:enable line_length
 // swiftlint:enable type_name
