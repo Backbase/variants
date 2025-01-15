@@ -26,10 +26,6 @@ jobs:
       with:
         swift-version: ${{ matrix.swift }}
 
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '2.7'
-
     - name: Install variants
       run: make install
 
