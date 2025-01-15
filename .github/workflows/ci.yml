@@ -26,6 +26,9 @@ jobs:
       with:
         swift-version: ${{ matrix.swift }}
 
+    - name: Install variants
+      run: make install
+
     - name: Run CI validation
       run: make ci-validation
 
