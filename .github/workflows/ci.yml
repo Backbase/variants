@@ -27,7 +27,7 @@ jobs:
         swift-version: ${{ matrix.swift }}
 
     - name: Install variants
-      run: make DESTDIR=. && make install
+      run: make install
 
     - name: Run CI validation
       run: make ci-validation

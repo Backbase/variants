@@ -6,12 +6,7 @@ else
 	detected_OS := $(shell uname)
 endif
 
-ifeq ($(detected_OS),Linux) # Linux only
-	prefix ?= ~/.local
-else
-	prefix ?= /usr/local
-endif
-
+prefix ?= ~/.local
 bindir ?= $(prefix)/bin
 libdir ?= $(prefix)/lib
 srcdir = Sources
