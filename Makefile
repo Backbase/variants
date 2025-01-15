@@ -83,3 +83,8 @@ lint:
 validation: lint coverage
 	@rm -rf variants.yml
 	@echo "Ready to go."
+
+.PHONY: ci-validation
+validation: coverage
+	@rm -rf variants.yml
+	@echo "Ready to go."

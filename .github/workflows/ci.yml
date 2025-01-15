@@ -21,12 +21,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - uses: swift-actions/setup-swift@v2
       with:
         swift-version: ${{ matrix.swift }}
 
-    - name: Run unit tests and coverage
-      run: make coverage
+    - name: Run CI validation
+      run: make ci-validation
 
     #
     # CODECOV temporarily disabled due to issues running 'bundle install'

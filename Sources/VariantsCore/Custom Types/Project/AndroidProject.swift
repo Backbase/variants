@@ -103,84 +103,83 @@ class AndroidProject: Project {
 
     // swiftlint:disable:next function_body_length
     private func setupFastlane(with configuration: AndroidConfiguration, skip: Bool) {
-        if skip {
-            Logger.shared.logInfo("Skipped Fastlane setup", item: "")
-        } else {
-            Logger.shared.logInfo("Setting up Fastlane", item: "")
+        guard skip == false else {
+            return Logger.shared.logInfo("Skipped Fastlane setup for Android", item: "")
+        }
 
-            do {
-                let projectSourceFolder = configuration.path
-                let path = try TemplateDirectory().path
-                try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", ".")
-                    .run()
+        Logger.shared.logInfo("Setting up Fastlane for Android", item: "")
+        do {
+            let projectSourceFolder = configuration.path
+            let path = try TemplateDirectory().path
+            try Bash("cp", arguments: "-R", "\(path.absolute())/android/_fastlane/", ".")
+                .run()
 
-                let baseSetupCompletedMessage =
-                    """
-                    ✅  Your variants configuration was setup
-                    ✅  For configuration properties with 'project' destination, they have been
-                        stored in '\(projectSourceFolder)/gradleScripts/variants.gradle'.
-                        This gradle file should be used by your 'app/build.gradle' in order to read the app's
-                        information and custom properties you've set with destination 'project'.
-                    🔄  Use 'variants switch --variants <value>' to switch between variants and
-                        update the properties in the files described above.
+            let baseSetupCompletedMessage =
+                """
+                ✅  Your variants configuration was setup
+                ✅  For configuration properties with 'project' destination, they have been
+                    stored in '\(projectSourceFolder)/gradleScripts/variants.gradle'.
+                    This gradle file should be used by your 'app/build.gradle' in order to read the app's
+                    information and custom properties you've set with destination 'project'.
+                🔄  Use 'variants switch --variants <value>' to switch between variants and
+                    update the properties in the files described above.
 
-                    That is all.
-                    """
-                
-                var setupCompleteMessage =
-                    """
+                That is all.
+                """
 
-                    We got almost everything done!
+            var setupCompleteMessage =
+                """
 
-                    ❌  Fastlane could not be setup. The template wasn't found or something else went wrong when
-                        copying it.
+                We got almost everything done!
 
-                    """
-                
-                if StaticPath.Fastlane.baseFolder.isDirectory {
-                    guard let defaultVariant = configuration.variants
-                            .first(where: { $0.name.lowercased() == "default" }) else {
-                        throw ValidationError("Variant 'default' not found.")
-                    }
+                ❌  Fastlane could not be setup. The template wasn't found or something else went wrong when
+                    copying it.
 
-                    // Create 'variants_params.rb' with parameters whose
-                    // destination are set as '.fastlane'
-                    try storeFastlaneParams(for: defaultVariant, configuration: configuration)
-                    
-                    setupCompleteMessage =
-                        """
+                """
 
-                        Your setup is complete, congratulations! 🎉
-                        However, you still need to provide some parameters in order for fastlane to run correctly.
-
-                        ⚠️  Check the files in 'fastlane/parameters/', change the parameters
-                            accordingly, provide environment variables when applicable.
-                        ⚠️  Note that the values in the file 'fastlane/parameters/variants_params.rb'
-                            where generated automatically for configuration properties with 'fastlane' destination.
-
-                        """
-                    
-                    Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
-                    Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
-                } else {
-                    Logger.shared.logWarning("", item: "Fastlane setup couldn't be completed")
-                    Logger.shared.logInfo("👇  What happened ", item: "", color: .yellow)
-                }
-                
-                setupCompleteMessage += baseSetupCompletedMessage
-                setupCompleteMessage.enumerateLines { (line, _) in
-                    Logger.shared.logInfo("", item: line, color: .yellow)
+            if StaticPath.Fastlane.baseFolder.isDirectory {
+                guard let defaultVariant = configuration.variants
+                        .first(where: { $0.name.lowercased() == "default" }) else {
+                    throw ValidationError("Variant 'default' not found.")
                 }
 
-            } catch let error as ValidationError {
-                Logger.shared.logFatal(item: error.description)
-                
-            } catch let error as RuntimeError {
-                Logger.shared.logFatal(item: error.description)
-                
-            } catch {
-                Logger.shared.logFatal(item: error.localizedDescription)
+                // Create 'variants_params.rb' with parameters whose
+                // destination are set as '.fastlane'
+                try storeFastlaneParams(for: defaultVariant, configuration: configuration)
+
+                setupCompleteMessage =
+                    """
+
+                    Your setup is complete, congratulations! 🎉
+                    However, you still need to provide some parameters in order for fastlane to run correctly.
+
+                    ⚠️  Check the files in 'fastlane/parameters/', change the parameters
+                        accordingly, provide environment variables when applicable.
+                    ⚠️  Note that the values in the file 'fastlane/parameters/variants_params.rb'
+                        where generated automatically for configuration properties with 'fastlane' destination.
+
+                    """
+
+                Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
+                Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
+            } else {
+                Logger.shared.logWarning("", item: "Fastlane setup couldn't be completed")
+                Logger.shared.logInfo("👇  What happened ", item: "", color: .yellow)
             }
+
+            setupCompleteMessage += baseSetupCompletedMessage
+            setupCompleteMessage.enumerateLines { (line, _) in
+                Logger.shared.logInfo("", item: line, color: .yellow)
+            }
+
+        } catch let error as ValidationError {
+            Logger.shared.logFatal(item: error.description)
+
+        } catch let error as RuntimeError {
+            Logger.shared.logFatal(item: error.description)
+
+        } catch {
+            Logger.shared.logFatal(item: error.localizedDescription)
         }
     }
     
