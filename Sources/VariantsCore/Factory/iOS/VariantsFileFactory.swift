@@ -88,14 +88,14 @@ class VariantsFileFactory {
         guard let message, !message.isEmpty else { return }
 
         switch message {
-        case _ where message.contains("env: python2.7: No such file or directory"):
+        case _ where message.contains("env: python3: No such file or directory"):
             logger.logFatal(item:
             """
-            We're unable to find a 'python2.7' executable.
-            Install 'python2.7' or ensure it's in your executables path and try running this Variants command again.
+            We're unable to find a 'python3' executable.
+            Install 'python3' or ensure it's in your executables path and try running this Variants command again.
             Tip:
                 * Install pyenv (brew install pyenv)
-                * Install python2.7 (pyenv install python2.7)
+                * Install python3 (pyenv install python3)
                 * Add "$(pyenv root)/shims" to your PATH
             """)
         case _ where message.contains("for chunk in chunks(encode(os.environ.get("):
@@ -108,8 +108,8 @@ class VariantsFileFactory {
             logger.logFatal(item:
             """
             Looks like you have pyenv installed but the current configured version is not correct.
-            Please, select the latest build of python 2.7 as local version.
-            For example: `pyenv local 2.7`
+            Please, select the latest build of python 3 as local version.
+            For example: `pyenv local 3`
             """)
         default:
             logger.logFatal(item: message as Any)

@@ -45,7 +45,7 @@ This file is responsible for:
 
 ### Dependencies
 
-In order to generate the code from templates, Variants requires Python 2.7. We recommend configuring the python version using a version management tool such as Pyenv.
+In order to generate the code from templates, Variants requires Python 3. We recommend configuring the python version using a version management tool such as Pyenv.
 
 For details on how to install and use it check the [Pyenv repo](https://github.com/pyenv/pyenv).
 
@@ -53,7 +53,7 @@ For details on how to install and use it check the [Pyenv repo](https://github.c
 
 See [Switching Variants on CI](docs/GITHUB_ACTION.md) for a better understanding and examples.
 
-### Homebrew (recommended)
+### Homebrew **(recommended)**
 
 ```sh
 brew install backbase/m/variants
@@ -68,6 +68,16 @@ git clone https://github.com/backbase/variants.git
 cd variants
 make install
 ```
+
+Once the installation is completed, the binary will be added to your `~/.local` folder. Make sure to have the folder included in your `PATH` variable. This should be done in the shell configuration file
+
+Add the following to the `~/.zshrc` or `~/.bashrc` file:
+```sh
+export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
+```
+
+Make sure to restart your terminal or source the changed file with `source ~/.zshrc` or `source ~/.bashrc`
+
 
 ### Swift Package Manager
 
