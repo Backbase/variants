@@ -26,7 +26,6 @@ class VariantsFileFactory {
             else { return }
             let secrets = variant.custom?.secrets() ?? []
             let configurationValues = variant.custom?.configurationValues() ?? []
-            logger.logInfo(item: "Writing custom properties: \(configurationValues)")
             let context = [
                 "secrets": secrets,
                 "configurationValues": configurationValues
@@ -38,15 +37,11 @@ class VariantsFileFactory {
             let lines = rendered.split(whereSeparator: \.isNewline)
             let content = lines.joined(separator: "\n")
             
-            logger.logInfo(item: "Writing gyb file with content: \(content)")
             try write(Data(content.utf8), using: configFilePath.parent().absolute())
-            logger.logInfo(item: "Successfully write file at \(configFilePath.parent().absolute().string)")
             let variantsGybFile = try configFilePath.parent().absolute()
                 .safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
             try variantsGybFile.delete()
-            logger.logInfo(item: "Successfully removed gyb at \(variantsGybFile.string)")
         } catch {
-            logger.logWarning(item: "Failed to write to variants file")
             let variantsFile = try? configFilePath.parent().absolute()
                 .safeJoin(path: Path(StaticPath.Xcode.variantsFileName))
             logger.logWarning(item: """
@@ -62,9 +57,6 @@ class VariantsFileFactory {
         }
 
         let variantsGybFile = try folder.safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
-        logger.logInfo(item: "From write, using file at \(variantsGybFile.string)")
-        logger.logInfo(item: "From write, file exists \(variantsGybFile.exists), is writable \(variantsGybFile.isWritable)")
-        logger.logInfo(item: "From write, file content is \(try? String(contentsOfFile: variantsGybFile.string))")
         // Only proceed to write to file if such doesn't yet exist
         // Or does exist and 'isWritable'
         guard !variantsGybFile.exists || variantsGybFile.isWritable else {
