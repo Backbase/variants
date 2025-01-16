@@ -13,7 +13,7 @@ def encode(string, cipher):
 //  Variants
 //
 //  Copyright (c) Backbase B.V. - https://www.backbase.com
-//  Created by Arthur Alves 2
+//  Created by Arthur Alves
 //
 
 import Foundation

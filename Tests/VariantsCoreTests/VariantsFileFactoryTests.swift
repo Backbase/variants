@@ -74,6 +74,9 @@ class VariantsFileFactoryTests: XCTestCase {
         let variantsFilePath = Bundle(for: type(of: self)).path(forResource: "Resources/ios/Variants", ofType: "swift")
         XCTAssertNotNil(variantsFilePath)
         guard let variantsFile = variantsFilePath else { return }
+
+        XCTAssertTrue(false, "Reading template path from \(try! TemplateDirectory().path.string)")
+
         XCTAssertEqual(try String(contentsOfFile: variantsFile), variantsSwiftContent)
     }
     
