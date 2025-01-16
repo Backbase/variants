@@ -26,6 +26,7 @@ class VariantsFileFactory {
             else { return }
             let secrets = variant.custom?.secrets() ?? []
             let configurationValues = variant.custom?.configurationValues() ?? []
+            logger.logInfo(item: "Writing custom properties: \(configurationValues)")
             let context = [
                 "secrets": secrets,
                 "configurationValues": configurationValues
@@ -38,10 +39,13 @@ class VariantsFileFactory {
             let content = lines.joined(separator: "\n")
             
             try write(Data(content.utf8), using: configFilePath.parent().absolute())
+            logger.logInfo(item: "Successfully write file at \(configFilePath.parent().absolute().string)")
             let variantsGybFile = try configFilePath.parent().absolute()
                 .safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
             try variantsGybFile.delete()
+            logger.logInfo(item: "Successfully removed gyb at \(variantsGybFile.string)")
         } catch {
+            logger.logWarning(item: "Failed to write to variants file")
             let variantsFile = try? configFilePath.parent().absolute()
                 .safeJoin(path: Path(StaticPath.Xcode.variantsFileName))
             logger.logWarning(item: """
