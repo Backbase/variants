@@ -67,6 +67,7 @@ endif
 
 .PHONY: coverage
 coverage: test
+	@gem install bundler
 	@bundle install
 	@bundle exec slather coverage --ignore ../**/*/Xcode\* --ignore Tests/\* --scheme VariantsCore Variants.xcodeproj/
 
