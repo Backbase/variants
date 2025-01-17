@@ -292,4 +292,5 @@ class YamlParserTests: XCTestCase {
          testStoreDestination_iOS)
     ]
 }
+
 // swiftlint:enable file_length
