@@ -192,12 +192,6 @@ GEM
     nokogiri (1.15.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.7-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.15.7-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.15.7-x86_64-linux)
-      racc (~> 1.4)
     optparse (0.6.0)
     os (1.1.4)
     plist (3.7.2)
@@ -263,7 +257,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
-  nokogiri (>= 1.13.2)
+  nokogiri
   slather
 
 BUNDLED WITH
