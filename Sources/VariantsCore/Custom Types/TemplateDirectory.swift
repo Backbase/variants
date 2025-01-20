@@ -15,7 +15,6 @@ struct TemplateDirectory {
 
     init(
         directories: [String] = [
-            "/usr/local/lib/variants/templates",
             "~/.local/lib/variants/templates",
             "./Templates"
         ]

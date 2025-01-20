@@ -15,7 +15,6 @@ struct UtilsDirectory {
 
     init(
         directories: [String] = [
-            "/usr/local/lib/variants/utils",
             "~/.local/lib/variants/utils",
             "./utils"
         ]
