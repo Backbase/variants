@@ -18,21 +18,16 @@ class VariantsFileFactory {
     /// and `Variants.ConfigurationValueKey` as keys for custom configuration values
     /// - Parameters:
     ///   - configFilePath: Path to XCConfig file
-    ///   - configuration: Base iOS configuration
     ///   - variant: Chosen variant, as seen in `variants.yml`
-    func updateVariantsFile(with configFilePath: Path, configuration: iOSConfiguration, variant: iOSVariant) {
+    func updateVariantsFile(with configFilePath: Path, variant: iOSVariant) {
         do {
             let path = try TemplateDirectory().path
             guard let variantsGybTemplatePath = try? path.safeJoin(path: Path("ios/"))
             else { return }
 
-            let allConfigurationValues = variant.combineCustomPropertiesWithGlobals(configuration: configuration)
-            let secrets = allConfigurationValues.projectSecretConfigurationValues
-            let configurationValues = allConfigurationValues.projectConfigurationValues
-
             let context = [
-                "secrets": secrets,
-                "configurationValues": configurationValues
+                "secrets": variant.custom?.projectSecretConfigurationValues ?? [],
+                "configurationValues": variant.custom?.projectConfigurationValues ?? []
             ] as [String: Any]
             let environment = Environment(loader: FileSystemLoader(paths: [variantsGybTemplatePath.absolute()]))
             let content = try environment.renderTemplate(name: StaticPath.Template.variantsSwiftGybFileName,

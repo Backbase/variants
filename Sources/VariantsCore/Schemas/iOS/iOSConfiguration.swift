@@ -31,8 +31,10 @@ public struct iOSConfiguration: Codable {
         
         self.xcodeproj = try container.decode(String.self, forKey: .xcodeproj)
         self.targets = try container.decode([String: iOSTarget].self, forKey: .targets)
-        self.custom = try? container.decode([CustomProperty].self, forKey: .custom)
-        
+
+        let globalCustomProperties = try? container.decode([CustomProperty].self, forKey: .custom)
+        self.custom = globalCustomProperties
+
         let globalPostSwitchScript = try container.decodeIfPresent(String.self, forKey: .postSwitchScript)
         let globalSigning = try container.decodeIfPresent(iOSSigning.self, forKey: .signing)
         let variantsDict = try container.decode([String: UnnamediOSVariant].self, forKey: .variants)
@@ -40,7 +42,9 @@ public struct iOSConfiguration: Codable {
         self.postSwitchScript = globalPostSwitchScript
         self.signing = globalSigning
         self.variants = try variantsDict
-            .map { try iOSVariant(from: $1, name: $0, globalSigning: globalSigning, globalPostSwitchScript: globalPostSwitchScript) }
+            .map { 
+                try iOSVariant(from: $1, name: $0, globalCustomProperties: globalCustomProperties,
+                    globalSigning: globalSigning, globalPostSwitchScript: globalPostSwitchScript) }
     }
 }
 

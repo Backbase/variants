@@ -24,7 +24,7 @@ class iOSVariantTests: XCTestCase {
                                                signing: validSigning, custom: customProperties, storeDestination: "testflight", postSwitchScript: "echo hello")
         
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(from: unnamedVariant, name: "beta", globalSigning: nil, globalPostSwitchScript: nil)
+            try iOSVariant(from: unnamedVariant, name: "beta", globalCustomProperties: nil, globalSigning: nil, globalPostSwitchScript: nil)
         }
         
         XCTAssertNoThrow(try makeiOSVariant())
@@ -43,8 +43,9 @@ class iOSVariantTests: XCTestCase {
     // MARK: - Default property assigning
     func testInitNilFallbackToDefaultProperties() {
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil, custom: nil,
-                           idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil, idSuffix: "beta",
+                           bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil, globalSigning: validSigning, variantSigning: nil,
+                           globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
         }
         
         XCTAssertNoThrow(try makeiOSVariant())
@@ -56,8 +57,9 @@ class iOSVariantTests: XCTestCase {
     // MARK: - Computed properties
     func testGetTitle() {
         let name = "Variant Name"
-        guard let variant = try? iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                            idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let variant = try? iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                            idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -66,8 +68,9 @@ class iOSVariantTests: XCTestCase {
     
     func testGetConfigName() {
         // Default variant
-        guard let defaultVariant = try? iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                                   idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let defaultVariant = try? iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                                   idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                                   globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -75,8 +78,9 @@ class iOSVariantTests: XCTestCase {
         
         // Any variant
         let name = "Variant Name"
-        guard let anyVariant = try? iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                               idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let anyVariant = try? iOSVariant(name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                                   idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                                   globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -86,7 +90,8 @@ class iOSVariantTests: XCTestCase {
     func testGetDestinationProperty() {
         let targetDestination = iOSVariant.Destination.appCenter
         guard let variant = try? iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: targetDestination.rawValue,
-                                            custom: nil, idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+                                                   idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                                   globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -101,10 +106,11 @@ class iOSVariantTests: XCTestCase {
     // MARK: - Post Switch Script tests
     func testInitiOSVariantsWithVariantPostSwitchScript() {
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil, custom: nil,
-                           idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: nil, variantPostSwitchScript: "echo variant")
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil,
+                           idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                           globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: "echo variant")
         }
-        
+
         XCTAssertNoThrow(try makeiOSVariant())
         
         let variant = try? makeiOSVariant()
@@ -113,8 +119,9 @@ class iOSVariantTests: XCTestCase {
     
     func testInitiOSVariantsWithGlobalPostSwitchScript() {
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil, custom: nil,
-                           idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: nil)
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil,
+                           idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                           globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: "echo global", variantPostSwitchScript: nil)
         }
         
         XCTAssertNoThrow(try makeiOSVariant())
@@ -125,8 +132,9 @@ class iOSVariantTests: XCTestCase {
     
     func testInitiOSVariantsWithVariantAndGlobalPostSwitchScript() {
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil, custom: nil,
-                           idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil,
+                           idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                           globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
         }
         
         XCTAssertNoThrow(try makeiOSVariant())
@@ -137,8 +145,9 @@ class iOSVariantTests: XCTestCase {
     
     func testInitiOSVariantsWithNoPostSwitchScript() {
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil, custom: nil,
-                           idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil,
+                           idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                           globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         }
         
         XCTAssertNoThrow(try makeiOSVariant())
@@ -151,36 +160,14 @@ class iOSVariantTests: XCTestCase {
     
     func testInitiOSVariantWithIDSuffixOrBundleID() {
         // Only ID Suffix
-        XCTAssertNoThrow(try iOSVariant(
-            name: "Valid Name",
-            versionName: "1.0.0",
-            versionNumber: 0,
-            appIcon: nil,
-            appName: nil,
-            storeDestination: "appStore",
-            custom: nil,
-            idSuffix: "beta",
-            bundleID: nil,
-            variantSigning: nil,
-            globalSigning: validSigning,
-            globalPostSwitchScript: "echo global",
-            variantPostSwitchScript: "echo variant"))
+        XCTAssertNoThrow(try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                            idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil))
         
         // Only Bundle ID
-        XCTAssertNoThrow(try iOSVariant(
-            name: "Valid Name",
-            versionName: "1.0.0",
-            versionNumber: 0,
-            appIcon: nil,
-            appName: nil,
-            storeDestination: "appStore",
-            custom: nil,
-            idSuffix: nil,
-            bundleID: "com.company.customBundle",
-            variantSigning: nil,
-            globalSigning: validSigning,
-            globalPostSwitchScript: "echo global",
-            variantPostSwitchScript: "echo variant"))
+        XCTAssertNoThrow(try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                            idSuffix: nil, bundleID: "com.company.customBundle", globalCustomProperties: nil, variantCustomProperties: nil,
+                                            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil))
     }
     
     func testInitWithIDSuffixAndBundleID() {
@@ -192,8 +179,9 @@ class iOSVariantTests: XCTestCase {
         )
         
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                           idSuffix: "beta", bundleID: "com.company.customBundle", variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                           idSuffix: "beta", bundleID: "com.company.customBundle", globalCustomProperties: nil, variantCustomProperties: nil,
+                           globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         }
         
         XCTAssertThrowsError(try makeiOSVariant(), "ID Suffix and Bundle ID can't be configured at same time in the same variant") { error in
@@ -210,8 +198,9 @@ class iOSVariantTests: XCTestCase {
         )
         
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                           idSuffix: nil, bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                           idSuffix: nil, bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                           globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         }
         
         XCTAssertThrowsError(try makeiOSVariant(), "ID Suffix and Bundle ID can't be configured at same time in the same variant") { error in
@@ -221,24 +210,27 @@ class iOSVariantTests: XCTestCase {
     
     func testMakeBundleIDForVariant() {
         // ID Suffix provided
-        guard let idSuffixVariant = try? iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                                    idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let idSuffixVariant = try? iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                                    idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                                    globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
         XCTAssertEqual(idSuffixVariant.makeBundleID(for: target), "com.Company.ValidName.beta")
                 
         // Bundle ID provided
-        guard let bundleIDVariant = try? iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                                    idSuffix: nil, bundleID: "com.Overwritten.BundleID", variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let bundleIDVariant = try? iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                                    idSuffix: nil, bundleID: "com.Overwritten.BundleID", globalCustomProperties: nil, variantCustomProperties: nil,
+                                                    globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
         XCTAssertEqual(bundleIDVariant.makeBundleID(for: target), "com.Overwritten.BundleID")
         
         // Default variant
-        guard let defaultVariant = try? iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                                   idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let defaultVariant = try? iOSVariant(name: "default", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                                    idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                                    globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -249,58 +241,26 @@ class iOSVariantTests: XCTestCase {
     
     func testInitWithValidSigningConfiguration() {
         // Variant and Global signing defined
-        XCTAssertNoThrow(try iOSVariant(
-            name: "Valid Name",
-            versionName: "1.0.0",
-            versionNumber: 0,
-            appIcon: nil,
-            appName: nil,
-            storeDestination: "appStore",
-            custom: nil,
-            idSuffix: "beta",
-            bundleID: nil,
-            variantSigning: validSigning,
-            globalSigning: validSigning,
-            globalPostSwitchScript: "echo global",
-            variantPostSwitchScript: "echo variant"))
+        XCTAssertNoThrow(try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil,
+                                        storeDestination: "appStore", idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                        globalSigning: validSigning, variantSigning: validSigning, globalPostSwitchScript: nil, variantPostSwitchScript: nil))
         
         // Only variant signing defined
-        XCTAssertNoThrow(try iOSVariant(
-            name: "Valid Name",
-            versionName: "1.0.0",
-            versionNumber: 0,
-            appIcon: nil,
-            appName: nil,
-            storeDestination: "appStore",
-            custom: nil,
-            idSuffix: "beta",
-            bundleID: nil,
-            variantSigning: validSigning,
-            globalSigning: nil,
-            globalPostSwitchScript: "echo global",
-            variantPostSwitchScript: "echo variant"))
-        
+        XCTAssertNoThrow(try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil,
+                                        storeDestination: "appStore", idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                        globalSigning: nil, variantSigning: validSigning, globalPostSwitchScript: nil, variantPostSwitchScript: nil))
+
         // Only global signing defined
-        XCTAssertNoThrow(try iOSVariant(
-            name: "Valid Name",
-            versionName: "1.0.0",
-            versionNumber: 0,
-            appIcon: nil,
-            appName: nil,
-            storeDestination: "appStore",
-            custom: nil,
-            idSuffix: "beta",
-            bundleID: nil,
-            variantSigning: nil,
-            globalSigning: validSigning,
-            globalPostSwitchScript: "echo global",
-            variantPostSwitchScript: "echo variant"))
+        XCTAssertNoThrow(try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil,
+                                        storeDestination: "appStore", idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                        globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil))
     }
     
     func testInitWithoutSigningConfiguration() {
         func makeiOSVariant() throws -> iOSVariant {
-            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                           idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: nil, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+            try iOSVariant(name: "Valid Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                           idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                           globalSigning: nil, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         }
 
         XCTAssertNoThrow(try makeiOSVariant())
@@ -315,8 +275,9 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NUMBER": "0"
         ]
         let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil)
-        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                            idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: signing, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                            idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                            globalSigning: signing, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -336,9 +297,10 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NUMBER": "0"
         ]
         let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil)
-        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil,
-                                            appName: "App Marketing Name", storeDestination: "appStore", custom: nil,
-                                            idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: signing, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
+        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: "App Marketing Name",
+                                            storeDestination: "appStore", idSuffix: "beta", bundleID: nil,
+                                            globalCustomProperties: nil, variantCustomProperties: nil, globalSigning: signing, variantSigning: nil,
+                                            globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -358,9 +320,9 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NUMBER": "0"
         ]
         let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil)
-        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil,
-                                            appName: nil, storeDestination: "appStore", custom: nil,
-                                            idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: signing, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
+        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                            idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                            globalSigning: signing, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -380,8 +342,9 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NAME": "1.0.0",
             "V_VERSION_NUMBER": "0"
         ]
-        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", custom: nil,
-                                            idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+                                            idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+                                            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -408,7 +371,8 @@ class iOSVariantTests: XCTestCase {
             CustomProperty(name: "Custom name 2", value: "Custom value 2", env: true, destination: .project),
             CustomProperty(name: "Custom name 3", value: "Custom value 3", env: false, destination: .fastlane)]
         guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
-                                            custom: customProperties, idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+                                            idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: customProperties,
+                                            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -426,7 +390,8 @@ class iOSVariantTests: XCTestCase {
     func testParsingiOSVariantDestintation() {
         func makeVariant(destination: String?) throws -> iOSVariant {
             try iOSVariant(name: "Variant Name", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: destination,
-                           custom: nil, idSuffix: "beta", bundleID: nil, variantSigning: nil, globalSigning: validSigning, globalPostSwitchScript: "echo global", variantPostSwitchScript: "echo variant")
+                           idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil, 
+                           globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         }
         
         // Should not throw if valid destination is provided

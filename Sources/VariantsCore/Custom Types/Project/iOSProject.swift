@@ -90,7 +90,6 @@ class iOSProject: Project {
                 do {
                     try configFactory.createConfig(
                         with: namedTarget,
-                        configuration: configuration,
                         variant: variant,
                         xcodeProj: configuration.xcodeproj,
                         configPath: Path(spec).absolute().parent(),
@@ -129,12 +128,12 @@ class iOSProject: Project {
                 // destination are set as '.project'
                 let configPath = Path(spec).absolute().parent()
                 do {
-                    try configFactory.createConfig(with: target,
-                                                   configuration: configuration,
-                                                   variant: defaultVariant,
-                                                   xcodeProj: configuration.xcodeproj,
-                                                   configPath: configPath,
-                                                   addToXcodeProj: true)
+                    try configFactory.createConfig(
+                        with: target,
+                        variant: defaultVariant,
+                        xcodeProj: configuration.xcodeproj,
+                        configPath: configPath,
+                        addToXcodeProj: true)
                 } catch {
                     Logger.shared.logFatal(item: error.localizedDescription)
                 }

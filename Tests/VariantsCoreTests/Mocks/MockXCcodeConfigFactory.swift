@@ -5,8 +5,6 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable colon
-
 import Foundation
 import PathKit
 @testable import VariantsCore
@@ -29,11 +27,11 @@ class MockXCcodeConfigFactory: XCFactory {
         return (true, file)
     }
     
-    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T : Encodable {
+    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T: Encodable {
         writeJSONCache.append((encodableObject: encodableObject, file: file))
         return (true, file)
     }
-    
+
     func createConfig(with target: NamedTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
@@ -49,5 +47,3 @@ class MockXCcodeConfigFactory: XCFactory {
     var xcconfigFileName: String = "variants.xcconfig"
     var logger: Logger
 }
-
-// swiftlint:enable colon

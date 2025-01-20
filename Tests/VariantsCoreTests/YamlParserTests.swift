@@ -105,22 +105,24 @@ class YamlParserTests: XCTestCase {
                     iOSTarget(name: "FrankBank", app_icon: "AppIcon", bundleId: "com.backbase.frank.ios",
                               testTarget: "FrankBankTests", source: source)
             )
-            XCTAssertEqual(firstVariantDefaultValues?.count, 7)
+            XCTAssertEqual(firstVariantDefaultValues?.count, 8)
             XCTAssertEqual(firstVariantDefaultValues?[0].key, "SAMPLE_CONFIG")
             XCTAssertEqual(firstVariantDefaultValues?[0].value, "Production Value")
-            XCTAssertEqual(firstVariantDefaultValues?[1].key, "V_APP_ICON")
-            XCTAssertEqual(firstVariantDefaultValues?[1].value, "AppIcon")
-            XCTAssertEqual(firstVariantDefaultValues?[2].key, "V_APP_NAME")
-            XCTAssertEqual(firstVariantDefaultValues?[2].value, "FrankBank")
-            XCTAssertEqual(firstVariantDefaultValues?[3].key, "V_BUNDLE_ID")
-            XCTAssertEqual(firstVariantDefaultValues?[3].value, "com.backbase.frank.ios")
-            XCTAssertEqual(firstVariantDefaultValues?[4].key, "V_MATCH_PROFILE")
-            XCTAssertEqual(firstVariantDefaultValues?[4].value, "match AppStore com.backbase.frank.ios")
-            XCTAssertEqual(firstVariantDefaultValues?[5].key, "V_VERSION_NAME")
-            XCTAssertEqual(firstVariantDefaultValues?[5].value, "0.0.1")
-            XCTAssertEqual(firstVariantDefaultValues?[6].key, "V_VERSION_NUMBER")
-            XCTAssertEqual(firstVariantDefaultValues?[6].value, "1")
-            
+            XCTAssertEqual(firstVariantDefaultValues?[1].key, "SAMPLE_GLOBAL")
+            XCTAssertEqual(firstVariantDefaultValues?[1].value, "GLOBAL Value iOS")
+            XCTAssertEqual(firstVariantDefaultValues?[2].key, "V_APP_ICON")
+            XCTAssertEqual(firstVariantDefaultValues?[2].value, "AppIcon")
+            XCTAssertEqual(firstVariantDefaultValues?[3].key, "V_APP_NAME")
+            XCTAssertEqual(firstVariantDefaultValues?[3].value, "FrankBank")
+            XCTAssertEqual(firstVariantDefaultValues?[4].key, "V_BUNDLE_ID")
+            XCTAssertEqual(firstVariantDefaultValues?[4].value, "com.backbase.frank.ios")
+            XCTAssertEqual(firstVariantDefaultValues?[5].key, "V_MATCH_PROFILE")
+            XCTAssertEqual(firstVariantDefaultValues?[5].value, "match AppStore com.backbase.frank.ios")
+            XCTAssertEqual(firstVariantDefaultValues?[6].key, "V_VERSION_NAME")
+            XCTAssertEqual(firstVariantDefaultValues?[6].value, "0.0.1")
+            XCTAssertEqual(firstVariantDefaultValues?[7].key, "V_VERSION_NUMBER")
+            XCTAssertEqual(firstVariantDefaultValues?[7].value, "1")
+
             // MARK: - iOS Global Properties
             
             let customGlobalConfig = configuration.ios?
