@@ -1,3 +1,4 @@
+
 //
 //  Variants
 //
@@ -6,6 +7,7 @@
 //
 
 import Foundation
+
 public struct Variants {
     static let configuration: [String: Any] = {
         guard let infoDictionary = Bundle.main.infoDictionary else {
@@ -16,10 +18,12 @@ public struct Variants {
     
     // MARK: - ConfigurationValueKey
     /// Custom configuration values coming from variants.yml as enum cases
-    public enum ConfigurationValueKey: String {
-    
+
+    public enum ConfigurationValueKey: String { 
+        case custom_global_property
         case OTHER_SWIFT_FLAGS
     }
+
     static func configurationValue(for key: ConfigurationValueKey) -> Any? {
         return Self.configuration[key.rawValue]
     }

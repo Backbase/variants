@@ -2,4 +2,4 @@ git_url("git@github.com:sample/match.git")
 storage_mode("git")
 # appstore, development, adhoc, enterprise
 type("appstore")
-app_identifier("com.backbase.VariantsTestApp")
+app_identifier("com.backbase.VariantsTestApp.beta")

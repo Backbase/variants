@@ -90,6 +90,7 @@ class iOSProject: Project {
                 do {
                     try configFactory.createConfig(
                         with: namedTarget,
+                        configuration: configuration,
                         variant: variant,
                         xcodeProj: configuration.xcodeproj,
                         configPath: Path(spec).absolute().parent(),
@@ -101,7 +102,6 @@ class iOSProject: Project {
                 
                 var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
                 customProperties.append(variant.destinationProperty)
-                
                 // Create 'variants_params.rb' with parameters whose
                 // destination are set as '.fastlane'
                 try? storeFastlaneParams(customProperties)
@@ -130,6 +130,7 @@ class iOSProject: Project {
                 let configPath = Path(spec).absolute().parent()
                 do {
                     try configFactory.createConfig(with: target,
+                                                   configuration: configuration,
                                                    variant: defaultVariant,
                                                    xcodeProj: configuration.xcodeproj,
                                                    configPath: configPath,

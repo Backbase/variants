@@ -23,7 +23,7 @@ public struct iOSConfiguration: Codable {
     private let signing: iOSSigning?
         
     var pbxproj: String {
-        return xcodeproj+"/project.pbxproj"
+        return xcodeproj + "/project.pbxproj"
     }
     
     public init(from decoder: Decoder) throws {

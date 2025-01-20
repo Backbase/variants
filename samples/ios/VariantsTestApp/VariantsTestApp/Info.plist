@@ -35,5 +35,9 @@
 			</array>
 		</dict>
 	</dict>
+	<key>custom_global_property</key>
+	<string>$(custom_global_property)</string>
+	<key>test_property</key>
+	<string>$(test_property)</string>
 </dict>
 </plist>

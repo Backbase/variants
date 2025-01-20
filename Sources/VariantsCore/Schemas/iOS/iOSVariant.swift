@@ -66,7 +66,7 @@ public struct iOSVariant: Variant {
         }
     }
     
-    func getDefaultValues(for target: iOSTarget) -> [(key: String, value: String)] {
+    func getDefaultValues(configuration: iOSConfiguration, target: iOSTarget) -> [(key: String, value: String)] {
         var customDictionary: [String: String] = [
             "V_APP_NAME": appName ?? target.name + configName,
             "V_BUNDLE_ID": makeBundleID(for: target),
@@ -78,14 +78,21 @@ public struct iOSVariant: Variant {
         if signing?.matchURL != nil, let exportMethod = signing?.exportMethod {
             customDictionary["V_MATCH_PROFILE"] = "\(exportMethod.prefix) \(makeBundleID(for: target))"
         }
-        
-        custom?
-            .filter { $0.destination == .project && !$0.isEnvironmentVariable }
-            .forEach { customDictionary[$0.name] = $0.value }
-        
+
+        let allCustomConfiguration = combineCustomPropertiesWithGlobals(configuration: configuration)
+        allCustomConfiguration.projectConfigurationValues.forEach {
+            customDictionary[$0.name] = $0.value
+        }
+
         return customDictionary.sorted(by: {$0.key < $1.key})
     }
-    
+
+    func combineCustomPropertiesWithGlobals(configuration: iOSConfiguration) -> [CustomProperty] {
+        let variantCustomProperties = custom ?? []
+        let globalMinusOverrideProperties = (configuration.custom ?? []).filter { !variantCustomProperties.contains($0) }
+        return globalMinusOverrideProperties + variantCustomProperties
+    }
+
     private static func parseDestination(name: String, destination: String?) throws -> Destination? {
         guard let destinationString = destination else { return nil }
         

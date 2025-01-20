@@ -1,7 +1,8 @@
-V_APP_ICON = AppIcon
-V_VERSION_NAME = 0.0.1
-V_MATCH_PROFILE = match AppStore com.backbase.VariantsTestApp
 OTHER_SWIFT_FLAGS = $(inherited)
-V_BUNDLE_ID = com.backbase.VariantsTestApp
-V_APP_NAME = VariantsTestApp
+V_APP_ICON = AppIconYellow
+V_APP_NAME = VariantsTestApp BETA
+V_BUNDLE_ID = com.backbase.VariantsTestApp.beta
+V_MATCH_PROFILE = match AppStore com.backbase.VariantsTestApp.beta
+V_VERSION_NAME = 0.0.1
 V_VERSION_NUMBER = 1
+custom_global_property = my value
