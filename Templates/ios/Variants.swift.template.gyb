@@ -8,7 +8,6 @@ def encode(string, cipher):
     bytes = string.encode("UTF-8")
     return [ord(bytes[i]) ^ cipher[i % len(cipher)] for i in range(0, len(bytes))]
 }%
-
 //
 //  Variants
 //
