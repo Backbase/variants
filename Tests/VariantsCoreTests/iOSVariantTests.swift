@@ -385,7 +385,41 @@ class iOSVariantTests: XCTestCase {
         XCTAssertFalse(defaultValues.contains(where: {$0.key == "Custom name 2"}), "Should not contains this property as it's an environment variable")
         XCTAssertFalse(defaultValues.contains(where: {$0.key == "Custom name 3"}), "Should not contains this property as it's not a project destination property")
     }
-    
+
+    func testGetDefaultValuesWithCustomAndGlobalCustomProperties() {
+        let customGlobalProperties = [
+            CustomProperty(name: "custom_global_property", value: "Custom global property", env: false, destination: .project),
+            CustomProperty(name: "custom_global_env_property", value: "Custom global env property", env: true, destination: .project),
+            CustomProperty(name: "custom_global_fastlane_property", value: "Custom global fastlane property", env: false, destination: .fastlane)
+        ]
+        let customVariantProperties = [
+            CustomProperty(name: "custom_variant_property", value: "Custom variant property", env: false, destination: .project),
+            CustomProperty(name: "custom_variant_env_property", value: "Custom variant env property", env: true, destination: .project),
+            CustomProperty(name: "custom_variant_fastlane_property", value: "Custom variant fastlane property", env: false, destination: .fastlane)]
+        
+        guard let variant = try? iOSVariant(
+            name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore", idSuffix: "beta", bundleID: nil,
+            globalCustomProperties: customGlobalProperties, variantCustomProperties: customVariantProperties,
+            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
+        else {
+            return XCTFail("Failed to initialize iOSVariant with provided parameters")
+        }
+
+        let defaultValues = variant.getDefaultValues(for: target)
+        
+        // Should have both global and variant custom properties
+        XCTAssertEqual(defaultValues.first(where: { $0.key == "custom_global_property"})?.value, "Custom global property")
+        XCTAssertEqual(defaultValues.first(where: { $0.key == "custom_variant_property"})?.value, "Custom variant property")
+
+        // Should not have environment variables
+        XCTAssertNil(defaultValues.first(where: { $0.key == "custom_global_env_property"}))
+        XCTAssertNil(defaultValues.first(where: { $0.key == "custom_variant_env_property"}))
+
+        // Should not have non-project custom properties
+        XCTAssertNil(defaultValues.first(where: { $0.key == "custom_global_fastlane_property"}))
+        XCTAssertNil(defaultValues.first(where: { $0.key == "custom_variant_fastlane_property"}))
+    }
+
     // MARK: - iOSVariants.Destination tests
     func testParsingiOSVariantDestintation() {
         func makeVariant(destination: String?) throws -> iOSVariant {
@@ -403,7 +437,6 @@ class iOSVariantTests: XCTestCase {
         XCTAssertNoThrow(try makeVariant(destination: "aPpCeNtEr"))
         
         // Should read correct value from input
-        
         XCTAssertEqual((try? makeVariant(destination: "appcenter"))?.storeDestination, iOSVariant.Destination.appCenter)
         XCTAssertEqual((try? makeVariant(destination: "appstore"))?.storeDestination, iOSVariant.Destination.appStore)
         XCTAssertEqual((try? makeVariant(destination: "testflight"))?.storeDestination, iOSVariant.Destination.testFlight)
