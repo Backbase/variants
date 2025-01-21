@@ -36,10 +36,11 @@ class XcodeProjFactoryTests: XCTestCase {
         let proj = XCConfigFactory(logger: Logger(verbose: true))
         let target = iOSTarget(name: "", app_icon: "", bundleId: "", testTarget: "",
                                source: .init(path: "", info: "", config: ""))
-        guard let variant = try? iOSVariant(name: target.name, versionName: "", versionNumber: 0, appIcon: nil, appName: nil,
-                                            storeDestination: nil, custom: nil, idSuffix: "", bundleID: nil, variantSigning: nil,
-                                            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
-                                            globalPostSwitchScript: nil, variantPostSwitchScript: nil)
+        guard let variant = try? iOSVariant(
+            name: target.name, versionName: "", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: nil,
+            idSuffix: "", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
+            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+            variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }

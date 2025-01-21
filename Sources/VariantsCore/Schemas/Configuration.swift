@@ -75,3 +75,19 @@ extension CustomProperty {
         }
     }
 }
+
+extension Sequence where Iterator.Element == CustomProperty {
+    var projectConfigurationValues: [CustomProperty] {
+        self.filter({ $0.destination == .project && !$0.isEnvironmentVariable })
+    }
+
+    var projectSecretConfigurationValues: [CustomProperty] {
+        self
+            .filter({ $0.destination == .project && $0.isEnvironmentVariable })
+            .map {
+                CustomProperty(name: $0.name,
+                               value: "os.environ.get('" + $0.environmentValue + "')",
+                               destination: $0.destination)
+        }
+    }
+}

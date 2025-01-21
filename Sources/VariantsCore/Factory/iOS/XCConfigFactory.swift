@@ -111,7 +111,7 @@ class XCConfigFactory: XCFactory {
         let infoPath = target.value.source.info
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
         updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
-        
+
         /*
          * Add custom properties whose values should be read from environment variables
          * to `Variants.Secret` as encrypted secrets.

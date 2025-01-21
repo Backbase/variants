@@ -101,7 +101,6 @@ class iOSProject: Project {
                 
                 var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
                 customProperties.append(variant.destinationProperty)
-                
                 // Create 'variants_params.rb' with parameters whose
                 // destination are set as '.fastlane'
                 try? storeFastlaneParams(customProperties)
@@ -129,11 +128,12 @@ class iOSProject: Project {
                 // destination are set as '.project'
                 let configPath = Path(spec).absolute().parent()
                 do {
-                    try configFactory.createConfig(with: target,
-                                                   variant: defaultVariant,
-                                                   xcodeProj: configuration.xcodeproj,
-                                                   configPath: configPath,
-                                                   addToXcodeProj: true)
+                    try configFactory.createConfig(
+                        with: target,
+                        variant: defaultVariant,
+                        xcodeProj: configuration.xcodeproj,
+                        configPath: configPath,
+                        addToXcodeProj: true)
                 } catch {
                     Logger.shared.logFatal(item: error.localizedDescription)
                 }

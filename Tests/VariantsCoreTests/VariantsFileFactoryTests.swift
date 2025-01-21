@@ -47,18 +47,18 @@ class VariantsFileFactoryTests: XCTestCase {
         versionNumber: 99,
         appIcon: nil,
         appName: nil,
-        storeDestination: "testFlight",
-        custom: [
-            CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
-            CustomProperty(name: "PROPERTY_B", value: "VALUE_B", destination: .project)
-        ],
+        storeDestination: "testflight",
         idSuffix: nil,
         bundleID: nil,
-        variantSigning: nil,
+        globalCustomProperties: nil,
+        variantCustomProperties: [
+            CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
+            CustomProperty(name: "PROPERTY_B", value: "VALUE_B", destination: .project)],
         globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+        variantSigning: nil,
         globalPostSwitchScript: "echo global",
         variantPostSwitchScript: "echo variant")
-    
+
     func testRender_noSecrets() {
         guard let configFile = Bundle(for: type(of: self))
                 .path(forResource: "Resources/ios/sample", ofType: "xcconfig") else { return }

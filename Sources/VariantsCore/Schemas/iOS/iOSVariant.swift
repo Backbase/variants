@@ -21,7 +21,7 @@ public struct iOSVariant: Variant {
     let postSwitchScript: String?
     
     private let bundleNamingOption: BundleNamingOption
-     
+
     public var title: String { name }
     
     var configName: String {
@@ -38,8 +38,10 @@ public struct iOSVariant: Variant {
     }
     
     init(
-        name: String, versionName: String, versionNumber: Int, appIcon: String?, appName: String?, storeDestination: String?,
-        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?,
+        name: String, versionName: String, versionNumber: Int, appIcon: String?, appName: String?,
+        storeDestination: String?, idSuffix: String?, bundleID: String?,
+        globalCustomProperties: [CustomProperty]?, variantCustomProperties: [CustomProperty]?,
+        globalSigning: iOSSigning?, variantSigning: iOSSigning?,
         globalPostSwitchScript: String?, variantPostSwitchScript: String?)
     throws {
         self.name = name
@@ -49,7 +51,7 @@ public struct iOSVariant: Variant {
         self.appName = appName
         self.storeDestination = try Self.parseDestination(name: name, destination: storeDestination) ?? .appStore
         self.signing = try Self.parseSigning(name: name, variantSigning: variantSigning, globalSigning: globalSigning)
-        self.custom = custom
+        self.custom = Self.parseCustomProperties(variantCustom: variantCustomProperties, globalCustom: globalCustomProperties)
         self.bundleNamingOption = try Self.parseBundleConfiguration(name: name, idSuffix: idSuffix, bundleID: bundleID)
         self.postSwitchScript = Self.parsePostSwitchScript(globalScript: globalPostSwitchScript,
                                                            variantScript: variantPostSwitchScript)
@@ -78,14 +80,11 @@ public struct iOSVariant: Variant {
         if signing?.matchURL != nil, let exportMethod = signing?.exportMethod {
             customDictionary["V_MATCH_PROFILE"] = "\(exportMethod.prefix) \(makeBundleID(for: target))"
         }
-        
-        custom?
-            .filter { $0.destination == .project && !$0.isEnvironmentVariable }
-            .forEach { customDictionary[$0.name] = $0.value }
-        
+        (custom?.projectConfigurationValues ?? []).forEach { customDictionary[$0.name] = $0.value }
+
         return customDictionary.sorted(by: {$0.key < $1.key})
     }
-    
+
     private static func parseDestination(name: String, destination: String?) throws -> Destination? {
         guard let destinationString = destination else { return nil }
         
@@ -116,7 +115,13 @@ public struct iOSVariant: Variant {
             return nil
         }
     }
-    
+
+    private static func parseCustomProperties(variantCustom: [CustomProperty]?, globalCustom: [CustomProperty]?) -> [CustomProperty] {
+        let variantCustomProperties = variantCustom ?? []
+        let globalMinusOverrideProperties = (globalCustom ?? []).filter { !variantCustomProperties.contains($0) }
+        return globalMinusOverrideProperties + variantCustomProperties
+    }
+
     private static func parsePostSwitchScript(globalScript: String?, variantScript: String?) -> String? {
         if let globalScript = globalScript, let variantScript = variantScript {
             return "\(globalScript) && \(variantScript)"
@@ -207,7 +212,9 @@ extension UnnamediOSVariant {
 }
 
 extension iOSVariant {
-    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalSigning: iOSSigning?, globalPostSwitchScript: String?) throws {
+    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalCustomProperties: [CustomProperty]?,
+         globalSigning: iOSSigning?, globalPostSwitchScript: String?)
+    throws {
         try self.init(
             name: name,
             versionName: unnamediOSVariant.versionName,
@@ -215,11 +222,12 @@ extension iOSVariant {
             appIcon: unnamediOSVariant.appIcon,
             appName: unnamediOSVariant.appName,
             storeDestination: unnamediOSVariant.storeDestination,
-            custom: unnamediOSVariant.custom,
             idSuffix: unnamediOSVariant.idSuffix,
             bundleID: unnamediOSVariant.bundleID,
-            variantSigning: unnamediOSVariant.signing,
+            globalCustomProperties: globalCustomProperties,
+            variantCustomProperties: unnamediOSVariant.custom,
             globalSigning: globalSigning,
+            variantSigning: unnamediOSVariant.signing,
             globalPostSwitchScript: globalPostSwitchScript,
             variantPostSwitchScript: unnamediOSVariant.postSwitchScript)
     }

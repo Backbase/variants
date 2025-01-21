@@ -131,12 +131,13 @@ class FastlaneParametersFactoryTests: XCTestCase {
             versionNumber: 99,
             appIcon: nil,
             appName: nil,
-            storeDestination: "testFlight",
-            custom: nil,
+            storeDestination: "testflight",
             idSuffix: "sample",
             bundleID: nil,
-            variantSigning: nil,
+            globalCustomProperties: nil,
+            variantCustomProperties: nil,
             globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+            variantSigning: nil,
             globalPostSwitchScript: "echo global",
             variantPostSwitchScript: "echo variant")
         else {

@@ -24,19 +24,15 @@ class VariantsFileFactory {
             let path = try TemplateDirectory().path
             guard let variantsGybTemplatePath = try? path.safeJoin(path: Path("ios/"))
             else { return }
-            let secrets = variant.custom?.secrets() ?? []
-            let configurationValues = variant.custom?.configurationValues() ?? []
+
             let context = [
-                "secrets": secrets,
-                "configurationValues": configurationValues
+                "secrets": variant.custom?.projectSecretConfigurationValues ?? [],
+                "configurationValues": variant.custom?.projectConfigurationValues ?? []
             ] as [String: Any]
             let environment = Environment(loader: FileSystemLoader(paths: [variantsGybTemplatePath.absolute()]))
-            let rendered = try environment.renderTemplate(name: StaticPath.Template.variantsSwiftGybFileName,
+            let content = try environment.renderTemplate(name: StaticPath.Template.variantsSwiftGybFileName,
                                                           context: context)
-            // Replace multiple empty lines by one only
-            let lines = rendered.split(whereSeparator: \.isNewline)
-            let content = lines.joined(separator: "\n")
-            
+
             try write(Data(content.utf8), using: configFilePath.parent().absolute())
             let variantsGybFile = try configFilePath.parent().absolute()
                 .safeJoin(path: Path(StaticPath.Xcode.variantsGybFileName))
@@ -71,17 +67,17 @@ class VariantsFileFactory {
             fileContent == data
         else { return }
 
+        let variantsOutputFilePath = "\(variantsGybFile.parent().absolute().string)/Variants.swift"
         let gybStdErr = try Bash(gybExecutablePath.absolute().description,
                  arguments:
                     "--line-directive",
                     "",
                     "-o",
-                    "Variants.swift",
+                    variantsOutputFilePath,
                     variantsGybFile.absolute().description
         ).capture(stream: .stderr)
-        let variantsFilePath = "\(variantsGybFile.parent().abbreviate().string)/Variants.swift"
-        handleGybErrors(message: gybStdErr, variantsFilePath: variantsFilePath)
-        logger.logInfo("⚙️  ", item: "'\(variantsFilePath)' has been generated with success", color: .green)
+        handleGybErrors(message: gybStdErr, variantsFilePath: variantsOutputFilePath)
+        logger.logInfo("⚙️  ", item: "'\(variantsOutputFilePath)' has been generated with success", color: .green)
     }
     
     private func handleGybErrors(message: String?, variantsFilePath: String) {
@@ -117,21 +113,4 @@ class VariantsFileFactory {
     }
     
     let logger: Logger
-}
-
-fileprivate extension Sequence where Iterator.Element == CustomProperty {
-    func secrets() -> [CustomProperty] {
-        return self
-            .filter({ $0.destination == .project && $0.isEnvironmentVariable })
-            .map { (property) -> CustomProperty in
-                return CustomProperty(name: property.name,
-                                      value: "os.environ.get('"+property.environmentValue+"')",
-                                      destination: property.destination)
-            }
-    }
-    
-    func configurationValues() -> [CustomProperty] {
-        return self
-            .filter({ $0.destination == .project && !$0.isEnvironmentVariable })
-    }
 }
