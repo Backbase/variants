@@ -45,7 +45,7 @@ class XcodeProjFactoryTests: XCTestCase {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
         XCTAssertNoThrow(try proj.createConfig(
-            with: ("", target),
+            for: target,
             variant: variant,
             xcodeProj: xcodeProjectPath.description,
             configPath: Path(""),

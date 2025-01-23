@@ -109,7 +109,7 @@ struct XcodeProjFactory {
     ///   - projectPath: Path to `.xcodeproj`
     ///   - sourceRoot: Path to source root group the files will be added to
     ///   - target: Named target `(key: String, value: Target) ` these files will be added to
-    func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: NamedTarget) {
+    func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: iOSTarget) {
         do {
             let project = try XcodeProj(path: projectPath)
             let variantsGroup = try createVarientsGroup(for: project, path: projectPath, sourceRoot: sourceRoot, target: target)
@@ -139,21 +139,21 @@ struct XcodeProjFactory {
     func changeBaseConfig(_ fileReference: PBXFileReference,
                           in xcodeProject: XcodeProj,
                           path: Path,
-                          target: NamedTarget,
+                          target: iOSTarget,
                           autoSave: Bool = false) {
         do {
             for conf in xcodeProject.pbxproj.buildConfigurations {
                 if
                     let infoList = conf.buildSettings["INFOPLIST_FILE"] as? String,
-                    infoList == target.value.source.info {
+                    infoList == target.source.info {
                     conf.baseConfiguration = fileReference
                 }
             }
             if autoSave { try xcodeProject.write(path: path) }
-            logger.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.key)'",
+            logger.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.name)'",
                            color: .green)
         } catch {
-            logger.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.key)'")
+            logger.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.name)'")
         }
     }
     
@@ -200,7 +200,7 @@ private extension XcodeProjFactory {
         for project: XcodeProj,
         path: Path,
         sourceRoot: Path,
-        target: NamedTarget
+        target: iOSTarget
     ) throws -> PBXGroup? {
         let variantsGroupPath = Path("\(path)/Variants")
         let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
@@ -216,11 +216,11 @@ private extension XcodeProjFactory {
         path: Path,
         variantsGroup: PBXGroup?,
         sourceRoot: Path,
-        target: NamedTarget
+        target: iOSTarget
     ) throws {
-        guard let pbxTarget = project.pbxproj.targets(named: target.key).first
+        guard let pbxTarget = project.pbxproj.targets(named: target.name).first
         else {
-            logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.key)' not found.")
+            logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.name)' not found.")
             return
         }
         

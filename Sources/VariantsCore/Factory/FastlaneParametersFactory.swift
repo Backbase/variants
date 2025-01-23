@@ -11,7 +11,7 @@ import PathKit
 
 protocol ParametersFactory {
     func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws
-    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws
+    func createMatchFile(for variant: iOSVariant, target: iOSTarget) throws
     func render(context: [String: Any], renderTemplate: String) throws -> Data?
     func write(_ data: Data, using parametersFile: Path) throws
 }
@@ -31,7 +31,7 @@ class FastlaneParametersFactory: ParametersFactory {
         try write(data, using: file)
     }
     
-    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws {
+    func createMatchFile(for variant: iOSVariant, target: iOSTarget) throws {
         // Return immediately if folder 'fastlane/' doesn't exist.
         guard StaticPath.Fastlane.baseFolder.exists && StaticPath.Fastlane.baseFolder.isDirectory
         else { return }

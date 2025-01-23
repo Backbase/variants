@@ -87,9 +87,8 @@ class YamlParserTests: XCTestCase {
             
             XCTAssertNotNil(configuration.ios)
             if let iosConfiguration = configuration.ios {
-                XCTAssertEqual(iosConfiguration.targets.count, 1)
-                XCTAssertEqual(iosConfiguration.targets.first?.value.name, "FrankBank")
-                XCTAssertEqual(iosConfiguration.targets.first?.value.bundleId, "com.backbase.frank.ios")
+                XCTAssertEqual(iosConfiguration.target.name, "FrankBank")
+                XCTAssertEqual(iosConfiguration.target.bundleId, "com.backbase.frank.ios")
                 XCTAssertEqual(iosConfiguration.variants.count, 3)
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("default"))
                 XCTAssertTrue(iosConfiguration.variants.map(\.name).contains("BETA"))

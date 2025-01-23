@@ -9,8 +9,6 @@
 
 import Foundation
 
-public typealias NamedTarget = (key: String, value: iOSTarget)
-
 public struct iOSTarget: Codable {
     let name: String
     let app_icon: String

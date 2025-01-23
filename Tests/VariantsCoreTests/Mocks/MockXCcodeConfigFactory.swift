@@ -12,7 +12,7 @@ import PathKit
 class MockXCcodeConfigFactory: XCFactory {
     var writeContentCache: [(content: String, file: Path, force: Bool)] = []
     var writeJSONCache: [(encodableObject: Encodable, file: Path)] = []
-    var createConfigCache: [(target: NamedTarget,
+    var createConfigCache: [(target: iOSTarget,
                              variant: iOSVariant,
                              xcodeProj: String?,
                              configPath: Path,
@@ -32,7 +32,7 @@ class MockXCcodeConfigFactory: XCFactory {
         return (true, file)
     }
 
-    func createConfig(with target: NamedTarget,
+    func createConfig(for target: iOSTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
                       configPath: Path,

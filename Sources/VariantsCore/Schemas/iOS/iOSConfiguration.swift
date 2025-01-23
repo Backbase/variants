@@ -15,7 +15,7 @@ internal extension CodingUserInfoKey {
 
 public struct iOSConfiguration: Codable {
     let xcodeproj: String
-    let targets: [String: iOSTarget]
+    let target: iOSTarget
     let variants: [iOSVariant]
     let custom: [CustomProperty]?
     
@@ -30,7 +30,7 @@ public struct iOSConfiguration: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.xcodeproj = try container.decode(String.self, forKey: .xcodeproj)
-        self.targets = try container.decode([String: iOSTarget].self, forKey: .targets)
+        self.target = try container.decode(iOSTarget.self, forKey: .target)
 
         let globalCustomProperties = try? container.decode([CustomProperty].self, forKey: .custom)
         self.custom = globalCustomProperties
