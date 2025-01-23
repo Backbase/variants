@@ -14,8 +14,8 @@ import PathKit
 struct XcodeProjFactory {
     private let logger: Logger
     
-    init(logLegel: Bool = false) {
-        logger = Logger(verbose: logLegel)
+    init(enableVerboseLog: Bool = false) {
+        logger = Logger(verbose: enableVerboseLog)
     }
     
     /// Scan the working directory for a Xcode project
@@ -112,23 +112,15 @@ struct XcodeProjFactory {
     func add(_ files: [Path], toProject projectPath: Path, sourceRoot: Path, target: iOSTarget) {
         do {
             let project = try XcodeProj(path: projectPath)
-            let variantsGroup = try createVarientsGroup(for: project, path: projectPath, sourceRoot: sourceRoot, target: target)
             for file in files {
-                try add(
-                    file: file,
-                    to: project,
-                    path: projectPath,
-                    variantsGroup: variantsGroup,
-                    sourceRoot: sourceRoot,
-                    target: target
-                )
+                try add(file: file, project: project, projectPath: projectPath, sourceRoot: sourceRoot, target: target)
             }
             try project.write(path: projectPath)
         } catch {
             logger.logFatal("❌ ", item: "Unable to add files to Xcode project '\(projectPath)', error: '\(error.localizedDescription)'")
         }
     }
-    
+
     /// Change Xcode project's base configuration.
     /// - Parameters:
     ///   - fileReference: File reference of the `.xcconfig` file
@@ -195,59 +187,56 @@ struct XcodeProjFactory {
 }
 
 private extension XcodeProjFactory {
-    
-    private func createVarientsGroup(
+    private func getOrCreateVariantsGroup(
         for project: XcodeProj,
         path: Path,
-        sourceRoot: Path,
         target: iOSTarget
     ) throws -> PBXGroup? {
-        let variantsGroupPath = Path("\(path)/Variants")
-        let rootGroup = project.pbxproj.groups.first(where: { $0.path == sourceRoot.lastComponent })
-        try rootGroup?.addGroup(named: variantsGroupPath.lastComponent)
-        let variantsGroup = rootGroup?.group(named: variantsGroupPath.lastComponent)
-        return variantsGroup
+        let groupName = "Variants"
+        let currentVariantsGroup = project.pbxproj.groups.first(where: { $0.name == groupName })
+
+        guard currentVariantsGroup == nil else { return currentVariantsGroup }
+        let sourceGroup = project.pbxproj.groups.first(where: { $0.path == target.name })
+        return try sourceGroup?.addGroup(named: groupName).first
     }
-    
-    // swiftlint:disable function_parameter_count
+
     private func add(
         file: Path,
-        to project: XcodeProj,
-        path: Path,
-        variantsGroup: PBXGroup?,
+        project: XcodeProj,
+        projectPath: Path,
         sourceRoot: Path,
         target: iOSTarget
     ) throws {
+        guard let variantsGroup = try getOrCreateVariantsGroup(for: project, path: projectPath, target: target)
+        else {
+            return logger.logFatal("❌ ", item: "Failed to generate Variants group at provided target name")
+        }
         guard let pbxTarget = project.pbxproj.targets(named: target.name).first
         else {
-            logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.name)' not found.")
-            return
+            return logger.logFatal("❌ ", item: "Could not add files to Xcode project - Target '\(target.name)' not found.")
         }
-        
-        let fileRef = try variantsGroup?.addFile(
+
+        let fileReference = try variantsGroup.addFile(
             at: file,
             sourceTree: .group,
             sourceRoot: sourceRoot,
             validatePresence: true
         )
-        
-        let fileElement = PBXFileElement(
-            sourceTree: .group,
-            path: file.description,
-            name: file.lastComponent
-        )
-        let buildFile = PBXBuildFile(file: fileElement)
-        let sourceBuildPhase = try pbxTarget.sourcesBuildPhase()
-        sourceBuildPhase?.files?.append(buildFile)
-        
-        /*
-         * If .xcconfig, set baseConfigurationReference to it
-         */
-        if file.extension == "xcconfig", let fileReference = fileRef {
-            changeBaseConfig(fileReference, in: project, path: path,
-                             target: target, autoSave: true)
+
+        switch file.extension {
+        // .swift files must be added to the compile sources build phase
+        case "swift":
+            let sourcesBuildPhase = try? pbxTarget.sourcesBuildPhase()
+            _  = try sourcesBuildPhase?.add(file: fileReference)
+
+        // .xcconfig is set to the project's base config
+        case "xcconfig":
+            changeBaseConfig(fileReference, in: project, path: projectPath, target: target, autoSave: true)
+
+        // Unsupported file extension
+        default:
+            break
         }
     }
-    // swiftlint:enable function_parameter_count
 }
 // swiftlint:enable file_length

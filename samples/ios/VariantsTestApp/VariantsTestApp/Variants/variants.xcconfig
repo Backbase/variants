@@ -5,4 +5,4 @@ V_BUNDLE_ID = com.backbase.VariantsTestApp
 V_MATCH_PROFILE = match AppStore com.backbase.VariantsTestApp
 V_VERSION_NAME = 0.0.1
 V_VERSION_NUMBER = 1
-custom_global_property = Overriden value
+custom_global_property = Overridden value

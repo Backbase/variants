@@ -41,7 +41,7 @@ ios:
                   env: false
                   destination: fastlane
                 - name: custom_global_property
-                  value: Overriden value
+                  value: Overridden value
                   destination: project
             #
             # Sample variant, "beta".

@@ -18,8 +18,7 @@ protocol XCFactory {
     func createConfig(for target: iOSTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool?) throws
+                      configPath: Path) throws
 }
 
 class XCConfigFactory: XCFactory {
@@ -66,8 +65,7 @@ class XCConfigFactory: XCFactory {
     func createConfig(for target: iOSTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool? = true) throws {
+                      configPath: Path) throws {
         
         let logger = Logger.shared
         guard let xcodeProj = xcodeProj
@@ -96,9 +94,7 @@ class XCConfigFactory: XCFactory {
         /*
          * If template files should be added to Xcode Project
          */
-        if addToXcodeProj ?? false {
-            addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target, variant: variant)
-        }
+        addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target, variant: variant)
 
         /*
          * Adjust signing configuration in project.pbxproj

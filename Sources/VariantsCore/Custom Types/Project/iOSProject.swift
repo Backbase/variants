@@ -88,9 +88,7 @@ class iOSProject: Project {
                 for: configuration.target,
                 variant: variant,
                 xcodeProj: configuration.xcodeproj,
-                configPath: Path(spec).absolute().parent(),
-                addToXcodeProj: false
-            )
+                configPath: Path(spec).absolute().parent())
         } catch {
             Logger.shared.logFatal(item: error.localizedDescription)
         }
@@ -123,8 +121,7 @@ class iOSProject: Project {
                 for: configuration.target,
                 variant: defaultVariant,
                 xcodeProj: configuration.xcodeproj,
-                configPath: configPath,
-                addToXcodeProj: true)
+                configPath: configPath)
         } catch {
             Logger.shared.logFatal(item: error.localizedDescription)
         }

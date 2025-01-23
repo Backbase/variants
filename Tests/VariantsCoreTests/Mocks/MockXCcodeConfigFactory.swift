@@ -15,8 +15,7 @@ class MockXCcodeConfigFactory: XCFactory {
     var createConfigCache: [(target: iOSTarget,
                              variant: iOSVariant,
                              xcodeProj: String?,
-                             configPath: Path,
-                             addToXcodeProj: Bool?)] = []
+                             configPath: Path)] = []
     
     init(logLevel: Bool = false) {
         logger = Logger(verbose: logLevel)
@@ -35,13 +34,11 @@ class MockXCcodeConfigFactory: XCFactory {
     func createConfig(for target: iOSTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool?) throws {
+                      configPath: Path) throws {
         createConfigCache.append((target: target,
                                   variant: variant,
                                   xcodeProj: xcodeProj,
-                                  configPath: configPath,
-                                  addToXcodeProj: addToXcodeProj))
+                                  configPath: configPath))
     }
     
     var xcconfigFileName: String = "variants.xcconfig"
