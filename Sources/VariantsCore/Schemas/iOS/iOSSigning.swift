@@ -5,10 +5,9 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable type_name
-
 import Foundation
 
+// swiftlint:disable:next type_name
 struct iOSSigning: Codable {
     let teamName: String?
     let teamID: String?
@@ -92,5 +91,3 @@ extension iOSSigning {
         return signing
     }
 }
-
-// swiftlint:enable type_name

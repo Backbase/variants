@@ -5,10 +5,9 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable type_name
-
 import Foundation
 
+// swiftlint:disable:next type_name
 public struct iOSVariant: Variant {
     let name: String
     let versionName: String
@@ -107,12 +106,11 @@ public struct iOSVariant: Variant {
         } else if let globalSigning = globalSigning {
             return try globalSigning ~ nil
         } else {
-            Logger.shared.logWarning(item:
+            throw RuntimeError(
                 """
                 Variant "\(name)" doesn't contain a 'signing' configuration. \
                 Create a global 'signing' configuration or make sure all variants have this property.
                 """)
-            return nil
         }
     }
 
@@ -232,5 +230,3 @@ extension iOSVariant {
             variantPostSwitchScript: unnamediOSVariant.postSwitchScript)
     }
 }
-
-// swiftlint:enable type_name

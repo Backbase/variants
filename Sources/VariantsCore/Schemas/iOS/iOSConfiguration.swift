@@ -5,17 +5,18 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable type_name
-
 import Foundation
+import ArgumentParser
 
 internal extension CodingUserInfoKey {
     static let bundleID = CodingUserInfoKey(rawValue: "bundle_id")!
 }
 
+// swiftlint:disable:next type_name
 public struct iOSConfiguration: Codable {
     let xcodeproj: String
     let target: iOSTarget
+    let extensions: [iOSExtension]
     let variants: [iOSVariant]
     let custom: [CustomProperty]?
     
@@ -25,12 +26,21 @@ public struct iOSConfiguration: Codable {
     var pbxproj: String {
         return xcodeproj + "/project.pbxproj"
     }
-    
+
+    var defaultVariant: iOSVariant {
+        get throws {
+            guard  let defaultVariant = variants.first(where: { $0.name.lowercased() == "default" })
+            else { throw ValidationError("Variant 'default' not found.") }
+            return defaultVariant
+        }
+    }
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.xcodeproj = try container.decode(String.self, forKey: .xcodeproj)
         self.target = try container.decode(iOSTarget.self, forKey: .target)
+        self.extensions = try container.decodeIfPresent([iOSExtension].self, forKey: .extensions) ?? []
 
         let globalCustomProperties = try? container.decode([CustomProperty].self, forKey: .custom)
         self.custom = globalCustomProperties
@@ -47,5 +57,3 @@ public struct iOSConfiguration: Codable {
                     globalSigning: globalSigning, globalPostSwitchScript: globalPostSwitchScript) }
     }
 }
-
-// swiftlint:enable type_name

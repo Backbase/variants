@@ -83,23 +83,23 @@ class iOSProject: Project {
 
         // Create 'variants.xcconfig' with parameters whose
         // destination are set as '.project'
+        let configPath = Path(spec).absolute().parent()
         do {
             try configFactory.createConfig(
-                for: configuration.target,
-                variant: variant,
-                xcodeProj: configuration.xcodeproj,
-                configPath: Path(spec).absolute().parent())
+                for: variant,
+                configuration: configuration,
+                configPath: configPath)
         } catch {
             Logger.shared.logFatal(item: error.localizedDescription)
         }
 
+        // Update `variants_params.rb` with custom fastlane properties
         var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
         customProperties.append(variant.destinationProperty)
-        // Create 'variants_params.rb' with parameters whose
-        // destination are set as '.fastlane'
-        try? storeFastlaneParams(customProperties)
+        try storeFastlaneParams(customProperties)
 
-        try parametersFactory.createMatchFile(for: variant, target: configuration.target)
+        // Update `Matchfile` with signing configurations
+        try parametersFactory.createMatchFile(for: variant, configuration: configuration)
     }
     
     private func runPostSwitchScript(_ script: String) throws {
@@ -108,19 +108,15 @@ class iOSProject: Project {
     }
 
     private func createVariants(with configuration: iOSConfiguration, spec: String) throws {
-        guard let defaultVariant = configuration.variants
-                .first(where: { $0.name.lowercased() == "default" }) else {
-            throw ValidationError("Variant 'default' not found.")
-        }
+        let defaultVariant = try configuration.defaultVariant
 
         // Create 'variants.xcconfig' with parameters whose
         // destination are set as '.project'
         let configPath = Path(spec).absolute().parent()
         do {
             try configFactory.createConfig(
-                for: configuration.target,
-                variant: defaultVariant,
-                xcodeProj: configuration.xcodeproj,
+                for: defaultVariant,
+                configuration: configuration,
                 configPath: configPath)
         } catch {
             Logger.shared.logFatal(item: error.localizedDescription)
@@ -166,20 +162,15 @@ class iOSProject: Project {
                 """
 
             if StaticPath.Fastlane.baseFolder.isDirectory {
+                let defaultVariant = try configuration.defaultVariant
 
-                guard let defaultVariant = configuration.variants
-                        .first(where: { $0.name.lowercased() == "default" })
-                else {
-                    throw ValidationError("Variant 'default' not found.")
-                }
+                // Update `variants_params.rb` with custom fastlane properties
                 var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
                 customProperties.append(defaultVariant.destinationProperty)
-
-                // Create 'variants_params.rb' with parameters whose
-                // destination are set as '.fastlane'
                 try storeFastlaneParams(customProperties)
 
-                try parametersFactory.createMatchFile(for: defaultVariant, target: configuration.target)
+                // Update `Matchfile` with signing configurations
+                try parametersFactory.createMatchFile(for: defaultVariant, configuration: configuration)
 
                 setupCompleteMessage =
                     """

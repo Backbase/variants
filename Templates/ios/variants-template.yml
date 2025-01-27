@@ -14,6 +14,16 @@ ios:
             path: {{ SOURCE }}
             info: {{ INFO_PLIST }}
             config: {{ SOURCE }}
+    # ----------------------------------------------------------------------
+    # This can be used to add a list of target extensions to be included in
+    # the signing phase, both in the Matchfile and Xcode target
+    #
+    # Comment or delete section below if necessary.
+    # ----------------------------------------------------------------------
+    #extensions:
+    #    - name: MyAppExtension
+    #      bundle_id: com.myApp.MyAppExtension
+    #      signed: true
     variants:
         # Default variant is mandatory, do not remove
         default:
