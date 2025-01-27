@@ -190,7 +190,7 @@ private extension XcodeProjFactory {
         target: iOSTarget
     ) throws -> PBXGroup? {
         let groupName = "Variants"
-        let currentVariantsGroup = project.pbxproj.groups.first(where: { $0.name == groupName })
+        let currentVariantsGroup = project.pbxproj.groups.first(where: { $0.path == groupName || $0.name == groupName })
 
         guard currentVariantsGroup == nil else { return currentVariantsGroup }
         let sourceGroup = project.pbxproj.groups.first(where: { $0.path == target.name })

@@ -131,15 +131,6 @@
 			path = VariantsTestAppTests;
 			sourceTree = "<group>";
 		};
-		3C00DF7AC3E9535AC87DE841 /* Variants */ = {
-			isa = PBXGroup;
-			children = (
-				78DBE119A2B49BE740D07F6E /* variants.xcconfig */,
-				B512AE731F1EAB7155E4C339 /* Variants.swift */,
-			);
-			path = Variants;
-			sourceTree = "<group>";
-		};
 		8E00D0DA29967BD4009F995B = {
 			isa = PBXGroup;
 			children = (
@@ -171,9 +162,18 @@
 				8E00D0EF29967BD5009F995B /* Assets.xcassets */,
 				8E00D0F129967BD5009F995B /* LaunchScreen.storyboard */,
 				8E00D0F429967BD5009F995B /* Info.plist */,
-				3C00DF7AC3E9535AC87DE841 /* Variants */,
+				EAFEB4948D49564FD23C7C18 /* Variants */,
 			);
 			path = VariantsTestApp;
+			sourceTree = "<group>";
+		};
+		EAFEB4948D49564FD23C7C18 /* Variants */ = {
+			isa = PBXGroup;
+			children = (
+				78DBE119A2B49BE740D07F6E /* variants.xcconfig */,
+				B512AE731F1EAB7155E4C339 /* Variants.swift */,
+			);
+			path = Variants;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
