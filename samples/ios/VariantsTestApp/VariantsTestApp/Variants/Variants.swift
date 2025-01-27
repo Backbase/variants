@@ -18,10 +18,9 @@ public struct Variants {
     // MARK: - ConfigurationValueKey
     /// Custom configuration values coming from variants.yml as enum cases
 
-    public enum ConfigurationValueKey: String {
-    
-        case custom_global_property
+    public enum ConfigurationValueKey: String { 
         case OTHER_SWIFT_FLAGS
+        case custom_global_property
     }
 
     static func configurationValue(for key: ConfigurationValueKey) -> Any? {

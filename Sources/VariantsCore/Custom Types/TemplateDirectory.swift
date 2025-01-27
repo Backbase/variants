@@ -15,6 +15,8 @@ struct TemplateDirectory {
 
     init(
         directories: [String] = [
+            // Uncomment below line while in development to read from local template files
+            "../../../Templates",
             "~/.local/lib/variants/templates",
             "./Templates"
         ]

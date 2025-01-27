@@ -19,7 +19,7 @@ class MockFastlaneFactory: ParametersFactory {
         createParametersCache.append((file: file, renderTemplate: renderTemplate, parameters: parameters))
     }
     
-    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws {
+    func createMatchFile(for variant: iOSVariant, target: iOSTarget) throws {
         createMatchFileCache.append((variant: variant, target: target))
     }
     

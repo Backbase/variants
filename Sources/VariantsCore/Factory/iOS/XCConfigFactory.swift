@@ -15,11 +15,10 @@ public typealias DoesFileExist = (exists: Bool, path: Path?)
 protocol XCFactory {
     func write(_ stringContent: String, toFile file: Path, force: Bool) -> (Bool, Path?)
     func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T: Encodable
-    func createConfig(with target: NamedTarget,
+    func createConfig(for target: iOSTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool?) throws
+                      configPath: Path) throws
 }
 
 class XCConfigFactory: XCFactory {
@@ -63,11 +62,10 @@ class XCConfigFactory: XCFactory {
         }
     }
     
-    func createConfig(with target: NamedTarget,
+    func createConfig(for target: iOSTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool? = true) throws {
+                      configPath: Path) throws {
         
         let logger = Logger.shared
         guard let xcodeProj = xcodeProj
@@ -75,7 +73,7 @@ class XCConfigFactory: XCFactory {
             throw RuntimeError("Attempting to create \(xcconfigFileName) - Path to Xcode Project not found")
         }
         let xcodeProjPath = Path(xcodeProj)
-        let configString = target.value.source.config
+        let configString = target.source.config
         
         logger.logInfo("Checking if \(xcconfigFileName) exists", item: "")
         let xcodeConfigFolder = Path("\(configPath)/\(configString)")
@@ -91,26 +89,24 @@ class XCConfigFactory: XCFactory {
         
         _ = write("", toFile: xcodeConfigPath, force: true)
         logger.logInfo("Created file: ", item: "'\(xcconfigFileName)' at \(xcodeConfigPath.parent().abbreviate().description)")
-        populateConfig(with: target, configFile: xcodeConfigPath, variant: variant)
+        populateConfig(for: target, configFile: xcodeConfigPath, variant: variant)
 
         /*
          * If template files should be added to Xcode Project
          */
-        if addToXcodeProj ?? false {
-            addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target, variant: variant)
-        }
+        addToXcode(xcodeConfigPath, toProject: xcodeProjPath, sourceRoot: configPath, target: target, variant: variant)
 
         /*
          * Adjust signing configuration in project.pbxproj
          */
-        updateSigningConfig(for: variant, inTarget: target, projectPath: xcodeProjPath)
+        updateSigningConfig(for: target, variant: variant, projectPath: xcodeProjPath)
 
         /*
          * INFO.plist
          */
-        let infoPath = target.value.source.info
+        let infoPath = target.source.info
         let infoPlistPath = Path("\(configPath)/\(infoPath)")
-        updateInfoPlist(with: target.value, configFile: infoPlistPath, variant: variant)
+        updateInfoPlist(with: target, configFile: infoPlistPath, variant: variant)
 
         /*
          * Add custom properties whose values should be read from environment variables
@@ -125,7 +121,7 @@ class XCConfigFactory: XCFactory {
     private func addToXcode(_ xcConfigFile: Path,
                             toProject projectPath: Path,
                             sourceRoot: Path,
-                            target: NamedTarget,
+                            target: iOSTarget,
                             variant: iOSVariant) {
         let variantsFile = Path("\(xcConfigFile.parent().absolute().description)/Variants.swift")
         do {
@@ -143,23 +139,23 @@ class XCConfigFactory: XCFactory {
                 "PRODUCT_NAME": "$(V_APP_NAME)",
                 "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
             ]
-            xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
+            xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target)
             
             xcodeFactory.modify(
                 [
                     "TEST_HOST": "$(BUILT_PRODUCTS_DIR)/$(V_APP_NAME).app/$(V_APP_NAME)"
                 ],
                 in: projectPath,
-                target: target.value,
+                target: target,
                 asTestSettings: true)
         } catch {
             logger.logError("❌ ", item: "Failed to add Variants.swift to Xcode Project")
         }
     }
 
-    private func populateConfig(with target: NamedTarget, configFile: Path, variant: iOSVariant) {
+    private func populateConfig(for target: iOSTarget, configFile: Path, variant: iOSVariant) {
         logger.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
-        variant.getDefaultValues(for: target.value).forEach { (key, value) in
+        variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
             logger.logDebug("Item: ", item: stringContent, indentationLevel: 1, color: .purple)
             
@@ -171,8 +167,8 @@ class XCConfigFactory: XCFactory {
     }
 
     private func updateSigningConfig(
-        for variant: iOSVariant,
-        inTarget target: NamedTarget,
+        for target: iOSTarget,
+        variant: iOSVariant,
         projectPath: Path
     ) {
         guard
@@ -193,7 +189,7 @@ class XCConfigFactory: XCFactory {
             "CODE_SIGN_STYLE": "Manual",
             "CODE_SIGN_IDENTITY": "Apple \(certType): \(teamName) (\(teamID))"
         ]
-        xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target.value)
+        xcodeFactory.modify(mainTargetSettings, in: projectPath, target: target)
     }
     
     private func updateInfoPlist(with target: iOSTarget, configFile: Path, variant: iOSVariant) {

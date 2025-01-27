@@ -58,7 +58,7 @@ It will generate a variants.yml file in the base folder of your project
 > NOTE: Edit the file variants.yml accordingly.
 
 #### Variants Spec
-Your `variants.yml` spec will contain all the necessary fields. The information within `xcodeproj` and `targets` sections are populated automatically if a `.xcodeproj` is found in your working directory - otherwise, you'll be asked to update the placeholders in this file. It comes with one variant named `default`, which will be used whenever a variant isn't specified. You can then include custom variants, for which the following settings are required:
+Your `variants.yml` spec will contain all the necessary fields. The information within `xcodeproj` and `target` section are populated automatically if a `.xcodeproj` is found in your working directory - otherwise, you'll be asked to update the placeholders in this file. It comes with one variant named `default`, which will be used whenever a variant isn't specified. You can then include custom variants, for which the following settings are required:
 * `name`
 * `version_name`
 * `version_number`
@@ -66,46 +66,45 @@ Your `variants.yml` spec will contain all the necessary fields. The information 
 ```yaml
 ios:
     xcodeproj: SampleProject.xcodeproj
-    targets:
-      SampleProject:
+    target:
         name: SampleApp
         bundle_id: com.sample.app
         test_target: SampleProjectTests
         app_icon: AppIcon
         source:
-          path: Sources
-          info: Sources/Info.plist
-          # Path to folder that will serve as parent to folder Variants/
-          config: Sources
+            path: Sources
+            info: Sources/Info.plist
+            # Path to folder that will serve as parent to folder Variants/
+            config: Sources
     variants:
-      # Default variant is mandatory, do not remove
-      default:
-        version_name: 0.0.1
-        version_number: {{ envVars.VERSION_CODE }}
-        store_destination: AppStore
-        # This is an optional field to override the default app name per variant
-        app_name: App Marketing Name 
-        custom:
-            - name: apiBaseUrl
-              value: https://sample.com/
-              destination: project
-        postSwitchScript: |-
-            echo default Variant Done Switching
-      BETA:
-        id_suffix: beta
-        app_icon: AppIcon.beta
-        version_name: 0.0.1
-        version_number: 13
-        store_destination: TestFlight
-        custom:
-            - name: apiBaseUrl
-              value: https://sample-beta.com/
-              destination: project
-            - key:  OTHER_SWIFT_FLAGS
-              value: $(inherited) -DBETA
-              destination: project
+        # Default variant is mandatory, do not remove
+        default:
+            version_name: 0.0.1
+            version_number: {{ envVars.VERSION_CODE }}
+            store_destination: AppStore
+            # This is an optional field to override the default app name per variant
+            app_name: App Marketing Name 
+            custom:
+                - name: apiBaseUrl
+                  value: https://sample.com/
+                  destination: project
+            postSwitchScript: |-
+                echo default Variant Done Switching
+        BETA:
+            id_suffix: beta
+            app_icon: AppIcon.beta
+            version_name: 0.0.1
+            version_number: 13
+            store_destination: TestFlight
+            custom:
+                - name: apiBaseUrl
+                  value: https://sample-beta.com/
+                  destination: project
+                - key:  OTHER_SWIFT_FLAGS
+                  value: $(inherited) -DBETA
+                  destination: project
     postSwitchScript: |-
-            echo global Done Switching
+        echo global Done Switching
 ```
 ```yaml
 android:

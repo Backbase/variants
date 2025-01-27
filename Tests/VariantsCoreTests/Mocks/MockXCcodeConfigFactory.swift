@@ -12,11 +12,10 @@ import PathKit
 class MockXCcodeConfigFactory: XCFactory {
     var writeContentCache: [(content: String, file: Path, force: Bool)] = []
     var writeJSONCache: [(encodableObject: Encodable, file: Path)] = []
-    var createConfigCache: [(target: NamedTarget,
+    var createConfigCache: [(target: iOSTarget,
                              variant: iOSVariant,
                              xcodeProj: String?,
-                             configPath: Path,
-                             addToXcodeProj: Bool?)] = []
+                             configPath: Path)] = []
     
     init(logLevel: Bool = false) {
         logger = Logger(verbose: logLevel)
@@ -32,16 +31,14 @@ class MockXCcodeConfigFactory: XCFactory {
         return (true, file)
     }
 
-    func createConfig(with target: NamedTarget,
+    func createConfig(for target: iOSTarget,
                       variant: iOSVariant,
                       xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool?) throws {
+                      configPath: Path) throws {
         createConfigCache.append((target: target,
                                   variant: variant,
                                   xcodeProj: xcodeProj,
-                                  configPath: configPath,
-                                  addToXcodeProj: addToXcodeProj))
+                                  configPath: configPath))
     }
     
     var xcconfigFileName: String = "variants.xcconfig"
