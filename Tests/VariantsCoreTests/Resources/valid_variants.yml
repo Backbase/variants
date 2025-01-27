@@ -59,6 +59,16 @@ ios:
             path: Sources
             info: Sources/Info.plist
             config: Sources
+    extensions:
+        - name: VariantsWidgetExtension
+          bundle_suffix: VariantsWidgetExtension
+          signed: true
+        - name: VariantsWidgetExtension2
+          bundle_id: com.backbase.frank.io.VariantsWidgetExtension2
+          signed: true
+        - name: OtherExtension
+          bundle_id: com.variantsTest.OtherExtension
+          signed: false
     variants:
         default:
             version_name: 0.0.1

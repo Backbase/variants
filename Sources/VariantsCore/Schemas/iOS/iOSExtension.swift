@@ -20,9 +20,20 @@ public struct iOSExtension: Codable {
         case signed
     }
 
-    enum BundleNamingOption: Codable {
+    enum BundleNamingOption: Codable, Equatable {
         case explicit(String)
         case suffix(String)
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case let (.explicit(lhsValue), .explicit(rhsValue)): 
+                return lhsValue == rhsValue
+            case let (.suffix(lhsValue), .suffix(rhsValue)): 
+                return lhsValue == rhsValue
+            default:
+                return false
+            }
+        }
     }
 
     public init(from decoder: Decoder) throws {

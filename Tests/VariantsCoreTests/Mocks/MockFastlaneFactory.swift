@@ -11,18 +11,18 @@ import PathKit
 
 class MockFastlaneFactory: ParametersFactory {
     var createParametersCache: [(file: Path, renderTemplate: String, parameters: [CustomProperty])] = []
-    var createMatchFileCache: [(variant: iOSVariant, target: iOSTarget)] = []
+    var createMatchFileCache: [(variant: iOSVariant, configuration: iOSConfiguration)] = []
     var renderCache: [[String: Any]] = []
     var writeCache: [(data: Data, parametersFile: Path)] = []
     
     func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws {
         createParametersCache.append((file: file, renderTemplate: renderTemplate, parameters: parameters))
     }
-    
-    func createMatchFile(for variant: iOSVariant, target: iOSTarget) throws {
-        createMatchFileCache.append((variant: variant, target: target))
+
+    func createMatchFile(for variant: iOSVariant, configuration: iOSConfiguration) throws {
+        createMatchFileCache.append((variant: variant, configuration: configuration))
     }
-    
+
     func render(context: [String: Any], renderTemplate: String) throws -> Data? {
         renderCache.append(context)
         return nil
