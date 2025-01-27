@@ -89,6 +89,7 @@ class XCConfigFactory: XCFactory {
          * Adjust signing configuration in project.pbxproj
          */
         updateSigningConfig(for: variant, configuration: configuration, projectPath: xcodeProjPath)
+        updateSigningConfigForExtensions(for: variant, configuration: configuration, projectPath: xcodeProjPath)
 
         /*
          * INFO.plist
@@ -177,29 +178,48 @@ class XCConfigFactory: XCFactory {
             !teamName.isEmpty
         else { return }
 
-        let xcodeFactory = XcodeProjFactory()
-        var certType = "Development"
-        if exportMethod == .appstore || exportMethod == .enterprise {
-            certType = "Distribution"
-        }
-
-        // Update main app signing
+        let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
+        let certType = isDistribution ? "Distribution" : "Development"
         let signingSettings = [
             "PROVISIONING_PROFILE_SPECIFIER": "$(V_MATCH_PROFILE)",
             "CODE_SIGN_STYLE": "Manual",
             "CODE_SIGN_IDENTITY": "Apple \(certType): \(teamName) (\(teamID))"
         ]
-        xcodeFactory.modify(signingSettings, in: projectPath, targetName: configuration.target.source.info)
 
-        // For now we won't touch the signing in Xcode itself for the extensions since it will be overwritten by
-        // fastlane Match. In case this becomes a requested feature we can re-visit the code below
-//        // Update signed extensions
-//        for targetExtension in configuration.extensions {
-//            guard targetExtension.signed else { continue }
-//            xcodeFactory.modify(signingSettings, in: projectPath, targetName: targetExtension.name)
-//        }
+        let xcodeFactory = XcodeProjFactory()
+        xcodeFactory.modify(signingSettings, in: projectPath, targetName: configuration.target.source.info)
     }
-    
+
+    private func updateSigningConfigForExtensions(
+        for variant: iOSVariant,
+        configuration: iOSConfiguration,
+        projectPath: Path
+    ) {
+        let targetExtensions = configuration.extensions.filter({ $0.signed })
+        guard 
+            !targetExtensions.isEmpty,
+            let exportMethod = variant.signing?.exportMethod,
+            let teamName = variant.signing?.teamName,
+            let teamID = variant.signing?.teamID,
+            !teamID.isEmpty,
+            !teamName.isEmpty
+        else { return }
+
+        let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
+        let certType = isDistribution ? "Distribution" : "Development"
+
+        let xcodeFactory = XcodeProjFactory()
+        for targetExtension in targetExtensions {
+            let bundleID = targetExtension.makeBundleID(variant: variant, target: configuration.target)
+            let signingSettings = [
+                "PROVISIONING_PROFILE_SPECIFIER": "\(exportMethod.prefix) \(bundleID)",
+                "CODE_SIGN_STYLE": "Manual",
+                "CODE_SIGN_IDENTITY": "Apple \(certType): \(teamName) (\(teamID))"
+            ]
+            xcodeFactory.modify(signingSettings, in: projectPath, targetName: targetExtension.name)
+        }
+    }
+
     private func updateInfoPlist(with target: iOSTarget, configFile: Path, variant: iOSVariant) {
         let configFilePath = configFile.absolute().description
         do {
