@@ -79,4 +79,5 @@ class iOSTargetExtensionTests: XCTestCase {
     ]
 }
 
+// swiftlint:enable line_length
 // swiftlint:enable type_name

@@ -17,6 +17,9 @@ Commands:
 
 * [1. Initialize](#initialize)
     * [Variants Spec](#variants-spec)
+    * [Environment variables injection](#enviromental-variables-injection)
+    * [iOS: Bundle ID](#configuring-bundleid)
+    * [iOS: Signing App Extensions](#signing-extensions)
     * [Custom configuration](#custom-configuration)
     * [Signing configuration (iOS only)](#signing-configuration)
 * [2. Setup](#setup-multiple-build-variants-with-full-fastlane-integration)
@@ -190,6 +193,38 @@ If a `bundle_id` is provided in the variant config, the BundleID will be overwri
 For example: Target BundleID is `com.sample.App` and variant `bundle_id` is `com.anotherSample.App`, the generated BundleID will be `com.anotherSample.App`
 
 *Note: `id_suffix` and `bundle_id` are not compatible and must not be provided at the same time. Only one of the configurations can be provided per each variant.*
+
+#### Signing extensions
+
+Variants can also help signing extensions via Match. In order to do so simply include the extensions in the `variants.yml` as the following:
+
+```yaml
+ios:
+    xcodeproj: SampleProject.xcodeproj
+    target:
+        ...
+    extensions:
+        - name: TestWidgetExtension
+          bundle_suffix: TestWidgetExtension
+          signed: true
+        - name: AnotherTestWidgetExtension
+          bundle_id: com.test.MyApp.AnotherTestWidgetExtension
+          signed: true
+    variants:
+        ...
+```
+
+The `bundle_id` will be generated for each extension marked with `signed: true` and added to the `app_identifier` property in the Matchfile for Match to sign the application.
+
+There are two ways to configure the Bundle ID generation:
+
+If a `id_suffix` is provided in the extension config the BundleID will be generated based on the selected variant BundleID and the suffix provided. 
+For example: Variant BundleID is `com.sample.App.beta` and extension `id_sufix` is `TestWidgetExtension`, the generated BundleID will be `com.sample.App.beta.TestWidgetExtension`
+
+If a `bundle_id` is provided in the extension config the BundleID will be generated based on the bundle ID provided. 
+For example: Variant BundleID is `com.sample.App.beta` and extension `bundle_id` is `com.test.MyApp.AnotherTestWidgetExtension`, the generated BundleID will be `com.test.MyApp.AnotherTestWidgetExtension`
+
+*Note: `id_suffix` and `bundle_id` are not compatible and must not be provided at the same time. Only one of the configurations can be provided per each extension.*
 
 #### Custom configuration
 
