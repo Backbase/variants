@@ -54,6 +54,13 @@ ios:
             # Sample variant, "beta".
             # Only `version_name` and `version_number` are mandatory fields
             #
+            debug_signing:
+                style: automatic
+                # 'match_url' isn't mandatory, only if you use Match to sign your app
+                # match_url: "git@github.com:sample/match.git"
+                # team_name: "Backbase B.V."
+                # team_id: "DEF7654321H"
+                # export_method: "appstore"
         BETA:
             id_suffix: beta
             # If app_icon isn't specified, the value fallbacks to target.app_icon

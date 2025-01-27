@@ -10,9 +10,13 @@ import XcodeProj
 import PathKit
 
 struct XcodeProjFactory {
+    enum BuildConfigType: String, CaseIterable {
+        case debug, release
+    }
+
     private let logger: Logger
     
-    init(enableVerboseLog: Bool = false) {
+    init(enableVerboseLog: Bool = true) {
         logger = Logger(verbose: enableVerboseLog)
     }
     
@@ -152,23 +156,26 @@ struct XcodeProjFactory {
     ///   - keyValue: Key/value pair to be modified
     ///   - projectPath: Path to Xcode project
     ///   - targetName: Name of the target on which the `buildSettings` should be changed.
-    ///   - asTestSettings: If true, add configuraiton to test/non-host targets.
     ///   - silent: Flag to determine if final logs are necessary
     func modify(_ keyValue: [String: String],
                 in projectPath: Path,
                 targetName: String,
-                asTestSettings: Bool = false,
+                configurationTypes: [BuildConfigType] = BuildConfigType.allCases,
                 silent: Bool = false) {
         do {
             let project = try XcodeProj(path: projectPath)
+            let configTypeNames = configurationTypes.map { $0.rawValue.lowercased() }
             logger.logInfo("Updating: ", item: projectPath)
 
             project.pbxproj.buildConfigurations
                 .filter({ ($0.buildSettings["INFOPLIST_FILE"] as? String)?.contains(targetName) ?? false })
+                .filter({ configTypeNames.contains($0.name.lowercased()) })
                 .forEach { conf in
+                    logger.logDebug(
+                        "Build configuration type: ", item: conf.name, indentationLevel: 1, color: .blue)
                     keyValue.forEach { (key, value) in
-                        Logger.shared.logDebug("Item: ", item: "\(key) = \(value)",
-                                               indentationLevel: 1, color: .purple)
+                        logger.logDebug(
+                            "Item: ", item: "\(key) = \(value)", indentationLevel: 2, color: .purple)
                         conf.buildSettings[key] = value
                     }
                 }

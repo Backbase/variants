@@ -16,12 +16,14 @@ final class iOSSigningTests: XCTestCase {
         let signing = iOSSigning(teamName: "team",
                                  teamID: nil,
                                  exportMethod: .appstore,
-                                 matchURL: "url")
+                                 matchURL: "url",
+                                 style: .manual)
         let signing1 = iOSSigning(teamName: nil,
                                   teamID: "new id",
                                   exportMethod: .development,
-                                  matchURL: nil)
-        
+                                  matchURL: nil,
+                                  style: .manual)
+
         do {
             let result = try signing ~ signing1
             XCTAssertEqual(result.teamName, "team")
@@ -37,11 +39,13 @@ final class iOSSigningTests: XCTestCase {
         let signing = iOSSigning(teamName: nil,
                                  teamID: nil,
                                  exportMethod: .appstore,
-                                 matchURL: "url")
+                                 matchURL: "url",
+                                 style: .manual)
         let signing1 = iOSSigning(teamName: nil,
                                   teamID: "new id",
                                   exportMethod: .development,
-                                  matchURL: "new url")
+                                  matchURL: "new url",
+                                  style: .manual)
         let expectedError = RuntimeError("""
             Missing: 'signing.team_name'
             At least one variant doesn't contain 'signing.team_name' in its configuration.
@@ -61,11 +65,13 @@ final class iOSSigningTests: XCTestCase {
         let signing = iOSSigning(teamName: nil,
                                  teamID: nil,
                                  exportMethod: .appstore,
-                                 matchURL: "url")
+                                 matchURL: "url",
+                                 style: .manual)
         let signing1 = iOSSigning(teamName: "Name",
                                   teamID: nil,
                                   exportMethod: .development,
-                                  matchURL: "new url")
+                                  matchURL: "new url",
+                                  style: .manual)
         let expectedError = RuntimeError("""
             Missing: 'signing.team_id'
             At least one variant doesn't contain 'signing.team_id' in its configuration.
@@ -85,8 +91,9 @@ final class iOSSigningTests: XCTestCase {
         let signing = iOSSigning(teamName: "Name",
                                  teamID: nil,
                                  exportMethod: .enterprise,
-                                 matchURL: "url")
-        
+                                 matchURL: "url",
+                                 style: .manual)
+
         let expected = [CustomProperty(name: "TEAMNAME", value: "NAME", destination: .fastlane),
                         CustomProperty(name: "EXPORTMETHOD", value: "match InHouse", destination: .fastlane),
                         CustomProperty(name: "MATCHURL", value: "url", destination: .fastlane)]
@@ -95,10 +102,10 @@ final class iOSSigningTests: XCTestCase {
     }
     
     func testExportMethodPrefixes() {
-        let dev: iOSSigning.`Type` = .development,
-            appstore: iOSSigning.`Type` = .appstore,
-            enterprise: iOSSigning.`Type` = .enterprise,
-            adhoc: iOSSigning.`Type` = .adhoc
+        let dev: iOSSigning.ExportMethod = .development,
+            appstore: iOSSigning.ExportMethod = .appstore,
+            enterprise: iOSSigning.ExportMethod = .enterprise,
+            adhoc: iOSSigning.ExportMethod = .adhoc
         XCTAssertEqual(dev.prefix, "match Development")
         XCTAssertEqual(appstore.prefix, "match AppStore")
         XCTAssertEqual(enterprise.prefix, "match InHouse")

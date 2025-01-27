@@ -54,8 +54,9 @@ class VariantsFileFactoryTests: XCTestCase {
         variantCustomProperties: [
             CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
             CustomProperty(name: "PROPERTY_B", value: "VALUE_B", destination: .project)],
-        globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
-        variantSigning: nil,
+        globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: "", style: .manual),
+        debugSigning: nil,
+        releaseSigning: nil,
         globalPostSwitchScript: "echo global",
         variantPostSwitchScript: "echo variant")
 

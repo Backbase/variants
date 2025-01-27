@@ -90,8 +90,11 @@ class XCConfigFactory: XCFactory {
         /*
          * Adjust signing configuration in project.pbxproj
          */
-        updateSigningConfig(for: variant, configuration: configuration, projectPath: xcodeProjPath)
-        updateSigningConfigForExtensions(for: variant, configuration: configuration, projectPath: xcodeProjPath)
+        updateSigning(using: variant.releaseSigning, targetName: configuration.target.source.info, isRelease: true, projectPath: xcodeProjPath)
+        updateSigning(using: variant.debugSigning, targetName: configuration.target.source.info, isRelease: false, projectPath: xcodeProjPath)
+
+        updateSigningConfigForExtensions(signing: variant.releaseSigning, variant: variant, configuration: configuration, isRelease: true, projectPath: xcodeProjPath)
+        updateSigningConfigForExtensions(signing: variant.debugSigning, variant: variant, configuration: configuration, isRelease: false, projectPath: xcodeProjPath)
 
         /*
          * INFO.plist
@@ -167,58 +170,87 @@ class XCConfigFactory: XCFactory {
         }
     }
 
-    private func updateSigningConfig(
-        for variant: iOSVariant,
-        configuration: iOSConfiguration,
+    private func updateSigning(
+        using signing: iOSSigning?,
+        targetName: String,
+        isRelease: Bool,
         projectPath: Path
     ) {
         guard
-            let exportMethod = variant.signing?.exportMethod,
-            let teamName = variant.signing?.teamName,
-            let teamID = variant.signing?.teamID,
-            !teamID.isEmpty,
-            !teamName.isEmpty
+            let signing,
+            let teamID = signing.teamID, !teamID.isEmpty
         else { return }
 
-        let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
-        let certType = isDistribution ? "Distribution" : "Development"
-        let signingSettings = [
-            "PROVISIONING_PROFILE_SPECIFIER": "$(V_MATCH_PROFILE)",
-            "CODE_SIGN_STYLE": "Manual",
-            "CODE_SIGN_IDENTITY": "Apple \(certType): \(teamName) (\(teamID))"
+        var signingSettings = [
+            "PROVISIONING_PROFILE_SPECIFIER": "",
+            "CODE_SIGN_STYLE": "\(signing.style.rawValue.capitalized)",
+            "DEVELOPMENT_TEAM": "\(teamID)"
         ]
 
+        if signing.style == .manual {
+            guard
+                let exportMethod = signing.exportMethod,
+                let teamName = signing.teamName, !teamName.isEmpty
+            else { return }
+
+            let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
+            let certType = isDistribution ? "Distribution" : "Development"
+            signingSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
+            signingSettings["CODE_SIGN_IDENTITY"] = "Apple \(certType): \(teamName) (\(teamID))"
+        }
+
         let xcodeFactory = XcodeProjFactory()
-        xcodeFactory.modify(signingSettings, in: projectPath, targetName: configuration.target.source.info)
+        xcodeFactory.modify(
+            signingSettings,
+            in: projectPath,
+            targetName: targetName,
+            configurationTypes: [isRelease ? .release : .debug])
     }
 
     private func updateSigningConfigForExtensions(
-        for variant: iOSVariant,
+        signing: iOSSigning?,
+        variant: iOSVariant,
         configuration: iOSConfiguration,
+        isRelease: Bool,
         projectPath: Path
     ) {
         let targetExtensions = configuration.extensions.filter({ $0.signed })
-        guard 
+
+        guard
             !targetExtensions.isEmpty,
-            let exportMethod = variant.signing?.exportMethod,
-            let teamName = variant.signing?.teamName,
-            let teamID = variant.signing?.teamID,
-            !teamID.isEmpty,
-            !teamName.isEmpty
+            let signing,
+            let teamID = signing.teamID, !teamID.isEmpty
         else { return }
 
-        let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
-        let certType = isDistribution ? "Distribution" : "Development"
+        var signingSettings = [
+            "PROVISIONING_PROFILE_SPECIFIER": "",
+            "CODE_SIGN_STYLE": "\(signing.style.rawValue.capitalized)",
+            "DEVELOPMENT_TEAM": "\(teamID)"
+        ]
+        
+        if signing.style == .manual {
+            guard
+                let exportMethod = signing.exportMethod,
+                let teamName = signing.teamName, !teamName.isEmpty
+            else { return }
+
+            let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
+            let certType = isDistribution ? "Distribution" : "Development"
+            signingSettings["CODE_SIGN_IDENTITY"] = "Apple \(certType): \(teamName) (\(teamID))"
+        }
 
         let xcodeFactory = XcodeProjFactory()
         for targetExtension in targetExtensions {
-            let bundleID = targetExtension.makeBundleID(variant: variant, target: configuration.target)
-            let signingSettings = [
-                "PROVISIONING_PROFILE_SPECIFIER": "\(exportMethod.prefix) \(bundleID)",
-                "CODE_SIGN_STYLE": "Manual",
-                "CODE_SIGN_IDENTITY": "Apple \(certType): \(teamName) (\(teamID))"
-            ]
-            xcodeFactory.modify(signingSettings, in: projectPath, targetName: targetExtension.name)
+            if signing.style == .manual, let exportMethod = signing.exportMethod {
+                let bundleID = targetExtension.makeBundleID(variant: variant, target: configuration.target)
+                signingSettings["PROVISIONING_PROFILE_SPECIFIER"] = "\(exportMethod.prefix) \(bundleID)"
+            }
+
+            xcodeFactory.modify(
+                signingSettings,
+                in: projectPath,
+                targetName: targetExtension.name,
+                configurationTypes: [isRelease ? .release : .debug])
         }
     }
 
