@@ -263,7 +263,7 @@ class iOSVariantTests: XCTestCase {
                            globalSigning: nil, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         }
 
-        XCTAssertNoThrow(try makeiOSVariant())
+        XCTAssertThrowsError(try makeiOSVariant())
     }
     
     func testGetDefaultValuesForTargetWithoutSigning() {

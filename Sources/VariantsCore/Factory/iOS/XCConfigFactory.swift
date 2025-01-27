@@ -5,6 +5,8 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import ArgumentParser
 import PathKit
@@ -255,3 +257,5 @@ class XCConfigFactory: XCFactory {
     let xcconfigFileName: String = "variants.xcconfig"
     let logger: Logger
 }
+
+// swiftlint:enable file_length

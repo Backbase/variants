@@ -1,7 +1,7 @@
 //
-//  iOSExtension.swift
-//  VariantsCore
+//  Variants
 //
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Gabriel Rodrigues Minucci on 24/01/2025.
 //
 

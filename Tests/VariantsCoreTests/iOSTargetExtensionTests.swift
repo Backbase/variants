@@ -1,7 +1,7 @@
 //
-//  iOSTargetExtensionTests.swift
-//  VariantsCoreTests
+//  Variants
 //
+//  Copyright (c) Backbase B.V. - https://www.backbase.com
 //  Created by Gabriel Rodrigues Minucci on 27/01/2025.
 //
 
@@ -16,7 +16,6 @@ class iOSTargetExtensionTests: XCTestCase {
     private let target = iOSTarget(name: "Target Name", app_icon: "AppIcon", bundleId: "com.Company.ValidName", testTarget: "ValidNameTests", source: iOSSource(path: "", info: "", config: ""))
 
     func testTargetExtensionCreationWithBundleSuffix() {
-        let variantBundleID = "com.test.Application"
         guard let variant = try? iOSVariant(
             name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
             idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
@@ -40,7 +39,6 @@ class iOSTargetExtensionTests: XCTestCase {
     }
 
     func testTargetExtensionCreationWithBundleID() {
-        let variantBundleID = "com.test.Application"
         guard let variant = try? iOSVariant(
             name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
             idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
