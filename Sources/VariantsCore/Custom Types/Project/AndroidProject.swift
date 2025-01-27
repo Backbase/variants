@@ -94,10 +94,7 @@ class AndroidProject: Project {
     }
 
     private func createVariants(with configuration: AndroidConfiguration, spec: String) throws {
-        guard let defaultVariant = configuration.variants
-                .first(where: { $0.name.lowercased() == "default" }) else {
-            throw ValidationError("Variant 'default' not found.")
-        }
+        let defaultVariant = try configuration.defaultVariant
         try gradleFactory.createScript(with: configuration, variant: defaultVariant)
     }
 
@@ -138,10 +135,7 @@ class AndroidProject: Project {
                 """
 
             if StaticPath.Fastlane.baseFolder.isDirectory {
-                guard let defaultVariant = configuration.variants
-                        .first(where: { $0.name.lowercased() == "default" }) else {
-                    throw ValidationError("Variant 'default' not found.")
-                }
+                let defaultVariant = try configuration.defaultVariant
 
                 // Create 'variants_params.rb' with parameters whose
                 // destination are set as '.fastlane'

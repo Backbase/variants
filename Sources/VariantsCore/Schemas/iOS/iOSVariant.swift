@@ -5,10 +5,9 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable type_name
-
 import Foundation
 
+// swiftlint:disable:next type_name
 public struct iOSVariant: Variant {
     let name: String
     let versionName: String
@@ -232,5 +231,3 @@ extension iOSVariant {
             variantPostSwitchScript: unnamediOSVariant.postSwitchScript)
     }
 }
-
-// swiftlint:enable type_name

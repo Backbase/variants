@@ -5,10 +5,9 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable type_name
-
 import Foundation
 
+// swiftlint:disable:next type_name
 public struct iOSTarget: Codable {
     let name: String
     let app_icon: String
@@ -25,10 +24,9 @@ public struct iOSTarget: Codable {
     }
 }
 
+// swiftlint:disable:next type_name
 public struct iOSSource: Codable {
     let path: String
     let info: String
     let config: String
 }
-
-// swiftlint:enable type_name

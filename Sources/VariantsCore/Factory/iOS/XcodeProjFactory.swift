@@ -151,21 +151,20 @@ struct XcodeProjFactory {
     /// - Parameters:
     ///   - keyValue: Key/value pair to be modified
     ///   - projectPath: Path to Xcode project
-    ///   - target: iOSTarget on which the `buildSettings` should be changed.
+    ///   - targetName: Name of the target on which the `buildSettings` should be changed.
     ///   - asTestSettings: If true, add configuraiton to test/non-host targets.
     ///   - silent: Flag to determine if final logs are necessary
     func modify(_ keyValue: [String: String],
                 in projectPath: Path,
-                target: iOSTarget,
+                targetName: String,
                 asTestSettings: Bool = false,
                 silent: Bool = false) {
         do {
             let project = try XcodeProj(path: projectPath)
             logger.logInfo("Updating: ", item: projectPath)
-            
-            let matchingKey = asTestSettings ? target.testTarget : target.source.info
+
             project.pbxproj.buildConfigurations
-                .filter({ ($0.buildSettings["INFOPLIST_FILE"] as? String)?.contains(matchingKey) ?? false })
+                .filter({ ($0.buildSettings["INFOPLIST_FILE"] as? String)?.contains(targetName) ?? false })
                 .forEach { conf in
                     keyValue.forEach { (key, value) in
                         Logger.shared.logDebug("Item: ", item: "\(key) = \(value)",
