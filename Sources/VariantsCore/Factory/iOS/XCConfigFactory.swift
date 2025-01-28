@@ -101,11 +101,15 @@ class XCConfigFactory: XCFactory {
         /*
          * Adjust signing configuration in project.pbxproj
          */
-        updateSigning(using: variant.releaseSigning, targetName: configuration.target.source.info, isRelease: true, projectPath: xcodeProjPath)
-        updateSigning(using: variant.debugSigning, targetName: configuration.target.source.info, isRelease: false, projectPath: xcodeProjPath)
+        updateSigning(using: variant.releaseSigning, targetName: configuration.target.source.info,
+                      isRelease: true, projectPath: xcodeProjPath)
+        updateSigning(using: variant.debugSigning, targetName: configuration.target.source.info,
+                      isRelease: false, projectPath: xcodeProjPath)
 
-        updateSigningConfigForExtensions(signing: variant.releaseSigning, variant: variant, configuration: configuration, isRelease: true, projectPath: xcodeProjPath)
-        updateSigningConfigForExtensions(signing: variant.debugSigning, variant: variant, configuration: configuration, isRelease: false, projectPath: xcodeProjPath)
+        updateSigningConfigForExtensions(signing: variant.releaseSigning, variant: variant, configuration: configuration,
+                                         isRelease: true, projectPath: xcodeProjPath)
+        updateSigningConfigForExtensions(signing: variant.debugSigning, variant: variant, configuration: configuration,
+                                         isRelease: false, projectPath: xcodeProjPath)
 
         /*
          * INFO.plist

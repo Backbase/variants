@@ -5,6 +5,8 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable type_body_length
+// swiftlint:disable function_body_length
 // swiftlint:disable file_length
 
 import XCTest
@@ -75,7 +77,6 @@ class YamlParserTests: XCTestCase {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     func testExtractConfiguration_valid_iOS() {
         let parser = YamlParser()
         do {
@@ -320,4 +321,6 @@ class YamlParserTests: XCTestCase {
     ]
 }
 
+// swiftlint:enable type_body_length
+// swiftlint:enable function_body_length
 // swiftlint:enable file_length
