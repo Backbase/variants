@@ -12,14 +12,14 @@ import XCTest
 @testable import VariantsCore
 
 class iOSTargetExtensionTests: XCTestCase {
-    private let validSigning = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: "git@github.com:sample/match.git")
+    private let validSigning = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: "git@github.com:sample/match.git", style: .manual)
     private let target = iOSTarget(name: "Target Name", app_icon: "AppIcon", bundleId: "com.Company.ValidName", testTarget: "ValidNameTests", source: iOSSource(path: "", info: "", config: ""))
 
     func testTargetExtensionCreationWithBundleSuffix() {
         guard let variant = try? iOSVariant(
             name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
             idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
-            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
+            globalSigning: validSigning, debugSigning: nil, releaseSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }
@@ -42,7 +42,7 @@ class iOSTargetExtensionTests: XCTestCase {
         guard let variant = try? iOSVariant(
             name: name, versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
             idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
-            globalSigning: validSigning, variantSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
+            globalSigning: validSigning, debugSigning: nil, releaseSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {
             return XCTFail("Failed to initialize iOSVariant with provided parameters")
         }

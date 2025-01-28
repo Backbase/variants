@@ -136,8 +136,9 @@ class FastlaneParametersFactoryTests: XCTestCase {
             bundleID: nil,
             globalCustomProperties: nil,
             variantCustomProperties: nil,
-            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
-            variantSigning: nil,
+            globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: "", style: .manual),
+            debugSigning: nil,
+            releaseSigning: nil,
             globalPostSwitchScript: "echo global",
             variantPostSwitchScript: "echo variant")
         else {

@@ -226,6 +226,12 @@ For example: Variant BundleID is `com.sample.App.beta` and extension `bundle_id`
 
 *Note: `id_suffix` and `bundle_id` are not compatible and must not be provided at the same time. Only one of the configurations can be provided per each extension.*
 
+#### iOS Signing
+
+For iOS only you can combine signing options for debug and or release depending on the project needs. 
+
+For more information see our [iOS Signing documentation](ios/IOS_SIGNING.md).
+
 #### Custom configuration
 
 Configuration through custom properties can bring a lot of value to your variants, such as defining different API base URLs, or credentials using environment variables. This allows us to also define its destination. Certain properties should not be available to the project but to fastlane and vice-versa.

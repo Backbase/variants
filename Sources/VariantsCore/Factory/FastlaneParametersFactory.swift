@@ -37,7 +37,7 @@ class FastlaneParametersFactory: ParametersFactory {
         else { return }
         
         // Populate 'fastlane/parameters/match_params.rb' from template
-        let parameters: [CustomProperty] = variant.signing?.customProperties() ?? []
+        let parameters: [CustomProperty] = variant.releaseSigning?.customProperties() ?? []
         try? createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
                                   renderTemplate: StaticPath.Template.matchParametersFileName,
                                   with: parameters)
@@ -49,11 +49,11 @@ class FastlaneParametersFactory: ParametersFactory {
             .reduce(into: [], { $0.append($1) })
         let appBundleID = [variant.makeBundleID(for: configuration.target)]
         var context: [String: Any] = [
-            "export_method": (variant.signing?.exportMethod ?? .appstore).rawValue,
+            "export_method": (variant.releaseSigning?.exportMethod ?? .appstore).rawValue,
             "app_identifiers": appBundleID + extensionBundleIDs
         ]
         
-        if let matchURL = variant.signing?.matchURL {
+        if let matchURL = variant.releaseSigning?.matchURL {
             context["git_url"] = matchURL
         } else {
             Logger.shared.logWarning(item:
