@@ -21,6 +21,17 @@ protocol XCFactory {
 }
 
 class XCConfigFactory: XCFactory {
+    private enum PListKey {
+        static let productBundleID = "PRODUCT_BUNDLE_IDENTIFIER"
+        static let productName = "PRODUCT_NAME"
+        static let assetCatalogAppIconName = "ASSETCATALOG_COMPILER_APPICON_NAME"
+        static let testHost = "TEST_HOST"
+        static let provisioningProfile = "PROVISIONING_PROFILE_SPECIFIER"
+        static let codeSignStyle = "CODE_SIGN_STYLE"
+        static let codeSignIdentity = "CODE_SIGN_IDENTITY"
+        static let developmentTeam = "DEVELOPMENT_TEAM"
+    }
+
     init(logger: Logger = Logger(verbose: false)) {
         self.logger = logger
     }
@@ -131,15 +142,15 @@ class XCConfigFactory: XCFactory {
 
             // Update main target
             let mainTargetSettings = [
-                "PRODUCT_BUNDLE_IDENTIFIER": "$(V_BUNDLE_ID)",
-                "PRODUCT_NAME": "$(V_APP_NAME)",
-                "ASSETCATALOG_COMPILER_APPICON_NAME": "$(V_APP_ICON)"
+                PListKey.productBundleID: "$(V_BUNDLE_ID)",
+                PListKey.productName: "$(V_APP_NAME)",
+                PListKey.assetCatalogAppIconName: "$(V_APP_ICON)"
             ]
             xcodeFactory.modify(mainTargetSettings, in: projectPath, targetName: configuration.target.source.info)
 
             // Update test target
             let testTargetSettings = [
-                "TEST_HOST": "$(BUILT_PRODUCTS_DIR)/$(V_APP_NAME).app/$(V_APP_NAME)"
+                PListKey.testHost: "$(BUILT_PRODUCTS_DIR)/$(V_APP_NAME).app/$(V_APP_NAME)"
             ]
             xcodeFactory.modify(testTargetSettings, in: projectPath, targetName: configuration.target.testTarget)
 
@@ -147,7 +158,7 @@ class XCConfigFactory: XCFactory {
             for targetExtension in configuration.extensions.filter({ $0.signed }) {
                 let bundleID = targetExtension.makeBundleID(variant: variant, target: configuration.target)
                 let extensionSettings = [
-                    "PRODUCT_BUNDLE_IDENTIFIER": "\(bundleID)"
+                    PListKey.productBundleID: "\(bundleID)"
                 ]
                 xcodeFactory.modify(extensionSettings, in: projectPath, targetName: targetExtension.name)
             }
@@ -182,9 +193,9 @@ class XCConfigFactory: XCFactory {
         else { return }
 
         var signingSettings = [
-            "PROVISIONING_PROFILE_SPECIFIER": "",
-            "CODE_SIGN_STYLE": "\(signing.style.rawValue.capitalized)",
-            "DEVELOPMENT_TEAM": "\(teamID)"
+            PListKey.provisioningProfile: "",
+            PListKey.codeSignStyle: "\(signing.style.rawValue.capitalized)",
+            PListKey.developmentTeam: "\(teamID)"
         ]
 
         if signing.style == .manual {
@@ -195,8 +206,8 @@ class XCConfigFactory: XCFactory {
 
             let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
             let certType = isDistribution ? "Distribution" : "Development"
-            signingSettings["PROVISIONING_PROFILE_SPECIFIER"] = "$(V_MATCH_PROFILE)"
-            signingSettings["CODE_SIGN_IDENTITY"] = "Apple \(certType): \(teamName) (\(teamID))"
+            signingSettings[PListKey.provisioningProfile] = "$(V_MATCH_PROFILE)"
+            signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
         }
 
         let xcodeFactory = XcodeProjFactory()
@@ -223,9 +234,9 @@ class XCConfigFactory: XCFactory {
         else { return }
 
         var signingSettings = [
-            "PROVISIONING_PROFILE_SPECIFIER": "",
-            "CODE_SIGN_STYLE": "\(signing.style.rawValue.capitalized)",
-            "DEVELOPMENT_TEAM": "\(teamID)"
+            PListKey.provisioningProfile: "",
+            PListKey.codeSignStyle: "\(signing.style.rawValue.capitalized)",
+            PListKey.developmentTeam: "\(teamID)"
         ]
         
         if signing.style == .manual {
@@ -236,14 +247,14 @@ class XCConfigFactory: XCFactory {
 
             let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
             let certType = isDistribution ? "Distribution" : "Development"
-            signingSettings["CODE_SIGN_IDENTITY"] = "Apple \(certType): \(teamName) (\(teamID))"
+            signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
         }
 
         let xcodeFactory = XcodeProjFactory()
         for targetExtension in targetExtensions {
             if signing.style == .manual, let exportMethod = signing.exportMethod {
                 let bundleID = targetExtension.makeBundleID(variant: variant, target: configuration.target)
-                signingSettings["PROVISIONING_PROFILE_SPECIFIER"] = "\(exportMethod.prefix) \(bundleID)"
+                signingSettings[PListKey.provisioningProfile] = "\(exportMethod.prefix) \(bundleID)"
             }
 
             xcodeFactory.modify(
