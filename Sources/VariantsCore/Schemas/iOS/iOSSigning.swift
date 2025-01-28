@@ -8,7 +8,7 @@
 import Foundation
 
 // swiftlint:disable:next type_name
-struct iOSSigning: Codable {
+struct iOSSigning: Codable, Equatable {
     let teamName: String?
     let teamID: String?
     let exportMethod: ExportMethod?

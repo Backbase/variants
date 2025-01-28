@@ -6,12 +6,20 @@
 //
 
 // swiftlint:disable type_name
+// swiftlint:disable line_length
 
 import XCTest
 @testable import VariantsCore
 
 final class iOSSigningTests: XCTestCase {
     
+    private func makeUnnamedVariant(signing: iOSSigning?, debugSigning: iOSSigning?, releaseSigning: iOSSigning?) -> UnnamediOSVariant {
+        return UnnamediOSVariant(
+            versionName: "1", versionNumber: 1, appIcon: nil, appName: "AppName", idSuffix: "test", bundleID: nil,
+            signing: signing, debugSigning: debugSigning, releaseSigning: releaseSigning, 
+            custom: nil, storeDestination: "appstore", postSwitchScript: nil)
+    }
+
     func testMergeValidSignings() throws {
         let signing = iOSSigning(teamName: "team",
                                  teamID: nil,
@@ -112,6 +120,81 @@ final class iOSSigningTests: XCTestCase {
         XCTAssertEqual(adhoc.prefix, "match AdHoc")
     }
 
+    func testOnlyGlobalSigning() {
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
+        let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: nil, releaseSigning: nil)
+        guard
+            let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
+        else { return XCTFail("Failed to generate variants") }
+
+        XCTAssertEqual(variant.debugSigning, globalSigning)
+        XCTAssertEqual(variant.releaseSigning, globalSigning)
+    }
+
+    func testGlobalAndVariantSigning() {
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
+        let variantSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let unnamedVariant = makeUnnamedVariant(signing: variantSigning, debugSigning: nil, releaseSigning: nil)
+        guard
+            let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
+        else { return XCTFail("Failed to generate variants") }
+
+        XCTAssertEqual(variant.debugSigning, variantSigning)
+        XCTAssertEqual(variant.releaseSigning, variantSigning)
+    }
+
+    func testGlobalAndVariantReleaseSigning() {
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
+        let variantReleaseSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: nil, releaseSigning: variantReleaseSigning)
+        guard
+            let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
+        else { return XCTFail("Failed to generate variants") }
+
+        XCTAssertEqual(variant.debugSigning, globalSigning)
+        XCTAssertEqual(variant.releaseSigning, variantReleaseSigning)
+    }
+
+    func testGlobalAndVariantDebugSigning() {
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
+        let variantDebugSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: variantDebugSigning, releaseSigning: nil)
+        guard
+            let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
+        else { return XCTFail("Failed to generate variants") }
+
+        XCTAssertEqual(variant.debugSigning, variantDebugSigning)
+        XCTAssertEqual(variant.releaseSigning, globalSigning)
+    }
+
+    func testGlobalAndVariantReleaseDebugSigning() {
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
+        let variantDebugSigning = iOSSigning(teamName: "variant debug team name", teamID: "variant_debug_team_id", 
+                                             exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let variantReleaseSigning = iOSSigning(teamName: "variant release team name", teamID: "variant_release_team_id", 
+                                               exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: variantDebugSigning, releaseSigning: variantReleaseSigning)
+        guard
+            let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
+        else { return XCTFail("Failed to generate variants") }
+
+        XCTAssertEqual(variant.debugSigning, variantDebugSigning)
+        XCTAssertEqual(variant.releaseSigning, variantReleaseSigning)
+    }
+
+    func testGlobalAndVariantSigningAndDebugSigning() {
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
+        let variantSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let variantDebugSigning = iOSSigning(teamName: "variant debug team name", teamID: "variant_debug_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let unnamedVariant = makeUnnamedVariant(signing: variantSigning, debugSigning: variantDebugSigning, releaseSigning: nil)
+        guard
+            let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
+        else { return XCTFail("Failed to generate variants") }
+
+        XCTAssertEqual(variant.debugSigning, variantDebugSigning)
+        XCTAssertEqual(variant.releaseSigning, variantSigning)
+    }
 }
 
 // swiftlint:enable type_name
+// swiftlint:enable line_length
