@@ -14,6 +14,12 @@ struct iOSSigning: Codable, Equatable {
     let exportMethod: ExportMethod?
     let matchURL: String?
     let style: SigningStyle
+    
+    var codeSigningIdentity: String? {
+        guard let teamID = teamID else { return nil }
+        
+        return fetchSigningCertificate(for: teamID)
+    }
 
     enum CodingKeys: String, CodingKey {
         case teamName = "team_name"
@@ -113,5 +119,29 @@ extension iOSSigning {
         guard signing.exportMethod != nil else { throw iOSSigning.missingParameterError(CodingKeys.exportMethod) }
         
         return signing
+    }
+}
+
+extension iOSSigning {
+    private func fetchSigningCertificate(for teamId: String) -> String? {
+        do {
+            let output = try Bash("security", arguments: "find-identity", "-v", "-p", "codesigning")
+                .capture()
+            
+            guard let output else { return nil }
+            let lines = output.split(separator: "\n")
+            
+            let matches = lines.compactMap { line -> String? in
+                guard line.contains(teamId) else { return nil }
+                
+                let components = line.split(separator: "\"", maxSplits: 2, omittingEmptySubsequences: false)
+                guard components.count > 1 else { return nil }
+                
+                return String(components[1])
+            }
+            return matches.first
+        } catch {
+            return nil
+        }
     }
 }
