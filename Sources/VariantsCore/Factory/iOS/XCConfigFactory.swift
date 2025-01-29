@@ -209,9 +209,15 @@ class XCConfigFactory: XCFactory {
             else { return }
 
             let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
-            let certType = isDistribution ? "Distribution" : "Development"
+            
             signingSettings[PListKey.provisioningProfile] = "$(V_MATCH_PROFILE)"
-            signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
+            
+            if let fetchedSigningIdentity = signing.codeSigningIdentity {
+                signingSettings[PListKey.codeSignIdentity] = fetchedSigningIdentity
+            } else {
+                let certType = isDistribution ? "Distribution" : "Development"
+                signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
+            }
         }
 
         let xcodeFactory = XcodeProjFactory()
@@ -250,8 +256,13 @@ class XCConfigFactory: XCFactory {
             else { return }
 
             let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
-            let certType = isDistribution ? "Distribution" : "Development"
-            signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
+            
+            if let fetchedSigningIdentity = signing.codeSigningIdentity {
+                signingSettings[PListKey.codeSignIdentity] = fetchedSigningIdentity
+            } else {
+                let certType = isDistribution ? "Distribution" : "Development"
+                signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
+            }
         }
 
         let xcodeFactory = XcodeProjFactory()
