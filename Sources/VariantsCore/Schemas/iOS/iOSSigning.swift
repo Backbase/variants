@@ -18,7 +18,7 @@ struct iOSSigning: Codable, Equatable {
     var codeSigningIdentity: String? {
         guard let teamID = teamID else { return nil }
         
-        return fetchSigningCertificate(for: teamID)
+        return fetchSigningCertificate()
     }
 
     enum CodingKeys: String, CodingKey {
@@ -65,6 +65,14 @@ extension iOSSigning {
             case .enterprise:
                 return "match InHouse"
             }
+        }
+        
+        var isDistribution: Bool {
+            self == .appstore || self == .enterprise
+        }
+        
+        var certType: String {
+            isDistribution ? "Distribution" : "Development"
         }
     }
 
@@ -123,7 +131,9 @@ extension iOSSigning {
 }
 
 extension iOSSigning {
-    private func fetchSigningCertificate(for teamId: String) -> String? {
+    private func fetchSigningCertificate() -> String? {
+        guard let teamID else { return nil }
+        
         do {
             let output = try Bash("security", arguments: "find-identity", "-v", "-p", "codesigning")
                 .capture()
@@ -132,7 +142,11 @@ extension iOSSigning {
             let lines = output.split(separator: "\n")
             
             let matches = lines.compactMap { line -> String? in
-                guard line.contains(teamId) else { return nil }
+                guard line.contains(teamID) else { return nil }
+                
+                if let teamName, !line.contains(teamName) { return nil }
+                if let certType = exportMethod?.certType.lowercased(),
+                    !line.contains(certType) { return nil }
                 
                 let components = line.split(separator: "\"", maxSplits: 2, omittingEmptySubsequences: false)
                 guard components.count > 1 else { return nil }
