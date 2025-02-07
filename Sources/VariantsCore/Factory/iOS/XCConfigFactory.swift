@@ -252,8 +252,6 @@ class XCConfigFactory: XCFactory {
                 let exportMethod = signing.exportMethod,
                 let teamName = signing.teamName, !teamName.isEmpty
             else { return }
-
-            let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
             
             if signing.autoDetectSigningIdentity, let fetchedSigningIdentity = signing.codeSigningIdentity {
                 signingSettings[PListKey.codeSignIdentity] = fetchedSigningIdentity

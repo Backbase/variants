@@ -17,9 +17,7 @@ struct iOSSigning: Codable, Equatable {
     let autoDetectSigningIdentity: Bool
     
     var codeSigningIdentity: String? {
-        guard let teamID = teamID else { return nil }
-        
-        return fetchSigningCertificate()
+        fetchSigningCertificate()
     }
 
     enum CodingKeys: String, CodingKey {
@@ -41,8 +39,13 @@ struct iOSSigning: Codable, Equatable {
         let signingIdentity = try container.decodeIfPresent(Bool.self, forKey: .autoDetectSigningIdentity)
         self.autoDetectSigningIdentity = signingIdentity ?? true
     }
-
-    init(teamName: String?, teamID: String?, exportMethod: ExportMethod?, matchURL: String?, style: SigningStyle, autoDetectSigningIdentity: Bool) {
+    
+    init(teamName: String?,
+         teamID: String?,
+         exportMethod: ExportMethod?,
+         matchURL: String?,
+         style: SigningStyle,
+         autoDetectSigningIdentity: Bool) {
         self.teamName = teamName
         self.teamID = teamID
         self.exportMethod = exportMethod
