@@ -210,7 +210,8 @@ class XCConfigFactory: XCFactory {
             
             signingSettings[PListKey.provisioningProfile] = "$(V_MATCH_PROFILE)"
             
-            if let fetchedSigningIdentity = signing.codeSigningIdentity {
+            if signing.autoDetectSigningIdentity,
+               let fetchedSigningIdentity = signing.codeSigningIdentity {
                 signingSettings[PListKey.codeSignIdentity] = fetchedSigningIdentity
             } else {
                 signingSettings[PListKey.codeSignIdentity] = "Apple \(exportMethod.certType): \(teamName) (\(teamID))"
@@ -254,7 +255,7 @@ class XCConfigFactory: XCFactory {
 
             let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
             
-            if let fetchedSigningIdentity = signing.codeSigningIdentity {
+            if signing.autoDetectSigningIdentity, let fetchedSigningIdentity = signing.codeSigningIdentity {
                 signingSettings[PListKey.codeSignIdentity] = fetchedSigningIdentity
             } else {
                 signingSettings[PListKey.codeSignIdentity] = "Apple \(exportMethod.certType): \(teamName) (\(teamID))"

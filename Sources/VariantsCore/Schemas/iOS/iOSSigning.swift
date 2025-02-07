@@ -14,6 +14,7 @@ struct iOSSigning: Codable, Equatable {
     let exportMethod: ExportMethod?
     let matchURL: String?
     let style: SigningStyle
+    let autoDetectSigningIdentity: Bool
     
     var codeSigningIdentity: String? {
         guard let teamID = teamID else { return nil }
@@ -27,6 +28,7 @@ struct iOSSigning: Codable, Equatable {
         case exportMethod = "export_method"
         case matchURL = "match_url"
         case style
+        case autoDetectSigningIdentity = "auto_detect_signing_identity"
     }
 
     init(from decoder: any Decoder) throws {
@@ -36,14 +38,17 @@ struct iOSSigning: Codable, Equatable {
         self.exportMethod = try container.decodeIfPresent(ExportMethod.self, forKey: .exportMethod)
         self.matchURL = try container.decodeIfPresent(String.self, forKey: .matchURL)
         self.style = try container.decodeIfPresent(iOSSigning.SigningStyle.self, forKey: .style) ?? .manual
+        let signingIdentity = try container.decodeIfPresent(Bool.self, forKey: .autoDetectSigningIdentity)
+        self.autoDetectSigningIdentity = signingIdentity ?? true
     }
 
-    init(teamName: String?, teamID: String?, exportMethod: ExportMethod?, matchURL: String?, style: SigningStyle) {
+    init(teamName: String?, teamID: String?, exportMethod: ExportMethod?, matchURL: String?, style: SigningStyle, autoDetectSigningIdentity: Bool) {
         self.teamName = teamName
         self.teamID = teamID
         self.exportMethod = exportMethod
         self.matchURL = matchURL
         self.style = style
+        self.autoDetectSigningIdentity = autoDetectSigningIdentity
     }
 }
 
@@ -120,7 +125,8 @@ extension iOSSigning {
             teamID: lhs.teamID ?? rhs?.teamID,
             exportMethod: lhs.exportMethod ?? rhs?.exportMethod,
             matchURL: lhs.matchURL ?? rhs?.matchURL,
-            style: lhs.style)
+            style: lhs.style,
+            autoDetectSigningIdentity: lhs.autoDetectSigningIdentity)
 
         guard signing.teamName != nil else { throw iOSSigning.missingParameterError(CodingKeys.teamName) }
         guard signing.teamID != nil else { throw iOSSigning.missingParameterError(CodingKeys.teamID) }
