@@ -8,6 +8,8 @@ The same priority applies to the debug signing
 
 `debug_signing` (from variant configuration) > `signing` (from variant configuration) > `signing` (from global configuration)
 
+`auto_detect_signing_identity` boolean flag will determine if Variants should attempt to fetch the matching signing certificate from the Keychain Access automatically. If this fails, it will fall back to manual signing gracefully. Auto detect is enabled by default.
+
 If no signing configuration is found, an error is thrown to the user so the `variants.yml` must be updated.
 
 ### Configuration example
@@ -32,6 +34,7 @@ ios:
                 team_name: "Beta Backbase B.V."
                 team_id: "DEF7654321D"
                 export_method: "appstore"
+                auto_detect_signing_identity: true
         staging:
             signing:
                 match_url: "git@github.com:sample/match.git"
@@ -53,6 +56,7 @@ ios:
         team_name: "Backbase B.V."
         team_id: "ABC1234567D"
         export_method: "appstore"
+        auto_detect_signing_identity: true
 ```
 
 This is the output in Xcode and Matchfile:
