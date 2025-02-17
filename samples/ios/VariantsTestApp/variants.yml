@@ -86,6 +86,7 @@ ios:
         team_name: "Backbase B.V."
         team_id: "ABC1234567D"
         export_method: "appstore"
+        auto_detect_signing_identity: true
 
     custom:
       - name: custom_global_property

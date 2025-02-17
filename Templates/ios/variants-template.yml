@@ -40,7 +40,12 @@ ios:
                 # match_url: "git@github.com:sample/match.git"
                 team_name: "iPhone Distribution"
                 team_id: "AB1234567D"
-        
+
+                # Should Variant try to auto detect signing identity 
+                # if set to true, Variant will use the team_id, team_name and export_method
+                # to detect code signing identity from the Keychain Access
+                # default value is `true`
+                auto_detect_signing_identity: true
             #
             # custom: - Not required.
             #
@@ -100,7 +105,12 @@ ios:
         team_name: "iPhone Distribution"
         team_id: "AB1234567D"
         export_method: "appstore"
-    
+
+        # Should Variant try to auto detect signing identity 
+        # if set to true, Variant will use the team_id, team_name and export_method
+        # to detect code signing identity from the Keychain Access
+        # default value is `true`
+        auto_detect_signing_identity: true
     # ----------------------------------------------------------------------
     # custom: - Not required.
     #

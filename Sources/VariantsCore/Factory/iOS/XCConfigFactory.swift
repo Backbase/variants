@@ -207,11 +207,15 @@ class XCConfigFactory: XCFactory {
                 let exportMethod = signing.exportMethod,
                 let teamName = signing.teamName, !teamName.isEmpty
             else { return }
-
-            let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
-            let certType = isDistribution ? "Distribution" : "Development"
+            
             signingSettings[PListKey.provisioningProfile] = "$(V_MATCH_PROFILE)"
-            signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
+            
+            if signing.autoDetectSigningIdentity,
+               let fetchedSigningIdentity = signing.codeSigningIdentity {
+                signingSettings[PListKey.codeSignIdentity] = fetchedSigningIdentity
+            } else {
+                signingSettings[PListKey.codeSignIdentity] = "Apple \(exportMethod.certType): \(teamName) (\(teamID))"
+            }
         }
 
         let xcodeFactory = XcodeProjFactory()
@@ -248,10 +252,12 @@ class XCConfigFactory: XCFactory {
                 let exportMethod = signing.exportMethod,
                 let teamName = signing.teamName, !teamName.isEmpty
             else { return }
-
-            let isDistribution = exportMethod == .appstore || exportMethod == .enterprise
-            let certType = isDistribution ? "Distribution" : "Development"
-            signingSettings[PListKey.codeSignIdentity] = "Apple \(certType): \(teamName) (\(teamID))"
+            
+            if signing.autoDetectSigningIdentity, let fetchedSigningIdentity = signing.codeSigningIdentity {
+                signingSettings[PListKey.codeSignIdentity] = fetchedSigningIdentity
+            } else {
+                signingSettings[PListKey.codeSignIdentity] = "Apple \(exportMethod.certType): \(teamName) (\(teamID))"
+            }
         }
 
         let xcodeFactory = XcodeProjFactory()

@@ -25,12 +25,14 @@ final class iOSSigningTests: XCTestCase {
                                  teamID: nil,
                                  exportMethod: .appstore,
                                  matchURL: "url",
-                                 style: .manual)
+                                 style: .manual,
+                                 autoDetectSigningIdentity: true)
         let signing1 = iOSSigning(teamName: nil,
                                   teamID: "new id",
                                   exportMethod: .development,
                                   matchURL: nil,
-                                  style: .manual)
+                                  style: .manual,
+                                  autoDetectSigningIdentity: true)
 
         do {
             let result = try signing ~ signing1
@@ -48,12 +50,14 @@ final class iOSSigningTests: XCTestCase {
                                  teamID: nil,
                                  exportMethod: .appstore,
                                  matchURL: "url",
-                                 style: .manual)
+                                 style: .manual,
+                                 autoDetectSigningIdentity: true)
         let signing1 = iOSSigning(teamName: nil,
                                   teamID: "new id",
                                   exportMethod: .development,
                                   matchURL: "new url",
-                                  style: .manual)
+                                  style: .manual,
+                                  autoDetectSigningIdentity: true)
         let expectedError = RuntimeError("""
             Missing: 'signing.team_name'
             At least one variant doesn't contain 'signing.team_name' in its configuration.
@@ -74,12 +78,14 @@ final class iOSSigningTests: XCTestCase {
                                  teamID: nil,
                                  exportMethod: .appstore,
                                  matchURL: "url",
-                                 style: .manual)
+                                 style: .manual,
+                                 autoDetectSigningIdentity: true)
         let signing1 = iOSSigning(teamName: "Name",
                                   teamID: nil,
                                   exportMethod: .development,
                                   matchURL: "new url",
-                                  style: .manual)
+                                  style: .manual,
+                                  autoDetectSigningIdentity: true)
         let expectedError = RuntimeError("""
             Missing: 'signing.team_id'
             At least one variant doesn't contain 'signing.team_id' in its configuration.
@@ -100,7 +106,8 @@ final class iOSSigningTests: XCTestCase {
                                  teamID: nil,
                                  exportMethod: .enterprise,
                                  matchURL: "url",
-                                 style: .manual)
+                                 style: .manual,
+                                 autoDetectSigningIdentity: true)
 
         let expected = [CustomProperty(name: "TEAMNAME", value: "NAME", destination: .fastlane),
                         CustomProperty(name: "EXPORTMETHOD", value: "match InHouse", destination: .fastlane),
@@ -121,7 +128,7 @@ final class iOSSigningTests: XCTestCase {
     }
 
     func testOnlyGlobalSigning() {
-        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual, autoDetectSigningIdentity: true)
         let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: nil, releaseSigning: nil)
         guard
             let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
@@ -132,8 +139,8 @@ final class iOSSigningTests: XCTestCase {
     }
 
     func testGlobalAndVariantSigning() {
-        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
-        let variantSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual, autoDetectSigningIdentity: true)
+        let variantSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual, autoDetectSigningIdentity: false)
         let unnamedVariant = makeUnnamedVariant(signing: variantSigning, debugSigning: nil, releaseSigning: nil)
         guard
             let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
@@ -144,8 +151,8 @@ final class iOSSigningTests: XCTestCase {
     }
 
     func testGlobalAndVariantReleaseSigning() {
-        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
-        let variantReleaseSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual, autoDetectSigningIdentity: true)
+        let variantReleaseSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual, autoDetectSigningIdentity: false)
         let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: nil, releaseSigning: variantReleaseSigning)
         guard
             let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
@@ -156,8 +163,8 @@ final class iOSSigningTests: XCTestCase {
     }
 
     func testGlobalAndVariantDebugSigning() {
-        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
-        let variantDebugSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual, autoDetectSigningIdentity: true)
+        let variantDebugSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual, autoDetectSigningIdentity: false)
         let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: variantDebugSigning, releaseSigning: nil)
         guard
             let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
@@ -168,11 +175,11 @@ final class iOSSigningTests: XCTestCase {
     }
 
     func testGlobalAndVariantReleaseDebugSigning() {
-        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
-        let variantDebugSigning = iOSSigning(teamName: "variant debug team name", teamID: "variant_debug_team_id", 
-                                             exportMethod: .appstore, matchURL: "variant match url", style: .manual)
-        let variantReleaseSigning = iOSSigning(teamName: "variant release team name", teamID: "variant_release_team_id", 
-                                               exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual, autoDetectSigningIdentity: true)
+        let variantDebugSigning = iOSSigning(teamName: "variant debug team name", teamID: "variant_debug_team_id",
+                                             exportMethod: .appstore, matchURL: "variant match url", style: .manual, autoDetectSigningIdentity: true)
+        let variantReleaseSigning = iOSSigning(teamName: "variant release team name", teamID: "variant_release_team_id",
+                                               exportMethod: .appstore, matchURL: "variant match url", style: .manual, autoDetectSigningIdentity: false)
         let unnamedVariant = makeUnnamedVariant(signing: nil, debugSigning: variantDebugSigning, releaseSigning: variantReleaseSigning)
         guard
             let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)
@@ -183,9 +190,9 @@ final class iOSSigningTests: XCTestCase {
     }
 
     func testGlobalAndVariantSigningAndDebugSigning() {
-        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual)
-        let variantSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
-        let variantDebugSigning = iOSSigning(teamName: "variant debug team name", teamID: "variant_debug_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual)
+        let globalSigning = iOSSigning(teamName: "global team name", teamID: "global_team_id", exportMethod: .appstore, matchURL: "global match url", style: .manual, autoDetectSigningIdentity: true)
+        let variantSigning = iOSSigning(teamName: "variant team name", teamID: "variant_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual, autoDetectSigningIdentity: true)
+        let variantDebugSigning = iOSSigning(teamName: "variant debug team name", teamID: "variant_debug_team_id", exportMethod: .appstore, matchURL: "variant match url", style: .manual, autoDetectSigningIdentity: true)
         let unnamedVariant = makeUnnamedVariant(signing: variantSigning, debugSigning: variantDebugSigning, releaseSigning: nil)
         guard
             let variant = try? iOSVariant(from: unnamedVariant, name: "", globalCustomProperties: nil, globalSigning: globalSigning, globalPostSwitchScript: nil)

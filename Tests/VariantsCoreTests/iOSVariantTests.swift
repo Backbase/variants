@@ -14,7 +14,7 @@ import XCTest
 @testable import VariantsCore
 
 class iOSVariantTests: XCTestCase {
-    private let validSigning = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: "git@github.com:sample/match.git", style: .manual)
+    private let validSigning = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: "git@github.com:sample/match.git", style: .manual, autoDetectSigningIdentity: false)
     private let target = iOSTarget(name: "Target Name", app_icon: "AppIcon", bundleId: "com.Company.ValidName", testTarget: "ValidNameTests", source: iOSSource(path: "", info: "", config: ""))
     
     // MARK: - Initializer tests
@@ -275,7 +275,7 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NAME": "1.0.0",
             "V_VERSION_NUMBER": "0"
         ]
-        let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil, style: .manual)
+        let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil, style: .manual, autoDetectSigningIdentity: false)
         guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
                                             idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
                                             globalSigning: signing, debugSigning: nil, releaseSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
@@ -297,7 +297,7 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NAME": "1.0.0",
             "V_VERSION_NUMBER": "0"
         ]
-        let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil, style: .manual)
+        let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil, style: .manual, autoDetectSigningIdentity: false)
         guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: "App Marketing Name",
                                             storeDestination: "appStore", idSuffix: "beta", bundleID: nil,
                                             globalCustomProperties: nil, variantCustomProperties: nil, globalSigning: signing, debugSigning: nil, releaseSigning: nil,
@@ -320,8 +320,9 @@ class iOSVariantTests: XCTestCase {
             "V_VERSION_NAME": "1.0.0",
             "V_VERSION_NUMBER": "0"
         ]
-        let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil, style: .manual)
-        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil, storeDestination: "appStore",
+        let signing = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: nil, style: .manual, autoDetectSigningIdentity: false)
+        guard let variant = try? iOSVariant(name: "Beta", versionName: "1.0.0", versionNumber: 0, appIcon: nil, appName: nil,
+                                            storeDestination: "appStore",
                                             idSuffix: "beta", bundleID: nil, globalCustomProperties: nil, variantCustomProperties: nil,
                                             globalSigning: signing, debugSigning: nil, releaseSigning: nil, globalPostSwitchScript: nil, variantPostSwitchScript: nil)
         else {

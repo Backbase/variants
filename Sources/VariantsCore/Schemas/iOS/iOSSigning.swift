@@ -14,6 +14,11 @@ struct iOSSigning: Codable, Equatable {
     let exportMethod: ExportMethod?
     let matchURL: String?
     let style: SigningStyle
+    let autoDetectSigningIdentity: Bool
+    
+    var codeSigningIdentity: String? {
+        fetchSigningCertificate()
+    }
 
     enum CodingKeys: String, CodingKey {
         case teamName = "team_name"
@@ -21,6 +26,7 @@ struct iOSSigning: Codable, Equatable {
         case exportMethod = "export_method"
         case matchURL = "match_url"
         case style
+        case autoDetectSigningIdentity = "auto_detect_signing_identity"
     }
 
     init(from decoder: any Decoder) throws {
@@ -30,14 +36,22 @@ struct iOSSigning: Codable, Equatable {
         self.exportMethod = try container.decodeIfPresent(ExportMethod.self, forKey: .exportMethod)
         self.matchURL = try container.decodeIfPresent(String.self, forKey: .matchURL)
         self.style = try container.decodeIfPresent(iOSSigning.SigningStyle.self, forKey: .style) ?? .manual
+        let signingIdentity = try container.decodeIfPresent(Bool.self, forKey: .autoDetectSigningIdentity)
+        self.autoDetectSigningIdentity = signingIdentity ?? true
     }
-
-    init(teamName: String?, teamID: String?, exportMethod: ExportMethod?, matchURL: String?, style: SigningStyle) {
+    
+    init(teamName: String?,
+         teamID: String?,
+         exportMethod: ExportMethod?,
+         matchURL: String?,
+         style: SigningStyle,
+         autoDetectSigningIdentity: Bool) {
         self.teamName = teamName
         self.teamID = teamID
         self.exportMethod = exportMethod
         self.matchURL = matchURL
         self.style = style
+        self.autoDetectSigningIdentity = autoDetectSigningIdentity
     }
 }
 
@@ -59,6 +73,14 @@ extension iOSSigning {
             case .enterprise:
                 return "match InHouse"
             }
+        }
+        
+        var isDistribution: Bool {
+            self == .appstore || self == .enterprise
+        }
+        
+        var certType: String {
+            isDistribution ? "Distribution" : "Development"
         }
     }
 
@@ -106,12 +128,43 @@ extension iOSSigning {
             teamID: lhs.teamID ?? rhs?.teamID,
             exportMethod: lhs.exportMethod ?? rhs?.exportMethod,
             matchURL: lhs.matchURL ?? rhs?.matchURL,
-            style: lhs.style)
+            style: lhs.style,
+            autoDetectSigningIdentity: lhs.autoDetectSigningIdentity)
 
         guard signing.teamName != nil else { throw iOSSigning.missingParameterError(CodingKeys.teamName) }
         guard signing.teamID != nil else { throw iOSSigning.missingParameterError(CodingKeys.teamID) }
         guard signing.exportMethod != nil else { throw iOSSigning.missingParameterError(CodingKeys.exportMethod) }
         
         return signing
+    }
+}
+
+extension iOSSigning {
+    private func fetchSigningCertificate() -> String? {
+        guard let teamID else { return nil }
+        
+        do {
+            let output = try Bash("security", arguments: "find-identity", "-v", "-p", "codesigning")
+                .capture()
+            
+            guard let output else { return nil }
+            let lines = output.split(separator: "\n")
+            
+            let matches = lines.compactMap { line -> String? in
+                guard line.contains(teamID) else { return nil }
+                
+                if let teamName, !line.contains(teamName) { return nil }
+                if let certType = exportMethod?.certType.lowercased(),
+                    !line.contains(certType) { return nil }
+                
+                let components = line.split(separator: "\"", maxSplits: 2, omittingEmptySubsequences: false)
+                guard components.count > 1 else { return nil }
+                
+                return String(components[1])
+            }
+            return matches.first
+        } catch {
+            return nil
+        }
     }
 }

@@ -12,7 +12,7 @@ import XCTest
 @testable import VariantsCore
 
 class iOSTargetExtensionTests: XCTestCase {
-    private let validSigning = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: "git@github.com:sample/match.git", style: .manual)
+    private let validSigning = iOSSigning(teamName: "Signing Team Name", teamID: "AB12345CD", exportMethod: .appstore, matchURL: "git@github.com:sample/match.git", style: .manual, autoDetectSigningIdentity: true)
     private let target = iOSTarget(name: "Target Name", app_icon: "AppIcon", bundleId: "com.Company.ValidName", testTarget: "ValidNameTests", source: iOSSource(path: "", info: "", config: ""))
 
     func testTargetExtensionCreationWithBundleSuffix() {
