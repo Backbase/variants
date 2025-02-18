@@ -11,6 +11,11 @@ struct Bash {
     var command: String
     var arguments: [String]
     
+    enum Stream {
+        case stdout
+        case stderr
+    }
+    
     init(_ command: String, arguments: String...) {
         self.command = command
         self.arguments = arguments
@@ -20,12 +25,12 @@ struct Bash {
         _ = try capture()
     }
     
-    func capture() throws -> String? {
+    func capture(stream: Stream = .stdout) throws -> String? {
         guard var bashCommand = try execute(command: "/bin/bash", arguments: ["-l", "-c", "which \(command)"]) else {
             throw RuntimeError("\(command) not found")
         }
         bashCommand = bashCommand.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
-        if let output = try execute(command: bashCommand, arguments: arguments) {
+        if let output = try execute(command: bashCommand, arguments: arguments, stream: stream) {
             // `dropLast()` is required as the output always contains a new line (`\n`) at the end.
             return String(output.dropLast())
         }
@@ -34,11 +39,13 @@ struct Bash {
     
     // MARK: - Private
     
-    private func execute(command: String, arguments: [String] = []) throws -> String? {
+    private func execute(command: String, arguments: [String] = [], stream: Stream = .stdout) throws -> String? {
         let process = Process()
-        let pipe = Pipe()
+        let stdoutPipe = Pipe()
+        let stderrPipe = Pipe()
         process.arguments = arguments
-        process.standardOutput = pipe
+        process.standardOutput = stdoutPipe
+        process.standardError = stderrPipe
         
         if #available(OSX 10.13, *) {
             process.executableURL = URL(fileURLWithPath: command)
@@ -48,8 +55,15 @@ struct Bash {
             process.launch()
         }
         
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)
-        return output
+        switch stream {
+        case .stdout:
+            let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
+            let stdout = String(data: stdoutData, encoding: .utf8)
+            return stdout
+        case .stderr:
+            let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
+            let stderr = String(data: stderrData, encoding: .utf8)
+            return stderr
+        }
     }
 }

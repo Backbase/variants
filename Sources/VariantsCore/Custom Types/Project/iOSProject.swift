@@ -5,11 +5,11 @@
 //  Created by Balazs Toth
 //
 
+// swiftlint:disable type_name
+
 import Foundation
 import ArgumentParser
 import PathKit
-
-// swiftlint:disable type_name
 
 class iOSProject: Project {
     init(
@@ -81,33 +81,30 @@ class iOSProject: Project {
     private func switchTo(_ variant: iOSVariant, spec: String, configuration: iOSConfiguration) throws {
         specHelper.logger.logInfo(item: "Found: \(variant.title)")
 
-        try configuration.targets
-            .map { (key: $0.key, value: $0.value)}
-            .forEach { namedTarget in
-                
-                // Create 'variants.xcconfig' with parameters whose
-                // destination are set as '.project'
-                do {
-                    try configFactory.createConfig(
-                        with: namedTarget,
-                        variant: variant,
-                        xcodeProj: configuration.xcodeproj,
-                        configPath: Path(spec).absolute().parent(),
-                        addToXcodeProj: false
-                    )
-                } catch {
-                    Logger.shared.logFatal(item: error.localizedDescription)
-                }
-                
-                var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
-                customProperties.append(variant.destinationProperty)
-                
-                // Create 'variants_params.rb' with parameters whose
-                // destination are set as '.fastlane'
-                try? storeFastlaneParams(customProperties)
-                
-                try parametersFactory.createMatchFile(using: variant, target: namedTarget.value)
-            }
+        // Create 'variants.xcconfig' with parameters whose
+        // destination are set as '.project'
+        let configPath = Path(spec).absolute().parent()
+        do {
+            try configFactory.createConfig(
+                for: variant,
+                configuration: configuration,
+                configPath: configPath)
+        } catch {
+            Logger.shared.logFatal(item: error.localizedDescription)
+        }
+
+        // Update `variants_params.rb` with custom fastlane properties
+        var customProperties: [CustomProperty] = (variant.custom ?? []) + (configuration.custom ?? [])
+        customProperties.append(variant.destinationProperty)
+        try storeFastlaneParams(customProperties)
+
+        // Update `Matchfile` with signing configurations
+        try parametersFactory.createMatchFile(for: variant, configuration: configuration)
+    }
+    
+    private func runPostSwitchScript(_ script: String) throws {
+        guard let outputString = try Bash("bash", arguments: "-c", script).capture() else { return }
+        Logger.shared.logInfo(item: outputString)
     }
     
     private func runPostSwitchScript(_ script: String) throws {
@@ -116,116 +113,99 @@ class iOSProject: Project {
     }
 
     private func createVariants(with configuration: iOSConfiguration, spec: String) throws {
-        try configuration.targets
-            .map { (key: $0.key, value: $0.value) }
-            .forEach { target in
-                
-                guard let defaultVariant = configuration.variants
-                        .first(where: { $0.name.lowercased() == "default" }) else {
-                    throw ValidationError("Variant 'default' not found.")
-                }
-                
-                // Create 'variants.xcconfig' with parameters whose
-                // destination are set as '.project'
-                let configPath = Path(spec).absolute().parent()
-                do {
-                    try configFactory.createConfig(with: target,
-                                                   variant: defaultVariant,
-                                                   xcodeProj: configuration.xcodeproj,
-                                                   configPath: configPath,
-                                                   addToXcodeProj: true)
-                } catch {
-                    Logger.shared.logFatal(item: error.localizedDescription)
-                }
-            }
-    }
+        let defaultVariant = try configuration.defaultVariant
 
-    // swiftlint:disable function_body_length
-    private func setupFastlane(with configuration: iOSConfiguration, skip: Bool) {
-        if skip {
-            Logger.shared.logInfo("Skipped Fastlane setup", item: "")
-        } else {
-            Logger.shared.logInfo("Setting up Fastlane", item: "")
-
-            do {
-                let path = try TemplateDirectory().path
-                try Bash("cp", arguments: "-R", "\(path.absolute())/ios/_fastlane/", ".")
-                    .run()
-                
-                let projectSourceFolder = configuration.targets.first?.value.source.path ?? "{{ SOURCE_PATH }}"
-                let baseSetupCompletedMessage =
-                    """
-                    ✅  Your variants configuration was setup
-                    ✅  '\(projectSourceFolder)/Variants/' has been created.
-                        Add that folder to your Xcode project if it wasn't done automatically.
-                    ✅  For configuration properties with 'project' destination, they have been
-                        stored in '\(projectSourceFolder)/Variants/variants.xcconfig'.
-                        These values have been made available to your project via your Info.plist.
-                        Use them in your code as 'Variants.configuration["SAMPLE_PROPERTY"]'.
-                    🔄  Use 'variants switch --variants <value>' to switch between variants and
-                        update the properties in the files described above.
-
-                    That is all.
-                    """
-                
-                var setupCompleteMessage =
-                    """
-
-                    We got almost everything done!
-
-                    ❌  Fastlane could not be setup. The template wasn't found or something else went wrong when
-                        copying it.
-
-                    """
-                
-                if StaticPath.Fastlane.baseFolder.isDirectory {
-                    
-                    guard let defaultVariant = configuration.variants
-                            .first(where: { $0.name.lowercased() == "default" }),
-                          let namedTarget = configuration.targets.first
-                    else {
-                        throw ValidationError("Variant 'default' not found.")
-                    }
-                    var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
-                    customProperties.append(defaultVariant.destinationProperty)
-                    
-                    // Create 'variants_params.rb' with parameters whose
-                    // destination are set as '.fastlane'
-                    try storeFastlaneParams(customProperties)
-                
-                    try parametersFactory.createMatchFile(using: defaultVariant, target: namedTarget.value)
-                    
-                    setupCompleteMessage =
-                        """
-
-                        Your setup is complete, congratulations! 🎉
-                        However, you still need to provide some parameters in order for fastlane to run correctly.
-
-                        ⚠️  Check the files in 'fastlane/parameters/', change the parameters accordingly,
-                            provide environment variables when applicable.
-                        ⚠️  If you use Cocoapods-art, enable it in 'fastlane/Cocoapods'
-                        ⚠️  Change your signing configuration in 'fastlane/Match' and potentially 'fastlane/Deploy'
-
-                        """
-                    
-                    Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
-                    Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
-                } else {
-                    Logger.shared.logWarning("", item: "Fastlane setup couldn't be completed")
-                    Logger.shared.logInfo("👇  What happened ", item: "", color: .yellow)
-                }
-                
-                setupCompleteMessage += baseSetupCompletedMessage
-                setupCompleteMessage.enumerateLines { (line, _) in
-                    Logger.shared.logInfo("", item: line, color: .yellow)
-                }
-
-            } catch {
-                Logger.shared.logFatal(item: error.localizedDescription)
-            }
+        // Create 'variants.xcconfig' with parameters whose
+        // destination are set as '.project'
+        let configPath = Path(spec).absolute().parent()
+        do {
+            try configFactory.createConfig(
+                for: defaultVariant,
+                configuration: configuration,
+                configPath: configPath)
+        } catch {
+            Logger.shared.logFatal(item: error.localizedDescription)
         }
     }
-    // swiftlint:enable function_body_length
+
+    // swiftlint:disable:next function_body_length
+    private func setupFastlane(with configuration: iOSConfiguration, skip: Bool) {
+        guard skip == false else {
+            return Logger.shared.logInfo("Skipped Fastlane setup for iOS", item: "")
+        }
+
+        Logger.shared.logInfo("Setting up Fastlane for iOS", item: "")
+        do {
+            let path = try TemplateDirectory().path
+            try Bash("cp", arguments: "-R", "\(path.absolute())/ios/_fastlane/", ".")
+                .run()
+
+            let projectSourceFolder = configuration.target.source.path
+            let baseSetupCompletedMessage =
+                """
+                ✅  Your variants configuration was setup
+                ✅  '\(projectSourceFolder)/Variants/' has been created.
+                    Add that folder to your Xcode project if it wasn't done automatically.
+                ✅  For configuration properties with 'project' destination, they have been
+                    stored in '\(projectSourceFolder)/Variants/variants.xcconfig'.
+                    These values have been made available to your project via your Info.plist.
+                    Use them in your code as 'Variants.configuration["SAMPLE_PROPERTY"]'.
+                🔄  Use 'variants switch --variants <value>' to switch between variants and
+                    update the properties in the files described above.
+
+                That is all.
+                """
+
+            var setupCompleteMessage =
+                """
+
+                We got almost everything done!
+
+                ❌  Fastlane could not be setup. The template wasn't found or something else went wrong when
+                    copying it.
+
+                """
+
+            if StaticPath.Fastlane.baseFolder.isDirectory {
+                let defaultVariant = try configuration.defaultVariant
+
+                // Update `variants_params.rb` with custom fastlane properties
+                var customProperties: [CustomProperty] = (defaultVariant.custom ?? []) + (configuration.custom ?? [])
+                customProperties.append(defaultVariant.destinationProperty)
+                try storeFastlaneParams(customProperties)
+
+                // Update `Matchfile` with signing configurations
+                try parametersFactory.createMatchFile(for: defaultVariant, configuration: configuration)
+
+                setupCompleteMessage =
+                    """
+
+                    Your setup is complete, congratulations! 🎉
+                    However, you still need to provide some parameters in order for fastlane to run correctly.
+
+                    ⚠️  Check the files in 'fastlane/parameters/', change the parameters accordingly,
+                        provide environment variables when applicable.
+                    ⚠️  If you use Cocoapods-art, enable it in 'fastlane/Cocoapods'
+                    ⚠️  Change your signing configuration in 'fastlane/Match' and potentially 'fastlane/Deploy'
+
+                    """
+
+                Logger.shared.logInfo("🚀 ", item: "Fastlane setup with success", color: .green)
+                Logger.shared.logInfo("👇  Next steps ", item: "", color: .yellow)
+            } else {
+                Logger.shared.logWarning("", item: "Fastlane setup couldn't be completed")
+                Logger.shared.logInfo("👇  What happened ", item: "", color: .yellow)
+            }
+
+            setupCompleteMessage += baseSetupCompletedMessage
+            setupCompleteMessage.enumerateLines { (line, _) in
+                Logger.shared.logInfo("", item: line, color: .yellow)
+            }
+
+        } catch {
+            Logger.shared.logFatal(item: error.localizedDescription)
+        }
+    }
     
     private func storeFastlaneParams(_ properties: [CustomProperty]) throws {
         let fastlaneProperties = properties.filter { $0.destination == .fastlane }

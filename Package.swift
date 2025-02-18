@@ -17,7 +17,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/jpsim/Yams.git",
-            from: "2.0.0"
+            from: "5.0.0"
         ),
         .package(
             name: "XcodeProj",
@@ -26,7 +26,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
-            from: "0.1.0"
+            from: "1.0.0"
         ),
         .package(
             url: "https://github.com/stencilproject/Stencil.git",
@@ -36,6 +36,10 @@ let package = Package(
             name: "danger-swift",
             url: "https://github.com/danger/swift.git",
             from: "3.5.0"
+        ),
+        .package(
+            url: "https://github.com/realm/SwiftLint",
+            from: "0.58.0"
         )
     ],
     targets: [
@@ -57,7 +61,9 @@ let package = Package(
         ),
         .testTarget(
             name: "VariantsTests",
-            dependencies: ["Variants"]
+            dependencies: [
+                "Variants"
+            ]
         )
     ]
 )

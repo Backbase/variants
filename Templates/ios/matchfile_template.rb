@@ -2,7 +2,7 @@
 git_url("{{ git_url }}")
 
 {% else %}
-# Sample: "git@github.com:backbase/match.git"
+
 git_url(YOUR_MATCH_GIT_URL)
 
 {% endif %}
@@ -10,12 +10,24 @@ git_url(YOUR_MATCH_GIT_URL)
 storage_mode("git")
 
 {% if export_method %}
-# appstore, development, adhoc, enterprise
+
 type("{{ export_method }}")
 
 {% endif %}
 
-{% if bundle_id %}
-app_identifier("{{ bundle_id }}")
+{% if app_identifiers %}
+
+{% if app_identifiers.count == 1 %}
+
+app_identifier("{{ app_identifiers[0] }}")
+
+{% else %}
+
+app_identifier([
+{% for identifier in app_identifiers %}
+    "{{ identifier }}"{% if not forloop.last %},{% endif %}
+{% endfor %}])
+
+{% endif %}
 
 {% endif %}

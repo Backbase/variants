@@ -54,24 +54,24 @@ Assume we have an iOS project, which production variant (default) should deploy 
 ```yaml
 ios:
     xcodeproj: ...
-    targets:
+    target:
       ...
     variants:
-      default:
-        version_name: 0.0.1
-        version_number: 1
-        store_destination: AppStore
-        ...
-      beta:
-        version_name: 0.0.1
-        version_number: 1
-        store_destination: TestFlight
-        ...
-      enterprise_release:
-        version_name: 0.0.1
-        version_number: 1
-        store_destination: AppCenter
-        ...
+        default:
+            version_name: 0.0.1
+            version_number: 1
+            store_destination: AppStore
+            ...
+        beta:
+            version_name: 0.0.1
+            version_number: 1
+            store_destination: TestFlight
+            ...
+        enterprise_release:
+            version_name: 0.0.1
+            version_number: 1
+            store_destination: AppCenter
+            ...
 ```
 
 #### Example for Android
@@ -84,16 +84,16 @@ android:
     app_name:
       ...
     variants:
-      default:
-        version_name: 0.0.1
-        version_code: 1
-        store_destination: PlayStore
-        ...
-      enterprise_release:
-        version_name: 0.0.1
-        version_code: 1
-        store_destination: AppCenter
-        ...
+        default:
+            version_name: 0.0.1
+            version_code: 1
+            store_destination: PlayStore
+            ...
+        enterprise_release:
+            version_name: 0.0.1
+            version_code: 1
+            store_destination: AppCenter
+            ...
 ```
 
 Now, all we have to do is to switch to the correct variant and instruct *fastlane* to deploy as usual:

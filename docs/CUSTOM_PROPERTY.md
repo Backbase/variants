@@ -40,7 +40,7 @@ property = VARIANTS_PARAMS[:NAME_OF_PROPERTY]
 ```yaml
 ios:
     xcodeproj: ...
-    targets:
+    target:
       ...
     variants:
       default:

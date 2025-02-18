@@ -8,17 +8,12 @@
 import Foundation
 import PathKit
 @testable import VariantsCore
-// swiftlint:disable colon
 
 class MockXCcodeConfigFactory: XCFactory {
     var writeContentCache: [(content: String, file: Path, force: Bool)] = []
     var writeJSONCache: [(encodableObject: Encodable, file: Path)] = []
-    var createConfigCache: [(target: NamedTarget,
-                             variant: iOSVariant,
-                             xcodeProj: String?,
-                             configPath: Path,
-                             addToXcodeProj: Bool?)] = []
-    
+    var createConfigCache: [(variant: iOSVariant, configuration: iOSConfiguration, configPath: Path)] = []
+
     init(logLevel: Bool = false) {
         logger = Logger(verbose: logLevel)
     }
@@ -28,21 +23,17 @@ class MockXCcodeConfigFactory: XCFactory {
         return (true, file)
     }
     
-    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T : Encodable {
+    func writeJSON<T>(_ encodableObject: T, toFile file: Path) -> (Bool, Path?) where T: Encodable {
         writeJSONCache.append((encodableObject: encodableObject, file: file))
         return (true, file)
     }
-    
-    func createConfig(with target: NamedTarget,
-                      variant: iOSVariant,
-                      xcodeProj: String?,
-                      configPath: Path,
-                      addToXcodeProj: Bool?) throws {
-        createConfigCache.append((target: target,
-                                  variant: variant,
-                                  xcodeProj: xcodeProj,
-                                  configPath: configPath,
-                                  addToXcodeProj: addToXcodeProj))
+
+    func createConfig(for variant: iOSVariant, configuration: iOSConfiguration, configPath: Path) throws {
+        createConfigCache.append((
+            variant: variant,
+            configuration: configuration,
+            configPath: configPath
+        ))
     }
     
     var xcconfigFileName: String = "variants.xcconfig"

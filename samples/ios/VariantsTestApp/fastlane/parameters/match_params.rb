@@ -11,7 +11,7 @@ MATCH_PARAMS = {
   
   # Signing properties coming from Variants YAML spec. Do not change manually
   TEAMNAME: "Backbase B.V.",
-  TEAMID: "R22WT7DX79",
+  TEAMID: "ABC1234567D",
   EXPORTMETHOD: "appstore",
   MATCHURL: "git@github.com:sample/match.git",
 }.freeze

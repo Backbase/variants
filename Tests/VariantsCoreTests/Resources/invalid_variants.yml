@@ -51,16 +51,15 @@ android:
 
 ios:
     xcodeproj: FrankBank.xcodeproj
-    targets:
-      FrankBank:
-        name: FrankBank
-        bundle_id: com.backbase.frank.ios
-        test_target: FrankBankTests
-        app_icon: AppIcon
-        source:
-          path: Sources
-          info: Sources/Info.plist
-          config: Sources
+    target:
+      name: FrankBank
+      bundle_id: com.backbase.frank.ios
+      test_target: FrankBankTests
+      app_icon: AppIcon
+      source:
+        path: Sources
+        info: Sources/Info.plist
+        config: Sources
     variants:
       default:
         version_name: 0.0.1

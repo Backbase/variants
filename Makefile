@@ -6,12 +6,7 @@ else
 	detected_OS := $(shell uname)
 endif
 
-ifeq ($(detected_OS),Linux) # Linux only
-	prefix ?= ~/.local
-else
-	prefix ?= /usr/local
-endif
-
+prefix ?= ~/.local
 bindir ?= $(prefix)/bin
 libdir ?= $(prefix)/lib
 srcdir = Sources
@@ -72,6 +67,7 @@ endif
 
 .PHONY: coverage
 coverage: test
+	@gem install bundler
 	@bundle install
 	@bundle exec slather coverage --ignore ../**/*/Xcode\* --ignore Tests/\* --scheme VariantsCore Variants.xcodeproj/
 
@@ -81,5 +77,10 @@ lint:
 
 .PHONY: validation
 validation: lint coverage
+	@rm -rf variants.yml
+	@echo "Ready to go."
+
+.PHONY: ci-validation
+ci-validation: test
 	@rm -rf variants.yml
 	@echo "Ready to go."

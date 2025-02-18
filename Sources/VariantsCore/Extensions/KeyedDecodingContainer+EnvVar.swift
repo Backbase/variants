@@ -28,7 +28,6 @@ public extension KeyedDecodingContainer {
 }
 
 fileprivate extension String {
-    
     var asEnvVariable: String? {
         get throws {
             let regexPattern = #"^\$\{\{ envVars.(?<name>.*) \}\}"#

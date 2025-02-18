@@ -5,11 +5,12 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable type_name
+
 import XCTest
 import PathKit
 import ArgumentParser
 @testable import VariantsCore
-// swiftlint:disable type_name
 
 class iOSProjectTests: XCTestCase {
     let specHelperMock = SpecHelperMock(

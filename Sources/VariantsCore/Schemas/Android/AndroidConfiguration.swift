@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ArgumentParser
 
 public struct AndroidConfiguration: Codable {
     let path: String
@@ -13,6 +14,14 @@ public struct AndroidConfiguration: Codable {
     let appIdentifier: String
     let variants: [AndroidVariant]
     let custom: [CustomProperty]?
+
+    var defaultVariant: AndroidVariant {
+        get throws {
+            guard  let defaultVariant = variants.first(where: { $0.name.lowercased() == "default" })
+            else { throw ValidationError("Variant 'default' not found.") }
+            return defaultVariant
+        }
+    }
 
     enum CodingKeys: String, CodingKey {
         case path = "path"

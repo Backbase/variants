@@ -5,85 +5,99 @@
 
 ios:
     xcodeproj: {{ PROJECT }}.xcodeproj
-    targets:
-      {{ TARGET }}:
+    target:
         name: {{ APP_NAME }}
         bundle_id: {{ APP_BUNDLE_ID }}
         test_target: {{ TEST_TARGET }}
         app_icon: {{ APP_ICON }}
         source:
-          path: {{ SOURCE }}
-          info: {{ INFO_PLIST }}
-          config: {{ SOURCE }}
+            path: {{ SOURCE }}
+            info: {{ INFO_PLIST }}
+            config: {{ SOURCE }}
+    # ----------------------------------------------------------------------
+    # This can be used to add a list of target extensions to be included in
+    # the signing phase, both in the Matchfile and Xcode target
+    #
+    # Comment or delete section below if necessary.
+    # ----------------------------------------------------------------------
+    #extensions:
+    #    - name: MyAppExtension
+    #      bundle_id: com.myApp.MyAppExtension
+    #      signed: true
     variants:
-      # Default variant is mandatory, do not remove
-      default:
-        version_name: 0.0.1
-        version_number: 1
+        # Default variant is mandatory, do not remove
+        default:
+            version_name: 0.0.1
+            version_number: 1
+            #
+            # 'store_destination' can be: AppStore, TestFlight or AppCenter
+            store_destination: AppStore
+
+            #
+            # Same as `ios.signing`, but this will override those values.
+            signing:
+                # 'match_url' isn't mandatory, only if you use Match to sign your app
+                # match_url: "git@github.com:sample/match.git"
+                team_name: "iPhone Distribution"
+                team_id: "AB1234567D"
+
+                # Should Variant try to auto detect signing identity 
+                # if set to true, Variant will use the team_id, team_name and export_method
+                # to detect code signing identity from the Keychain Access
+                # default value is `true`
+                auto_detect_signing_identity: true
+            #
+            # custom: - Not required.
+            #
+            # You can have as many custom fields as possible.
+            # Only strings allowed.
+            #
+            # The value of will be written to 1 of 2 possible destinations:
+            # - project => variants.xcconfig
+            # - fastlane => fastlane/parameters/variants_params.rb
+            #
+            custom:
+                - name: OTHER_SWIFT_FLAGS
+                  value: $(inherited)
+                  env: false
+                  destination: project
+                - name: SAMPLE_FASTLANE_PROPERTY
+                  value: This will be available to fastlane
+                  env: false
+                  destination: fastlane
         #
-        # 'store_destination' can be: AppStore, TestFlight or AppCenter
-        store_destination: AppStore
-        
+        # Sample variant, "beta".
+        # Only `version_name` and `version_number` are mandatory fields
         #
-        # Same as `ios.signing`, but this will override those values.
-        signing:
-            # 'match_url' isn't mandatory, only if you use Match to sign your app
-            # match_url: "git@github.com:sample/match.git"
-            team_name: "iPhone Distribution"
-            team_id: "AB1234567D"
-        
-        #
-        # custom: - Not required.
-        #
-        # You can have as many custom fields as possible.
-        # Only strings allowed.
-        #
-        # The value of will be written to 1 of 2 possible destinations:
-        # - project => variants.xcconfig
-        # - fastlane => fastlane/parameters/variants_params.rb
-        #
-        custom:
-            - name: OTHER_SWIFT_FLAGS
-              value: $(inherited)
-              env: false
-              destination: project
-            - name: SAMPLE_FASTLANE_PROPERTY
-              value: This will be available to fastlane
-              env: false
-              destination: fastlane
-      #
-      # Sample variant, "beta".
-      # Only `version_name` and `version_number` are mandatory fields
-      #
-      BETA:
-        id_suffix: beta
-        # If app_icon isn't specified, the value fallbacks to target.app_icon
-        app_icon: AppIcon.beta
-        version_name: 0.0.1
-        version_number: 1
-        
-        #
-        # 'store_destination' can be: AppStore, TestFlight or AppCenter
-        store_destination: AppCenter
-        
-        #
-        # Same as `ios.signing`, but this will override those values.
-        signing:
-            # 'match_url' isn't mandatory, only if you use Match to sign your app
-            # match_url: "git@github.com:sample/match.git"
-            team_name: "iPhone Distribution: Enterprise Sample"
-            team_id: "7A1234567D"
-            export_method: "enterprise"
-            
-        custom:
-            - name: OTHER_SWIFT_FLAGS
-              value: $(inherited)
-              env: false
-              destination: project
-            - name: SAMPLE_FASTLANE_PROPERTY
-              value: This will be available to fastlane on Beta variant
-              env: false
-              destination: fastlane
+        BETA:
+            id_suffix: beta
+            # If app_icon isn't specified, the value fallbacks to target.app_icon
+            app_icon: AppIcon.beta
+            version_name: 0.0.1
+            version_number: 1
+
+            #
+            # 'store_destination' can be: AppStore, TestFlight or AppCenter
+            store_destination: AppCenter
+
+            #
+            # Same as `ios.signing`, but this will override those values.
+            signing:
+                # 'match_url' isn't mandatory, only if you use Match to sign your app
+                # match_url: "git@github.com:sample/match.git"
+                team_name: "iPhone Distribution: Enterprise Sample"
+                team_id: "7A1234567D"
+                export_method: "enterprise"
+
+            custom:
+                - name: OTHER_SWIFT_FLAGS
+                  value: $(inherited)
+                  env: false
+                  destination: project
+                - name: SAMPLE_FASTLANE_PROPERTY
+                  value: This will be available to fastlane on Beta variant
+                  env: false
+                  destination: fastlane
 
     signing:
         # 'match_url' isn't mandatory, only if you use Match to sign your app
@@ -91,7 +105,12 @@ ios:
         team_name: "iPhone Distribution"
         team_id: "AB1234567D"
         export_method: "appstore"
-    
+
+        # Should Variant try to auto detect signing identity 
+        # if set to true, Variant will use the team_id, team_name and export_method
+        # to detect code signing identity from the Keychain Access
+        # default value is `true`
+        auto_detect_signing_identity: true
     # ----------------------------------------------------------------------
     # custom: - Not required.
     #
@@ -100,7 +119,6 @@ ios:
     #
     # Comment or delete section below if necessary.
     # ----------------------------------------------------------------------
-
     #custom:
     #    - name: SAMPLE_PROPERTY
     #      value: Sample value

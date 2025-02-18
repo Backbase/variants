@@ -3,11 +3,17 @@ name: SwiftLint
 on:
   pull_request:
     types: [ opened, synchronize ]
+    paths:
+      - '.github/workflows/swiftlint.yml'
+      - '.swiftlint.yml'
+      - '**/*.swift'
 
 jobs:
   SwiftLint:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Run SwiftLint
-        run: swiftlint lint --strict --reporter github-actions-logging
+      - uses: actions/checkout@v3
+      - name: GitHub Action for SwiftLint
+        uses: stanfordbdhg/action-swiftlint@v4
+        with:
+          args: --strict --reporter github-actions-logging

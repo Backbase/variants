@@ -16,6 +16,8 @@
 	<string>$(V_VERSION_NUMBER)</string>
 	<key>OTHER_SWIFT_FLAGS</key>
 	<string>$(OTHER_SWIFT_FLAGS)</string>
+	<key>SAMPLE_FASTLANE_PROPERTY</key>
+	<string>$(SAMPLE_FASTLANE_PROPERTY)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -35,5 +37,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>custom_global_property</key>
+	<string>$(custom_global_property)</string>
 </dict>
 </plist>

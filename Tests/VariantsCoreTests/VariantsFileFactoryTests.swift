@@ -26,8 +26,19 @@ class VariantsFileFactoryTests: XCTestCase {
             }
             return infoDictionary
         }()
+        
+        // MARK: - ConfigurationValueKey
+        /// Custom configuration values coming from variants.yml as enum cases
+        public enum ConfigurationValueKey: String {
+        
+            case PROPERTY_A
+            case PROPERTY_B
+        }
+        static func configurationValue(for key: ConfigurationValueKey) -> Any? {
+            return Self.configuration[key.rawValue]
+        }
+        
     }
-    
     """
     
     private let defaultVariant = try? iOSVariant(
@@ -36,16 +47,24 @@ class VariantsFileFactoryTests: XCTestCase {
         versionNumber: 99,
         appIcon: nil,
         appName: nil,
-        storeDestination: "testFlight",
-        custom: [CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
-                 CustomProperty(name: "PROPERTY_B", value: "VALUE_B", env: true, destination: .project)],
+        storeDestination: "testflight",
         idSuffix: nil,
         bundleID: nil,
-        variantSigning: nil,
-        globalSigning: iOSSigning(teamName: "", teamID: "", exportMethod: .appstore, matchURL: ""),
+        globalCustomProperties: nil,
+        variantCustomProperties: [
+            CustomProperty(name: "PROPERTY_A", value: "VALUE_A", destination: .project),
+            CustomProperty(name: "PROPERTY_B", value: "VALUE_B", destination: .project)],
+        globalSigning: iOSSigning(teamName: "",
+                                  teamID: "",
+                                  exportMethod: .appstore,
+                                  matchURL: "",
+                                  style: .manual,
+                                  autoDetectSigningIdentity: true),
+        debugSigning: nil,
+        releaseSigning: nil,
         globalPostSwitchScript: "echo global",
         variantPostSwitchScript: "echo variant")
-    
+
     func testRender_noSecrets() {
         guard let configFile = Bundle(for: type(of: self))
                 .path(forResource: "Resources/ios/sample", ofType: "xcconfig") else { return }
@@ -60,6 +79,9 @@ class VariantsFileFactoryTests: XCTestCase {
 
         let variantsFilePath = Bundle(for: type(of: self)).path(forResource: "Resources/ios/Variants", ofType: "swift")
         XCTAssertNotNil(variantsFilePath)
+
+        // Note: We are skipping the check for the file content as multiple tests edit the same file which leads to CI failure
+        // We need to refactor the test to write the file in a way it won't break when running multiple tests
 //        guard let variantsFile = variantsFilePath else { return }
 //        XCTAssertEqual(try String(contentsOfFile: variantsFile), variantsSwiftContent)
     }
