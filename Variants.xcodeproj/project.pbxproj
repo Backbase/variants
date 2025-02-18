@@ -34,6 +34,7 @@
 /* Begin PBXBuildFile section */
 		2D72CCA82D478A6000B01883 /* iOSTargetExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D72CCA72D478A6000B01883 /* iOSTargetExtensionTests.swift */; };
 		2D99DF062820856A004A36E1 /* iOSVariantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D99DF052820856A004A36E1 /* iOSVariantTests.swift */; };
+		2DA453002D64CDF4001930B2 /* MockXCodeConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA452FF2D64CDF4001930B2 /* MockXCodeConfigFactory.swift */; };
 		2DFF30112D438AEF00F8CF7B /* iOSExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFF30102D438AEF00F8CF7B /* iOSExtension.swift */; };
 		3907EE7026FDF9CE00311EE6 /* XcodeProjFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */; };
 		3940C5A127074B1A00FEA51D /* LogData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3940C5A027074B1A00FEA51D /* LogData.swift */; };
@@ -106,7 +107,6 @@
 		8EDC550C25592F5800A9CDFF /* iOSProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC550B25592F5800A9CDFF /* iOSProjectTests.swift */; };
 		8EE24235256BA98C00F66F61 /* iOSSigning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE24234256BA98C00F66F61 /* iOSSigning.swift */; };
 		BEAA71ED255A012900E9D4D9 /* AndroidProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */; };
-		BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */; };
 		BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */; };
 		BEAA7219255E5C6C00E9D4D9 /* MockFastlaneFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */; };
 		C52A0A5429263483007CE315 /* UserInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52A0A5329263483007CE315 /* UserInputTests.swift */; };
@@ -176,6 +176,7 @@
 /* Begin PBXFileReference section */
 		2D72CCA72D478A6000B01883 /* iOSTargetExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSTargetExtensionTests.swift; sourceTree = "<group>"; };
 		2D99DF052820856A004A36E1 /* iOSVariantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSVariantTests.swift; sourceTree = "<group>"; };
+		2DA452FF2D64CDF4001930B2 /* MockXCodeConfigFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockXCodeConfigFactory.swift; sourceTree = "<group>"; };
 		2DFF30102D438AEF00F8CF7B /* iOSExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSExtension.swift; sourceTree = "<group>"; };
 		3907EE6F26FDF9CE00311EE6 /* XcodeProjFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjFactoryTests.swift; sourceTree = "<group>"; };
 		3940C5A027074B1A00FEA51D /* LogData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogData.swift; sourceTree = "<group>"; };
@@ -218,7 +219,6 @@
 		8EE24234256BA98C00F66F61 /* iOSSigning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSSigning.swift; sourceTree = "<group>"; };
 		BEAA71EC255A012900E9D4D9 /* AndroidProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidProjectTests.swift; sourceTree = "<group>"; };
 		BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGradleScriptFactory.swift; sourceTree = "<group>"; };
-		BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockXCcodeConfigFactory.swift; sourceTree = "<group>"; };
 		BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFastlaneFactory.swift; sourceTree = "<group>"; };
 		C52A0A5329263483007CE315 /* UserInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputTests.swift; sourceTree = "<group>"; };
 		C52A0A5529266B1B007CE315 /* iOSSigningTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSSigningTests.swift; sourceTree = "<group>"; };
@@ -381,8 +381,8 @@
 		BEAA71FE255E5B8C00E9D4D9 /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
+				2DA452FF2D64CDF4001930B2 /* MockXCodeConfigFactory.swift */,
 				BEAA71FF255E5BBB00E9D4D9 /* MockGradleScriptFactory.swift */,
-				BEAA720B255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift */,
 				BEAA7218255E5C6C00E9D4D9 /* MockFastlaneFactory.swift */,
 				397811F526F4BCF800643F91 /* MockLogger.swift */,
 				7C460E7E281C1DDE00BBF15D /* MockVariant.swift */,
@@ -860,7 +860,6 @@
 				7C460E81281C1E8100BBF15D /* MockProject.swift in Sources */,
 				8E1B9F3C254AC31A00DD0204 /* InitializerTests.swift in Sources */,
 				BEAA7212255E5C4100E9D4D9 /* MockGradleScriptFactory.swift in Sources */,
-				BEAA720C255E5C3E00E9D4D9 /* MockXCcodeConfigFactory.swift in Sources */,
 				E39502A9256DB16B00484DCE /* String+WriteTests.swift in Sources */,
 				397811FB26F4CD3300643F91 /* VerboseLoggerTests.swift in Sources */,
 				2D99DF062820856A004A36E1 /* iOSVariantTests.swift in Sources */,
@@ -880,6 +879,7 @@
 				7C460E7F281C1DDE00BBF15D /* MockVariant.swift in Sources */,
 				8E8A48CA255307B20056F79F /* GradleScriptFactoryTests.swift in Sources */,
 				8E8A491025543F920056F79F /* SpecHelperTests.swift in Sources */,
+				2DA453002D64CDF4001930B2 /* MockXCodeConfigFactory.swift in Sources */,
 				2D72CCA82D478A6000B01883 /* iOSTargetExtensionTests.swift in Sources */,
 				7C460E83281C30B900BBF15D /* CommandTests.swift in Sources */,
 			);
