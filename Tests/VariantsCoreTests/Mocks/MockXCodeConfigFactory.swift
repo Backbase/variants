@@ -39,5 +39,3 @@ class MockXCcodeConfigFactory: XCFactory {
     var xcconfigFileName: String = "variants.xcconfig"
     var logger: Logger
 }
-
-// swiftlint:enable colon

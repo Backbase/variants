@@ -5,6 +5,8 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 
 // swiftlint:disable:next type_name
@@ -254,4 +256,4 @@ extension iOSVariant {
     }
 }
 
-// swiftlint:enable type_name
+// swiftlint:enable file_length
