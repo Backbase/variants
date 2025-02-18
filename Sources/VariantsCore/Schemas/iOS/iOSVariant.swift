@@ -5,8 +5,6 @@
 //  Created by Arthur Alves
 //
 
-// swiftlint:disable file_length
-
 import Foundation
 
 // swiftlint:disable:next type_name
@@ -111,12 +109,11 @@ public struct iOSVariant: Variant {
         } else if let base {
             return try base ~ nil
         } else {
-            Logger.shared.logWarning(item:
+            throw RuntimeError(
                 """
                 Variant "\(name)" doesn't contain a 'signing' configuration. \
                 Create a global 'signing' configuration or make sure all variants have this property.
                 """)
-            return nil
         }
     }
 
@@ -126,18 +123,6 @@ public struct iOSVariant: Variant {
         return globalMinusOverrideProperties + variantCustomProperties
     }
 
-    private static func parsePostSwitchScript(globalScript: String?, variantScript: String?) -> String? {
-        if let globalScript = globalScript, let variantScript = variantScript {
-            return "\(globalScript) && \(variantScript)"
-        } else if let globalScript = globalScript {
-            return globalScript
-        } else if let variantScript = variantScript {
-            return variantScript
-        } else {
-            return nil
-        }
-    }
-    
     private static func parsePostSwitchScript(globalScript: String?, variantScript: String?) -> String? {
         if let globalScript = globalScript, let variantScript = variantScript {
             return "\(globalScript) && \(variantScript)"
@@ -255,5 +240,3 @@ extension iOSVariant {
             variantPostSwitchScript: unnamediOSVariant.postSwitchScript)
     }
 }
-
-// swiftlint:enable file_length

@@ -106,11 +106,6 @@ class iOSProject: Project {
         guard let outputString = try Bash("bash", arguments: "-c", script).capture() else { return }
         Logger.shared.logInfo(item: outputString)
     }
-    
-    private func runPostSwitchScript(_ script: String) throws {
-        guard let outputString = try Bash("bash", arguments: "-c", script).capture() else { return }
-        Logger.shared.logInfo(item: outputString)
-    }
 
     private func createVariants(with configuration: iOSConfiguration, spec: String) throws {
         let defaultVariant = try configuration.defaultVariant
