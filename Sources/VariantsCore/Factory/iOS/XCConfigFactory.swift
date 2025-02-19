@@ -174,7 +174,7 @@ class XCConfigFactory: XCFactory {
 
     private func populateConfig(for target: iOSTarget, configFile: Path, variant: iOSVariant) {
         logger.logInfo("Populating: ", item: "'\(configFile.lastComponent)'")
-        variant.getDefaultValues(for: target.value).forEach { (key, value) in
+        variant.getDefaultValues(for: target).forEach { (key, value) in
             let stringContent = "\(key) = \(value)"
             logger.logDebug("Item: ", item: stringContent, indentationLevel: 1, color: .purple)
             
