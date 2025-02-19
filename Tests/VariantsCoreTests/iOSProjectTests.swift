@@ -21,7 +21,7 @@ class iOSProjectTests: XCTestCase {
     )
     
     func testProject_initialize() {
-        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -38,7 +38,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_setup() {
-        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -80,7 +80,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_list() {
-        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         let project = iOSProject(
             specHelper: specHelperMock,
@@ -99,7 +99,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_switch() {
-        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -153,7 +153,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_setup_missingiOSConfiguration() {
-        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -176,7 +176,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_setup_fail() {
-        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(

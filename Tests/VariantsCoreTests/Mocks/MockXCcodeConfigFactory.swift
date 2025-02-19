@@ -9,7 +9,7 @@ import Foundation
 import PathKit
 @testable import VariantsCore
 
-class MockXCodeConfigFactory: XCFactory {
+class MockXCcodeConfigFactory: XCFactory {
     var writeContentCache: [(content: String, file: Path, force: Bool)] = []
     var writeJSONCache: [(encodableObject: Encodable, file: Path)] = []
     var createConfigCache: [(variant: iOSVariant, configuration: iOSConfiguration, configPath: Path)] = []
