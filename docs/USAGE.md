@@ -17,6 +17,9 @@ Commands:
 
 * [1. Initialize](#initialize)
     * [Variants Spec](#variants-spec)
+    * [Environment variables injection](#enviromental-variables-injection)
+    * [iOS: Bundle ID](#configuring-bundleid)
+    * [iOS: Signing App Extensions](#signing-extensions)
     * [Custom configuration](#custom-configuration)
     * [Signing configuration (iOS only)](#signing-configuration)
 * [2. Setup](#setup-multiple-build-variants-with-full-fastlane-integration)
@@ -58,7 +61,7 @@ It will generate a variants.yml file in the base folder of your project
 > NOTE: Edit the file variants.yml accordingly.
 
 #### Variants Spec
-Your `variants.yml` spec will contain all the necessary fields. The information within `xcodeproj` and `targets` sections are populated automatically if a `.xcodeproj` is found in your working directory - otherwise, you'll be asked to update the placeholders in this file. It comes with one variant named `default`, which will be used whenever a variant isn't specified. You can then include custom variants, for which the following settings are required:
+Your `variants.yml` spec will contain all the necessary fields. The information within `xcodeproj` and `target` section are populated automatically if a `.xcodeproj` is found in your working directory - otherwise, you'll be asked to update the placeholders in this file. It comes with one variant named `default`, which will be used whenever a variant isn't specified. You can then include custom variants, for which the following settings are required:
 * `name`
 * `version_name`
 * `version_number`
@@ -66,46 +69,45 @@ Your `variants.yml` spec will contain all the necessary fields. The information 
 ```yaml
 ios:
     xcodeproj: SampleProject.xcodeproj
-    targets:
-      SampleProject:
+    target:
         name: SampleApp
         bundle_id: com.sample.app
         test_target: SampleProjectTests
         app_icon: AppIcon
         source:
-          path: Sources
-          info: Sources/Info.plist
-          # Path to folder that will serve as parent to folder Variants/
-          config: Sources
+            path: Sources
+            info: Sources/Info.plist
+            # Path to folder that will serve as parent to folder Variants/
+            config: Sources
     variants:
-      # Default variant is mandatory, do not remove
-      default:
-        version_name: 0.0.1
-        version_number: {{ envVars.VERSION_CODE }}
-        store_destination: AppStore
-        # This is an optional field to override the default app name per variant
-        app_name: App Marketing Name 
-        custom:
-            - name: apiBaseUrl
-              value: https://sample.com/
-              destination: project
-        postSwitchScript: |-
-            echo default Variant Done Switching
-      BETA:
-        id_suffix: beta
-        app_icon: AppIcon.beta
-        version_name: 0.0.1
-        version_number: 13
-        store_destination: TestFlight
-        custom:
-            - name: apiBaseUrl
-              value: https://sample-beta.com/
-              destination: project
-            - key:  OTHER_SWIFT_FLAGS
-              value: $(inherited) -DBETA
-              destination: project
+        # Default variant is mandatory, do not remove
+        default:
+            version_name: 0.0.1
+            version_number: {{ envVars.VERSION_CODE }}
+            store_destination: AppStore
+            # This is an optional field to override the default app name per variant
+            app_name: App Marketing Name 
+            custom:
+                - name: apiBaseUrl
+                  value: https://sample.com/
+                  destination: project
+            postSwitchScript: |-
+                echo default Variant Done Switching
+        BETA:
+            id_suffix: beta
+            app_icon: AppIcon.beta
+            version_name: 0.0.1
+            version_number: 13
+            store_destination: TestFlight
+            custom:
+                - name: apiBaseUrl
+                  value: https://sample-beta.com/
+                  destination: project
+                - key:  OTHER_SWIFT_FLAGS
+                  value: $(inherited) -DBETA
+                  destination: project
     postSwitchScript: |-
-            echo global Done Switching
+        echo global Done Switching
 ```
 ```yaml
 android:
@@ -191,6 +193,44 @@ If a `bundle_id` is provided in the variant config, the BundleID will be overwri
 For example: Target BundleID is `com.sample.App` and variant `bundle_id` is `com.anotherSample.App`, the generated BundleID will be `com.anotherSample.App`
 
 *Note: `id_suffix` and `bundle_id` are not compatible and must not be provided at the same time. Only one of the configurations can be provided per each variant.*
+
+#### Signing extensions
+
+Variants can also help signing extensions via Match. In order to do so simply include the extensions in the `variants.yml` as the following:
+
+```yaml
+ios:
+    xcodeproj: SampleProject.xcodeproj
+    target:
+        ...
+    extensions:
+        - name: TestWidgetExtension
+          bundle_suffix: TestWidgetExtension
+          signed: true
+        - name: AnotherTestWidgetExtension
+          bundle_id: com.test.MyApp.AnotherTestWidgetExtension
+          signed: true
+    variants:
+        ...
+```
+
+The `bundle_id` will be generated for each extension marked with `signed: true` and added to the `app_identifier` property in the Matchfile for Match to sign the application.
+
+There are two ways to configure the Bundle ID generation:
+
+If a `id_suffix` is provided in the extension config the BundleID will be generated based on the selected variant BundleID and the suffix provided. 
+For example: Variant BundleID is `com.sample.App.beta` and extension `id_sufix` is `TestWidgetExtension`, the generated BundleID will be `com.sample.App.beta.TestWidgetExtension`
+
+If a `bundle_id` is provided in the extension config the BundleID will be generated based on the bundle ID provided. 
+For example: Variant BundleID is `com.sample.App.beta` and extension `bundle_id` is `com.test.MyApp.AnotherTestWidgetExtension`, the generated BundleID will be `com.test.MyApp.AnotherTestWidgetExtension`
+
+*Note: `id_suffix` and `bundle_id` are not compatible and must not be provided at the same time. Only one of the configurations can be provided per each extension.*
+
+#### iOS Signing
+
+For iOS only you can combine signing options for debug and or release depending on the project needs. 
+
+For more information see our [iOS Signing documentation](ios/IOS_SIGNING.md).
 
 #### Custom configuration
 

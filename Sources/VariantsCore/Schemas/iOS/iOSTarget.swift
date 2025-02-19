@@ -7,10 +7,7 @@
 
 import Foundation
 
-// swiftlint:disable type_name
-
-public typealias NamedTarget = (key: String, value: iOSTarget)
-
+// swiftlint:disable:next type_name
 public struct iOSTarget: Codable {
     let name: String
     let app_icon: String
@@ -27,10 +24,9 @@ public struct iOSTarget: Codable {
     }
 }
 
+// swiftlint:disable:next type_name
 public struct iOSSource: Codable {
     let path: String
     let info: String
     let config: String
 }
-
-// swiftlint:enable type_name

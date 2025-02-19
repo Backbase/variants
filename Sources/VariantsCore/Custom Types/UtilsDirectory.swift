@@ -15,11 +15,11 @@ struct UtilsDirectory {
 
     init(
         directories: [String] = [
-            "/usr/local/lib/variants/utils",
+            "~/.local/lib/variants/utils",
             "./utils"
         ]
     ) throws {
-        var utilsDirectories = directories.map(Path.init(stringLiteral:))
+        var utilsDirectories = directories.map { Path($0).absolute() }
         
         if let variantsInstallationPath = try? Bash(
             "which",

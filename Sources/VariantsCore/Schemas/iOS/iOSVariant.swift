@@ -7,8 +7,7 @@
 
 import Foundation
 
-// swiftlint:disable type_name
-
+// swiftlint:disable:next type_name
 public struct iOSVariant: Variant {
     let name: String
     let versionName: String
@@ -16,12 +15,13 @@ public struct iOSVariant: Variant {
     let appIcon: String?
     let appName: String?
     let storeDestination: Destination
-    let signing: iOSSigning?
+    let debugSigning: iOSSigning?
+    let releaseSigning: iOSSigning?
     let custom: [CustomProperty]?
     let postSwitchScript: String?
     
     private let bundleNamingOption: BundleNamingOption
-     
+
     public var title: String { name }
     
     var configName: String {
@@ -38,8 +38,10 @@ public struct iOSVariant: Variant {
     }
     
     init(
-        name: String, versionName: String, versionNumber: Int, appIcon: String?, appName: String?, storeDestination: String?,
-        custom: [CustomProperty]?, idSuffix: String?, bundleID: String?, variantSigning: iOSSigning?, globalSigning: iOSSigning?,
+        name: String, versionName: String, versionNumber: Int, appIcon: String?, appName: String?,
+        storeDestination: String?, idSuffix: String?, bundleID: String?,
+        globalCustomProperties: [CustomProperty]?, variantCustomProperties: [CustomProperty]?,
+        globalSigning: iOSSigning?, debugSigning: iOSSigning?, releaseSigning: iOSSigning?,
         globalPostSwitchScript: String?, variantPostSwitchScript: String?)
     throws {
         self.name = name
@@ -48,8 +50,9 @@ public struct iOSVariant: Variant {
         self.appIcon = appIcon
         self.appName = appName
         self.storeDestination = try Self.parseDestination(name: name, destination: storeDestination) ?? .appStore
-        self.signing = try Self.parseSigning(name: name, variantSigning: variantSigning, globalSigning: globalSigning)
-        self.custom = custom
+        self.debugSigning = try Self.parseSigning(name: name, override: debugSigning, base: globalSigning)
+        self.releaseSigning = try Self.parseSigning(name: name, override: releaseSigning, base: globalSigning)
+        self.custom = Self.parseCustomProperties(variantCustom: variantCustomProperties, globalCustom: globalCustomProperties)
         self.bundleNamingOption = try Self.parseBundleConfiguration(name: name, idSuffix: idSuffix, bundleID: bundleID)
         self.postSwitchScript = Self.parsePostSwitchScript(globalScript: globalPostSwitchScript,
                                                            variantScript: variantPostSwitchScript)
@@ -66,6 +69,7 @@ public struct iOSVariant: Variant {
         }
     }
     
+    // TODO: is debug?
     func getDefaultValues(for target: iOSTarget) -> [(key: String, value: String)] {
         var customDictionary: [String: String] = [
             "V_APP_NAME": appName ?? target.name + configName,
@@ -75,17 +79,14 @@ public struct iOSVariant: Variant {
             "V_APP_ICON": appIcon ?? target.app_icon
         ]
        
-        if signing?.matchURL != nil, let exportMethod = signing?.exportMethod {
+        if releaseSigning?.matchURL != nil, let exportMethod = releaseSigning?.exportMethod {
             customDictionary["V_MATCH_PROFILE"] = "\(exportMethod.prefix) \(makeBundleID(for: target))"
         }
-        
-        custom?
-            .filter { $0.destination == .project && !$0.isEnvironmentVariable }
-            .forEach { customDictionary[$0.name] = $0.value }
-        
+        (custom?.projectConfigurationValues ?? []).forEach { customDictionary[$0.name] = $0.value }
+
         return customDictionary.sorted(by: {$0.key < $1.key})
     }
-    
+
     private static func parseDestination(name: String, destination: String?) throws -> Destination? {
         guard let destinationString = destination else { return nil }
         
@@ -100,23 +101,28 @@ public struct iOSVariant: Variant {
         return destination
     }
 
-    private static func parseSigning(name: String, variantSigning: iOSSigning?, globalSigning: iOSSigning?) throws -> iOSSigning? {
-        if let variantSigning = variantSigning, let globalSigning = globalSigning {
-            return try variantSigning ~ globalSigning
-        } else if let variantSigning = variantSigning {
-            return try variantSigning ~ nil
-        } else if let globalSigning = globalSigning {
-            return try globalSigning ~ nil
+    private static func parseSigning(name: String, override: iOSSigning?, base: iOSSigning?) throws -> iOSSigning? {
+        if let override, let base {
+            return try override ~ base
+        } else if let override {
+            return try override ~ nil
+        } else if let base {
+            return try base ~ nil
         } else {
-            Logger.shared.logWarning(item:
+            throw RuntimeError(
                 """
                 Variant "\(name)" doesn't contain a 'signing' configuration. \
                 Create a global 'signing' configuration or make sure all variants have this property.
                 """)
-            return nil
         }
     }
-    
+
+    private static func parseCustomProperties(variantCustom: [CustomProperty]?, globalCustom: [CustomProperty]?) -> [CustomProperty] {
+        let variantCustomProperties = variantCustom ?? []
+        let globalMinusOverrideProperties = (globalCustom ?? []).filter { !variantCustomProperties.contains($0) }
+        return globalMinusOverrideProperties + variantCustomProperties
+    }
+
     private static func parsePostSwitchScript(globalScript: String?, variantScript: String?) -> String? {
         if let globalScript = globalScript, let variantScript = variantScript {
             return "\(globalScript) && \(variantScript)"
@@ -172,6 +178,8 @@ struct UnnamediOSVariant: Codable {
     let idSuffix: String?
     let bundleID: String?
     let signing: iOSSigning?
+    let debugSigning: iOSSigning?
+    let releaseSigning: iOSSigning?
     let custom: [CustomProperty]?
     let storeDestination: String?
     let postSwitchScript: String?
@@ -184,6 +192,8 @@ struct UnnamediOSVariant: Codable {
         case idSuffix = "id_suffix"
         case bundleID = "bundle_id"
         case signing
+        case releaseSigning = "release_signing"
+        case debugSigning = "debug_signing"
         case custom
         case storeDestination = "store_destination"
         case postSwitchScript
@@ -200,6 +210,8 @@ extension UnnamediOSVariant {
         idSuffix = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .idSuffix)
         bundleID = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .bundleID)
         signing = try values.decodeIfPresent(iOSSigning.self, forKey: .signing)
+        debugSigning = try values.decodeIfPresent(iOSSigning.self, forKey: .debugSigning)
+        releaseSigning = try values.decodeIfPresent(iOSSigning.self, forKey: .releaseSigning)
         custom = try values.decodeIfPresent([CustomProperty].self, forKey: .custom)
         storeDestination = try values.decodeIfPresentOrReadFromEnv(String.self, forKey: .storeDestination)
         postSwitchScript = try values.decodeIfPresent(String.self, forKey: .postSwitchScript)
@@ -207,7 +219,9 @@ extension UnnamediOSVariant {
 }
 
 extension iOSVariant {
-    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalSigning: iOSSigning?, globalPostSwitchScript: String?) throws {
+    init(from unnamediOSVariant: UnnamediOSVariant, name: String, globalCustomProperties: [CustomProperty]?,
+         globalSigning: iOSSigning?, globalPostSwitchScript: String?)
+    throws {
         try self.init(
             name: name,
             versionName: unnamediOSVariant.versionName,
@@ -215,14 +229,14 @@ extension iOSVariant {
             appIcon: unnamediOSVariant.appIcon,
             appName: unnamediOSVariant.appName,
             storeDestination: unnamediOSVariant.storeDestination,
-            custom: unnamediOSVariant.custom,
             idSuffix: unnamediOSVariant.idSuffix,
             bundleID: unnamediOSVariant.bundleID,
-            variantSigning: unnamediOSVariant.signing,
+            globalCustomProperties: globalCustomProperties,
+            variantCustomProperties: unnamediOSVariant.custom,
             globalSigning: globalSigning,
+            debugSigning: unnamediOSVariant.debugSigning ?? unnamediOSVariant.signing,
+            releaseSigning: unnamediOSVariant.releaseSigning ?? unnamediOSVariant.signing,
             globalPostSwitchScript: globalPostSwitchScript,
             variantPostSwitchScript: unnamediOSVariant.postSwitchScript)
     }
 }
-
-// swiftlint:enable type_name

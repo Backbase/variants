@@ -5,10 +5,10 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable line_length
+
 import XCTest
 import class Foundation.Bundle
-
-// swiftlint:disable line_length
 
 final class InitCommandTests: XCTestCase {
     func testUsage_help() throws {
@@ -33,8 +33,9 @@ final class InitCommandTests: XCTestCase {
         let output = try CLIExecutor.shared.run(with: arguments)
         XCTAssertEqual(output, expectedOutput)
     }
-    
-    #warning("Test 'testUsage_noExtraArguments' will always fail when running from Xcode.")
+
+    /// Note:
+    /// Test testUsage_noExtraArguments' will always fail when running from Xcode.
     func testUsage_noExtraArguments() throws {
         let arguments = ["init"]
         

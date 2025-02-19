@@ -11,7 +11,7 @@ import PathKit
 
 protocol ParametersFactory {
     func createParametersFile(in file: Path, renderTemplate: String, with parameters: [CustomProperty]) throws
-    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws
+    func createMatchFile(for variant: iOSVariant, configuration: iOSConfiguration) throws
     func render(context: [String: Any], renderTemplate: String) throws -> Data?
     func write(_ data: Data, using parametersFile: Path) throws
 }
@@ -31,24 +31,29 @@ class FastlaneParametersFactory: ParametersFactory {
         try write(data, using: file)
     }
     
-    func createMatchFile(using variant: iOSVariant, target: iOSTarget) throws {
+    func createMatchFile(for variant: iOSVariant, configuration: iOSConfiguration) throws {
         // Return immediately if folder 'fastlane/' doesn't exist.
         guard StaticPath.Fastlane.baseFolder.exists && StaticPath.Fastlane.baseFolder.isDirectory
         else { return }
         
         // Populate 'fastlane/parameters/match_params.rb' from template
-        let parameters: [CustomProperty] = variant.signing?.customProperties() ?? []
+        let parameters: [CustomProperty] = variant.releaseSigning?.customProperties() ?? []
         try? createParametersFile(in: StaticPath.Fastlane.matchParametersFile,
                                   renderTemplate: StaticPath.Template.matchParametersFileName,
                                   with: parameters)
         
         // Populate 'fastlane/Matchfile' from template
-        var context = [
-            "export_method": (variant.signing?.exportMethod ?? .appstore).rawValue,
-            "bundle_id": variant.makeBundleID(for: target)
+        let extensionBundleIDs = configuration.extensions
+            .filter { $0.signed }
+            .map { $0.makeBundleID(variant: variant, target: configuration.target) }
+            .reduce(into: [], { $0.append($1) })
+        let appBundleID = [variant.makeBundleID(for: configuration.target)]
+        var context: [String: Any] = [
+            "export_method": (variant.releaseSigning?.exportMethod ?? .appstore).rawValue,
+            "app_identifiers": appBundleID + extensionBundleIDs
         ]
         
-        if let matchURL = variant.signing?.matchURL {
+        if let matchURL = variant.releaseSigning?.matchURL {
             context["git_url"] = matchURL
         } else {
             Logger.shared.logWarning(item:

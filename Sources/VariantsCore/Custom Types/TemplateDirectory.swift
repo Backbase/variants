@@ -15,13 +15,15 @@ struct TemplateDirectory {
 
     init(
         directories: [String] = [
-            "/usr/local/lib/variants/templates",
+            // Uncomment below line while in development to read from local template files
+            "../../../Templates",
+            "~/.local/lib/variants/templates",
             "./Templates"
         ]
     ) throws {
         
-        var templateDirectories = directories.map(Path.init(stringLiteral:))
-        
+        var templateDirectories = directories.map { Path($0).absolute() }
+
         if let variantsInstallationPath = try? Bash(
             "which",
             arguments: "variants"
@@ -33,7 +35,7 @@ struct TemplateDirectory {
                 ))
             )
         }
-        
+
         let firstFoundDirectory = templateDirectories.first(where: \.exists)
         guard let path = firstFoundDirectory else {
             let dirs = directories.joined(separator: " or ")

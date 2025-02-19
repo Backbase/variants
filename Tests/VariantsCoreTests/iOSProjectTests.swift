@@ -5,11 +5,12 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable type_name
+
 import XCTest
 import PathKit
 import ArgumentParser
 @testable import VariantsCore
-// swiftlint:disable type_name
 
 class iOSProjectTests: XCTestCase {
     let specHelperMock = SpecHelperMock(
@@ -20,7 +21,7 @@ class iOSProjectTests: XCTestCase {
     )
     
     func testProject_initialize() {
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -37,7 +38,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_setup() {
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -79,7 +80,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_list() {
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         let project = iOSProject(
             specHelper: specHelperMock,
@@ -98,7 +99,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_switch() {
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -152,7 +153,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_setup_missingiOSConfiguration() {
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
@@ -175,7 +176,7 @@ class iOSProjectTests: XCTestCase {
     }
     
     func testProject_setup_fail() {
-        let xcFactoryMock = MockXCcodeConfigFactory(logLevel: true)
+        let xcFactoryMock = MockXCodeConfigFactory(logLevel: true)
         let parametersFactoryMock = MockFastlaneFactory()
         
         let project = iOSProject(
