@@ -11,12 +11,9 @@ on:
 jobs:
   SwiftLint:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     steps:
       - uses: actions/checkout@v3
       - name: GitHub Action for SwiftLint
-        uses: stanfordbdhg/action-swiftlint@f6ee119765c4b81b667fa84b1e9ee77ca864f622 # v4.1.1
+        uses: stanfordbdhg/action-swiftlint@v4
         with:
           args: --strict --reporter github-actions-logging
