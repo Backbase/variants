@@ -57,3 +57,5 @@ public struct iOSConfiguration: Codable {
                     globalSigning: globalSigning, globalPostSwitchScript: globalPostSwitchScript) }
     }
 }
+
+// swiftlint:enable type_name
