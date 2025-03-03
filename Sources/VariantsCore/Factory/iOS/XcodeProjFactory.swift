@@ -5,6 +5,8 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import XcodeProj
 import PathKit
@@ -163,6 +165,7 @@ struct XcodeProjFactory {
 
     private func isCocoapodsWorkspace(configurations: [XCBuildConfiguration]) -> Bool {
         for conf in configurations {
+            // swiftlint:disable:next for_where
             if conf.baseConfiguration?.name?.lowercased().contains("pods") == true {
                 return true
             }
@@ -268,3 +271,5 @@ private extension XCBuildConfiguration {
         buildSettings["INFO_PLIST"] as? String
     }
 }
+
+// swiftlint:enable file_length
