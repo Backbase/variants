@@ -5,6 +5,8 @@
 //  Created by Arthur Alves
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import XcodeProj
 import PathKit
@@ -16,7 +18,7 @@ struct XcodeProjFactory {
 
     private let logger: Logger
     
-    init(enableVerboseLog: Bool = true) {
+    init(enableVerboseLog: Bool = false) {
         logger = Logger(verbose: enableVerboseLog)
     }
     
@@ -136,21 +138,41 @@ struct XcodeProjFactory {
                           target: iOSTarget,
                           autoSave: Bool = false) {
         do {
+            let isUsingCocoapodsWorkspace = isCocoapodsWorkspace(
+                configurations: xcodeProject.pbxproj.buildConfigurations)
+
             for conf in xcodeProject.pbxproj.buildConfigurations {
-                if
-                    let infoList = conf.buildSettings["INFOPLIST_FILE"] as? String,
-                    infoList == target.source.info {
+                if isUsingCocoapodsWorkspace {
+                    let confName = conf.baseConfiguration?.name?.lowercased()
+                    guard confName?.contains("pods") == false else { continue }
+                    conf.baseConfiguration = fileReference
+                } else {
+                    guard conf.infoPlistFile == target.source.info else { continue }
                     conf.baseConfiguration = fileReference
                 }
             }
-            if autoSave { try xcodeProject.write(path: path) }
+            
+            if autoSave {
+                try xcodeProject.write(path: path)
+            }
+            
             logger.logInfo("✅ ", item: "Changed baseConfiguration of target '\(target.name)'",
                            color: .green)
         } catch {
             logger.logFatal("❌ ", item: "Unable to edit baseConfiguration for target '\(target.name)'")
         }
     }
-    
+
+    private func isCocoapodsWorkspace(configurations: [XCBuildConfiguration]) -> Bool {
+        for conf in configurations {
+            // swiftlint:disable:next for_where
+            if conf.baseConfiguration?.name?.lowercased().contains("pods") == true {
+                return true
+            }
+        }
+        return false
+    }
+
     /// Modify value directly in `.xcodeproj/project.pbxproj`
     /// - Parameters:
     ///   - keyValue: Key/value pair to be modified
@@ -168,7 +190,7 @@ struct XcodeProjFactory {
             logger.logInfo("Updating: ", item: projectPath)
 
             project.pbxproj.buildConfigurations
-                .filter({ ($0.buildSettings["INFOPLIST_FILE"] as? String)?.contains(targetName) ?? false })
+                .filter({ $0.infoPlistFile?.contains(targetName) ?? false })
                 .filter({ configTypeNames.contains($0.name.lowercased()) })
                 .forEach { conf in
                     logger.logDebug(
@@ -243,3 +265,11 @@ private extension XcodeProjFactory {
         }
     }
 }
+
+private extension XCBuildConfiguration {
+    var infoPlistFile: String? {
+        buildSettings["INFO_PLIST"] as? String
+    }
+}
+
+// swiftlint:enable file_length
